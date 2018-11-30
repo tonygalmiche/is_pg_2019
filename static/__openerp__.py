@@ -3,7 +3,7 @@
     "name" : "InfoSaône - Module Odoo pour Plastigray en 2019",
     "version" : "0.1",
     "author" : "InfoSaône",
-    "category" : "Plastigray",
+    "category" : "InfoSaône\Plastigray",
     "description": """
 InfoSaône - Module Odoo pour Plastigray en 2019
 ===================================================
