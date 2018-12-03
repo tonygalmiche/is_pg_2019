@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Constituant Tampographie -->
+        <record id="is_fiche_tampographie_constituant_view_tree" model="ir.ui.view">
+            <field name="name">is.fiche.tampographie.constituant.view.tree</field>
+            <field name="model">is.fiche.tampographie.constituant</field>
+            <field name="arch" type="xml">
+                <tree string="Constituant Tampographie">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        <record id="is_fiche_tampographie_constituant_view_form" model="ir.ui.view">
+            <field name="name">is.fiche.tampographie.constituant.view.form</field>
+            <field name="model">is.fiche.tampographie.constituant</field>
+            <field name="arch" type="xml">
+                <form string="Constituant Tampographie">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_is_fiche_tampographie_constituant" model="ir.actions.act_window">
+            <field name="name">Constituant Tampographie</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.fiche.tampographie.constituant</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- Type réglage Tampographie -->
+        <record id="is_fiche_tampographie_type_reglage_view_tree"
+            model="ir.ui.view">
+            <field name="name">is.fiche.tampographie.type.reglage.view.tree
+            </field>
+            <field name="model">is.fiche.tampographie.type.reglage</field>
+            <field name="arch" type="xml">
+                <tree string="Type réglage Tampographie">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        <record id="is_fiche_tampographie_type_reglage_view_form"
+            model="ir.ui.view">
+            <field name="name">is.fiche.tampographie.type.reglage.view.form
+            </field>
+            <field name="model">is.fiche.tampographie.type.reglage</field>
+            <field name="arch" type="xml">
+                <form string="Type réglage Tampographie">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_is_fiche_tampographie_type_reglage" model="ir.actions.act_window">
+            <field name="name">Type réglage Tampographie</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.fiche.tampographie.type.reglage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- Tampographie -->
+        <record id="is_fiche_tampographie_view_tree" model="ir.ui.view">
+            <field name="name">is.fiche.tampographie.view.tree</field>
+            <field name="model">is.fiche.tampographie</field>
+            <field name="arch" type="xml">
+                <tree string="Tampographie">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        <record id="is_fiche_tampographie_view_form" model="ir.ui.view">
+            <field name="name">is.fiche.tampographie.view.form</field>
+            <field name="model">is.fiche.tampographie</field>
+            <field name="arch" type="xml">
+                <form string="Tampographie">
+                    <header>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="article_injection_id" />
+                                <field name="is_mold_dossierf" />
+                                <field name="article_tampo_id" />
+                                <field name="temps_cycle" />
+                                <field name="nettoyage_materiel_id" />
+                            </group>
+                            <group>
+                                <field name="date_redaction" />
+                                <field name="nettoyage_piece_id" />
+                                <field name="duree_vie_melange" />
+                                <field name="redacteur_id" />
+                                <field name="approbateur_id" />
+                                <field name="indice" />
+                            </group>
+                            <separator string="Recette" colspan="4" />
+                            <field name="recette_ids" colspan="4" nolabel="1">
+                                <tree editable="top">
+                                    <field name="name" />
+                                    <field name="constituant_id" />
+                                    <field name="product_id" />
+                                    <field name="poids" />
+                                </tree>
+                            </field>
+                            <separator string="Reglage" colspan="4" />
+                            <field name="reglage_ids" colspan="4" nolabel="1">
+                                <tree editable="top">
+                                    <field name="name" />
+                                    <field name="type_reglage_id" />
+                                    <field name="reglage" />
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="image_finale" />
+                            <field name="image_encrier1" />
+                            <field name="image_encrier2" />
+                            <field name="image_encrier3" />
+                            <field name="image_posage" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_is_fiche_tampographie" model="ir.actions.act_window">
+            <field name="name">Tampographie</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.fiche.tampographie</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</openerp>
