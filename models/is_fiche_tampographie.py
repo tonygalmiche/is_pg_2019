@@ -9,7 +9,7 @@ class is_fiche_tampographie_constituant(models.Model):
     _name = 'is.fiche.tampographie.constituant'
     _order = 'name'
 
-    name = fields.Char('Constituant')
+    name = fields.Char('Constituant', required=True)
 
 
 class is_fiche_tampographie_recette(models.Model):
@@ -30,7 +30,7 @@ class is_fiche_tampographie_type_reglage(models.Model):
     _name = 'is.fiche.tampographie.type.reglage'
     _order = 'name'
 
-    name = fields.Char(u'Type de réglage de la machine')
+    name = fields.Char(u'Type de réglage de la machine', required=True)
 
 
 class is_fiche_tampographie_reglage(models.Model):

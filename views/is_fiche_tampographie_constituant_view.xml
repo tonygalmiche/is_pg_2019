@@ -85,6 +85,18 @@
             <field name="arch" type="xml">
                 <tree string="Tampographie">
                     <field name="name" />
+                    <field name="article_injection_id" />
+                    <field name="is_mold_dossierf" />
+                    <field name="article_tampo_id" />
+                    <field name="temps_cycle" />
+                    <field name="nettoyage_materiel_id" />
+                    <field name="date_redaction" />
+                    <field name="nettoyage_piece_id" />
+                    <field name="duree_vie_melange" />
+                    <field name="redacteur_id" />
+                    <field name="approbateur_id" />
+                    <field name="indice" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -133,11 +145,11 @@
                             </field>
                         </group>
                         <group>
-                            <field name="image_finale" />
-                            <field name="image_encrier1" />
-                            <field name="image_encrier2" />
-                            <field name="image_encrier3" />
-                            <field name="image_posage" />
+                            <field name="image_finale" widget='image' class="oe_left oe_avatar" />
+                            <field name="image_encrier1" widget='image' class="oe_left oe_avatar" />
+                            <field name="image_encrier2" widget='image' class="oe_left oe_avatar" />
+                            <field name="image_encrier3" widget='image' class="oe_left oe_avatar" />
+                            <field name="image_posage" widget='image' class="oe_left oe_avatar" />
                         </group>
                     </sheet>
                 </form>
