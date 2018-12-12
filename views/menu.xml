@@ -12,7 +12,8 @@
 	        <field name="groups_id" eval="[(6,0,[ref('is_plastigray.is_gestionnaire_tables_group')])]"/>
 	    </record>
 
-        <menuitem id="menu_is_fiche_tampographie" sequence="1" name="Tampographie" parent="menu_is_dt_tampographie" action="action_is_fiche_tampographie" />
+        <menuitem id="menu_is_fiche_tampographie" sequence="1" name="Tampographie"     parent="menu_is_dt_tampographie" action="action_is_fiche_tampographie" />
+        <menuitem id="menu_is_encres_utilisees"   sequence="1" name="Encres utilisées" parent="menu_is_dt_tampographie" action="is_encres_utilisees_action" />
 
     </data>
 </openerp>

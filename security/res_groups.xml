@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <record model="res.groups" id="is_main_admin_one_group" >
+        <field name="name">Is Admin ?</field>
+        <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
+    </record>
+
+</data>
+</openerp>

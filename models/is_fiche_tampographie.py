@@ -49,6 +49,97 @@ class is_fiche_tampographie_reglage(models.Model):
 class is_fiche_tampographie(models.Model):
     _name = 'is.fiche.tampographie'
 
+    @api.multi
+    def envoi_mail(self, email_from, email_to, subject, body_html):
+        for obj in self:
+            vals = {
+                'email_from'    : email_from,
+                'email_to'      : email_to,
+                'email_cc'      : email_from,
+                'subject'       : subject,
+                'body_html'     : body_html,
+            }
+            email = self.env['mail.mail'].create(vals)
+            if email:
+                self.env['mail.mail'].send(email)
+
+    @api.multi
+    def vers_approbation_action(self):
+        for obj in self:
+            subject = u'[' + obj.name + u'] tampographie'
+            email_to = obj.approbateur_id.email
+            user = self.env['res.users'].browse(self._uid)
+            email_from = user.email
+            nom = user.name
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.fiche.tampographie'
+            body_html=u""" 
+                <p>Bonjour,</p> 
+                <p>"""+nom+""" vient de passer la fiche de réglage tampographie <a href='"""+url+"""'>"""+obj.name+"""</a> à l'état 'Approbation'.</p> 
+                <p>Merci d'en prendre connaissance.</p> 
+            """ 
+            self.envoi_mail(email_from, email_to, subject, body_html)
+            obj.date_redaction = datetime.datetime.today()
+            obj.state = "approbation"
+
+    @api.multi
+    def vers_approbation_to_valide_action(self):
+        for obj in self:
+            subject = u'[' + obj.name + u'] tampographie'
+            email_to = obj.approbateur_id.email
+            user = self.env['res.users'].browse(self._uid)
+            email_from = user.email
+            nom = user.name
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.fiche.tampographie'
+            body_html=u""" 
+                <p>Bonjour,</p> 
+                <p>"""+nom+""" vient de passer la fiche de réglage tampographie <a href='"""+url+"""'>"""+obj.name+"""</a> à l'état 'Validé'.</p> 
+                <p>Merci d'en prendre connaissance.</p> 
+            """ 
+            self.envoi_mail(email_from, email_to, subject, body_html)
+            obj.date_redaction = datetime.datetime.today()
+            obj.state = "valide"
+
+    @api.multi
+    def vers_approbation_to_redaction_action(self):
+        for obj in self:
+            subject = u'[' + obj.name + u'] tampographie'
+            email_to = obj.approbateur_id.email
+            user = self.env['res.users'].browse(self._uid)
+            email_from = user.email
+            nom = user.name
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.fiche.tampographie'
+            body_html=u""" 
+                <p>Bonjour,</p> 
+                <p>"""+nom+""" vient de passer la fiche de réglage tampographie <a href='"""+url+"""'>"""+obj.name+"""</a> à l'état 'Rédaction'.</p> 
+                <p>Merci d'en prendre connaissance.</p> 
+            """
+            self.envoi_mail(email_from, email_to, subject, body_html)
+            obj.date_redaction = datetime.datetime.today()
+            obj.state = "redaction"
+
+    @api.multi
+    def vers_valide_to_approbation_action(self):
+        for obj in self:
+            subject = u'[' + obj.name + u'] tampographie'
+            email_to = obj.approbateur_id.email
+            user = self.env['res.users'].browse(self._uid)
+            email_from = user.email
+            nom = user.name
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.fiche.tampographie'
+            body_html=u""" 
+                <p>Bonjour,</p> 
+                <p>"""+nom+""" vient de passer la fiche de réglage tampographie <a href='"""+url+"""'>"""+obj.name+"""</a> à l'état 'Approbation'.</p> 
+                <p>Merci d'en prendre connaissance.</p> 
+            """ 
+            self.envoi_mail(email_from, email_to, subject, body_html)
+            obj.date_redaction = datetime.datetime.today()
+            obj.state = "approbation"
+
+
     name                  = fields.Char(u'Désignation', required=True)
     article_injection_id  = fields.Many2one('product.product', u'Référence pièce sortie injection', required=True)
     is_mold_dossierf      = fields.Char('Moule', related='article_injection_id.is_mold_dossierf', readonly=True)
