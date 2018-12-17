@@ -139,6 +139,27 @@ class is_fiche_tampographie(models.Model):
             obj.date_redaction = datetime.datetime.today()
             obj.state = "approbation"
 
+    @api.depends('state','redacteur_id','approbateur_id')
+    def _compute(self):
+        uid = self._uid
+        for obj in self:
+            vsb = False
+            if obj.state == 'redaction' and uid == obj.redacteur_id.id:
+                vsb = True
+            obj.vers_approbation_vsb = vsb
+            vsb = False
+            if obj.state == 'approbation' and uid == obj.redacteur_id.id and uid == obj.approbateur_id.id:
+                vsb = True
+            obj.vers_approbation_to_redaction_vsb = vsb
+            vsb = False
+            if obj.state == 'approbation' and uid == obj.approbateur_id.id:
+                vsb = True
+            obj.vers_approbation_to_valide_vsb = vsb
+            vsb = False
+            if obj.state == 'valide' and uid == obj.approbateur_id.id:
+                vsb = True
+            obj.vers_valide_to_approbation_vsb = vsb
+
 
     name                  = fields.Char(u'Désignation', required=True)
     article_injection_id  = fields.Many2one('product.product', u'Référence pièce sortie injection', required=True)
@@ -167,4 +188,8 @@ class is_fiche_tampographie(models.Model):
             ('approbation', 'Approbation'),
             ('valide', u'Validé'),
         ], u'État', default='redaction')
+    vers_approbation_vsb              = fields.Boolean('Champ technique', compute='_compute', readonly=True, store=False)
+    vers_approbation_to_redaction_vsb = fields.Boolean('Champ technique', compute='_compute', readonly=True, store=False)
+    vers_approbation_to_valide_vsb    = fields.Boolean('Champ technique', compute='_compute', readonly=True, store=False)
+    vers_valide_to_approbation_vsb    = fields.Boolean('Champ technique', compute='_compute', readonly=True, store=False)
 

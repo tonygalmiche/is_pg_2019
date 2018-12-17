@@ -106,35 +106,35 @@
             <field name="arch" type="xml">
                 <form string="Tampographie">
                     <header>
+                        <field name="vers_approbation_vsb" invisible="1"/>
                         <button 
                             name="vers_approbation_action"
                             string="Vers Approbation"
-                            attrs="{'invisible': ['|',('state','!=','redaction'),('redacteur_id', '=', False)]}"
+                            attrs="{'invisible': [('vers_approbation_vsb', '!=', True)]}"
                             type="object"
                             class="oe_highlight"
-                            groups="is_pg_2019.is_main_admin_one_group"
                         />
+                        <field name="vers_approbation_to_redaction_vsb" invisible="1"/>
                         <button 
                             name="vers_approbation_to_redaction_action"
                             string="Vers Rédaction"
-                            attrs="{'invisible': ['|',('state', '!=', 'approbation'),'&amp;',('redacteur_id', '=', False),('approbateur_id', '=', False)]}"
+                            attrs="{'invisible': [('vers_approbation_to_redaction_vsb', '!=', True)]}"
                             type="object"
-                            groups="is_pg_2019.is_main_admin_one_group"
                         />
+                        <field name="vers_approbation_to_valide_vsb" invisible="1"/>
                         <button 
                             name="vers_approbation_to_valide_action"
                             string="Vers Validé"
-                            attrs="{'invisible': ['|',('approbateur_id', '=', False),('state', '!=', 'approbation')]}"
+                            attrs="{'invisible': [('vers_approbation_to_valide_vsb', '!=', True)]}"
                             type="object"
                             class="oe_highlight"
-                            groups="is_pg_2019.is_main_admin_one_group"
                         />
+                        <field name="vers_valide_to_approbation_vsb" invisible="1"/>
                         <button 
                             name="vers_valide_to_approbation_action"
                             string="Vers Approbation"
-                            attrs="{'invisible': ['|',('approbateur_id', '=', False),('state', '!=', 'valide')]}"
+                            attrs="{'invisible': [('vers_valide_to_approbation_vsb', '!=', True)]}"
                             type="object"
-                            groups="is_pg_2019.is_main_admin_one_group"
                         />
                         <field name="state" widget="statusbar" />
                     </header>
