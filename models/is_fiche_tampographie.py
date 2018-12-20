@@ -146,17 +146,27 @@ class is_fiche_tampographie(models.Model):
             vsb = False
             if obj.state == 'redaction' and uid == obj.redacteur_id.id:
                 vsb = True
+            elif obj.state == 'redaction' and uid == 1:
+                vsb = True
             obj.vers_approbation_vsb = vsb
             vsb = False
-            if obj.state == 'approbation' and uid == obj.redacteur_id.id and uid == obj.approbateur_id.id:
+            if obj.state == 'approbation' and uid == obj.redacteur_id.id:
                 vsb = True
+            elif obj.state == 'approbation' and uid == obj.approbateur_id.id:
+                vsb = True
+            elif obj.state == 'approbation' and uid == 1:
+                vsb=True
             obj.vers_approbation_to_redaction_vsb = vsb
             vsb = False
             if obj.state == 'approbation' and uid == obj.approbateur_id.id:
                 vsb = True
+            elif obj.state == 'approbation' and uid == 1:
+                vsb = True
             obj.vers_approbation_to_valide_vsb = vsb
             vsb = False
             if obj.state == 'valide' and uid == obj.approbateur_id.id:
+                vsb = True
+            elif obj.state == 'valide' and uid == 1:
                 vsb = True
             obj.vers_valide_to_approbation_vsb = vsb
 
