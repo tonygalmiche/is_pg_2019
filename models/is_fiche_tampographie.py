@@ -3,6 +3,7 @@
 from openerp import models, fields, api
 from openerp.tools.translate import _
 import datetime
+from collections import defaultdict
 
 
 class is_fiche_tampographie_constituant(models.Model):
@@ -159,6 +160,55 @@ class is_fiche_tampographie(models.Model):
             if obj.state == 'valide' and (uid == obj.approbateur_id.id or uid == 1):
                 vsb = True
             obj.vers_valide_to_approbation_vsb = vsb
+
+    @api.multi
+    def get_recette_encrier(self):
+        res = False
+        for obj in self:
+            for recette in obj.recette_ids:
+                if recette.name == "3":
+                    return '3'
+        return '2'
+
+    @api.multi
+    def get_reglage_encrier(self):
+        res = False
+        for obj in self:
+            for recette in obj.reglage_ids:
+                if recette.name == "3":
+                    return '3'
+        return '2'
+
+    @api.multi
+    def get_recette_data(self):
+        res = False
+        recet = []
+        rec_dict = defaultdict(list)
+        for obj in self:
+            for rec in obj.recette_ids:
+                if rec.constituant_id not in recet:
+                    recdict = {
+                        'name': rec.name,
+                        'product_id': rec.product_id.name,
+                        'poids': rec.poids
+                    }
+                    rec_dict[rec.constituant_id.name].append(recdict)
+        return rec_dict
+
+    @api.multi
+    def get_reglage_data(self):
+        res = False
+        recet = []
+        rec_dict = defaultdict(list)
+        for obj in self:
+            for rec in obj.reglage_ids:
+                if rec.type_reglage_id not in recet:
+                    recdict = {
+                        'name': rec.name,
+                        'type_reglage': rec.reglage
+                    }
+                    rec_dict[rec.type_reglage_id.name].append(recdict)
+        return rec_dict
 
 
     name                  = fields.Char(u'Désignation', required=True)
