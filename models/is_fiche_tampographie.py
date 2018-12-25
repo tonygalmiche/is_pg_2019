@@ -29,13 +29,13 @@ class is_fiche_tampographie_recette(models.Model):
 
 class is_fiche_tampographie_type_reglage(models.Model):
     _name = 'is.fiche.tampographie.type.reglage'
-    _order = 'name'
 
     name = fields.Char(u'Type de réglage de la machine', required=True)
 
 
 class is_fiche_tampographie_reglage(models.Model):
     _name = 'is.fiche.tampographie.reglage'
+    _order = 'name,type_reglage_id asc'
 
     name            = fields.Selection([
             ('1', '1'),

@@ -2,6 +2,258 @@
 <openerp>
     <data>
 
+        <template id="report_bon_transfert_style">
+            .header {
+                font-size:10pt;
+            }
+            .footer {
+                font-size:7pt;
+            }
+            .page {
+                font-size:9pt;
+            }
+            .titre {
+                font-size:11pt;
+                font-weight: bold;
+            }
+            .expediteur {
+                font-size:9pt;
+                text-align:left;
+            }
+            .destinataire {
+                text-align:left;
+                border: 1px solid black;
+                padding:5mm;
+            }
+            .rowcenter {
+                font-size:11pt;
+                font-weight: bold;
+                font-family: 'Calibri';
+                vertical-align:middle;
+                text-align:center;
+                background-color:#58ACFA;
+                border: 1px solid black;
+                padding:2mm;
+            }
+            .footerbold {
+                font-size:8pt;
+                font-weight: bold;
+                font-family: 'Calibri';
+                vertical-align:middle;
+                text-align:center;
+                background-color:#58ACFA;
+                border: 1px solid black;
+            }
+            .footernobold {
+                font-size:8pt;
+                vertical-align:middle;
+                text-align:center;
+                background-color:#58ACFA;
+                border: 1px solid black;
+            }
+            .twocolumntable1col {
+                padding-left:7px;
+                font-weight: bold;
+                font-size: 11pt;
+                vertical-align:middle;
+                text-align:left;
+                border: 1px solid black;
+            }
+            .twocolumntable2col {
+                padding-left:10px;
+                font-size: 9pt;
+                vertical-align:middle;
+                text-align:left;
+                border: 1px solid black;
+            }
+            .twocolumntable2colcenter {
+                font-size: 9pt;
+                vertical-align:middle;
+                text-align:left;
+                border: 1px solid black;
+                text-align:center;
+            }
+            .tablecenterheader {
+                font-weight: bold;
+                font-size: 11pt;
+                vertical-align:middle;
+                text-align:center;
+                border: 1px solid black;
+            }
+            .colcenteralign {
+                font-size: 9pt;
+                vertical-align:middle;
+                text-align:center;
+                border: 1px solid black;
+            }
+            .colleftalign {
+                font-size: 9pt;
+                vertical-align:middle;
+                text-align:left;
+                border: 1px solid black;
+                padding-left:6px;
+            }
+            .colleftalign1 {
+                font-size: 9pt;
+                vertical-align:middle;
+                text-align:left;
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                border-bottom: 1px solid black;
+                padding-left:6px;
+            }
+            .imgclass {
+                text-align:center;
+                height: 80px;
+                text-align: center;
+                width: 120px;
+                vertical-align: middle;
+                padding-left:20px;
+                padding-top:5px;
+                padding-bottom:5px;
+                border: 0px solid black;
+            }
+            .imgclass1 {
+                text-align:center;
+                height: 180px;
+                text-align: center;
+                width: 150px;
+                vertical-align: middle;
+                padding-left:20px;
+                padding-top:5px;
+                padding-bottom:5px;
+                border: 0px solid black;
+            }
+            .companyimgclass {
+                text-align:center;
+                height: 80px;
+                text-align: center;
+                width: 120px;
+                vertical-align: middle;
+                padding-left:20px;
+                padding-top:5px;
+                padding-bottom:5px;
+                border: 1px solid black;
+            }
+            .classborder {
+                border: 1px solid black;
+            }
+            .rowcenter1 {
+                font-size:11pt;
+                font-weight: bold;
+                font-family: 'Calibri';
+                vertical-align:middle;
+                text-align:center;
+                background-color:#58ACFA;
+                border-top: 0px solid black;
+                border-right: 1px solid black;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+                padding:2mm;
+            }
+            .rowcenter2 {
+                font-size:11pt;
+                font-weight: bold;
+                font-family: 'Calibri';
+                vertical-align:middle;
+                text-align:center;
+                background-color:#58ACFA;
+                border-right: 1px solid black;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+                padding:2mm;
+            }
+            .rowcenter3 {
+                font-size:11pt;
+                font-weight: bold;
+                font-family: 'Calibri';
+                vertical-align:top;
+                text-align:center;
+                background-color:#58ACFA;
+                border: 0px solid black;
+            }
+            .rowcenter4 {
+                font-size:11pt;
+                font-weight: bold;
+                vertical-align:top;
+                text-align:center;
+                background-color:#58ACFA;
+                border-top: 1px solid black;
+                height: 35px;
+                padding-top:10px;
+            }
+            .classlrborder {
+                font-weight: bold;
+                font-size: 11pt;
+                vertical-align:middle;
+                text-align:center;
+                border-right: 1px solid black;
+                border-left: 1px solid black;
+            }
+            .classrborder {
+                font-weight: bold;
+                font-size: 11pt;
+                vertical-align:middle;
+                text-align:center;
+                border-right: 1px solid black;
+            }
+            .classlborder {
+                font-weight: bold;
+                font-size: 11pt;
+                vertical-align:middle;
+                text-align:center;
+                border-left: 1px solid black;
+            }
+            .classr1border {
+                font-size: 10pt;
+                vertical-align:middle;
+                text-align:left;
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                border-left: 0px solid black;
+                border-bottom: 1px solid black;
+            }
+            .classtoptable {
+                font-weight: bold;
+                font-size: 11pt;
+                vertical-align:top;
+                text-align:center;
+                border-right: 1px solid black;
+                border-left: 1px solid black;
+            }
+        </template>
+
+        <template id="report_bon_transfert_layout" inherit_id="web.layout" primary="True">
+            <!-- Add report attributes -->
+            <xpath expr="//html" position="attributes">
+                <attribute name="t-att-data-report-margin-top">data_report_margin_top if data_report_margin_top else None</attribute>
+                <attribute name="t-att-data-report-header-spacing">data_report_header_spacing if data_report_header_spacing else None</attribute>
+                <attribute name="t-att-data-report-dpi">data_report_dpi if data_report_dpi else None</attribute>
+            </xpath>
+            <!-- Add report style -->
+            <xpath expr="//head" position="inside">
+                <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+                <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+                <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+                <style type="text/css">
+                    <t t-call="report.style"/>
+                    <t t-call="is_pg_2019.report_bon_transfert_style"/>
+                </style>
+            </xpath>
+            <!-- Remove conflicting style -->
+            <xpath expr="//head/link[@href='/web/static/src/css/full.css']" position="replace"></xpath>
+        </template>
+
+
+
+        <template id="report_bon_transfert_html_container">
+            <t t-set="body_classname" t-value="'container'"/>
+            <t t-call="is_pg_2019.report_bon_transfert_layout">
+                <t t-raw="0"/>
+            </t>
+        </template>
+
+
         <template id="report_is_fiche_tampographie_external_layout">
             <t t-if="o and 'company_id' in o">
                 <t t-set="company" t-value="o.company_id" />
@@ -20,53 +272,53 @@
                     <table style="border-collapse: collapse;" width="100%">
                         <tr>
                             <td width="12%"
-                                style="font-weight: bold;font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footerbold">
                                 F0-0-PROD-72-2
                             </td>
                             <td width="8%"
-                                style="font-weight: bold;font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footerbold">
                                 <div>
                                     Rédacteur :
                                 </div>
                             </td>
                             <td width="15%"
-                                style="font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footernobold">
                                 <div>
                                     <span t-field="o.redacteur_id and o.redacteur_id.name" />
                                 </div>
                             </td>
                             <td width="12%"
-                                style="font-weight: bold;font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footerbold">
                                 <div>
                                     Approbateur :
                                 </div>
                             </td>
                             <td width="15%"
-                                style="font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footernobold">
                                 <div>
                                     <span t-field="o.approbateur_id and o.approbateur_id.name" />
                                 </div>
                             </td>
                             <td width="7%"
-                                style="font-weight: bold;font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footerbold">
                                 <div>
                                     Date :
                                 </div>
                             </td>
                             <td width="10%"
-                                style="font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footernobold">
                                 <div>
                                     <span t-field="o.date_redaction" />
                                 </div>
                             </td>
                             <td width="8%"
-                                style="font-weight: bold;font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footerbold">
                                 <div>
                                     Indice :
                                 </div>
                             </td>
                             <td width="10%"
-                                style="font-family: 'Calibri';font-size: 12px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                class="footernobold">
                                 <div>
                                     <span t-field="o.indice" />
                                 </div>
@@ -80,47 +332,41 @@
         <template id="report_is_fiche_tampographie_external_layout_header">
             <div class="header">
                 <div class="row">
-                    <table width="100%">
+                    <table style="border-collapse: collapse;" width="100%">
                         <tr>
-                            <td width="15%">
+                            <td width="15%" class="classborder">
                                 <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo"
-                                    style="max-height: 60px;" />
+                                    class="imgclass" />
                             </td>
                             <td width="50%"
-                                style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;">
+                                class="rowcenter">
                                 <div>
                                     FICHE DE REGLAGE TAMPOGRAPHIE
                                 </div>
                             </td>
-                            <td width="20%"
-                                style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;">
-                                <table>
+                            <td width="20%" class="rowcenter3">
+                                <table width="100%">
                                     <tr>
-                                        <td
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;">
+                                        <td class="rowcenter4">
                                             <div>MOULE</div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;">
-                                            <div>F0305</div>
+                                        <td class="rowcenter4">
+                                            <span t-field="o.is_mold_dossierf" />
                                         </td>
                                     </tr>
                                 </table>
                             </td>
-                            <td width="15%"
-                                style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;">
-                                <table>
+                            <td width="15%" class="rowcenter3">
+                                <table width="100%">
                                     <tr>
-                                        <td
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;">
+                                        <td class="rowcenter4">
                                             <div>PAGE</div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;">
+                                        <td class="rowcenter4">
                                             <div>
                                                 <span class="page" />
                                                 /
@@ -138,14 +384,13 @@
 
         <template id="report_is_fiche_tampographie_document">
             <t t-call="is_pg_2019.report_is_fiche_tampographie_external_layout">
-                <t t-call="report.internal_layout">
+                <!-- <t t-call="report.internal_layout"> -->
                     <div class="page">
                         <div class="oe_structure" />
                         <div class="row">
                             <table style="border-collapse: collapse;" width="100%">
                                 <tr>
-                                    <td colspan="7"
-                                        style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                    <td colspan="7" class="rowcenter">
                                         <div>
                                             Définition du produit
                                         </div>
@@ -153,13 +398,13 @@
                                 </tr>
                                 <tr>
                                     <td colspan="4" width="50%"
-                                        style="padding-left:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                        class="twocolumntable1col">
                                         <div>
                                             Désignation :
                                         </div>
                                     </td>
                                     <td colspan="3" width="50%"
-                                        style="font-family: 'Calibri';font-size: 15px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                        class="twocolumntable2colcenter">
                                         <div>
                                             <span t-field="o.name" />
                                         </div>
@@ -167,50 +412,49 @@
                                 </tr>
                                 <tr>
                                     <td colspan="4" width="50%"
-                                        style="padding-left:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                        class="twocolumntable1col">
                                         <div>
                                             Référence pièce sortie injection :
                                         </div>
                                     </td>
                                     <td colspan="3" width="50%"
-                                        style="font-family: 'Calibri';font-size: 15px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                        class="twocolumntable2colcenter">
                                         <div>
-                                            <span
-                                                t-field="o.article_injection_id and o.article_injection_id.name" />
+                                            <span t-field="o.article_injection_id and o.article_injection_id.is_code" /> <span t-field="o.article_injection_id and o.article_injection_id.name" />
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" width="50%"
-                                        style="padding-left:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                        class="twocolumntable1col">
                                         <div>
                                             Référence pièce tampographiée :
                                         </div>
                                     </td>
                                     <td colspan="3" width="50%"
-                                        style="font-family: 'Calibri';font-size: 15px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                        class="twocolumntable2colcenter">
                                         <div>
-                                            <span t-field="o.article_tampo_id and o.article_tampo_id.name" />
+                                            <span t-field="o.article_tampo_id and o.article_tampo_id.is_code" /> <span t-field="o.article_tampo_id and o.article_tampo_id.name" />
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" width="50%"
-                                        style="padding-left:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                        class="twocolumntable1col">
                                         <div>
                                             Temps de cycle/cadence horaire :
                                         </div>
                                     </td>
                                     <td colspan="3" width="50%"
-                                        style="font-family: 'Calibri';font-size: 15px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                        class="twocolumntable2colcenter">
                                         <div>
-                                            <span t-field="o.temps_cycle" />
+                                            <span t-field="o.temps_cycle" />S
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="7"
-                                        style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                        class="rowcenter1">
                                         <div>
                                             Recette
                                         </div>
@@ -222,31 +466,31 @@
                                 <table style="border-collapse: collapse;" width="100%">
                                     <tr>
                                         <td width="26%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
 
                                             </div>
                                         </td>
                                         <td width="22%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Ref / désign.
                                             </div>
                                         </td>
                                         <td width="15%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Poids (g.)
                                             </div>
                                         </td>
                                         <td width="22%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Ref / désign.
                                             </div>
                                         </td>
                                         <td width="15%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Poids (g.)
                                             </div>
@@ -254,19 +498,19 @@
                                     </tr>
                                     <tr>
                                         <td width="26%" colspan="1"
-                                            style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="twocolumntable1col">
                                             <div>
                                                 N°encrier
                                             </div>
                                         </td>
                                         <td width="37%" colspan="2"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="tablecenterheader">
                                             <div>
                                                 1
                                             </div>
                                         </td>
                                         <td width="37%" colspan="2"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="tablecenterheader">
                                             <div>
                                                 2
                                             </div>
@@ -276,7 +520,7 @@
                                     <t t-foreach="recette_values" t-as="rec">
                                         <tr>
                                             <td width="26%"
-                                                style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                                class="twocolumntable1col">
                                                 <div>
                                                     <span t-esc="rec" />
                                                 </div>
@@ -292,25 +536,25 @@
                                                 </t>
                                             </t>
                                             <td width="22%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_1.get('product_id','')" />
                                                 </div>
                                             </td>
                                             <td width="15%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_1.get('poids','')" />
                                                 </div>
                                             </td>
                                             <td width="22%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_2.get('product_id','')" />
                                                 </div>
                                             </td>
                                             <td width="15%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_2.get('poids','')" />
                                                 </div>
@@ -319,13 +563,13 @@
                                     </t>
                                     <tr>
                                         <td width="26%"
-                                            style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="twocolumntable1col">
                                             <div>
-                                                Nettoyage du matériel :
+                                                Nettoyage du matériel
                                             </div>
                                         </td>
                                         <td colspan="4" width="74%"
-                                            style="padding-left:8px;font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="colleftalign">
                                             <div>
                                                 <span t-field="o.nettoyage_materiel_id.name" />
                                             </div>
@@ -333,13 +577,13 @@
                                     </tr>
                                     <tr>
                                         <td width="26%"
-                                            style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="twocolumntable1col">
                                             <div>
-                                                Nettoyage de la pièce :
+                                                Nettoyage de la pièce
                                             </div>
                                         </td>
                                         <td colspan="4" width="74%"
-                                            style="padding-left:8px;font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="colleftalign">
                                             <div>
                                                 <span t-field="o.nettoyage_piece_id.name" />
                                             </div>
@@ -347,13 +591,13 @@
                                     </tr>
                                     <tr>
                                         <td width="26%"
-                                            style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="twocolumntable1col">
                                             <div>
-                                                Durée de vie du mélange:
+                                                Durée de vie du mélange
                                             </div>
                                         </td>
                                         <td colspan="4" width="74%"
-                                            style="padding-left:8px;font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="colleftalign">
                                             <div>
                                                 <span t-field="o.duree_vie_melange" />
                                             </div>
@@ -365,43 +609,43 @@
                                 <table style="border-collapse: collapse;" width="100%">
                                     <tr>
                                         <td width="19%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
 
                                             </div>
                                         </td>
                                         <td width="18%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Ref / désign.
                                             </div>
                                         </td>
                                         <td width="9%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Poids (g.)
                                             </div>
                                         </td>
                                         <td width="18%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Ref / désign.
                                             </div>
                                         </td>
                                         <td width="9%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Poids (g.)
                                             </div>
                                         </td>
                                         <td width="18%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Ref / désign.
                                             </div>
                                         </td>
                                         <td width="9%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="classlrborder">
                                             <div>
                                                 Poids (g.)
                                             </div>
@@ -409,25 +653,25 @@
                                     </tr>
                                     <tr>
                                         <td width="19%" colspan="1"
-                                            style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="twocolumntable1col">
                                             <div>
                                                 N°encrier
                                             </div>
                                         </td>
                                         <td width="27%" colspan="2"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="tablecenterheader">
                                             <div>
                                                 1
                                             </div>
                                         </td>
                                         <td width="27%" colspan="2"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="tablecenterheader">
                                             <div>
                                                 2
                                             </div>
                                         </td>
                                         <td width="27%" colspan="2"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                            class="tablecenterheader">
                                             <div>
                                                 3
                                             </div>
@@ -437,7 +681,7 @@
                                     <t t-foreach="recette_values" t-as="rec">
                                         <tr>
                                             <td width="19%"
-                                                style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                                class="twocolumntable1col">
                                                 <div>
                                                     <span t-esc="rec" />
                                                 </div>
@@ -457,37 +701,37 @@
                                                 </t>
                                             </t>
                                             <td width="18%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_1.get('product_id','')" />
                                                 </div>
                                             </td>
                                             <td width="9%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_1.get('poids','')" />
                                                 </div>
                                             </td>
                                             <td width="18%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_2.get('product_id','')" />
                                                 </div>
                                             </td>
                                             <td width="9%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_2.get('poids','')" />
                                                 </div>
                                             </td>
                                             <td width="18%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_3.get('product_id','')" />
                                                 </div>
                                             </td>
                                             <td width="9%"
-                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                class="colcenteralign">
                                                 <div>
                                                     <span t-esc="dict_3.get('poids','')" />
                                                 </div>
@@ -496,13 +740,13 @@
                                     </t>
                                     <tr>
                                         <td width="19%"
-                                            style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="twocolumntable1col">
                                             <div>
-                                                Nettoyage du matériel :
+                                                Nettoyage du matériel
                                             </div>
                                         </td>
                                         <td colspan="6" width="81%"
-                                            style="padding-left:8px;font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="colleftalign">
                                             <div>
                                                 <span t-field="o.nettoyage_materiel_id.name" />
                                             </div>
@@ -510,13 +754,13 @@
                                     </tr>
                                     <tr>
                                         <td width="19%"
-                                            style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="twocolumntable1col">
                                             <div>
-                                                Nettoyage de la pièce :
+                                                Nettoyage de la pièce
                                             </div>
                                         </td>
                                         <td colspan="6" width="81%"
-                                            style="padding-left:8px;font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="colleftalign">
                                             <div>
                                                 <span t-field="o.nettoyage_piece_id.name" />
                                             </div>
@@ -524,13 +768,13 @@
                                     </tr>
                                     <tr>
                                         <td width="19%"
-                                            style="padding-left:8px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="twocolumntable1col">
                                             <div>
-                                                Durée de vie du mélange:
+                                                Durée de vie du mélange
                                             </div>
                                         </td>
                                         <td colspan="6" width="81%"
-                                            style="padding-left:8px;font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                            class="colleftalign">
                                             <div>
                                                 <span t-field="o.duree_vie_melange" />
                                             </div>
@@ -538,106 +782,137 @@
                                     </tr>
                                 </table>
                             </t>
-                            <t>
+                            
+                            <t t-if="o.get_reglage_encrier() == '2'">
                                 <table style="border-collapse: collapse;" width="100%">
                                     <tr>
-                                        <td width="22%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                        <td width="26%"
+                                            class="rowcenter1">
                                             <div>
                                                 Marquage à réaliser
                                             </div>
                                         </td>
-                                        <td width="78%"
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                        <td width="74%"
+                                            class="rowcenter1">
                                             <div>
                                                 Réglages machines
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td width="22%"
-                                            style="font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                        <td width="26%"
+                                            class="classlrborder">
                                             <table width="100">
                                                 <tr>
-                                                    <td
-                                                        style="padding-left:15px;padding-top:10px;padding-bottom:10px;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
-                                                        <img t-if="o.image_finale"
-                                                            t-att-src="'data:image/png;base64,%s' % o.image_finale"
-                                                            style="max-height: 80px;max-weight: 80px;" />
+                                                    <td >
+                                                            <img t-if="o.image_finale"
+                                                                t-att-src="'data:image/png;base64,%s' % o.image_finale"
+                                                                class="imgclass" />
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td width="78%"
-                                            style="font-family: 'Calibri';font-size: 16px;text-align:center;border: 1px solid black;">
-                                            <t t-if="o.get_reglage_encrier() == '2'">
-                                                <table width="100%">
+                                        <td width="74%" class="classtoptable">
+                                            <table width="100%">
+                                                <tr>
+                                                    <td width="40%"
+                                                        class="classrborder">
+                                                        N°encrier
+                                                    </td>
+                                                    <td width="30%"
+                                                        class="classlrborder">
+                                                        1
+                                                    </td>
+                                                    <td width="30%"
+                                                        class="classlborder">
+                                                        2
+                                                    </td>
+                                                </tr>
+                                                <t t-set="reglage_values" t-value="o.get_reglage_data()" />
+                                                <t t-foreach="reglage_values" t-as="rec">
                                                     <tr>
                                                         <td width="40%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border-right: 1px solid black;">
-                                                            N°encrier
+                                                            class="colleftalign1">
+                                                            <div>
+                                                                <span t-esc="rec" />
+                                                            </div>
+                                                        </td>
+                                                        <t t-set="dict_1" t-value="{}" />
+                                                        <t t-set="dict_2" t-value="{}" />
+                                                        <t t-foreach="reglage_values[rec]" t-as="line">
+                                                            <t t-if="line['name'] == '1'">
+                                                                <t t-set="dict_1" t-value="line" />
+                                                            </t>
+                                                            <t t-if="line['name'] == '2'">
+                                                                <t t-set="dict_2" t-value="line" />
+                                                            </t>
+                                                        </t>
+                                                        <td width="30%"
+                                                            class="colcenteralign">
+                                                            <div>
+                                                                <span t-esc="dict_1.get('type_reglage','')" />
+                                                            </div>
                                                         </td>
                                                         <td width="30%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border-right: 1px solid black;">
-                                                            1
-                                                        </td>
-                                                        <td width="30%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
-                                                            2
+                                                            class="colcenteralign">
+                                                            <div>
+                                                                <span t-esc="dict_2.get('type_reglage','')" />
+                                                            </div>
                                                         </td>
                                                     </tr>
-                                                    <t t-set="reglage_values" t-value="o.get_reglage_data()" />
-                                                    <t t-foreach="reglage_values" t-as="rec">
-                                                        <tr>
-                                                            <td width="40%"
-                                                                style="padding-left:8px;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
-                                                                <div>
-                                                                    <span t-esc="rec" />
-                                                                </div>
-                                                            </td>
-                                                            <t t-set="dict_1" t-value="{}" />
-                                                            <t t-set="dict_2" t-value="{}" />
-                                                            <t t-foreach="reglage_values[rec]" t-as="line">
-                                                                <t t-if="line['name'] == '1'">
-                                                                    <t t-set="dict_1" t-value="line" />
-                                                                </t>
-                                                                <t t-if="line['name'] == '2'">
-                                                                    <t t-set="dict_2" t-value="line" />
-                                                                </t>
-                                                            </t>
-                                                            <td width="30%"
-                                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
-                                                                <div>
-                                                                    <span t-esc="dict_1.get('type_reglage','')" />
-                                                                </div>
-                                                            </td>
-                                                            <td width="30%"
-                                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
-                                                                <div>
-                                                                    <span t-esc="dict_2.get('type_reglage','')" />
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </t>
+                                                </t>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                                </t>
+                                
+                                <t t-if="o.get_reglage_encrier() == '3'">
+                                    <table style="border-collapse: collapse;" width="100%">
+                                        <tr>
+                                            <td width="19%"
+                                                class="rowcenter2">
+                                                <div>
+                                                    Marquage à réaliser
+                                                </div>
+                                            </td>
+                                            <td width="81%"
+                                                class="rowcenter2">
+                                                <div>
+                                                    Réglages machines
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="19%"
+                                                class="classlrborder">
+                                                <table width="100">
+                                                    <tr>
+                                                        <td >
+                                                                <img t-if="o.image_finale"
+                                                                    t-att-src="'data:image/png;base64,%s' % o.image_finale"
+                                                                    class="imgclass" />
+                                                        </td>
+                                                    </tr>
                                                 </table>
-                                            </t>
-                                            <t t-if="o.get_reglage_encrier() == '3'">
+                                            </td>
+                                            <td width="81%" class="classtoptable">
                                                 <table width="100%">
                                                     <tr>
                                                         <td width="34%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border-right: 1px solid black;">
+                                                            class="classrborder">
                                                             N°encrier
                                                         </td>
                                                         <td width="22%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border-right: 1px solid black;">
+                                                            class="classlrborder">
                                                             1
                                                         </td>
                                                         <td width="22%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border-right: 1px solid black;">
+                                                            class="classlborder">
                                                             2
                                                         </td>
                                                         <td width="22%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
+                                                            class="classlborder">
                                                             3
                                                         </td>
                                                     </tr>
@@ -645,7 +920,7 @@
                                                     <t t-foreach="reglage_values" t-as="rec">
                                                         <tr>
                                                             <td width="34%"
-                                                                style="padding-left:8px;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:left;border: 1px solid black;">
+                                                                class="colleftalign1">
                                                                 <div>
                                                                     <span t-esc="rec" />
                                                                 </div>
@@ -665,19 +940,19 @@
                                                                 </t>
                                                             </t>
                                                             <td width="22%"
-                                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                                class="colcenteralign">
                                                                 <div>
                                                                     <span t-esc="dict_1.get('type_reglage','')" />
                                                                 </div>
                                                             </td>
                                                             <td width="22%"
-                                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                                class="colcenteralign">
                                                                 <div>
                                                                     <span t-esc="dict_2.get('type_reglage','')" />
                                                                 </div>
                                                             </td>
                                                             <td width="22%"
-                                                                style="font-family: 'Calibri';font-size: 14px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                                                class="colcenteralign">
                                                                 <div>
                                                                     <span t-esc="dict_3.get('type_reglage','')" />
                                                                 </div>
@@ -685,104 +960,95 @@
                                                         </tr>
                                                     </t>
                                                 </table>
-                                            </t>
-                                        </td>
-                                    </tr>
-                                    <t t-if="not o.image_encrier3">
-                                        <tr>
-                                            <td width="22%"
-                                                style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border-left: 1px solid black;border-bottom: 1px solid black;">
-                                            </td>
-                                            <td width="78%"
-                                                style="font-family: 'Calibri';font-size: 16px;text-align:center;border-right: 1px solid black;border-bottom: 1px solid black;">
-                                                <table width="100%">
-                                                    <tr>
-                                                        <td width="40%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
-
-                                                        </td>
-                                                        <td width="30%"
-                                                            style="padding-top:10px;padding-bottom:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
-                                                            <img t-if="o.image_encrier1"
-                                                                t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
-                                                                style="max-height: 80px;max-weight: 80px;" />
-                                                        </td>
-                                                        <td width="30%"
-                                                            style="padding-top:10px;padding-bottom:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
-                                                            <img t-if="o.image_encrier2"
-                                                                t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
-                                                                style="max-height: 80px;max-weight: 80px;" />
-                                                        </td>
-                                                    </tr>
-                                                </table>
                                             </td>
                                         </tr>
-                                    </t>
-                                    <t t-if="o.image_encrier3">
-                                        <tr>
-                                            <td width="22%"
-                                                style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border-left: 1px solid black;border-bottom: 1px solid black;">
-                                            </td>
-                                            <td width="78%"
-                                                style="font-family: 'Calibri';font-size: 16px;text-align:center;border-right: 1px solid black;border-bottom: 1px solid black;">
-                                                <table style="border-collapse: collapse;" width="100%">
-                                                    <tr>
-                                                        <td width="10%"
-                                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
+                                    </table>
+                                </t>
+                                
+                                <t t-if="not o.image_encrier3">
+                                    <table style="border-collapse: collapse;" width="100%">
+                                     <tr class="classborder">
+                                         <td width="26%">
+                                         </td>
+                                         <td width="74%">
+                                             <table style="border-collapse: collapse;" width="100%">
+                                                 <tr>
+                                                     <td width="40%">
 
-                                                        </td>
-                                                        <td width="30%"
-                                                            style="padding-top:10px;padding-bottom:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
-                                                            <img t-if="o.image_encrier1"
-                                                                t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
-                                                                style="max-height: 80px;max-weight: 80px;" />
-                                                        </td>
-                                                        <td width="30%"
-                                                            style="padding-top:10px;padding-bottom:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
-                                                            <img t-if="o.image_encrier2"
-                                                                t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
-                                                                style="max-height: 80px;max-weight: 80px;" />
-                                                        </td>
-                                                        <td width="30%"
-                                                            style="padding-top:10px;padding-bottom:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;">
-                                                            <img t-if="o.image_encrier3"
-                                                                t-att-src="'data:image/png;base64,%s' % o.image_encrier3"
-                                                                style="max-height: 80px;max-weight: 80px;" />
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                </table>
-                                <table style="border-collapse: collapse;" width="100%">
+                                                     </td>
+                                                     <td width="30%">
+                                                         <img t-if="o.image_encrier1"
+                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
+                                                             class="imgclass" />
+                                                     </td>
+                                                     <td width="30%">
+                                                         <img t-if="o.image_encrier2"
+                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
+                                                             class="imgclass" />
+                                                     </td>
+                                                 </tr>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                    </table>
+                                </t>
+                                <t t-if="o.image_encrier3">
+                                    <table style="border-collapse: collapse;" width="100%">
+                                     <tr class="classborder">
+                                         <td width="19%">
+                                         </td>
+                                         <td width="81%">
+                                             <table style="border-collapse: collapse;" width="100%">
+                                                 <tr>
+                                                     <td width="34%">
+
+                                                     </td>
+                                                     <td width="22%" >
+                                                         <img t-if="o.image_encrier1"
+                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
+                                                             class="imgclass" />
+                                                     </td>
+                                                     <td width="22%">
+                                                         <img t-if="o.image_encrier2"
+                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
+                                                             class="imgclass" />
+                                                     </td>
+                                                     <td width="22%">
+                                                         <img t-if="o.image_encrier3"
+                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier3"
+                                                             class="imgclass" />
+                                                     </td>
+                                                 </tr>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                    </table>
+                                </t>
+                                <table width="100%">
                                     <tr>
                                         <td
-                                            style="font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;background-color:#58ACFA;border: 1px solid black;">
+                                            class="rowcenter2">
                                             <div>
                                                 Positions
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td
-                                            style="padding-top:10px;padding-bottom:10px;font-weight: bold;font-family: 'Calibri';font-size: 16px;vertical-align:middle;text-align:center;border: 1px solid black;">
+                                        <td class="colcenteralign">
                                             <div>
                                                 <img t-if="o.image_posage" t-att-src="'data:image/png;base64,%s' % o.image_posage"
-                                                    style="max-height: 180px;max-weight: 150px;" />
+                                                    class="imgclass1" />
                                             </div>
                                         </td>
                                     </tr>
                                 </table>
-                            </t>
                         </div>
                     </div>
                 </t>
-            </t>
         </template>
 
         <template id="report_is_fiche_tampographie">
-            <t t-call="report.html_container">
+            <t t-call="is_pg_2019.report_bon_transfert_html_container">
                 <t t-foreach="doc_ids" t-as="doc_id">
                     <t
                         t-raw="translate_doc(doc_id, doc_model, 'redacteur_id.lang', 'is_pg_2019.report_is_fiche_tampographie_document')" />
