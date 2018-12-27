@@ -4,6 +4,7 @@ from openerp import models, fields, api
 from openerp.tools.translate import _
 import datetime
 from collections import defaultdict
+from collections import OrderedDict
 
 
 class is_fiche_tampographie_constituant(models.Model):
@@ -29,13 +30,14 @@ class is_fiche_tampographie_recette(models.Model):
 
 class is_fiche_tampographie_type_reglage(models.Model):
     _name = 'is.fiche.tampographie.type.reglage'
+    _order = 'name asc'
 
     name = fields.Char(u'Type de réglage de la machine', required=True)
 
 
 class is_fiche_tampographie_reglage(models.Model):
     _name = 'is.fiche.tampographie.reglage'
-    _order = 'name,type_reglage_id asc'
+    _order = 'type_reglage_id asc'
 
     name            = fields.Selection([
             ('1', '1'),
@@ -189,7 +191,7 @@ class is_fiche_tampographie(models.Model):
                 if rec.constituant_id not in recet:
                     recdict = {
                         'name': rec.name,
-                        'product_id': rec.product_id.name,
+                        'product_id': rec.product_id.is_code + ' ' + rec.product_id.name,
                         'poids': rec.poids
                     }
                     rec_dict[rec.constituant_id.name].append(recdict)
@@ -208,7 +210,8 @@ class is_fiche_tampographie(models.Model):
                         'type_reglage': rec.reglage
                     }
                     rec_dict[rec.type_reglage_id.name].append(recdict)
-        return rec_dict
+        sort_rec_dict = OrderedDict(sorted(rec_dict.items(), key=lambda x: x[0]))
+        return sort_rec_dict
 
 
     name                  = fields.Char(u'Désignation', required=True)
