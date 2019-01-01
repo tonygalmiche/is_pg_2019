@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Equipement Type -->
+        <record id="is_equipement_type_view_tree" model="ir.ui.view">
+            <field name="name">view.is.equipement.type.tree</field>
+            <field name="model">is.equipement.type</field>
+            <field name="arch" type="xml">
+                <tree string="Type equipement">
+                    <field name="name" />
+                    <field name="code" />
+                </tree>
+            </field>
+        </record>
+        <record id="is_equipement_type_view_form" model="ir.ui.view">
+            <field name="name">view.is.equipement.type.form</field>
+            <field name="model">is.equipement.type</field>
+            <field name="arch" type="xml">
+                <form string="Type equipement">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                            </group>
+                            <group>
+                                <field name="code" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="is_equipement_type_filter" model="ir.ui.view">
+            <field name="name">is_equipement_type_filter</field>
+            <field name="model">is.equipement.type</field>
+            <field name="arch" type="xml">
+                <search string="Type equipement">
+                    <field name="name" />
+                    <field name="code" />
+                </search>
+            </field>
+        </record>
+        <record id="action_is_equipement_type" model="ir.actions.act_window">
+            <field name="name">Type equipement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.equipement.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Equipement -->
+        <record id="is_equipement_view_tree" model="ir.ui.view">
+            <field name="name">view.is.equipement.tree</field>
+            <field name="model">is.equipement</field>
+            <field name="arch" type="xml">
+                <tree string="Equipement">
+                    <field name="type_id" />
+                    <field name="numero_equipement" />
+                    <field name="designation" />
+                    <field name="database_id" />
+                    <field name="constructeur" />
+                    <field name="constructeur_serie" />
+                    <field name="partner_id" />
+                    <field name="date_fabrication" />
+                    <field name="date_de_fin" />
+                </tree>
+            </field>
+        </record>
+        <record id="is_equipement_view_form" model="ir.ui.view">
+            <field name="name">view.is.equipement.form</field>
+            <field name="model">is.equipement</field>
+            <field name="arch" type="xml">
+                <form string="Equipement">
+                    <sheet>
+                        <group string="Identification" name="identification">
+                            <group colspan="4" col="4">
+                                <field name="type_id" />
+                                <field name="numero_equipement" />
+                                <field name="designation" />
+                                <field name="database_id" />
+                                <field name="constructeur" />
+                                <field name="constructeur_serie" />
+                                <field name="partner_id" />
+                                <field name="date_fabrication" />
+                                <field name="date_de_fin" />
+                            </group>
+                        </group>
+                        <group string="Préventif" name="preventif">
+                            <group colspan="4" col="4">
+                                <field name="maintenance_preventif_niveau_one" />
+                                <field name="maintenance_preventif_niveau_two" />
+                                <field name="maintenance_preventif_niveau_three" />
+                                <field name="maintenance_preventif_niveau_four" />
+                            </group>
+                        </group>
+                        <group string=" Caractéristiques" name="caracteristiques">
+                            <group colspan="4" col="4">
+                                <field name="type_presse_commande" />
+                                <field name="classe_id" />
+                                <field name="classe_commerciale" />
+                                <field name="force_fermeture" />
+                                <field name="energie" />
+                                <field name="dimension_entre_col_h" />
+                                <field name="faux_plateau" />
+                                <field name="dimension_demi_plateau_h" />
+                                <field name="dimension_hors_tout_haut" />
+                                <field name="dimension_entre_col_v" />
+                                <field name="epaisseur_moule_mini_presse" />
+                                <field name="epaisseur_faux_plateau" />
+                                <field name="epaisseur_moule_maxi" />
+                                <field name="dimension_demi_plateau_v" />
+                                <field name="dimension_hors_tout_bas" />
+                                <field name="coefficient_vis" />
+                                <field name="type_de_clapet" />
+                                <field name="pression_maximum" />
+                                <field name="vis_mn" />
+                                <field name="volume_injectable" />
+                                <field name="course_ejection" />
+                                <field name="course_ouverture" />
+                                <field name="centrage_moule" />
+                                <field name="centrage_presse" />
+                                <field name="hauteur_porte_sol" />
+                                <field name="bridage_rapide_entre_axe" />
+                                <field name="bridage_rapide_pas" />
+                                <field name="bridage_rapide" />
+                                <field name="type_huile_hydraulique" />
+                                <field name="volume_reservoir" />
+                                <field name="type_huile_graissage_centralise" />
+                                <field name="nbre_noyau_total" />
+                                <field name="nbre_noyau_pf" />
+                                <field name="nbre_noyau_pm" />
+                                <field name="nbre_circuit_eau" />
+                                <field name="nbre_zone_de_chauffe_moule" />
+                                <field name="puissance_electrique_installee" />
+                                <field name="puissance_electrique_moteur" />
+                                <field name="puissance_de_chauffe" />
+                                <field name="compensation_cosinus" />
+                                <field name="passage_buse" />
+                                <field name="option_rotation_rone" />
+                                <field name="option_rotation_rtwo" />
+                                <field name="option_arret_intermediaire" />
+                                <field name="nbre_circuit_vide" />
+                                <field name="nbre_circuit_pression" />
+                                <field name="nbre_dentrees_automate_disponibles" />
+                                <field name="nbre_de_sorties_automate_disponibles" />
+                                <field name="dimension_chambre" />
+                                <field name="nbre_de_voie" />
+                                <field name="capacite_de_levage" />
+                                <field name="dimension_bande" />
+                                <field name="dimension_cage" />
+                                <field name="poids_kg" />
+                                <field name="affectation_sur_le_site" />
+                                <field name="is_mold_ids" widget="many2many_tags" />
+                                <field name="is_dossierf_ids" widget="many2many_tags" />
+                                <field name="type_de_fluide" />
+                                <field name="temperature_maximum" />
+                                <field name="puissance_de_refroidissement" />
+                                <field name="debit_maximum" />
+                                <field name="volume_l" />
+                                <field name="option_depresssion" />
+                                <field name="mesure_debit" />
+                                <field name="base_capacitaire" />
+                                <field name="emplacement_affectation_pe" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="is_equipement_filter" model="ir.ui.view">
+            <field name="name">is_equipement_filter</field>
+            <field name="model">is.equipement</field>
+            <field name="arch" type="xml">
+                <search string="Equipement">
+                    <field name="type_id" />
+                    <field name="numero_equipement" />
+                    <field name="designation" />
+                    <field name="database_id" />
+                    <field name="constructeur" />
+                    <field name="constructeur_serie" />
+                    <field name="partner_id" />
+                    <field name="date_fabrication" />
+                    <field name="date_de_fin" />
+                </search>
+            </field>
+        </record>
+        <record id="action_is_equipement" model="ir.actions.act_window">
+            <field name="name">Equipement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.equipement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+    </data>
+</openerp>

@@ -15,5 +15,9 @@
         <menuitem id="menu_is_fiche_tampographie" sequence="1" name="Tampographie"     parent="menu_is_dt_tampographie" action="action_is_fiche_tampographie" />
         <menuitem id="menu_is_encres_utilisees"   sequence="1" name="Encres utilisées" parent="menu_is_dt_tampographie" action="is_encres_utilisees_action" />
 
+        <!-- Equipement -->
+        <menuitem id="menu_is_equipement_type" sequence="10" name="Type equipement" parent="is_plastigray.menu_sub_main_moyens_fabrication_table" action="action_is_equipement_type" />
+        <menuitem id="menu_is_equipement"      sequence="11" name="Equipement"      parent="is_plastigray.menu_sub_main_moyens_fabrication_table" action="action_is_equipement" />
+
     </data>
 </openerp>
