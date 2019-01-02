@@ -16,6 +16,23 @@ class is_equipement(models.Model):
     _name = "is.equipement"
     _order = 'type_id,numero_equipement,designation'
 
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for equ in self.browse(cr, uid, ids, context=context):
+            name="["+equ.numero_equipement+"] "+equ.designation
+            res.append((equ.id,name))
+        return res
+
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if name:
+            ids = self.search(cr, user, ['|',('numero_equipement','ilike', name),('designation','ilike', name)], limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context)
+        result = self.name_get(cr, user, ids, context=context)
+        return result
+
     type_id                              = fields.Many2one("is.equipement.type", u"Type équipement", required=True)
     numero_equipement                    = fields.Char(u"Numéro d'équipement", required=True)
     designation                          = fields.Char(u"Désignation", required=True)
