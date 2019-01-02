@@ -6,27 +6,29 @@ import datetime
 
 class is_equipement_type(models.Model):
     _name = 'is.equipement.type'
+    _order = 'name'
 
-    name = fields.Char('Name', required=True)
-    code = fields.Char('Code', required=True)
+    name = fields.Char(u"Type d'équipement", required=True)
+    code = fields.Char("Code", required=True)
 
 
 class is_equipement(models.Model):
     _name = "is.equipement"
+    _order = 'type_id,numero_equipement,designation'
 
-    type_id                              = fields.Many2one("is.equipement.type", u"Type équipement")
-    numero_equipement                    = fields.Char(u"Numéro d'équipement")
-    designation                          = fields.Char(u"Désignation")
-    database_id                          = fields.Many2one("is.database", "Site")
+    type_id                              = fields.Many2one("is.equipement.type", u"Type équipement", required=True)
+    numero_equipement                    = fields.Char(u"Numéro d'équipement", required=True)
+    designation                          = fields.Char(u"Désignation", required=True)
+    database_id                          = fields.Many2one("is.database", "Site", required=True)
     constructeur                         = fields.Char("Constructeur")
     constructeur_serie                   = fields.Char(u"N° constructeur/N°série")
     partner_id                           = fields.Many2one("res.partner", "Fournisseur", domain=[('is_company', '=', True), ('supplier', '=', True)])
     date_fabrication                     = fields.Date("Date de fabrication")
     date_de_fin                          = fields.Date("Date de fin")
-    maintenance_preventif_niveau_one     = fields.Float(u"Maintenance préventif niveau 1 (h)", digits=(14, 1))
-    maintenance_preventif_niveau_two     = fields.Float(u"Maintenance préventif niveau 2 (h)", digits=(14, 1))
-    maintenance_preventif_niveau_three   = fields.Float(u"Maintenance préventif niveau 3 (h)", digits=(14, 1))
-    maintenance_preventif_niveau_four    = fields.Float(u"Maintenance préventif niveau 4 (h)", digits=(14, 1))
+    maintenance_preventif_niveau1        = fields.Float(u"Maintenance préventif niveau 1 (h)", digits=(14, 1))
+    maintenance_preventif_niveau2        = fields.Float(u"Maintenance préventif niveau 2 (h)", digits=(14, 1))
+    maintenance_preventif_niveau3        = fields.Float(u"Maintenance préventif niveau 3 (h)", digits=(14, 1))
+    maintenance_preventif_niveau4        = fields.Float(u"Maintenance préventif niveau 4 (h)", digits=(14, 1))
     type_presse_commande                 = fields.Char("Type de presse/type de commande/Generation")
     classe_id                            = fields.Many2one("is.presse.classe", "Classe")
     classe_commerciale                   = fields.Char("Classe commerciale")
@@ -68,19 +70,19 @@ class is_equipement(models.Model):
     nbre_noyau_pm                        = fields.Integer("Nbre Noyau PM")
     nbre_circuit_eau                     = fields.Integer("Nbre circuit Eau")
     nbre_zone_de_chauffe_moule           = fields.Integer("Nbre de zone de chauffe moule")
-    puissance_electrique_installee       = fields.Float("Puissance Electrique Installee (kw)", digits=(14, 1))
-    puissance_electrique_moteur          = fields.Float(u"Puissance électrique moteur (kw)", digits=(14, 1))
-    puissance_de_chauffe                 = fields.Float("Puissance de chauffe (kw)", digits=(14, 1))
+    puissance_electrique_installee       = fields.Float("Puissance Electrique Installee (kw)", digits=(14, 2))
+    puissance_electrique_moteur          = fields.Float(u"Puissance électrique moteur (kw)", digits=(14, 2))
+    puissance_de_chauffe                 = fields.Float("Puissance de chauffe (kw)", digits=(14, 2))
     compensation_cosinus                 = fields.Selection([
             ("oui", "oui"),
             ("non", "non"),
         ], "Compensation cosinus")
     passage_buse = fields.Integer("Ø Passage Buse (mm)")
-    option_rotation_rone                 = fields.Selection([
+    option_rotation_r1                   = fields.Selection([
             ("oui", "oui"),
             ("non", "non"),
         ], "Option Rotation R1 (vert/horiz)")
-    option_rotation_rtwo                 = fields.Selection([
+    option_rotation_r2                   = fields.Selection([
             ("oui", "oui"),
             ("non", "non"),
         ], "Option Rotation R2")
@@ -106,8 +108,8 @@ class is_equipement(models.Model):
             ("huile", "huile"),
         ], "Type de fluide")
     temperature_maximum                  = fields.Integer(u"Température maximum (°C)")
-    puissance_de_refroidissement         = fields.Float("Puissance de refroidissement (kw)", digits=(14, 1))
-    debit_maximum                        = fields.Float(u"Débit maximum (L/min) (m3/h)", digits=(14, 1))
+    puissance_de_refroidissement         = fields.Float("Puissance de refroidissement (kw)", digits=(14, 2))
+    debit_maximum                        = fields.Float(u"Débit maximum (L/min) (m3/h)", digits=(14, 2))
     volume_l                             = fields.Integer("Volume (L)")
     option_depresssion                   = fields.Selection([
             ("oui", "oui"),

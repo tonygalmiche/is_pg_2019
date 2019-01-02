@@ -88,10 +88,10 @@
                         </group>
                         <group string="Préventif" name="preventif">
                             <group colspan="4" col="4">
-                                <field name="maintenance_preventif_niveau_one" />
-                                <field name="maintenance_preventif_niveau_two" />
-                                <field name="maintenance_preventif_niveau_three" />
-                                <field name="maintenance_preventif_niveau_four" />
+                                <field name="maintenance_preventif_niveau1" />
+                                <field name="maintenance_preventif_niveau2" />
+                                <field name="maintenance_preventif_niveau3" />
+                                <field name="maintenance_preventif_niveau4" />
                             </group>
                         </group>
                         <group string=" Caractéristiques" name="caracteristiques">
@@ -137,8 +137,8 @@
                                 <field name="puissance_de_chauffe" />
                                 <field name="compensation_cosinus" />
                                 <field name="passage_buse" />
-                                <field name="option_rotation_rone" />
-                                <field name="option_rotation_rtwo" />
+                                <field name="option_rotation_r1" />
+                                <field name="option_rotation_r2" />
                                 <field name="option_arret_intermediaire" />
                                 <field name="nbre_circuit_vide" />
                                 <field name="nbre_circuit_pression" />
