@@ -3,19 +3,31 @@
 from openerp import models, fields, api
 from openerp.tools.translate import _
 import datetime
+from openerp.exceptions import Warning
 
 
 class is_equipement_champ_line(models.Model):
     _name = "is.equipement.champ.line"
+    _order = "name"
+
+    @api.one
+    @api.constrains('name', 'equipement_type_id')
+    def check_unique_so_record(self):
+        if self.name and self.equipement_type_id:
+            filters = [('name', '=', self.name.id),
+                       ('equipement_type_id', '=', self.equipement_type_id.id)]
+            champ_ids = self.search(filters)
+            if len(champ_ids) > 1:
+                raise Warning(
+                    _('There can not be two " %s " field in the same champ.' % champ_ids[0].name.field_description))
 
     name = fields.Many2one("ir.model.fields", "Champ", domain=[
             ('model_id.model', '=', 'is.equipement'),
             ('ttype', '!=', 'boolean')
         ])
-    vsb = fields.Boolean("Visible", default=False)
+    vsb = fields.Boolean("Visible", default=True)
     obligatoire = fields.Boolean("Obligatoire", default=False)
     equipement_type_id = fields.Many2one("is.equipement.type", "Type Equipement")
-
 
 
 class is_equipement_type(models.Model):
