@@ -80,7 +80,7 @@
             <field name="arch" type="xml">
                 <form string="Equipement">
                     <sheet>
-                        <group string="Identification" name="identification">
+                        <group string="Identification" name="identification" cols="2">
                             <group>
                                 <field name="type_id" />
                                 <field name="numero_equipement" />
@@ -116,7 +116,7 @@
                             </group>
                         </group>
                         <group string="Préventif" name="preventif">
-                            <group colspan="4" col="4">
+                            <group>
                                 <field name="maintenance_preventif_niveau1_vsb" invisible="1" />
                                 <field name="maintenance_preventif_niveau1_obl" invisible="1" />
                                 <field name="maintenance_preventif_niveau1" 
@@ -140,7 +140,7 @@
                             </group>
                         </group>
                         <group string=" Caractéristiques" name="caracteristiques">
-                            <group colspan="4" col="4">
+                            <group>
                                 <field name="type_presse_commande_vsb" invisible="1" />
                                 <field name="type_presse_commande_obl" invisible="1" />
                                 <field name="type_presse_commande" 
