@@ -292,7 +292,7 @@ class is_equipement(models.Model):
             ("non", "non"),
         ], u"Option Arrêt Intermédiaire")
     
-    nbre_circuit_vide_vs                     = fields.Boolean("Nbre de circuit de vide", compute='_compute')
+    nbre_circuit_vide_vsb                     = fields.Boolean("Nbre de circuit de vide", compute='_compute')
     nbre_circuit_vide_obl                    = fields.Boolean("Nbre de circuit de vide", compute='_compute')
     nbre_circuit_vide                        = fields.Integer("Nbre de circuit de vide")
     
