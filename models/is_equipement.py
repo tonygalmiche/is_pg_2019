@@ -22,6 +22,107 @@ class is_equipement_champ_line(models.Model):
     _name = "is.equipement.champ.line"
     _order = "name"
 
+    @api.multi
+    def write(self, vals):
+        try:
+            res=super(is_equipement_champ_line, self).write(vals)
+            for obj in self:
+                obj.copy_other_database_equipment_champs()
+            return res
+        except Exception as e:
+            raise osv.except_osv(_('Equipement Champs!'),
+                             _('(%s).') % str(e).decode('utf-8'))
+
+    @api.model
+    def create(self, vals):
+        try:
+            obj=super(is_equipement_champ_line, self).create(vals)
+            obj.copy_other_database_equipment_champs()
+            return obj
+        except Exception as e:
+            raise osv.except_osv(_('Equipement Champs!'),
+                             _('(%s).') % str(e).decode('utf-8'))
+
+    @api.multi
+    def unlink(self):
+        super(is_equipement_champ_line, self).unlink()
+        for obj in self:
+            cr , uid, context = self.env.args
+            context = dict(context)
+            database_obj = self.env['is.database']
+            database_lines = database_obj.search([])
+            for et in self:
+                for database in database_lines:
+                    if not database.ip_server or not database.database or not database.port_server or not database.login or not database.password:
+                        continue
+                    DB = database.database
+                    USERID = SUPERUSER_ID
+                    DBLOGIN = database.login
+                    USERPASS = database.password
+                    DB_SERVER = database.ip_server
+                    DB_PORT = database.port_server
+                    sock = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/object' % (DB_SERVER, DB_PORT))
+                    dest_is_equipement_champ_line_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'search', [('is_database_origine_id', '=', et.id),
+                                                                                                                    '|',('active','=',True),('active','=',False)], {})
+                    if dest_is_equipement_champ_line_ids:
+                        try:
+                            res = sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'unlink', dest_is_equipement_champ_line_ids,)
+                        except Exception as e:
+                            raise osv.except_osv(_('Delete Equipement Champ!'),
+                                             _('(%s).') % str(e).decode('utf-8'))
+        return True
+
+    @api.multi
+    def copy_other_database_equipment_champs(self):
+        cr , uid, context = self.env.args
+        context = dict(context)
+        database_obj = self.env['is.database']
+        database_lines = database_obj.search([])
+        for et in self:
+            for database in database_lines:
+                if not database.ip_server or not database.database or not database.port_server or not database.login or not database.password:
+                    continue
+                DB = database.database
+                USERID = SUPERUSER_ID
+                DBLOGIN = database.login
+                USERPASS = database.password
+                DB_SERVER = database.ip_server
+                DB_PORT = database.port_server
+                sock = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/object' % (DB_SERVER, DB_PORT))
+                is_equipement_champ_line_vals = self.get_is_equipement_champ_line_vals(et, DB, USERID, USERPASS, sock)
+                dest_is_equipement_champ_line_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'search', [('is_database_origine_id', '=', et.id),
+                                                                                                                '|',('active','=',True),('active','=',False)], {})
+#                 if not dest_is_equipement_champ_line_ids:
+#                     dest_is_equipement_champ_line_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'search', [('name', '=', et.name and et.name.id)], {})
+                if dest_is_equipement_champ_line_ids:
+                    sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'write', dest_is_equipement_champ_line_ids, is_equipement_champ_line_vals, {})
+                    is_equipement_champ_line_created_id = dest_is_equipement_champ_line_ids[0]
+                else:
+                    is_equipement_champ_line_created_id = sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'create', is_equipement_champ_line_vals, {})
+        return True
+
+    @api.model
+    def _get_type_id(self, et, DB, USERID, USERPASS, sock):
+        if et.equipement_type_id:
+            type_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'search', [('is_database_origine_id', '=', et.equipement_type_id.id)], {})
+            if not type_ids:
+                et.equipement_type_id.copy_other_database_equipement_type()
+                type_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'search', [('is_database_origine_id', '=', et.equipement_type_id.id)], {})
+            if type_ids:
+                return type_ids[0]
+        return False
+
+    @api.model
+    def get_is_equipement_champ_line_vals(self, et, DB, USERID, USERPASS, sock):
+        is_equipement_champ_line_vals = {
+            'name'                  : et.name and et.name.id,
+            'vsb'                   : et.vsb,
+            'obligatoire'           : et.obligatoire,
+            'equipement_type_id'    : self._get_type_id(et, DB, USERID, USERPASS, sock),
+            'is_database_origine_id': et.id,
+        }
+        return is_equipement_champ_line_vals
+
     @api.one
     @api.constrains('name', 'equipement_type_id')
     def check_unique_so_record(self):
@@ -33,13 +134,15 @@ class is_equipement_champ_line(models.Model):
                 raise Warning(
                     _('There can not be two " %s " field in the same champ.' % champ_ids[0].name.field_description))
 
-    name = fields.Many2one("ir.model.fields", "Champ", domain=[
-            ('model_id.model', '=', 'is.equipement'),
-            ('ttype', '!=', 'boolean')
-        ])
-    vsb = fields.Boolean("Visible", default=True)
-    obligatoire = fields.Boolean("Obligatoire", default=False)
-    equipement_type_id = fields.Many2one("is.equipement.type", "Type Equipement")
+    name                   = fields.Many2one("ir.model.fields", "Champ", domain=[
+                                                                            ('model_id.model', '=', 'is.equipement'),
+                                                                            ('ttype', '!=', 'boolean')
+                                                                        ])
+    vsb                    = fields.Boolean("Visible", default=True)
+    obligatoire            = fields.Boolean("Obligatoire", default=False)
+    equipement_type_id     = fields.Many2one("is.equipement.type", "Type Equipement")
+    is_database_origine_id = fields.Integer("Id d'origine", readonly=True, select=True)
+    active                 = fields.Boolean('Active', default=True)
 
 
 class is_equipement_type(models.Model):
@@ -57,7 +160,7 @@ class is_equipement_type(models.Model):
                                                     ])
             for equ in equp_field_ids:
                 champ_line_obj.create({
-                    'name': equ.id,
+                    'name'              : equ.id,
                     'equipement_type_id': obj.id
                 })
             return True
@@ -82,6 +185,38 @@ class is_equipement_type(models.Model):
         except Exception as e:
             raise osv.except_osv(_('Equipement Type!'),
                              _('(%s).') % str(e).decode('utf-8'))
+
+    @api.multi
+    def unlink(self):
+        super(is_equipement_type, self).unlink()
+        for obj in self:
+            cr , uid, context = self.env.args
+            context = dict(context)
+            database_obj = self.env['is.database']
+            database_lines = database_obj.search([])
+            for et in self:
+                for database in database_lines:
+                    if not database.ip_server or not database.database or not database.port_server or not database.login or not database.password:
+                        continue
+                    DB = database.database
+                    USERID = SUPERUSER_ID
+                    DBLOGIN = database.login
+                    USERPASS = database.password
+                    DB_SERVER = database.ip_server
+                    DB_PORT = database.port_server
+                    sock = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/object' % (DB_SERVER, DB_PORT))
+                    dest_is_equipement_type_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'search', [('is_database_origine_id', '=', et.id),
+                                                                                                                    '|',('active','=',True),('active','=',False)], {})
+#                     if not dest_is_equipement_type_ids:
+#                         dest_is_equipement_type_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'search', [('code', '=', et.code)], {})
+                    if dest_is_equipement_type_ids:
+                        try:
+                            res = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'unlink', dest_is_equipement_type_ids,)
+                        except Exception as e:
+                            return True
+                            raise osv.except_osv(_('Delete Equipement Type!'),
+                                             _('(%s).') % str(e).decode('utf-8'))
+        return True
 
     @api.multi
     def copy_other_database_equipement_type(self):
@@ -117,9 +252,19 @@ class is_equipement_type(models.Model):
         is_equipement_type_vals = {
             'name'                  : tools.ustr(et.name),
             'code'                  : tools.ustr(et.code),
+            'champ_line_ids'        : self._get_champ_line_ids(et, DB, USERID, USERPASS, sock),
             'is_database_origine_id': et.id,
         }
         return is_equipement_type_vals
+
+    def _get_champ_line_ids(self, et, DB, USERID, USERPASS, sock):
+        list_champ_line_ids =[]
+        for mold in et.champ_line_ids:
+            dest_champ_line_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'search', [('is_database_origine_id', '=', mold.id)], {})
+            print "::::::::>>>>>>>>>>>>>", dest_champ_line_ids
+            if dest_champ_line_ids:
+                list_champ_line_ids.append(dest_champ_line_ids[0])
+        return [(6, 0, list_champ_line_ids)]
 
     name                   = fields.Char(u"Type d'équipement", required=True)
     code                   = fields.Char("Code", required=True)
@@ -180,6 +325,31 @@ class is_equipement(models.Model):
                              _('(%s).') % str(e).decode('utf-8'))
 
     @api.multi
+    def unlink(self):
+        super(is_equipement, self).unlink()
+        for obj in self:
+            cr , uid, context = self.env.args
+            context = dict(context)
+            database_obj = self.env['is.database']
+            database_lines = database_obj.search([])
+            for equp in self:
+                for database in database_lines:
+                    if not database.ip_server or not database.database or not database.port_server or not database.login or not database.password:
+                        continue
+                    DB = database.database
+                    USERID = SUPERUSER_ID
+                    DBLOGIN = database.login
+                    USERPASS = database.password
+                    DB_SERVER = database.ip_server
+                    DB_PORT = database.port_server
+                    sock = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/object' % (DB_SERVER, DB_PORT))
+                    dest_is_equipement_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement', 'search', [('is_database_origine_id', '=', equp.id),
+                                                                                                    '|',('active','=',True),('active','=',False)], {})
+                    if dest_is_equipement_ids:
+                        res = sock.execute(DB, USERID, USERPASS, 'is.equipement', 'unlink', dest_is_equipement_ids,)
+        return True
+
+    @api.multi
     def copy_other_database_is_equipement(self):
         cr , uid, context = self.env.args
         context = dict(context)
@@ -209,8 +379,8 @@ class is_equipement(models.Model):
     @api.model
     def get_is_equipement_vals(self, equp, DB, USERID, USERPASS, sock):
         is_equipement_vals = {
-            'numero_equipement'                     : tools.ustr(equp.numero_equipement or ''),
-            'designation'                           : tools.ustr(equp.designation or ''),
+            'numero_equipement'                     : tools.ustr(equp.numero_equipement),
+            'designation'                           : tools.ustr(equp.designation),
             'database_id'                           : self._get_database_id(equp, DB, USERID, USERPASS, sock),
             'active'                                : equp.database_id and equp.database_id.database == DB and True or False,
             'is_database_origine_id'                : equp.id,
@@ -218,76 +388,77 @@ class is_equipement(models.Model):
             'constructeur'                          : tools.ustr(equp.constructeur or ''),
             'constructeur_serie'                    : tools.ustr(equp.constructeur_serie or ''),
             'partner_id'                            : self._get_partner_id(equp, DB, USERID, USERPASS, sock),
-            'date_fabrication'                      : tools.ustr(equp.date_fabrication or ''),
-            'date_de_fin'                           : tools.ustr(equp.date_de_fin or ''),
-            'maintenance_preventif_niveau1'         : tools.ustr(equp.maintenance_preventif_niveau1 or ''),
-            'maintenance_preventif_niveau2'         : tools.ustr(equp.maintenance_preventif_niveau2 or ''),
-            'maintenance_preventif_niveau3'         : tools.ustr(equp.maintenance_preventif_niveau3 or ''),
-            'maintenance_preventif_niveau4'         : tools.ustr(equp.maintenance_preventif_niveau4 or ''),
+            'date_fabrication'                      : equp.date_fabrication,
+            'date_de_fin'                           : equp.date_de_fin,
+            'maintenance_preventif_niveau1'         : tools.ustr(equp.maintenance_preventif_niveau1),
+            'maintenance_preventif_niveau2'         : tools.ustr(equp.maintenance_preventif_niveau2),
+            'maintenance_preventif_niveau3'         : tools.ustr(equp.maintenance_preventif_niveau3),
+            'maintenance_preventif_niveau4'         : tools.ustr(equp.maintenance_preventif_niveau4),
             'type_presse_commande'                  : tools.ustr(equp.type_presse_commande or ''),
             'classe_id'                             : self._get_classe_id(equp, DB, USERID, USERPASS, sock),
             'classe_commerciale'                    : tools.ustr(equp.classe_commerciale or ''),
-            'force_fermeture'                       : tools.ustr(equp.force_fermeture or ''),
+            'force_fermeture'                       : tools.ustr(equp.force_fermeture),
             'energie'                               : tools.ustr(equp.energie or ''),
-            'dimension_entre_col_h'                 : tools.ustr(equp.dimension_entre_col_h or ''),
-            'faux_plateau'                          : tools.ustr(equp.faux_plateau or ''),
-            'dimension_demi_plateau_h'              : tools.ustr(equp.dimension_demi_plateau_h or ''),
-            'dimension_hors_tout_haut'              : tools.ustr(equp.dimension_hors_tout_haut or ''),
-            'dimension_entre_col_v'                 : tools.ustr(equp.dimension_entre_col_v or ''),
-            'epaisseur_moule_mini_presse'           : tools.ustr(equp.epaisseur_moule_mini_presse or ''),
-            'epaisseur_faux_plateau'                : tools.ustr(equp.epaisseur_faux_plateau or ''),
-            'epaisseur_moule_maxi'                  : tools.ustr(equp.epaisseur_moule_maxi or ''),
-            'dimension_demi_plateau_v'              : tools.ustr(equp.dimension_demi_plateau_v or ''),
-            'dimension_hors_tout_bas'               : tools.ustr(equp.dimension_hors_tout_bas or ''),
+            'dimension_entre_col_h'                 : tools.ustr(equp.dimension_entre_col_h),
+            'faux_plateau'                          : tools.ustr(equp.faux_plateau),
+            'dimension_demi_plateau_h'              : tools.ustr(equp.dimension_demi_plateau_h),
+            'dimension_hors_tout_haut'              : tools.ustr(equp.dimension_hors_tout_haut),
+            'dimension_entre_col_v'                 : tools.ustr(equp.dimension_entre_col_v),
+            'epaisseur_moule_mini_presse'           : tools.ustr(equp.epaisseur_moule_mini_presse),
+            'epaisseur_faux_plateau'                : tools.ustr(equp.epaisseur_faux_plateau),
+            'epaisseur_moule_maxi'                  : tools.ustr(equp.epaisseur_moule_maxi),
+            'dimension_demi_plateau_v'              : tools.ustr(equp.dimension_demi_plateau_v),
+            'dimension_hors_tout_bas'               : tools.ustr(equp.dimension_hors_tout_bas),
             'coefficient_vis'                       : tools.ustr(equp.coefficient_vis or ''),
-            'type_de_clapet'                        : tools.ustr(equp.type_de_clapet or ''),
-            'pression_maximum'                      : tools.ustr(equp.pression_maximum or ''),
-            'vis_mn'                                : tools.ustr(equp.vis_mn or ''),
-            'volume_injectable'                     : tools.ustr(equp.volume_injectable or ''),
-            'course_ejection'                       : tools.ustr(equp.course_ejection or ''),
-            'course_ouverture'                      : tools.ustr(equp.course_ouverture or ''),
-            'centrage_moule'                        : tools.ustr(equp.centrage_moule or ''),
-            'centrage_presse'                       : tools.ustr(equp.centrage_presse or ''),
-            'hauteur_porte_sol'                     : tools.ustr(equp.hauteur_porte_sol or ''),
-            'bridage_rapide_entre_axe'              : tools.ustr(equp.bridage_rapide_entre_axe or ''),
-            'bridage_rapide_pas'                    : tools.ustr(equp.bridage_rapide_pas or ''),
-            'bridage_rapide'                        : tools.ustr(equp.bridage_rapide or ''),
+            'type_de_clapet'                        : equp.type_de_clapet,
+            'pression_maximum'                      : tools.ustr(equp.pression_maximum),
+            'vis_mn'                                : tools.ustr(equp.vis_mn),
+            'volume_injectable'                     : tools.ustr(equp.volume_injectable),
+            'course_ejection'                       : tools.ustr(equp.course_ejection),
+            'course_ouverture'                      : tools.ustr(equp.course_ouverture),
+            'centrage_moule'                        : tools.ustr(equp.centrage_moule),
+            'centrage_presse'                       : tools.ustr(equp.centrage_presse),
+            'hauteur_porte_sol'                     : tools.ustr(equp.hauteur_porte_sol),
+            'bridage_rapide_entre_axe'              : tools.ustr(equp.bridage_rapide_entre_axe),
+            'bridage_rapide_pas'                    : tools.ustr(equp.bridage_rapide_pas),
+            'bridage_rapide'                        : tools.ustr(equp.bridage_rapide),
             'type_huile_hydraulique'                : tools.ustr(equp.type_huile_hydraulique or ''),
-            'volume_reservoir'                      : tools.ustr(equp.volume_reservoir or ''),
+            'volume_reservoir'                      : tools.ustr(equp.volume_reservoir),
             'type_huile_graissage_centralise'       : tools.ustr(equp.type_huile_graissage_centralise or ''),
-            'nbre_noyau_total'                      : tools.ustr(equp.nbre_noyau_total or ''),
-            'nbre_noyau_pf'                         : tools.ustr(equp.nbre_noyau_pf or ''),
-            'nbre_noyau_pm'                         : tools.ustr(equp.nbre_noyau_pm or ''),
-            'nbre_circuit_eau'                      : tools.ustr(equp.nbre_circuit_eau or ''),
-            'nbre_zone_de_chauffe_moule'            : tools.ustr(equp.nbre_zone_de_chauffe_moule or ''),
-            'puissance_electrique_installee'        : tools.ustr(equp.puissance_electrique_installee or ''),
-            'puissance_electrique_moteur'           : tools.ustr(equp.puissance_electrique_moteur or ''),
-            'puissance_de_chauffe'                  : tools.ustr(equp.puissance_de_chauffe or ''),
-            'compensation_cosinus'                  : tools.ustr(equp.compensation_cosinus or ''),
-            'passage_buse'                          : tools.ustr(equp.passage_buse or ''),
-            'option_rotation_r1'                    : tools.ustr(equp.option_rotation_r1 or ''),
-            'option_rotation_r2'                    : tools.ustr(equp.option_rotation_r2 or ''),
-            'option_arret_intermediaire'            : tools.ustr(equp.option_arret_intermediaire or ''),
-            'nbre_circuit_vide'                     : tools.ustr(equp.nbre_circuit_vide or ''),
-            'nbre_circuit_pression'                 : tools.ustr(equp.nbre_circuit_pression or ''),
-            'nbre_dentrees_automate_disponibles'    : tools.ustr(equp.nbre_dentrees_automate_disponibles or ''),
-            'nbre_de_sorties_automate_disponibles'  : tools.ustr(equp.nbre_de_sorties_automate_disponibles or ''),
-            'dimension_chambre'                     : tools.ustr(equp.dimension_chambre or ''),
-            'nbre_de_voie'                          : tools.ustr(equp.nbre_de_voie or ''),
-            'capacite_de_levage'                    : tools.ustr(equp.capacite_de_levage or ''),
-            'dimension_bande'                       : tools.ustr(equp.dimension_bande or ''),
-            'dimension_cage'                        : tools.ustr(equp.dimension_cage or ''),
-            'poids_kg'                              : tools.ustr(equp.poids_kg or ''),
+            'nbre_noyau_total'                      : tools.ustr(equp.nbre_noyau_total),
+            'nbre_noyau_pf'                         : tools.ustr(equp.nbre_noyau_pf),
+            'nbre_noyau_pm'                         : tools.ustr(equp.nbre_noyau_pm),
+            'nbre_circuit_eau'                      : tools.ustr(equp.nbre_circuit_eau),
+            'nbre_zone_de_chauffe_moule'            : tools.ustr(equp.nbre_zone_de_chauffe_moule),
+            'puissance_electrique_installee'        : tools.ustr(equp.puissance_electrique_installee),
+            'puissance_electrique_moteur'           : tools.ustr(equp.puissance_electrique_moteur),
+            'puissance_de_chauffe'                  : tools.ustr(equp.puissance_de_chauffe),
+            'compensation_cosinus'                  : equp.compensation_cosinus,
+            'passage_buse'                          : tools.ustr(equp.passage_buse),
+            'option_rotation_r1'                    : equp.option_rotation_r1,
+            'option_rotation_r2'                    : equp.option_rotation_r2,
+            'option_arret_intermediaire'            : equp.option_arret_intermediaire,
+            'nbre_circuit_vide'                     : tools.ustr(equp.nbre_circuit_vide),
+            'nbre_circuit_pression'                 : tools.ustr(equp.nbre_circuit_pression),
+            'nbre_dentrees_automate_disponibles'    : tools.ustr(equp.nbre_dentrees_automate_disponibles),
+            'nbre_de_sorties_automate_disponibles'  : tools.ustr(equp.nbre_de_sorties_automate_disponibles),
+            'dimension_chambre'                     : tools.ustr(equp.dimension_chambre),
+            'nbre_de_voie'                          : tools.ustr(equp.nbre_de_voie),
+            'capacite_de_levage'                    : tools.ustr(equp.capacite_de_levage),
+            'dimension_bande'                       : tools.ustr(equp.dimension_bande),
+            'dimension_cage'                        : tools.ustr(equp.dimension_cage),
+            'poids_kg'                              : tools.ustr(equp.poids_kg),
             'affectation_sur_le_site'               : tools.ustr(equp.affectation_sur_le_site or ''),
             'is_mold_ids'                           : self._get_mold_ids(equp, DB, USERID, USERPASS, sock),
             'is_dossierf_ids'                       : self._get_dossierf_ids(equp, DB, USERID, USERPASS, sock),
-            'type_de_fluide'                        : tools.ustr(equp.type_de_fluide or ''),
-            'temperature_maximum'                   : tools.ustr(equp.temperature_maximum or ''),
-            'puissance_de_refroidissement'          : tools.ustr(equp.puissance_de_refroidissement or ''),
-            'debit_maximum'                         : tools.ustr(equp.debit_maximum or ''),
-            'volume_l'                              : tools.ustr(equp.volume_l or ''),
-            'option_depresssion'                    : tools.ustr(equp.option_depresssion or ''),
-            'base_capacitaire'                      : tools.ustr(equp.base_capacitaire or ''),
+            'type_de_fluide'                        : equp.type_de_fluide,
+            'temperature_maximum'                   : tools.ustr(equp.temperature_maximum),
+            'puissance_de_refroidissement'          : tools.ustr(equp.puissance_de_refroidissement),
+            'debit_maximum'                         : tools.ustr(equp.debit_maximum),
+            'volume_l'                              : tools.ustr(equp.volume_l),
+            'option_depresssion'                    : equp.option_depresssion,
+            'mesure_debit'                          : equp.mesure_debit,
+            'base_capacitaire'                      : tools.ustr(equp.base_capacitaire),
             'emplacement_affectation_pe'            : tools.ustr(equp.emplacement_affectation_pe or ''),
         }
         return is_equipement_vals
@@ -319,7 +490,10 @@ class is_equipement(models.Model):
     @api.model
     def _get_type_id(self, equp, DB, USERID, USERPASS, sock):
         if equp.type_id:
-            ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'search', [('is_database_origine_id', '=', equp.type_id.id)], {})
+            ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'search', [('is_database_origine_id', '=', equp.type_id.id), '|',('active','=',True),('active','=',False)], {})
+            if not ids:
+                equp.type_id.copy_other_database_equipement_type()
+                ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'search', [('is_database_origine_id', '=', equp.type_id.id), '|',('active','=',True),('active','=',False)], {})
             if ids:
                 return ids[0]
         return False

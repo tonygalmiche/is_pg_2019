@@ -10,6 +10,7 @@
                 <tree string="Type equipement">
                     <field name="name" />
                     <field name="code" />
+                    <field name="is_database_origine_id" />
                 </tree>
             </field>
         </record>
@@ -42,6 +43,9 @@
                                 <field name="obligatoire" />
                             </tree>
                         </field>
+                        <group>
+                        <field name="active" />
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -79,6 +83,7 @@
                     <field name="partner_id" />
                     <field name="date_fabrication" />
                     <field name="date_de_fin" />
+                    <field name="is_database_origine_id" />
                 </tree>
             </field>
         </record>
@@ -479,6 +484,7 @@
                                 <field name="emplacement_affectation_pe_obl" invisible="1" />
                                 <field name="emplacement_affectation_pe" 
                                     attrs="{'invisible': [('emplacement_affectation_pe_vsb', '!=', True)], 'required':  [('emplacement_affectation_pe_obl', '=', True)]}"/>
+                                <field name="active" />
                             </group>
                         </group>
                     </sheet>
