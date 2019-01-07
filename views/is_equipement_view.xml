@@ -18,6 +18,14 @@
             <field name="model">is.equipement.type</field>
             <field name="arch" type="xml">
                 <form string="Type equipement">
+                    <header>
+                        <button 
+                            name="add_champs_action"
+                            string="Add champs"
+                            type="object"
+                            class="oe_highlight"
+                        />
+                    </header>
                     <sheet>
                         <group>
                             <group>
@@ -501,8 +509,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-
 
     </data>
 </openerp>
