@@ -114,14 +114,17 @@ class is_equipement_champ_line(models.Model):
 
     @api.model
     def get_is_equipement_champ_line_vals(self, et, DB, USERID, USERPASS, sock):
-        is_equipement_champ_line_vals = {
-            'name'                  : et.name and et.name.id,
-            'vsb'                   : et.vsb,
-            'obligatoire'           : et.obligatoire,
-            'equipement_type_id'    : self._get_type_id(et, DB, USERID, USERPASS, sock),
-            'is_database_origine_id': et.id,
-        }
-        return is_equipement_champ_line_vals
+        field_id = sock.execute(DB, USERID, USERPASS, 'ir.model.fields', 'search', [('model_id.model', '=', 'is.equipement'),('name', '=', et.name.name)], {})
+        if field_id:
+            is_equipement_champ_line_vals = {
+                'name'                  : field_id and field_id[0],
+                'vsb'                   : et.vsb,
+                'obligatoire'           : et.obligatoire,
+                'equipement_type_id'    : self._get_type_id(et, DB, USERID, USERPASS, sock),
+                'is_database_origine_id': et.id,
+            }
+            return is_equipement_champ_line_vals
+        return {}
 
     @api.one
     @api.constrains('name', 'equipement_type_id')
