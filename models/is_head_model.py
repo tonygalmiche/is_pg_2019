@@ -129,6 +129,6 @@ class is_head_model_form_view(models.Model):
     model_id = fields.Many2one('ir.model', string='Modèle', required=True)
     name = fields.Char(string='Nom du modèle', required=True)
     picture = fields.Binary(string="Image", type="binary")
-    color = fields.Char(string='Couleur', required=True, default='#868482')
+    color = fields.Char(string='Couleur', required=True, default='#E1E1E1')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
