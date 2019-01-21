@@ -82,8 +82,8 @@ class is_fiche_tampographie(models.Model):
                 <p>Merci d'en prendre connaissance.</p> 
             """ 
             self.envoi_mail(email_from, email_to, subject, body_html)
-            obj.date_redaction = datetime.datetime.today()
-            obj.state = "approbation"
+            obj.sudo().date_redaction = datetime.datetime.today()
+            obj.sudo().state = "approbation"
 
     @api.multi
     def vers_approbation_to_valide_action(self):
@@ -101,8 +101,8 @@ class is_fiche_tampographie(models.Model):
                 <p>Merci d'en prendre connaissance.</p> 
             """ 
             self.envoi_mail(email_from, email_to, subject, body_html)
-            obj.date_redaction = datetime.datetime.today()
-            obj.state = "valide"
+            obj.sudo().date_redaction = datetime.datetime.today()
+            obj.sudo().state = "valide"
 
     @api.multi
     def vers_approbation_to_redaction_action(self):
@@ -120,8 +120,8 @@ class is_fiche_tampographie(models.Model):
                 <p>Merci d'en prendre connaissance.</p> 
             """
             self.envoi_mail(email_from, email_to, subject, body_html)
-            obj.date_redaction = datetime.datetime.today()
-            obj.state = "redaction"
+            obj.sudo().date_redaction = datetime.datetime.today()
+            obj.sudo().state = "redaction"
 
     @api.multi
     def vers_valide_to_approbation_action(self):
@@ -139,8 +139,8 @@ class is_fiche_tampographie(models.Model):
                 <p>Merci d'en prendre connaissance.</p> 
             """ 
             self.envoi_mail(email_from, email_to, subject, body_html)
-            obj.date_redaction = datetime.datetime.today()
-            obj.state = "approbation"
+            obj.sudo().date_redaction = datetime.datetime.today()
+            obj.sudo().state = "approbation"
 
     @api.depends('state','redacteur_id','approbateur_id')
     def _compute(self):
