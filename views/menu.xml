@@ -9,7 +9,7 @@
             <field name="name">Tampographie</field>
             <field name="sequence">89</field>
             <field name="parent_id" eval="ref('is_plastigray.menu_is_donnees_techniques')"/>
-            <field name="groups_id" eval="[(6,0,[ref('is_plastigray.is_gestionnaire_tables_group')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
         </record>
 
         <menuitem id="menu_is_fiche_tampographie" sequence="1" name="Tampographie"     parent="menu_is_dt_tampographie" action="action_is_fiche_tampographie" />
