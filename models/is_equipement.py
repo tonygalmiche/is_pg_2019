@@ -183,7 +183,6 @@ class is_equipement_type(models.Model):
         try:
             obj=super(is_equipement_type, self).create(vals)
             obj.copy_other_database_equipement_type()
-            print ss
             return obj
         except Exception as e:
             raise except_orm(_('Equipement Type!'),
@@ -264,7 +263,6 @@ class is_equipement_type(models.Model):
         list_champ_line_ids =[]
         for mold in et.champ_line_ids:
             dest_champ_line_ids = sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'search', [('is_database_origine_id', '=', mold.id)], {})
-            print "::::::::>>>>>>>>>>>>>", dest_champ_line_ids
             if dest_champ_line_ids:
                 list_champ_line_ids.append(dest_champ_line_ids[0])
         return [(6, 0, list_champ_line_ids)]
