@@ -4,9 +4,8 @@ from openerp import tools
 from openerp import models, fields, api
 from openerp.tools.translate import _
 import datetime
-from openerp.exceptions import ValidationError, Warning
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 import xmlrpclib
-from openerp.osv import osv
 import unicodedata
 from openerp import SUPERUSER_ID
 import sys
@@ -30,8 +29,8 @@ class is_equipement_champ_line(models.Model):
                 obj.copy_other_database_equipment_champs()
             return res
         except Exception as e:
-            raise osv.except_osv(_('Equipement Champs!'),
-                             _('(%s).') % str(e).decode('utf-8'))
+            raise except_orm(_('Equipement Champs!'),
+                             _(" %s ") % (str(e).decode('utf-8'),))
 
     @api.model
     def create(self, vals):
@@ -40,8 +39,8 @@ class is_equipement_champ_line(models.Model):
             obj.copy_other_database_equipment_champs()
             return obj
         except Exception as e:
-            raise osv.except_osv(_('Equipement Champs!'),
-                             _('(%s).') % str(e).decode('utf-8'))
+            raise except_orm(_('Equipement Champs!'),
+                             _(" %s ") % (str(e).decode('utf-8'),))
 
     @api.multi
     def unlink(self):
@@ -68,8 +67,8 @@ class is_equipement_champ_line(models.Model):
                         try:
                             res = sock.execute(DB, USERID, USERPASS, 'is.equipement.champ.line', 'unlink', dest_is_equipement_champ_line_ids,)
                         except Exception as e:
-                            raise osv.except_osv(_('Delete Equipement Champ!'),
-                                             _('(%s).') % str(e).decode('utf-8'))
+                            raise except_orm(_('Delete Equipement Champ!'),
+                                             _(" %s ") % (str(e).decode('utf-8'),))
         return True
 
     @api.multi
@@ -176,18 +175,19 @@ class is_equipement_type(models.Model):
                 obj.copy_other_database_equipement_type()
             return res
         except Exception as e:
-            raise osv.except_osv(_('Equipement Type!'),
-                             _('(%s).') % str(e).decode('utf-8'))
+            raise except_orm(_('Equipement Type!'),
+                             _(" %s ") % (str(e).decode('utf-8'),))
 
     @api.model
     def create(self, vals):
         try:
             obj=super(is_equipement_type, self).create(vals)
             obj.copy_other_database_equipement_type()
+            print ss
             return obj
         except Exception as e:
-            raise osv.except_osv(_('Equipement Type!'),
-                             _('(%s).') % str(e).decode('utf-8'))
+            raise except_orm(_('Equipement Type!'),
+                             _(" %s ") % (str(e).decode('utf-8'),))
 
     @api.multi
     def unlink(self):
@@ -217,8 +217,8 @@ class is_equipement_type(models.Model):
                             res = sock.execute(DB, USERID, USERPASS, 'is.equipement.type', 'unlink', dest_is_equipement_type_ids,)
                         except Exception as e:
                             return True
-                            raise osv.except_osv(_('Delete Equipement Type!'),
-                                             _('(%s).') % str(e).decode('utf-8'))
+                            raise except_orm(_('Delete Equipement Type!'),
+                                             _(" %s ") % (str(e).decode('utf-8'),))
         return True
 
     @api.multi
@@ -314,8 +314,8 @@ class is_equipement(models.Model):
                 obj.copy_other_database_is_equipement()
             return res
         except Exception as e:
-            raise osv.except_osv(_('Equipement!'),
-                             _('(%s).') % str(e).decode('utf-8'))
+            raise except_orm(_('Equipement!'),
+                             _(" %s ") % (str(e).decode('utf-8'),))
 
     @api.model
     def create(self, vals):
@@ -324,8 +324,8 @@ class is_equipement(models.Model):
             obj.copy_other_database_is_equipement()
             return obj
         except Exception as e:
-            raise osv.except_osv(_('Equipement!'),
-                             _('(%s).') % str(e).decode('utf-8'))
+            raise except_orm(_('Equipement!'),
+                             _(" %s ") % (str(e).decode('utf-8'),))
 
     @api.multi
     def unlink(self):
