@@ -383,7 +383,7 @@ class is_equipement(models.Model):
             'numero_equipement'                     : tools.ustr(equp.numero_equipement),
             'designation'                           : tools.ustr(equp.designation),
             'database_id'                           : self._get_database_id(equp, DB, USERID, USERPASS, sock),
-            'active'                                : equp.active, #equp.database_id and equp.database_id.database == DB and True or False,
+            'active'                                : equp.database_id and equp.database_id.database == DB and equp.active or False,
             'is_database_origine_id'                : equp.id,
             'type_id'                               : self._get_type_id(equp, DB, USERID, USERPASS, sock),
             'constructeur'                          : tools.ustr(equp.constructeur or ''),
