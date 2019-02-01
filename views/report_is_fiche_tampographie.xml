@@ -970,10 +970,17 @@
                                     </table>
                                 </t>
                                 
-                                <t t-if="not o.image_encrier3">
+                                <t t-if="not o.image_encrier3 and not o.image_encrier3_vsb">
                                     <table style="border-collapse: collapse;" width="100%">
                                      <tr class="classborder">
                                          <td width="26%">
+                                              <table width="100">
+                                                <tr>
+                                                    <td>
+                                                        <img src='/is_pg_2019/static/img/tampho.png' class="imgclass"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                          </td>
                                          <td width="74%">
                                              <table style="border-collapse: collapse;" width="100%">

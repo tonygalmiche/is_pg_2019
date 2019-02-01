@@ -194,7 +194,7 @@ class is_fiche_tampographie(models.Model):
                 if rec.constituant_id not in recet:
                     recdict = {
                         'name': rec.name,
-                        'product_id': rec.product_id.is_code + ' ' + rec.product_id.name,
+                        'product_id': rec.product_id and rec.product_id.is_code + ' ' + rec.product_id.name or False,
                         'poids': rec.poids
                     }
                     rec_dict[rec.constituant_id.name].append(recdict)
