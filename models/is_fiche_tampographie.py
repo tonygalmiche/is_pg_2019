@@ -243,6 +243,21 @@ class is_fiche_tampographie(models.Model):
                              _(" Add all element of reglage type in to Reglage array. "))
         return res
 
+    @api.model
+    def default_get(self, default_fields):
+        res = super(is_fiche_tampographie, self).default_get(default_fields)
+        reglage_obj = self.env['is.fiche.tampographie.reglage']
+        reglage_type_obj = self.env['is.fiche.tampographie.type.reglage']
+        ids = []
+        reglage_type_ids = reglage_type_obj.search([('active', '=', True)])
+        for rt in reglage_type_ids:
+            reglage_result = {'name':'1', 'type_reglage_id':rt.id}
+            sr = reglage_obj.create(reglage_result)
+            ids.append(sr.id)
+            res['reglage_ids'] = ids
+        return res
+
+
     name                  = fields.Char(u'Désignation', required=True)
     article_injection_id  = fields.Many2one('product.product', u'Référence pièce sortie injection', required=True)
     is_mold_dossierf      = fields.Char('Moule', related='article_injection_id.is_mold_dossierf', readonly=True)

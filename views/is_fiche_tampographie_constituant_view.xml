@@ -147,8 +147,8 @@
                                 <field name="is_mold_dossierf" />
                                 <field name="article_tampo_id" />
                                 <field name="temps_cycle" />
-                                <field name="nettoyage_materiel_id" domain="[('categ_id','in',[71])]" />
-                                <field name="nettoyage_piece_id" domain="[('categ_id','in',[71])]" />
+                                <field name="nettoyage_materiel_id" domain="[('is_category_id.name','=','71')]" />
+                                <field name="nettoyage_piece_id" domain="[('is_category_id.name','=','71')]" />
                                 <field name="duree_vie_melange" />
                             </group>
                             <group>
@@ -162,7 +162,7 @@
                                 <tree editable="bottom">
                                     <field name="name" />
                                     <field name="constituant_id" />
-                                    <field name="product_id" domain="[('categ_id','in',[71])]" />
+                                    <field name="product_id" domain="[('is_category_id.name','=','71')]" />
                                     <field name="poids" />
                                 </tree>
                             </field>
