@@ -4,6 +4,7 @@ from openerp import models, fields, api, _
 from openerp.osv.orm import BaseModel
 from lxml import etree
 import itertools
+import re
 
 
 def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -19,7 +20,7 @@ def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None,
     :raise AttributeError:
                         * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
                         * if some tag other than 'position' is found in parent view
-    :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
+    :raise Invalid ArchitectPartenaireureError: if there is view type other than form, tree, calendar, search etc defined on the structure
     """
     if context is None:
         context = {}
@@ -107,7 +108,14 @@ def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None,
             'relate': resrelate
         }
     abc= result['arch'].split('<sheet')[0]
-    if result['type'] == 'form' and result['arch'].find('<sheet') > 0:
+    s=result['arch']
+    sheetname = '<sheet>'
+    if result['type'] == 'form':
+        resul1=re.compile('<sheet(.*?)>').search(s)
+        sheetname = '<sheet'
+        if resul1:
+            sheetname = sheetname + str(resul1.group(1)) + '>'
+    if result['type'] == 'form' and result['arch'].find(sheetname) > 0:
         model_obj = self.pool['ir.model']
         model_id = model_obj.search(cr, uid,[('name','=', 'is.head.model.form.view')])
         if model_id:
@@ -118,7 +126,7 @@ def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None,
                 img_src = ""
                 if is_head.get('picture',False):
                     img_src = "<img src='data:image/gif;base64,"+is_head.get('picture')+"' height='42' width='42' />"
-                result['arch'] =  str(abc) + str("<sheet><div height='60px' width='100%' style='padding: 10px;font-size:18px;background-color: "+is_head.get('color')+";'> "+img_src+" "+is_head.get('name')+"</div><br/>") + str(result['arch'].split('<sheet')[1])
+                result['arch'] =  str(abc) + str(str(sheetname) + "<div height='60px' width='100%' style='padding: 10px;font-size:18px;background-color: "+is_head.get('color')+";'> "+img_src+" "+is_head.get('name')+"</div><br/>") + str(result['arch'].split(sheetname)[1])
     return result
 
 BaseModel.fields_view_get = fields_view_get
