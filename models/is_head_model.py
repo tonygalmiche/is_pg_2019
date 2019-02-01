@@ -106,7 +106,8 @@ def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None,
             'action': resaction,
             'relate': resrelate
         }
-    if result['type'] == 'form' and result['arch'].find('<sheet>') > 0:
+    abc= result['arch'].split('<sheet')[0]
+    if result['type'] == 'form' and result['arch'].find('<sheet') > 0:
         model_obj = self.pool['ir.model']
         model_id = model_obj.search(cr, uid,[('name','=', 'is.head.model.form.view')])
         if model_id:
@@ -117,7 +118,7 @@ def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None,
                 img_src = ""
                 if is_head.get('picture',False):
                     img_src = "<img src='data:image/gif;base64,"+is_head.get('picture')+"' height='42' width='42' />"
-                result['arch'] =  str(result['arch'].split('<sheet>')[0]) + str("<sheet><div height='60px' width='100%' style='padding: 10px;font-size:18px;background-color: "+is_head.get('color')+";'> "+img_src+" "+is_head.get('name')+"</div><br/>") + str(result['arch'].split('<sheet>')[1])
+                result['arch'] =  str(abc) + str("<sheet><div height='60px' width='100%' style='padding: 10px;font-size:18px;background-color: "+is_head.get('color')+";'> "+img_src+" "+is_head.get('name')+"</div><br/>") + str(result['arch'].split('<sheet')[1])
     return result
 
 BaseModel.fields_view_get = fields_view_get
