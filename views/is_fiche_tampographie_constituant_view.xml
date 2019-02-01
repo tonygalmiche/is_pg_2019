@@ -63,6 +63,7 @@
                                 <field name="name" />
                             </group>
                             <group>
+                                <field name="active" />
                             </group>
                         </group>
                     </sheet>
@@ -146,39 +147,46 @@
                                 <field name="is_mold_dossierf" />
                                 <field name="article_tampo_id" />
                                 <field name="temps_cycle" />
-                                <field name="nettoyage_materiel_id" />
+                                <field name="nettoyage_materiel_id" domain="[('categ_id','in',[71])]" />
+                                <field name="nettoyage_piece_id" domain="[('categ_id','in',[71])]" />
+                                <field name="duree_vie_melange" />
                             </group>
                             <group>
                                 <field name="date_redaction" />
-                                <field name="nettoyage_piece_id" />
-                                <field name="duree_vie_melange" />
                                 <field name="redacteur_id" />
                                 <field name="approbateur_id" />
                                 <field name="indice" />
                             </group>
                             <separator string="Recette" colspan="4" />
                             <field name="recette_ids" colspan="4" nolabel="1">
-                                <tree editable="top">
+                                <tree editable="bottom">
                                     <field name="name" />
                                     <field name="constituant_id" />
-                                    <field name="product_id" />
+                                    <field name="product_id" domain="[('categ_id','in',[71])]" />
                                     <field name="poids" />
                                 </tree>
                             </field>
                             <separator string="Reglage" colspan="4" />
                             <field name="reglage_ids" colspan="4" nolabel="1">
-                                <tree editable="top">
+                                <tree editable="bottom">
                                     <field name="name" />
                                     <field name="type_reglage_id" />
                                     <field name="reglage" />
+                                    <field name="active" />
                                 </tree>
                             </field>
                         </group>
                         <group>
                             <field name="image_finale" widget='image' class="oe_left oe_avatar" />
-                            <field name="image_encrier1" widget='image' class="oe_left oe_avatar" />
-                            <field name="image_encrier2" widget='image' class="oe_left oe_avatar" />
-                            <field name="image_encrier3" widget='image' class="oe_left oe_avatar" />
+                            <field name="image_encrier1_vsb" invisible="1" />
+                            <field name="image_encrier1" widget='image' 
+                                attrs="{'invisible': [('image_encrier1_vsb', '!=', True)]}" class="oe_left oe_avatar" />
+                            <field name="image_encrier2_vsb" invisible="1" />
+                            <field name="image_encrier2" widget='image' 
+                                attrs="{'invisible': [('image_encrier2_vsb', '!=', True)]}" class="oe_left oe_avatar" />
+                            <field name="image_encrier3_vsb" invisible="1" />
+                            <field name="image_encrier3" widget='image' 
+                                attrs="{'invisible': [('image_encrier3_vsb', '!=', True)]}" class="oe_left oe_avatar" />
                             <field name="image_posage" widget='image' class="oe_left oe_avatar" />
                         </group>
                     </sheet>

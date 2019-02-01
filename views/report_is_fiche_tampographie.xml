@@ -982,12 +982,12 @@
 
                                                      </td>
                                                      <td width="30%">
-                                                         <img t-if="o.image_encrier1"
+                                                         <img t-if="o.image_encrier1_vsb and o.image_encrier1"
                                                              t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
                                                              class="imgclass" />
                                                      </td>
                                                      <td width="30%">
-                                                         <img t-if="o.image_encrier2"
+                                                         <img t-if="o.image_encrier2_vsb and o.image_encrier2"
                                                              t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
                                                              class="imgclass" />
                                                      </td>
@@ -1001,6 +1001,13 @@
                                     <table style="border-collapse: collapse;" width="100%">
                                      <tr class="classborder">
                                          <td width="19%">
+                                            <table width="100">
+                                                <tr>
+                                                    <td>
+                                                        <img src='/is_pg_2019/static/img/tampho.png' class="imgclass"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                          </td>
                                          <td width="81%">
                                              <table style="border-collapse: collapse;" width="100%">
@@ -1009,17 +1016,17 @@
 
                                                      </td>
                                                      <td width="22%" >
-                                                         <img t-if="o.image_encrier1"
+                                                         <img t-if="o.image_encrier1_vsb and o.image_encrier1"
                                                              t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
                                                              class="imgclass" />
                                                      </td>
                                                      <td width="22%">
-                                                         <img t-if="o.image_encrier2"
+                                                         <img t-if="o.image_encrier2_vsb and o.image_encrier2"
                                                              t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
                                                              class="imgclass" />
                                                      </td>
                                                      <td width="22%">
-                                                         <img t-if="o.image_encrier3"
+                                                         <img t-if="o.image_encrier3_vsb and o.image_encrier3"
                                                              t-att-src="'data:image/png;base64,%s' % o.image_encrier3"
                                                              class="imgclass" />
                                                      </td>

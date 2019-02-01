@@ -5,6 +5,7 @@ from openerp.tools.translate import _
 import datetime
 from collections import defaultdict
 from collections import OrderedDict
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 
 class is_fiche_tampographie_constituant(models.Model):
@@ -32,7 +33,8 @@ class is_fiche_tampographie_type_reglage(models.Model):
     _name = 'is.fiche.tampographie.type.reglage'
     _order = 'name asc'
 
-    name = fields.Char(u'Type de réglage de la machine', required=True)
+    name   = fields.Char(u'Type de réglage de la machine', required=True)
+    active = fields.Boolean('Active', default=True)
 
 
 class is_fiche_tampographie_reglage(models.Model):
@@ -47,6 +49,7 @@ class is_fiche_tampographie_reglage(models.Model):
     type_reglage_id = fields.Many2one('is.fiche.tampographie.type.reglage', u'Type de réglage de la machine', required=True)
     reglage         = fields.Char(u'Réglage de la machine')
     tampographie_id = fields.Many2one('is.fiche.tampographie', 'Tampographie')
+    active          = fields.Boolean('Active', default=True)
 
 
 class is_fiche_tampographie(models.Model):
@@ -213,24 +216,54 @@ class is_fiche_tampographie(models.Model):
         sort_rec_dict = OrderedDict(sorted(rec_dict.items(), key=lambda x: x[0]))
         return sort_rec_dict
 
+    @api.depends('reglage_ids','reglage_ids.name')
+    def _compute(self):
+        for obj in self:
+            for cl in obj.reglage_ids:
+                if cl.name and cl.name == '1':
+                    setattr(obj, 'image_encrier1_vsb', True)
+                if cl.name and cl.name == '2':
+                    setattr(obj, 'image_encrier2_vsb', True)
+                if cl.name and cl.name == '3':
+                    setattr(obj, 'image_encrier3_vsb', True)
+
+    @api.model
+    def create(self, vals):
+        res = super(is_fiche_tampographie, self).create(vals)
+        reglage_obj = self.env['is.fiche.tampographie.type.reglage']
+        reglage_ids = reglage_obj.search([('active','=',True)])
+        tamp_reglage_ids = []
+        if reglage_ids:
+            reglage_ids = reglage_ids.ids
+            for data in res.reglage_ids:
+                if data.type_reglage_id.id in reglage_ids:
+                    reglage_ids.remove(data.type_reglage_id.id)
+        if reglage_ids:
+            raise except_orm(_('Configuration!'),
+                             _(" Add all element of reglage type in to Reglage array. "))
+        return res
 
     name                  = fields.Char(u'Désignation', required=True)
     article_injection_id  = fields.Many2one('product.product', u'Référence pièce sortie injection', required=True)
     is_mold_dossierf      = fields.Char('Moule', related='article_injection_id.is_mold_dossierf', readonly=True)
-    article_tampo_id      = fields.Many2one('product.product', u'Référence pièce typographiée', required=True)
+    article_tampo_id      = fields.Many2one('product.product', u'Référence pièce tampographiée', required=True)
     temps_cycle           = fields.Integer('Temps de cycle (s)')
-    recette_ids           = fields.One2many('is.fiche.tampographie.recette', 'tampographie_id', 'Recette')
-    reglage_ids           = fields.One2many('is.fiche.tampographie.reglage', 'tampographie_id', 'Reglage')
+    recette_ids           = fields.One2many('is.fiche.tampographie.recette', 'tampographie_id', 'Recette', copy=True)
+    reglage_ids           = fields.One2many('is.fiche.tampographie.reglage', 'tampographie_id', 'Reglage', copy=True)
     nettoyage_materiel_id = fields.Many2one('product.product', u'Nettoyage du matériel')
     nettoyage_piece_id    = fields.Many2one('product.product', u'Nettoyage de la pièce')
     duree_vie_melange     = fields.Selection([
             ('8h', '8H'),
-            ('24', '24'),
+            ('16h', '16H'),
+            ('24h', '24H'),
         ], u'Durée de vie du mélange')
     image_finale          = fields.Binary('Image Finale')
     image_encrier1        = fields.Binary('Image encrier1')
     image_encrier2        = fields.Binary('Image encrier2')
     image_encrier3        = fields.Binary('Image encrier3')
+    image_encrier1_vsb    = fields.Boolean("Image encrier1 Vsb", compute='_compute')
+    image_encrier2_vsb    = fields.Boolean("Image encrier2 Vsb", compute='_compute')
+    image_encrier3_vsb    = fields.Boolean("Image encrier3 Vsb", compute='_compute')
     image_posage          = fields.Binary('Image posage')
     redacteur_id          = fields.Many2one('res.users', u'Rédacteur', required=True, default=lambda self: self.env.user)
     approbateur_id        = fields.Many2one('res.users', 'Approbateur', required=True)
