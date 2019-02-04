@@ -227,21 +227,21 @@ class is_fiche_tampographie(models.Model):
                 if cl.name and cl.name == '3':
                     setattr(obj, 'image_encrier3_vsb', True)
 
-    @api.model
-    def create(self, vals):
-        res = super(is_fiche_tampographie, self).create(vals)
-        reglage_obj = self.env['is.fiche.tampographie.type.reglage']
-        reglage_ids = reglage_obj.search([('active','=',True)])
-        tamp_reglage_ids = []
-        if reglage_ids:
-            reglage_ids = reglage_ids.ids
-            for data in res.reglage_ids:
-                if data.type_reglage_id.id in reglage_ids:
-                    reglage_ids.remove(data.type_reglage_id.id)
-        if reglage_ids:
-            raise except_orm(_('Configuration!'),
-                             _(" Add all element of reglage type in to Reglage array. "))
-        return res
+#     @api.model
+#     def create(self, vals):
+#         res = super(is_fiche_tampographie, self).create(vals)
+#         reglage_obj = self.env['is.fiche.tampographie.type.reglage']
+#         reglage_ids = reglage_obj.search([('active','=',True)])
+#         tamp_reglage_ids = []
+#         if reglage_ids:
+#             reglage_ids = reglage_ids.ids
+#             for data in res.reglage_ids:
+#                 if data.type_reglage_id.id in reglage_ids:
+#                     reglage_ids.remove(data.type_reglage_id.id)
+#         if reglage_ids:
+#             raise except_orm(_('Configuration!'),
+#                              _(" Add all element of reglage type in to Reglage array. "))
+#         return res
 
     @api.model
     def default_get(self, default_fields):
