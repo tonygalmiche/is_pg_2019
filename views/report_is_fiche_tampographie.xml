@@ -28,7 +28,6 @@
             .rowcenter {
                 font-size:11pt;
                 font-weight: bold;
-                font-family: 'Calibri';
                 vertical-align:middle;
                 text-align:center;
                 background-color:#58ACFA;
@@ -38,7 +37,6 @@
             .footerbold {
                 font-size:8pt;
                 font-weight: bold;
-                font-family: 'Calibri';
                 vertical-align:middle;
                 text-align:center;
                 background-color:#58ACFA;
@@ -145,7 +143,6 @@
             .rowcenter1 {
                 font-size:11pt;
                 font-weight: bold;
-                font-family: 'Calibri';
                 vertical-align:middle;
                 text-align:center;
                 background-color:#58ACFA;
@@ -158,7 +155,6 @@
             .rowcenter2 {
                 font-size:11pt;
                 font-weight: bold;
-                font-family: 'Calibri';
                 vertical-align:middle;
                 text-align:center;
                 background-color:#58ACFA;
@@ -170,7 +166,6 @@
             .rowcenter3 {
                 font-size:11pt;
                 font-weight: bold;
-                font-family: 'Calibri';
                 vertical-align:top;
                 text-align:center;
                 background-color:#58ACFA;
@@ -227,6 +222,14 @@
                 border-right: 1px solid black;
                 border-left: 1px solid black;
             }
+            .frequentiel {
+                font-size: 9pt;
+                vertical-align:top;
+                text-align:left;
+                border: 1px solid black;
+                padding:3mm;
+            }
+
         </template>
 
         <template id="report_bon_transfert_layout" inherit_id="web.layout" primary="True">
@@ -340,6 +343,39 @@
                 <div class="row">
                     <table style="border-collapse: collapse;" width="100%">
                         <tr>
+                            <td width="15%" class="classborder" rowspan="2">
+                                <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo" style="max-height: 60px;"/>
+                            </td>
+                            <td width="50%" class="rowcenter" rowspan="2">
+                                <div>
+                                    FICHE DE REGLAGE TAMPOGRAPHIE
+                                </div>
+                            </td>
+                            <td width="20%"  class="rowcenter4">
+                                <div>MOULE</div>
+                            </td>
+                            <td class="rowcenter4">
+                                <div>PAGE</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="rowcenter4">
+                                <span t-field="o.is_mold_dossierf" />
+                            </td>
+                            <td class="rowcenter4">
+                                <div>
+                                    <span class="page" />
+                                    /
+                                    <span class="topage" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <!--
+                    <table style="border-collapse: collapse;" width="100%">
+                        <tr>
                             <td width="15%" class="classborder">
                                 <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo" style="max-height: 60px;"/>
                             </td>
@@ -383,6 +419,7 @@
                             </td>
                         </tr>
                     </table>
+                    -->
                 </div>
             </div>
         </template>
@@ -1057,6 +1094,37 @@
                                             <div>
                                                 <img t-if="o.image_posage" t-att-src="'data:image/png;base64,%s' % o.image_posage"
                                                     class="imgclass1" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table width="100%">
+                                    <tr>
+                                        <td class="rowcenter2">
+                                            Opérations fréquentielles / Commentaires spécifiques au processus / Observations
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="frequentiel">
+                                            1 - Niveau mini d'encre 100 g<br />
+                                            2 - Poids à vide de l'encrier 850 g (sans la bague)<br />
+                                            3 - Nettoyer le cliché, la lèvre de l'encrier, la semelle de la machine et le tampon toute les 4 H<br />
+                                            4 - Ajuster la dilution toute les  4 H par ajout de  5 g de diluant SV5<br />
+                                            5 - Stocker les tampons la pointe en haut et le cliché fermé par la pince sur l'encrier dans leur support<br />
+                                            6 - Vaporiser les clichés "record" d'huile spéciale anticorrosion avant de les stocker<br />
+                                            7 - <span style="font-weight: bold;color:red">Pour information paramètres relevés lors de l'essai</span><br />
+                                            <table style="border: 1px solid black;width:100%">
+                                                <tr>
+                                                    <td style="border: 1px solid black;width:20mm">Température</td>
+                                                    <td style="border: 1px solid black;"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border: 1px solid black;">Hygrométrie</td>
+                                                    <td style="border: 1px solid black;"></td>
+                                                </tr>
+                                            </table>
+                                            <div style="font-weight: bold;color:red">
+                                                NB: Si un des paramètres n'est applicable pour un site  mettez  non applicable « NA » devant la case correspondante
                                             </div>
                                         </td>
                                     </tr>
