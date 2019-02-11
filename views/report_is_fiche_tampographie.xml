@@ -104,6 +104,17 @@
                 border-bottom: 1px solid black;
                 padding-left:6px;
             }
+            .imgclass0 {
+                text-align:center;
+                height: 80px;
+                text-align: center;
+                width: 200px;
+                vertical-align: middle;
+                padding-left:100px;
+                padding-top:5px;
+                padding-bottom:5px;
+                border: 0px solid black;
+            }
             .imgclass {
                 text-align:center;
                 height: 80px;
@@ -825,7 +836,81 @@
                                 </table>
                             </t>
                             
-                            <t t-if="o.get_reglage_encrier() == '2'">
+                            <t t-if="o.image_encrier1_vsb and not o.image_encrier2_vsb and not o.image_encrier3_vsb">
+                                <table style="border-collapse: collapse;" width="100%">
+                                    <tr>
+                                        <td width="26%"
+                                            class="rowcenter1">
+                                            <div>
+                                                Marquage à réaliser
+                                            </div>
+                                        </td>
+                                        <td width="74%"
+                                            class="rowcenter1">
+                                            <div>
+                                                Réglages machines
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="26%"
+                                            class="classlrborder">
+                                            <table width="100">
+                                                <tr>
+                                                    <td >
+                                                            <img t-if="o.image_finale"
+                                                                t-att-src="'data:image/png;base64,%s' % o.image_finale"
+                                                                class="imgclass" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td width="74%" class="classtoptable">
+                                            <table width="100%">
+                                                <tr>
+                                                    <td width="50%"
+                                                        class="classrborder">
+                                                        N°encrier
+                                                    </td>
+                                                    <td width="50%"
+                                                        class="classlrborder">
+                                                        1
+                                                    </td>
+                                                </tr>
+                                                <t t-set="reglage_values" t-value="o.get_reglage_data()" />
+                                                <t t-foreach="reglage_values" t-as="rec">
+                                                    <tr>
+                                                        <td width="50%"
+                                                            class="colleftalign1">
+                                                            <div>
+                                                                <span t-esc="rec" />
+                                                            </div>
+                                                        </td>
+                                                        <t t-set="dict_1" t-value="{}" />
+                                                        <t t-set="dict_2" t-value="{}" />
+                                                        <t t-foreach="reglage_values[rec]" t-as="line">
+                                                            <t t-if="line['name'] == '1'">
+                                                                <t t-set="dict_1" t-value="line" />
+                                                            </t>
+                                                            <t t-if="line['name'] == '2'">
+                                                                <t t-set="dict_2" t-value="line" />
+                                                            </t>
+                                                        </t>
+                                                        <td width="50%"
+                                                            class="colcenteralign">
+                                                            <div>
+                                                                <span t-esc="dict_1.get('type_reglage','')" />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </t>
+                            
+                            <t t-if="o.image_encrier2_vsb and not o.image_encrier3_vsb">
                                 <table style="border-collapse: collapse;" width="100%">
                                     <tr>
                                         <td width="26%"
@@ -909,7 +994,7 @@
                                 </table>
                                 </t>
                                 
-                                <t t-if="o.get_reglage_encrier() == '3'">
+                                <t t-if="o.image_encrier3_vsb">
                                     <table style="border-collapse: collapse;" width="100%">
                                         <tr>
                                             <td width="19%"
@@ -1007,7 +1092,36 @@
                                     </table>
                                 </t>
                                 
-                                <t t-if="not o.image_encrier3 and not o.image_encrier3_vsb">
+                                <t t-if="o.image_encrier1_vsb and not o.image_encrier2_vsb and not o.image_encrier3_vsb">
+                                    <table style="border-collapse: collapse;" width="100%">
+                                     <tr class="classborder">
+                                         <td width="26%">
+                                              <table width="100">
+                                                <tr>
+                                                    <td>
+                                                        <img src='/is_pg_2019/static/img/tampho.png' class="imgclass"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                         </td>
+                                         <td width="74%">
+                                             <table style="border-collapse: collapse;" width="100%">
+                                                 <tr>
+                                                     <td width="50%">
+
+                                                     </td>
+                                                     <td width="50%">
+                                                         <img t-if="o.image_encrier1_vsb and o.image_encrier1"
+                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
+                                                             class="imgclass0" />
+                                                     </td>
+                                                 </tr>
+                                             </table>
+                                         </td>
+                                     </tr>
+                                    </table>
+                                </t>
+                                <t t-if="o.image_encrier2_vsb and not o.image_encrier3_vsb">
                                     <table style="border-collapse: collapse;" width="100%">
                                      <tr class="classborder">
                                          <td width="26%">
@@ -1041,7 +1155,7 @@
                                      </tr>
                                     </table>
                                 </t>
-                                <t t-if="o.image_encrier3">
+                                <t t-if="o.image_encrier3_vsb">
                                     <table style="border-collapse: collapse;" width="100%">
                                      <tr class="classborder">
                                          <td width="19%">
