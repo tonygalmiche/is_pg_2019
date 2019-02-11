@@ -226,6 +226,13 @@ class is_fiche_tampographie(models.Model):
                     setattr(obj, 'image_encrier2_vsb', True)
                 if cl.name and cl.name == '3':
                     setattr(obj, 'image_encrier3_vsb', True)
+            for cl in obj.recette_ids:
+                if cl.name and cl.name == '1':
+                    setattr(obj, 'image_encrier1r_vsb', True)
+                if cl.name and cl.name == '2':
+                    setattr(obj, 'image_encrier2r_vsb', True)
+                if cl.name and cl.name == '3':
+                    setattr(obj, 'image_encrier3r_vsb', True)
 
 #     @api.model
 #     def create(self, vals):
@@ -279,6 +286,9 @@ class is_fiche_tampographie(models.Model):
     image_encrier1_vsb    = fields.Boolean("Image encrier1 Vsb", compute='_compute')
     image_encrier2_vsb    = fields.Boolean("Image encrier2 Vsb", compute='_compute')
     image_encrier3_vsb    = fields.Boolean("Image encrier3 Vsb", compute='_compute')
+    image_encrier1r_vsb   = fields.Boolean("Image encrier1 Vsb", compute='_compute')
+    image_encrier2r_vsb   = fields.Boolean("Image encrier2 Vsb", compute='_compute')
+    image_encrier3r_vsb   = fields.Boolean("Image encrier3 Vsb", compute='_compute')
     image_posage          = fields.Binary('Image posage')
     redacteur_id          = fields.Many2one('res.users', u'Rédacteur', required=True, default=lambda self: self.env.user)
     approbateur_id        = fields.Many2one('res.users', 'Approbateur', required=True)

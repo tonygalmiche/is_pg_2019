@@ -382,55 +382,6 @@
                             </td>
                         </tr>
                     </table>
-
-
-                    <!--
-                    <table style="border-collapse: collapse;" width="100%">
-                        <tr>
-                            <td width="15%" class="classborder">
-                                <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo" style="max-height: 60px;"/>
-                            </td>
-                            <td width="50%"
-                                class="rowcenter">
-                                <div>
-                                    FICHE DE REGLAGE TAMPOGRAPHIE
-                                </div>
-                            </td>
-                            <td width="20%" class="rowcenter3">
-                                <table width="100%">
-                                    <tr>
-                                        <td class="rowcenter4">
-                                            <div>MOULE</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="rowcenter4">
-                                            <span t-field="o.is_mold_dossierf" />
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td width="15%" class="rowcenter3">
-                                <table width="100%">
-                                    <tr>
-                                        <td class="rowcenter4">
-                                            <div>PAGE</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="rowcenter4">
-                                            <div>
-                                                <span class="page" />
-                                                /
-                                                <span class="topage" />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                    -->
                 </div>
             </div>
         </template>
@@ -515,7 +466,117 @@
                                 </tr>
                             </table>
 
-                            <t t-if="o.get_recette_encrier() == '2'">
+                            <t t-if="o.image_encrier1r_vsb and not o.image_encrier2r_vsb and not o.image_encrier3r_vsb">
+                                <table style="border-collapse: collapse;" width="100%">
+                                    <tr>
+                                        <td width="26%"
+                                            class="classlrborder">
+                                            <div>
+
+                                            </div>
+                                        </td>
+                                        <td width="37%"
+                                            class="classlrborder">
+                                            <div>
+                                                Ref / désign.
+                                            </div>
+                                        </td>
+                                        <td width="37%"
+                                            class="classlrborder">
+                                            <div>
+                                                Poids (g.)
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="26%" colspan="1"
+                                            class="twocolumntable1col">
+                                            <div>
+                                                N°encrier
+                                            </div>
+                                        </td>
+                                        <td width="74%" colspan="2"
+                                            class="tablecenterheader">
+                                            <div>
+                                                1
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <t t-set="recette_values" t-value="o.get_recette_data()" />
+                                    <t t-foreach="recette_values" t-as="rec">
+                                        <tr>
+                                            <td width="26%"
+                                                class="twocolumntable1col">
+                                                <div>
+                                                    <span t-esc="rec" />
+                                                </div>
+                                            </td>
+                                            <t t-set="dict_1" t-value="{}" />
+                                            <t t-foreach="recette_values[rec]" t-as="line">
+                                                <t t-if="line['name'] == '1'">
+                                                    <t t-set="dict_1" t-value="line" />
+                                                </t>
+                                            </t>
+                                            <td width="37%"
+                                                class="colcenteralign">
+                                                <div>
+                                                    <span t-esc="dict_1.get('product_id','')" />
+                                                </div>
+                                            </td>
+                                            <td width="37%"
+                                                class="colcenteralign">
+                                                <div>
+                                                    <span t-esc="dict_1.get('poids','')" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td width="26%"
+                                            class="twocolumntable1col">
+                                            <div>
+                                                Nettoyage du matériel
+                                            </div>
+                                        </td>
+                                        <td colspan="2" width="74%"
+                                            class="colleftalign">
+                                            <div>
+                                                <span t-field="o.nettoyage_materiel_id.name" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="26%"
+                                            class="twocolumntable1col">
+                                            <div>
+                                                Nettoyage de la pièce
+                                            </div>
+                                        </td>
+                                        <td colspan="2" width="74%"
+                                            class="colleftalign">
+                                            <div>
+                                                <span t-field="o.nettoyage_piece_id.name" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="26%"
+                                            class="twocolumntable1col">
+                                            <div>
+                                                Durée de vie du mélange
+                                            </div>
+                                        </td>
+                                        <td colspan="2" width="74%"
+                                            class="colleftalign">
+                                            <div>
+                                                <span t-field="o.duree_vie_melange" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </t>
+                            
+                            <t t-if="o.image_encrier2r_vsb and not o.image_encrier3r_vsb">
                                 <table style="border-collapse: collapse;" width="100%">
                                     <tr>
                                         <td width="26%"
@@ -658,7 +719,8 @@
                                     </tr>
                                 </table>
                             </t>
-                            <t t-if="o.get_recette_encrier() == '3'">
+                            
+                            <t t-if="o.image_encrier3r_vsb">
                                 <table style="border-collapse: collapse;" width="100%">
                                     <tr>
                                         <td width="19%"
