@@ -145,7 +145,7 @@ class is_fiche_tampographie(models.Model):
             obj.sudo().date_redaction = datetime.datetime.today()
             obj.sudo().state = "approbation"
 
-    @api.depends('state','redacteur_id','approbateur_id')
+    @api.depends('state','redacteur_id','approbateur_id','reglage_ids','reglage_ids.name')
     def _compute(self):
         uid = self._uid
         for obj in self:
@@ -165,6 +165,20 @@ class is_fiche_tampographie(models.Model):
             if obj.state == 'valide' and (uid == obj.approbateur_id.id or uid == 1):
                 vsb = True
             obj.vers_valide_to_approbation_vsb = vsb
+        for cl in obj.reglage_ids:
+                if cl.name and cl.name == '1':
+                    setattr(obj, 'image_encrier1_vsb', True)
+                if cl.name and cl.name == '2':
+                    setattr(obj, 'image_encrier2_vsb', True)
+                if cl.name and cl.name == '3':
+                    setattr(obj, 'image_encrier3_vsb', True)
+        for cl in obj.recette_ids:
+            if cl.name and cl.name == '1':
+                setattr(obj, 'image_encrier1r_vsb', True)
+            if cl.name and cl.name == '2':
+                setattr(obj, 'image_encrier2r_vsb', True)
+            if cl.name and cl.name == '3':
+                setattr(obj, 'image_encrier3r_vsb', True)
 
     @api.multi
     def get_recette_encrier(self):
@@ -215,24 +229,6 @@ class is_fiche_tampographie(models.Model):
                     rec_dict[rec.type_reglage_id.name].append(recdict)
         sort_rec_dict = OrderedDict(sorted(rec_dict.items(), key=lambda x: x[0]))
         return sort_rec_dict
-
-    @api.depends('reglage_ids','reglage_ids.name')
-    def _compute(self):
-        for obj in self:
-            for cl in obj.reglage_ids:
-                if cl.name and cl.name == '1':
-                    setattr(obj, 'image_encrier1_vsb', True)
-                if cl.name and cl.name == '2':
-                    setattr(obj, 'image_encrier2_vsb', True)
-                if cl.name and cl.name == '3':
-                    setattr(obj, 'image_encrier3_vsb', True)
-            for cl in obj.recette_ids:
-                if cl.name and cl.name == '1':
-                    setattr(obj, 'image_encrier1r_vsb', True)
-                if cl.name and cl.name == '2':
-                    setattr(obj, 'image_encrier2r_vsb', True)
-                if cl.name and cl.name == '3':
-                    setattr(obj, 'image_encrier3r_vsb', True)
 
 #     @api.model
 #     def create(self, vals):
