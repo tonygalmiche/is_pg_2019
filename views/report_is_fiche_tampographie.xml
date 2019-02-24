@@ -117,9 +117,9 @@
             }
             .imgclass {
                 text-align:center;
-                height: 80px;
+                max-height: 30mm;
                 text-align: center;
-                width: 120px;
+                max-width: 40mm;
                 vertical-align: middle;
                 padding-left:20px;
                 padding-top:5px;
@@ -128,9 +128,9 @@
             }
             .imgclass1 {
                 text-align:center;
-                height: 180px;
+                max-height: 50mm;
                 text-align: center;
-                width: 150px;
+                max-width: 170mm;
                 vertical-align: middle;
                 padding-left:20px;
                 padding-top:5px;
@@ -1161,7 +1161,7 @@
                                               <table width="100">
                                                 <tr>
                                                     <td>
-                                                        <img src='/is_pg_2019/static/img/tampho.png' class="imgclass"/>
+                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass"/>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -1190,7 +1190,7 @@
                                               <table width="100">
                                                 <tr>
                                                     <td>
-                                                        <img src='/is_pg_2019/static/img/tampho.png' class="imgclass"/>
+                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass"/>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -1224,7 +1224,7 @@
                                             <table width="100">
                                                 <tr>
                                                     <td>
-                                                        <img src='/is_pg_2019/static/img/tampho.png' class="imgclass"/>
+                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass"/>
                                                     </td>
                                                 </tr>
                                             </table>
