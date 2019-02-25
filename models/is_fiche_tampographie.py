@@ -8,6 +8,13 @@ from collections import OrderedDict
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 
+_NUM_ENCRIER=[
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+]
+
+
 class is_fiche_tampographie_constituant(models.Model):
     _name = 'is.fiche.tampographie.constituant'
     _order = 'name'
@@ -17,12 +24,9 @@ class is_fiche_tampographie_constituant(models.Model):
 
 class is_fiche_tampographie_recette(models.Model):
     _name = 'is.fiche.tampographie.recette'
+    _order = 'name,constituant_id'
 
-    name            = fields.Selection([
-            ('1', '1'),
-            ('2', '2'),
-            ('3', '3'),
-        ], 'N°encrier', required=True)
+    name            = fields.Selection(_NUM_ENCRIER, 'N°encrier', required=True)
     constituant_id  = fields.Many2one('is.fiche.tampographie.constituant', 'Constituant')
     product_id      = fields.Many2one('product.product', u'Référence article')
     poids           = fields.Char('Poids (gr)')
@@ -39,13 +43,9 @@ class is_fiche_tampographie_type_reglage(models.Model):
 
 class is_fiche_tampographie_reglage(models.Model):
     _name = 'is.fiche.tampographie.reglage'
-    _order = 'type_reglage_id asc'
+    _order = 'name,type_reglage_id'
 
-    name            = fields.Selection([
-            ('1', '1'),
-            ('2', '2'),
-            ('3', '3'),
-        ], 'N°encrier', required=True)
+    name            = fields.Selection(_NUM_ENCRIER, 'N°encrier', required=True)
     type_reglage_id = fields.Many2one('is.fiche.tampographie.type.reglage', u'Type de réglage de la machine', required=True)
     reglage         = fields.Char(u'Réglage de la machine')
     tampographie_id = fields.Many2one('is.fiche.tampographie', 'Tampographie')
@@ -253,11 +253,15 @@ class is_fiche_tampographie(models.Model):
         reglage_type_obj = self.env['is.fiche.tampographie.type.reglage']
         ids = []
         reglage_type_ids = reglage_type_obj.search([('active', '=', True)])
-        for rt in reglage_type_ids:
-            reglage_result = {'name':'1', 'type_reglage_id':rt.id}
-            sr = reglage_obj.create(reglage_result)
-            ids.append(sr.id)
-            res['reglage_ids'] = ids
+        for num in _NUM_ENCRIER:
+            for rt in reglage_type_ids:
+                vals={
+                    'name':num[0], 
+                    'type_reglage_id':rt.id
+                }
+                sr = reglage_obj.create(vals)
+                ids.append(sr.id)
+        res['reglage_ids'] = ids
         return res
 
 

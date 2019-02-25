@@ -21,7 +21,7 @@ class is_encres_utilisees(models.Model):
     ift_name             = fields.Char(u'Désignation')
     article_injection_id = fields.Many2one('product.product', u'Référence pièce sortie injection')
     is_mold_dossierf     = fields.Char('Moule')
-    article_tampo_id     = fields.Many2one('product.product', u'Référence pièce typographiée')
+    article_tampo_id     = fields.Many2one('product.product', u'Référence pièce tampographiée')
 
 
 
