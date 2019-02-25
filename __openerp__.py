@@ -15,7 +15,7 @@ InfoSaône - Module Odoo pour Plastigray en 2019
         "is_plastigray",
     ], 
     "data" : [
-#         "data/sequence.xml",
+        "data/sequence.xml",
         "security/ir_model_access_is_fiche_tampographie.xml",
         "security/ot_security_view.xml",
         "views/is_fiche_tampographie_constituant_view.xml",
