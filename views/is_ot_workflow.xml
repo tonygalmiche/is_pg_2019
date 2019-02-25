@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wkf_is_ot" model="workflow">
+            <field name="name">is.ot.basic</field>
+            <field name="osv">is.ot</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <!-- Activity -->
+        <record id="act_creation" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_ot"/>
+            <field name="flow_start">True</field>
+            <field name="name">creation</field>
+        </record>
+        
+        <record id="act_analyse_ot" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_ot"/>
+            <field name="name">analyse_ot</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'analyse_ot'})</field>
+        </record>
+        <record id="act_travaux_a_realiser" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_ot"/>
+            <field name="name">travaux_a_realiser</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'travaux_a_realiser'})</field>
+        </record>
+        <record id="act_annule" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_ot"/>
+            <field name="name">annule</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">action_annule()</field>
+        </record>
+        <record id="act_travaux_a_valider" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_ot"/>
+            <field name="name">travaux_a_valider</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'travaux_a_valider'})</field>
+        </record>
+        <record id="act_termine" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_ot"/>
+            <field name="name">termine</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'termine'})</field>
+        </record>
+
+        <!-- Transistion -->
+
+        <record id="is_creation_analyse_ot" model="workflow.transition">
+            <field name="act_from" ref="act_creation"/>
+            <field name="act_to" ref="act_analyse_ot"/>
+            <field name="signal">creation_to_analyse</field>
+        </record>
+        <record id="is_analyse_ot_travaux_a_realiser" model="workflow.transition">
+            <field name="act_from" ref="act_analyse_ot"/>
+            <field name="act_to" ref="act_travaux_a_realiser"/>
+            <field name="signal">travaux_a_realiser</field>
+        </record>
+        <record id="is_analyse_ot_annule" model="workflow.transition">
+            <field name="act_from" ref="act_analyse_ot"/>
+            <field name="act_to" ref="act_annule"/>
+            <field name="signal">annule</field>
+        </record>
+        <record id="is_travaux_a_realiser_valider" model="workflow.transition">
+            <field name="act_from" ref="act_travaux_a_realiser"/>
+            <field name="act_to" ref="act_travaux_a_valider"/>
+            <field name="signal">travaux_a_valider</field>
+        </record>
+        <record id="is_travaux_a_valider_realiser" model="workflow.transition">
+            <field name="act_from" ref="act_travaux_a_valider"/>
+            <field name="act_to" ref="act_travaux_a_realiser"/>
+            <field name="signal">travaux_a_realiser</field>
+        </record>
+        <record id="is_travaux_a_valider_termine" model="workflow.transition">
+            <field name="act_from" ref="act_travaux_a_valider"/>
+            <field name="act_to" ref="act_termine"/>
+            <field name="signal">termine</field>
+        </record>
+
+    </data>
+</openerp>

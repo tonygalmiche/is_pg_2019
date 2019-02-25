@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data noupdate="1">
+        <record id="seq_type_is_ot" model="ir.sequence.type">
+            <field name="name">Gestion des OT</field>
+            <field name="code">is.ot</field>
+        </record>
+        <record id="seq_is_ot" model="ir.sequence">
+            <field name="name">Gestion des OT Sequence</field>
+            <field name="code">is.ot</field>
+            <field name="padding">5</field>
+        </record>
+
+    </data>
+</openerp>
