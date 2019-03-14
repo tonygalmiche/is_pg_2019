@@ -29,7 +29,7 @@
             <field name="name">Gestion des OT</field>
             <field name="sequence">28</field>
             <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
         </record>
 
         <menuitem id="menu_action_is_ot_form"                     sequence="1"   parent="is_gestion_des_ot_menu"          action="action_is_ot" />
