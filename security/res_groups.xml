@@ -2,21 +2,13 @@
 <openerp>
 <data noupdate="0">
 
-
-    <record model="ir.module.category" id="is_groupe_plastigray_hide_menu_category">
-        <field name="name">Groupes Hide Menu</field>
-        <field name="description">Groupes Hide Menu</field>
-        <field name="sequence">10</field>
-    </record>
     <record model="res.groups" id="is_base_principale_grp" >
         <field name="name">Menu: Principale Group</field>
         <field name="comment"></field>
-        <field name="category_id" ref="is_groupe_plastigray_hide_menu_category"/>
     </record>
     <record model="res.groups" id="is_base_secondaire_grp" >
         <field name="name">Menu: Secondaire Group</field>
         <field name="comment"></field>
-        <field name="category_id" ref="is_groupe_plastigray_hide_menu_category"/>
     </record>
 
 </data>
