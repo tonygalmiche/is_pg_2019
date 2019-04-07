@@ -16,7 +16,6 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-
 class is_equipement_champ_line(models.Model):
     _name = "is.equipement.champ.line"
     _order = "name"
@@ -281,7 +280,8 @@ class is_equipement(models.Model):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for equ in self.browse(cr, uid, ids, context=context):
-            name="["+equ.numero_equipement+"] "+equ.designation
+            #name="["+equ.numero_equipement+"] "+equ.designation
+            name=equ.numero_equipement
             res.append((equ.id,name))
         return res
 
@@ -520,6 +520,64 @@ class is_equipement(models.Model):
             if equp_ids:
                 return equp_ids[0]
         return False
+
+
+    def arret_raspberry(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.raspberry_id:
+                IP=obj.raspberry_id.name
+                cmd="ssh root@"+IP+" halt"
+                os.system(cmd)
+        return
+
+    def reboot_raspberry(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.raspberry_id:
+                IP=obj.raspberry_id.name
+                cmd="ssh root@"+IP+" reboot"
+                os.system(cmd)
+        return
+
+    def rafraichir_raspberry(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.raspberry_id:
+                IP=obj.raspberry_id.name
+                cmd="ssh root@"+IP+" killall midori"
+                os.system(cmd)
+        return
+
+    def interface_presse(self, cr, uid, ids, context=None):
+        presse=""
+        for obj in self.browse(cr, uid, ids, context=context):
+            presse = obj.numero_equipement
+            user   = self.pool['res.users'].browse(cr, uid, [uid], context=context)[0]
+            soc    = user.company_id.is_code_societe
+        url = "http://raspberry-cpi/presse.php?soc="+str(soc)+"&presse="+presse
+        return {
+            'name'     : 'Go to website',
+            'res_model': 'ir.actions.act_url',
+            'type'     : 'ir.actions.act_url',
+            'target'   : 'current',
+            'url'      : url
+        }
+
+
+    @api.depends('numero_equipement')
+    def _couleur(self):
+        colors=[
+            ("blanc"  , "white"),
+            ("bleu"   , "#5BC0DE"),
+            ("orange" , "#F0AD4E"),
+            ("rouge"  , "#D9534F"),
+            ("vert"   , "#5CB85C"),
+        ]
+        for obj in self:
+            couleur=""
+            for color in colors:
+                if obj.etat_presse_id.couleur==color[0]:
+                    couleur=color[1]
+            obj.couleur=couleur
+
 
     is_database_origine_id                   = fields.Integer("Id d'origine", readonly=True, select=True)
     active                                   = fields.Boolean('Active', default=True)
@@ -853,4 +911,31 @@ class is_equipement(models.Model):
     emplacement_affectation_pe_vsb           = fields.Boolean("Emplacement / affectation PE", compute='_compute')
     emplacement_affectation_pe_obl           = fields.Boolean("Emplacement / affectation PE", compute='_compute')
     emplacement_affectation_pe               = fields.Char("Emplacement / affectation PE")
+
+
+    # Integration de THEIA
+    ordre_vsb                   = fields.Boolean("ordre_vsb", compute='_compute')
+    ordre_obl                   = fields.Boolean("ordre_obl", compute='_compute')
+    ordre                       = fields.Integer('Ordre')
+
+    ilot_id_vsb                 = fields.Boolean("ilot_id_vsb", compute='_compute')
+    ilot_id_obl                 = fields.Boolean("ilot_id_obl", compute='_compute')
+    ilot_id                     = fields.Many2one('is.ilot', u"Ilot")
+
+    raspberry_id_vsb            = fields.Boolean("raspberry_id_vsb", compute='_compute')
+    raspberry_id_obl            = fields.Boolean("raspberry_id_obl", compute='_compute')
+    raspberry_id                = fields.Many2one('is.raspberry', u"Raspberry")
+
+    etat_presse_id_vsb          = fields.Boolean("etat_presse_id_vsb", compute='_compute')
+    etat_presse_id_obl          = fields.Boolean("etat_presse_id_obl", compute='_compute')
+    etat_presse_id              = fields.Many2one('is.etat.presse', u"État Presse")
+
+    couleur_vsb                 = fields.Boolean("couleur_vsb", compute='_compute')
+    couleur_obl                 = fields.Boolean("couleur_obl", compute='_compute')
+    couleur                     = fields.Char('Couleur'            , compute='_couleur')
+
+    prioritaire_vsb             = fields.Boolean("prioritaire_vsb", compute='_compute')
+    prioritaire_obl             = fields.Boolean("prioritaire_obl", compute='_compute')
+    prioritaire                 = fields.Boolean('Presse prioritaire')
+
 

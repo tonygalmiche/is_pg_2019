@@ -127,6 +127,34 @@
                                 <field name="date_de_fin" 
                                     attrs="{'invisible': [('date_de_fin_vsb', '!=', True)], 'required':  [('date_de_fin_obl', '=', True)]}"/>
                             </group>
+
+
+
+                            <group>
+                                <field name="ordre_vsb" invisible="1" />
+                                <field name="ordre_obl" invisible="1" />
+                                <field name="ordre" attrs="{'invisible': [('ordre_vsb', '!=', True)], 'required':  [('ordre_obl', '=', True)]}"/>
+
+                                <field name="ilot_id_vsb" invisible="1" />
+                                <field name="ilot_id_obl" invisible="1" />
+                                <field name="ilot_id" attrs="{'invisible': [('ilot_id_vsb', '!=', True)], 'required':  [('ilot_id_obl', '=', True)]}"/>
+
+                                <field name="raspberry_id_vsb" invisible="1" />
+                                <field name="raspberry_id_obl" invisible="1" />
+                                <field name="raspberry_id" attrs="{'invisible': [('raspberry_id_vsb', '!=', True)], 'required':  [('raspberry_id_obl', '=', True)]}"/>
+
+                                <field name="etat_presse_id_vsb" invisible="1" />
+                                <field name="etat_presse_id_obl" invisible="1" />
+                                <field name="etat_presse_id" attrs="{'invisible': [('etat_presse_id_vsb', '!=', True)], 'required':  [('etat_presse_id_obl', '=', True)]}"/>
+
+                                <field name="couleur_vsb" invisible="1" />
+                                <field name="couleur_obl" invisible="1" />
+                                <field name="couleur" attrs="{'invisible': [('couleur_vsb', '!=', True)], 'required':  [('couleur_obl', '=', True)]}"/>
+
+                                <field name="prioritaire_vsb" invisible="1" />
+                                <field name="prioritaire_obl" invisible="1" />
+                                <field name="prioritaire" attrs="{'invisible': [('prioritaire_vsb', '!=', True)], 'required':  [('prioritaire_obl', '=', True)]}"/>
+                            </group>
                         </group>
                         <group string="Préventif" name="preventif">
                             <group>
@@ -663,6 +691,121 @@
             <field name="domain">[('type_id.code', '=', 'PR')]</field>
             <field name="view_id" ref="is_equipement_view_tree_prechauffeur"/>
         </record>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Presse THIEA -->
+    <record model="ir.ui.view" id="is_theia_presse_tree_view">
+        <field name="name">is_theia_presse_tree_view</field>
+        <field name="model">is.equipement</field>
+        <field name="priority" eval="90" />
+        <field name="arch" type="xml">
+            <tree>
+                <field name="numero_equipement"/>
+                <field name="prioritaire"/>
+                <field name="designation"/>
+                <field name="ilot_id"/>
+                <field name="ordre"/>
+                <field name="raspberry_id"/>
+                <field name="etat_presse_id" />
+                <field name="couleur" widget='pgcolor'/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_presse_form_view">
+        <field name="name">is_theia_presse_form_view</field>
+        <field name="model">is.equipement</field>
+        <field name="priority" eval="90" />
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                   <button class="oe_inline oe_stat_button"    string="Interface"    
+                            help="Interface de la presse"      name= "interface_presse"     
+                            type="object" icon="fa-eye" />
+                    <button class="oe_inline oe_stat_button"   string="Rafraichir" 
+                            help="Redémarrer le navigateur du Rapsberry" name= "rafraichir_raspberry" 
+                            type="object" icon="fa-spinner"/>
+                    <button class="oe_inline oe_stat_button"   string="Arrêter"    
+                            help="Arrêter le Raspberry"        name= "arret_raspberry"     
+                            type="object" icon="fa-power-off " groups="base.group_erp_manager"/>
+                    <button class="oe_inline oe_stat_button"   string="Redémarrer" 
+                            help="Redémarrer le Raspberry"     name= "reboot_raspberry"     
+                            type="object" icon="fa-refresh"    groups="base.group_erp_manager"/>
+                </div>
+                <group>
+                    <field name="numero_equipement"/>
+                    <field name="prioritaire" readonly="1"/>
+                    <field name="designation"/>
+                    <field name="ilot_id"/>
+                    <field name="ordre"/>
+                    <field name="raspberry_id"/>
+                    <field name="etat_presse_id" readonly="1"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <!--
+    <record model="ir.ui.view" id="is_presse_search_view" >
+        <field name="name">is.presse.search</field>
+        <field name="model">is.equipement</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="intitule"/>
+                <field name="ilot_id"/>
+                <field name="ordre"/>
+                <field name="etat_presse_id"/>
+                <filter string="Presses actives" name="presses_actives" domain="[('raspberry_id','!=',False)]" />
+                <separator/>
+                <group expand="0" string="Group By...">
+                    <filter string="Ilot"         domain="[]" context="{'group_by':'ilot_id'}"/>
+                    <filter string="État presse"  domain="[]" context="{'group_by':'etat_presse_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    -->
+    <record model="ir.actions.act_window" id="is_theia_presse_action">
+        <field name="name">Presse</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.equipement</field>
+        <!--<field name="context">{"search_default_presses_actives":1}</field>-->
+        <field name="context">{}</field>
+        <field name="domain">[('type_id.code', '=', 'PE')]</field>
+        <field name="view_mode">tree,form</field>
+        <!--<field name="view_id" ref="is_theia_presse_tree_view"/>-->
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('is_pg_2019.is_theia_presse_tree_view')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('is_pg_2019.is_theia_presse_form_view')})
+        ]"/>
+    </record>
+
+
+    <menuitem action="is_theia_presse_action" 
+              id="is_theia_presse_menu" 
+              parent="is_pg_2019.is_theia_presse_main_menu" 
+              sequence="10"/>
+
+
+
+
+
 
     </data>
 </openerp>

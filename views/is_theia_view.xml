@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <menuitem name="THEIA" id="is_theia_root_menu" sequence="5"/>
+
+    <menuitem name="Presse" id="is_theia_presse_main_menu"
+              parent="is_theia_root_menu" sequence="10"/>
+
+    <menuitem name="OF" id="menu_is_of_root" 
+              parent="is_theia_root_menu" sequence="20"/>
+
+    <menuitem name="Indicateurs" id="menu_is_cpi_indicateurs" 
+              parent="is_theia_root_menu" sequence="30"/>
+
+    <menuitem name="Paramètres" id="is_theia_parametres_menu" 
+              parent="is_theia_root_menu" sequence="40" groups="base.group_erp_manager"/>
+
+
+
+
+
+    <!-- Parc des presses -->
+    <record model="ir.actions.act_url" id="is_url_parc_presses_action">
+        <field name="name">is_url_parc_presses_action</field>
+        <field name="url">http://localhost</field>
+        <field name="type">ir.actions.act_url</field>
+    </record>
+    <menuitem name="Parc des presses" id="is_url_parc_presses_menu" action="is_url_parc_presses_action"
+              parent="is_theia_presse_main_menu" sequence="15" />
+
+
+    <record model="ir.actions.act_url" id="is_url_indicateur_rebuts_action">
+        <field name="name">is_url_indicateur_rebuts_action</field>
+        <field name="url">http://localhost</field>
+        <field name="type">ir.actions.act_url</field>
+    </record>
+    <menuitem name="Rebuts" id="is_url_indicateur_rebuts_menu" action="is_url_indicateur_rebuts_action"
+              parent="menu_is_cpi_indicateurs" sequence="10" />
+
+    <record model="ir.actions.act_url" id="is_url_indicateur_trs_action">
+        <field name="name">is_url_indicateur_trs_action</field>
+        <field name="url">http://localhost</field>
+        <field name="type">ir.actions.act_url</field>
+    </record>
+
+    <menuitem name="TRS" id="is_url_indicateur_trs_menu" action="is_url_indicateur_trs_action"
+              parent="menu_is_cpi_indicateurs" sequence="20" />
+
+
+    <!-- presse.cycle -->
+    <record model="ir.ui.view" id="is_presse_cycle_tree_view">
+        <field name="name">is.presse.cycle.tree</field>
+        <field name="model">is.presse.cycle</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_heure"/>
+                <field name="presse_id"/>
+                <field name="of_ids"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_presse_cycle_form_view">
+        <field name="name">is.presse.cycle.form</field>
+        <field name="model">is.presse.cycle</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="date_heure"/>
+                    <field name="presse_id"/>
+                    <field name="of_ids" widget="many2many_tags" />
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_presse_cycle_search_view" >
+        <field name="name">is.presse.cycle.search</field>
+        <field name="model">is.presse.cycle</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="presse_id"/>
+                <field name="of_ids" />
+                <group expand="0" string="Regroupé par...">
+                  <filter name="group_presse_id"     string="Presse"       context="{'group_by':'presse_id'}"/>
+                  <filter name="group_annee"         string="Année"        context="{'group_by':'date_heure:year'}"/>
+                  <filter name="group_mois"          string="Mois"         context="{'group_by':'date_heure:month'}"/>
+                  <filter name="group_jour"          string="Jour"         context="{'group_by':'date_heure:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_presse_cycle_action">
+        <field name="name">Cycles des presses</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.presse.cycle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_presse_cycle_action" 
+              id="menu_is_presse_cycle" 
+              parent="is_theia_presse_main_menu" 
+              sequence="20"/>
+
+
+    <!-- presse.arret -->
+    <record model="ir.ui.view" id="is_presse_arret_tree_view">
+        <field name="name">is.presse.arret.tree</field>
+        <field name="model">is.presse.arret</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_heure"/>
+                <field name="presse_id"/>
+                <field name="type_arret_id"/>
+                <field name="couleur" widget='pgcolor'/>
+                <field name="origine"/>
+                <field name="tps_arret" widget="float_time" sum="Total"/>
+                <field name="of_ids"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_presse_arret_form_view">
+        <field name="name">is.presse.arret.form</field>
+        <field name="model">is.presse.arret</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="date_heure"                      readonly="1"/>
+                    <field name="presse_id"                       readonly="1"/>
+                    <field name="type_arret_id"/>
+                    <field name="origine"                         readonly="1"/>
+                    <field name="tps_arret" widget="float_time"   readonly="1"/>
+                    <field name="of_ids" widget="many2many_tags"  readonly="1"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_presse_arret_search_view" >
+        <field name="name">is.presse.arret.search</field>
+        <field name="model">is.presse.arret</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="presse_id"/>
+                <field name="type_arret_id"/>
+                <field name="of_ids" />
+                <filter string="Production série + Essai" name="production_serie_essai" domain="['|',('type_arret_id','=',1),('type_arret_id','=',13)]"/>
+                <group expand="0" string="Regroupé par...">
+                  <filter name="group_presse_id"     string="Presse"       context="{'group_by':'presse_id'}"/>
+                  <filter name="group_type_arret_id" string="Type d'arrêt" context="{'group_by':'type_arret_id'}"/>
+                  <filter name="group_mois"          string="Mois"         context="{'group_by':'date_heure:month'}"/>
+                  <filter name="group_jour"          string="Jour"         context="{'group_by':'date_heure:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_presse_arret_action">
+        <field name="name">États des presses</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.presse.arret</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_presse_arret_action" 
+              id="menu_is_presse_arret" 
+              parent="is_theia_presse_main_menu" 
+              sequence="30"/>
+
+
+    <!-- of -->
+    <record id="bilan_fin_of_action_server" model="ir.actions.server">
+         <field name="name">Bilan de fin d'OF</field>
+        <field name="model_id" ref="model_is_of"/>
+        <field name="code">action = self.bilan_fin_of(cr, uid, context.get('active_ids', []), context=context)</field>
+    </record>
+    <record id="bilan_fin_of_ir_value" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'is.of'" name="model"/>
+        <field name="name">Bilan de fin d'OF</field>
+        <field eval="'ir.actions.server,%d'%bilan_fin_of_action_server" name="value"/>
+    </record>
+
+    <record id="calcul_cycle_moyen_action_server" model="ir.actions.server">
+         <field name="name">Calcul du cycle moyen série</field>
+        <field name="model_id" ref="model_is_of"/>
+        <field name="code">action = self.get_cycle_moyen_serie(cr, uid, context.get('active_ids', []), context=context)</field>
+    </record>
+    <record id="calcul_cycle_moyen_ir_value" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'is.of'" name="model"/>
+        <field name="name">Calcul du cycle moyen série</field>
+        <field eval="'ir.actions.server,%d'%calcul_cycle_moyen_action_server" name="value"/>
+    </record>
+
+    <record id="calcul_qt_rebut_action_server" model="ir.actions.server">
+         <field name="name">Recalcul Qt Rebuts</field>
+        <field name="model_id" ref="model_is_of"/>
+        <field name="code">action = self.get_qt_rebut(cr, uid, context.get('active_ids', []), context=context)</field>
+    </record>
+    <record id="calcul_qt_rebut_ir_value" model="ir.values">
+        <field eval="'client_action_multi'" name="key2"/>
+        <field eval="'is.of'" name="model"/>
+        <field name="name">Recalcul Qt Rebuts</field>
+        <field eval="'ir.actions.server,%d'%calcul_qt_rebut_action_server" name="value"/>
+    </record>
+
+    <record model="ir.ui.view" id="is_of_tree_view">
+        <field name="name">is.of.tree</field>
+        <field name="model">is.of</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="prioritaire"/>
+                <field name="moule"/>
+                <field name="nb_empreintes"/>
+                <field name="coef_cpi"/>
+                <field name="code_article"/>
+                <field name="categorie"/>
+                <field name="designation"/>
+                <field name="presse_id"/>
+                <field name="affecte"/>
+                <field name="ordre"/>
+                <field name="qt"/>
+                <field name="qt_theorique"/>
+                <field name="qt_declaree"/>
+                <field name="qt_restante"/>
+                <field name="qt_rebut"/>
+                <field name="qt_rebut_theo"/>
+                <field name="taux_rebut"/>
+                <field name="taux_rebut_theo"/>
+                <field name="cycle_gamme"/>
+                <field name="cycle_moyen"/>
+                <field name="cycle_moyen_serie"/>
+                <field name="tps_restant" widget="float_time"/>
+                <field name="heure_debut"/>
+                <field name="heure_fin"/>
+                <field name="heure_fin_planning"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_of_form_view">
+        <field name="name">is.of.form</field>
+        <field name="model">is.of</field>
+        <field name="arch" type="xml">
+        <form>
+            <header>
+                <button 
+                    name="envoyer_par_mail_action"
+                    string="Envoyer par mail le blian de fin d'OF"
+                    type="object"
+                    groups="base.group_system"
+                />
+            </header>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="name"          readonly="1"/>
+                        <field name="prioritaire"   readonly="1"/>
+                        <field name="moule"         readonly="1"/>
+                        <field name="nb_empreintes"/>
+                        <field name="coef_cpi"      readonly="1"/>
+                        <field name="code_article"  readonly="1"/>
+                        <field name="categorie"     readonly="1"/>
+                        <field name="designation"   readonly="1"/>
+                        <field name="uc"            readonly="1"/>
+                        <field name="cout"          readonly="1"/>
+                        <field name="presse_id"     readonly="1"/>
+                        <field name="affecte"       readonly="1"/>
+                        <field name="ordre"         readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="qt"                readonly="1"/>
+                        <field name="nb_cycles"         invisible="1"/>
+                        <field name="qt_theorique"      readonly="1"/>
+                        <field name="qt_declaree"       readonly="1"/>
+                        <field name="qt_restante"       readonly="1"/>
+                        <field name="qt_rebut"          readonly="1"/>
+                        <field name="qt_rebut_theo"     readonly="1"/>
+                        <field name="taux_rebut"        readonly="1"/>
+                        <field name="taux_rebut_theo"   readonly="1"/>
+                        <field name="cycle_gamme"       readonly="1"/>
+                        <field name="cycle_moyen"       readonly="1"/>
+                        <field name="cycle_moyen_serie" readonly="1"/>
+                        <field name="tps_restant"       readonly="1" widget="float_time"/>
+                        <field name="heure_debut"       readonly="1"/>
+                        <field name="heure_fin"         readonly="1"/>
+                        <field name="heure_fin_planning" readonly="1"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="tps_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="etat_presse_id" />
+                                <field name="tps_arret" widget="float_time" sum="Total"/>
+                                <field name="couleur" widget='pgcolor'/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="rebut_ids" nolabel="1" readonly="1">
+                            <tree>
+                                 <field name="defaut_id" />
+                                 <field name="qt_rebut" sum="Total"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+
+    <!-- Cette vue permet de rendre modifiable certains champs au groupe 'Gestionnaire THEIA' -->
+    <record id="is_of_gestionnaire_form_view" model="ir.ui.view">
+        <field name="name">is_of_gestionnaire_form_view</field>
+        <field name="model">is.of</field>
+        <field name="inherit_id" ref="is_pg_2019.is_of_form_view"/>
+        <field name="groups_id" eval="[(4, ref('is_plastigray.group_gestionnaire_cpi_raspberry'))]"/>
+        <field name="arch" type="xml">
+            <field name="coef_cpi" position="replace">
+                <field name="coef_cpi"/>
+            </field>
+            <field name="heure_debut" position="replace">
+                <field name="heure_debut"/>
+            </field>
+            <field name="heure_fin" position="replace">
+                <field name="heure_fin"/>
+            </field>
+            <field name="presse_id" position="replace">
+                <field name="presse_id"/>
+            </field>
+            <field name="qt_theorique" position="replace">
+                <field name="qt_theorique"/>
+            </field>
+            <field name="qt_declaree" position="replace">
+                <field name="qt_declaree"/>
+            </field>
+            <field name="qt_restante" position="replace">
+                <field name="qt_restante"/>
+            </field>
+            <field name="qt_rebut" position="replace">
+                <field name="qt_rebut"/>
+            </field>
+            <field name="cycle_gamme" position="replace">
+                <field name="cycle_gamme"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="is_of_search_view" >
+        <field name="name">is.of.search</field>
+        <field name="model">is.of</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="moule"/>
+                <field name="code_article"/>
+                <field name="categorie"/>
+                <field name="designation"/>
+                <field name="ordre"/>
+                <field name="presse_id"/>
+                <group expand="0" string="Regroupé par...">
+                  <filter name="group_presse_id"    string="Presse"         context="{'group_by':'presse_id'}"/>
+                  <filter name="group_moule"        string="Moule"          context="{'group_by':'moule'}"/>
+                  <filter name="group_code_article" string="Article"        context="{'group_by':'code_article'}"/>
+                  <filter name="group_mois"         string="Mois"           context="{'group_by':'heure_debut:month'}"/>
+                  <filter name="group_jour"         string="Jour"           context="{'group_by':'heure_debut:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_of_en_cours_action">
+        <field name="name">OF en cours</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.of</field>
+        <field name="domain">[('heure_debut', '!=', False),('heure_fin', '=', False)]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_of_en_cours_action" 
+              id="menu_is_of_en_cours" 
+              parent="menu_is_of_root" 
+              sequence="10"/>
+    <record model="ir.actions.act_window" id="is_of_termines_action">
+        <field name="name">OF terminés</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.of</field>
+        <field name="domain">[('heure_debut', '!=', False),('heure_fin', '!=', False)]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_of_termines_action" 
+              id="menu_is_of_termines" 
+              parent="menu_is_of_root" 
+              sequence="12"/>
+    <record model="ir.actions.act_window" id="is_of_suivant_action">
+        <field name="name">OF suivants</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.of</field>
+        <field name="domain">[('heure_debut', '=', False),('heure_fin', '=', False)]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_of_suivant_action" 
+              id="menu_is_of_suivant" 
+              parent="menu_is_of_root" 
+              sequence="14"/>
+
+    <record model="ir.actions.act_window" id="is_of_tous_action">
+        <field name="name">Tous les OF</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.of</field>
+        <field name="domain">[]</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_of_tous_action" 
+              id="menu_is_of_tous" 
+              parent="menu_is_of_root" 
+              sequence="15"/>
+
+    <!-- Déclaration des OF -->
+    <record model="ir.ui.view" id="is_of_declaration_tree_view">
+        <field name="name">is.of.declaration.tree</field>
+        <field name="model">is.of.declaration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="of_id"/>
+                <field name="num_carton"/>
+                <field name="qt_bonne"/>
+                <field name="qt_rebut"/>
+                <field name="defaut_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_of_declaration_form_view">
+        <field name="name">is.of.declaration.form</field>
+        <field name="model">is.of.declaration</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name" />
+                    <field name="of_id" />
+                    <field name="num_carton"/>
+                    <field name="qt_bonne"/>
+                    <field name="qt_rebut"/>
+                    <field name="defaut_id"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_of_declaration_search_view" >
+        <field name="name">is.of.declaration.search</field>
+        <field name="model">is.of.declaration</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="of_id"/>
+                <field name="num_carton"/>
+                <field name="defaut_id"/>
+                <group expand="0" string="Regroupé par...">
+                  <filter name="group_of_id"     string="OF"             context="{'group_by':'of_id'}"/>
+                  <filter name="group_defaut_id" string="Type de défaut" context="{'group_by':'defaut_id'}"/>
+                  <filter name="group_mois"      string="Mois"           context="{'group_by':'name:month'}"/>
+                  <filter name="group_jour"      string="Jour"           context="{'group_by':'name:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_of_declaration_action">
+        <field name="name">Déclaration des OF</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.of.declaration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_of_declaration_action" 
+              id="menu_is_of_declaration" 
+              parent="menu_is_of_root" 
+              sequence="20"/>
+
+
+    <!-- Ilot -->
+    <!--
+    <record model="ir.ui.view" id="is_ilot_tree_view">
+        <field name="name">is.ilot.tree</field>
+        <field name="model">is.ilot</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_ilot_form_view">
+        <field name="name">is.ilot.form</field>
+        <field name="model">is.ilot</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_ilot_search_view" >
+        <field name="name">is.ilot.search</field>
+        <field name="model">is.ilot</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    -->
+    <record model="ir.actions.act_window" id="is_theia_ilot_action">
+        <field name="name">Ilot</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.ilot</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_theia_ilot_action"
+              id="is_theia_ilot_menu"
+              parent="is_theia_parametres_menu"
+              sequence="30" groups="base.group_erp_manager"/>
+
+
+
+    <!-- Type de défaut des rebuts -->
+    <record model="ir.ui.view" id="is_type_defaut_tree_view">
+        <field name="name">is.type.defaut.tree</field>
+        <field name="model">is.type.defaut</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_type_defaut_form_view">
+        <field name="name">is.type.defaut.form</field>
+        <field name="model">is.type.defaut</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_type_defaut_search_view" >
+        <field name="name">is.type.defaut.search</field>
+        <field name="model">is.type.defaut</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_type_defaut_action">
+        <field name="name">Type de défaut des rebuts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.type.defaut</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem action="is_type_defaut_action" 
+              id="menu_is_type_defaut" 
+              parent="is_theia_parametres_menu" 
+              sequence="40" groups="base.group_erp_manager"/>
+
+
+    <!-- État Presse -->
+    <record model="ir.ui.view" id="is_etat_presse_tree_view">
+        <field name="name">is.etat.presse.tree</field>
+        <field name="model">is.etat.presse</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="production_serie"/>
+                <field name="couleur"/>
+                <field name="colonne"/>
+                <field name="ligne"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_etat_presse_form_view">
+        <field name="name">is.etat.presse.form</field>
+        <field name="model">is.etat.presse</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="production_serie"/>
+                    <field name="couleur"/>
+                    <field name="colonne"/>
+                    <field name="ligne"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_etat_presse_search_view" >
+        <field name="name">is.etat.presse.search</field>
+        <field name="model">is.etat.presse</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="production_serie"/>
+                <field name="couleur"/>
+                <field name="colonne"/>
+                <field name="ligne"/>
+
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_etat_presse_action">
+        <field name="name">État presse</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.etat.presse</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_etat_presse_action" 
+              id="menu_is_etat_presse" 
+              parent="is_theia_parametres_menu" 
+              sequence="15" groups="base.group_erp_manager"/>
+
+
+    <!-- raspberry -->
+    <record model="ir.ui.view" id="is_raspberry_tree_view">
+        <field name="name">is.raspberry.tree</field>
+        <field name="model">is.raspberry</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_raspberry_form_view">
+        <field name="name">is.raspberry.form</field>
+        <field name="model">is.raspberry</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_raspberry_search_view" >
+        <field name="name">is.raspberry.search</field>
+        <field name="model">is.raspberry</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_raspberry_action">
+        <field name="name">Raspberry</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.raspberry</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_raspberry_action" 
+              id="menu_is_raspberry" 
+              parent="is_theia_parametres_menu" 
+              sequence="20" groups="base.group_erp_manager"/>
+
+
+    <!-- Lancement automatisé du calcul du bilan de fin d'OF -->
+    <!-- TODO : Fonction désactivée car pb d'accès concurrent avec les Raspberry -->
+    <record forcecreate="True" id="is_bilan_fin_of_scheduler_action" model="ir.cron">
+        <field name="name">Bilan de fin d'OF</field>
+        <field eval="False" name="active"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">10</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field eval="False" name="doall"/>
+        <field eval="'is.of'" name="model"/>
+        <field eval="'run_bilan_fin_of_scheduler_action'" name="function"/>
+        <field eval="'(True,)'" name="args"/>
+    </record>
+
+
+
+
+</data>
+</openerp>
