@@ -17,10 +17,24 @@
 
         <!-- Equipement -->
         <menuitem id="menu_sub_main_is_equipement"     sequence="31" name="Equipement"      parent="is_plastigray.menu_main_outillages" />
-        <menuitem id="menu_is_equipement_type"         sequence="11" name="Type equipement" parent="menu_sub_main_is_equipement" action="action_is_equipement_type" />
+
         <menuitem id="menu_is_equipement"              sequence="10" name="Equipement"      parent="menu_sub_main_is_equipement" action="action_is_equipement" />
-        <menuitem id="menu_is_equipement_presse"       sequence="12" name="Presse"          parent="menu_sub_main_is_equipement" action="action_is_equipement_presse" />
-        <menuitem id="menu_is_equipement_prechauffeur" sequence="13" name="Prechauffeur"    parent="menu_sub_main_is_equipement" action="action_is_equipement_prechauffeur" />
+        <menuitem id="menu_is_equipement_presse"       sequence="20" name="Presse"          parent="menu_sub_main_is_equipement" action="action_is_equipement_presse" />
+        <menuitem id="menu_is_equipement_prechauffeur" sequence="30" name="Prechauffeur"    parent="menu_sub_main_is_equipement" action="action_is_equipement_prechauffeur" />
+        <!--<menuitem id="menu_is_equipement_type"         sequence="90" name="Type equipement" parent="menu_sub_main_is_equipement" action="action_is_equipement_type" />-->
+
+        <record id="menu_is_equipement_type" model="ir.ui.menu" >
+            <field name="name">Type equipement</field>
+            <field name="sequence">90</field>
+            <field name="action"    ref="action_is_equipement_type"/>
+            <field name="parent_id" eval="ref('is_pg_2019.menu_sub_main_is_equipement')"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_plastigray.is_gestionnaire_tables_group')])]"/>
+        </record>
+
+
+
+
+
         <!-- Head View -->
         <menuitem id="menu_action_is_head_model_form" sequence="30"  parent="base.menu_res_company_global" action="action_is_head_model_form" />
 
