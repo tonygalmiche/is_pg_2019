@@ -12,5 +12,16 @@
             <field name="padding">5</field>
         </record>
 
+        <!-- is.ctrl100.gamme.mur.qualite -->
+        <record id="seq_type_is_ctrl100_gamme_mur_qualite" model="ir.sequence.type">
+            <field name="name">Gamme mur qualité</field>
+            <field name="code">is.ctrl100.gamme.mur.qualite</field>
+        </record>
+        <record id="seq_is_ctrl100_gamme_mur_qualite" model="ir.sequence">
+            <field name="name">Gamme mur qualité Sequence</field>
+            <field name="code">is.ctrl100.gamme.mur.qualite</field>
+            <field name="padding">5</field>
+        </record>
+
     </data>
 </openerp>

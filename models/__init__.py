@@ -7,4 +7,5 @@ import is_equipement
 import is_head_model
 import is_ot
 import res_company
+import is_ctrl100
 

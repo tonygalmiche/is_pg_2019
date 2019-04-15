@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Opérations standard -->
+        <record model="ir.ui.view" id="is_ctrl100_operation_standard_tree_view">
+            <field name="name">is.ctrl100.operation.standard.tree</field>
+            <field name="model">is.ctrl100.operation.standard</field>
+            <field name="arch" type="xml">
+                <tree string="Opérations standard">
+                    <field name="name"/>
+                    <field name="order"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_operation_standard_form_view">
+            <field name="name">is.ctrl100.operation.standard.form</field>
+            <field name="model">is.ctrl100.operation.standard</field>
+            <field name="arch" type="xml">
+            <form string="Opérations standard">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="order"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_operation_standard_search_view" >
+            <field name="name">is.ctrl100.operation.standard.search</field>
+            <field name="model">is.ctrl100.operation.standard</field>
+            <field name="arch" type="xml">
+                <search string="Opérations standard">
+                    <field name="name"/>
+                    <field name="order"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_ctrl100_operation_standard_action">
+            <field name="name">"Opérations standard"</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ctrl100.operation.standard</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Gamme mur qualité -->
+        <record model="ir.ui.view" id="is_ctrl100_gamme_mur_qualite_tree_view">
+            <field name="name">is.ctrl100.gamme.mur.qualite.tree</field>
+            <field name="model">is.ctrl100.gamme.mur.qualite</field>
+            <field name="arch" type="xml">
+                <tree string="Gamme mur qualité">
+                    <field name="name"/>
+                    <field name="type_gamme"/>
+                    <field name="date_creation"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_gamme_mur_qualite_form_view">
+            <field name="name">is.ctrl100.gamme.mur.qualite.form</field>
+            <field name="model">is.ctrl100.gamme.mur.qualite</field>
+            <field name="arch" type="xml">
+            <form string="Gamme mur qualité">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="type_gamme"/>
+                            <field name="gamme_sur"/>
+                            <field name="mold_id"     attrs="{'invisible': [('gamme_sur', '!=', 'moule')], 'required': [('gamme_sur', '=', 'moule')]}"/>
+                            <field name="dossierf_id" attrs="{'invisible': [('gamme_sur', '!=', 'dossier_f')], 'required': [('gamme_sur', '=', 'dossier_f')]}"/>
+                            <field name="product_id"  attrs="{'invisible': [('gamme_sur', '!=', 'article')], 'required': [('gamme_sur', '=', 'article')]}"/>
+                        </group>
+                        <group>
+                            <field name="date_creation"/>
+                            <field name="typologie_produit_id"/>
+                            <field name="date_fin_validite"/>
+                        </group>
+                    </group>
+                    <field name="operation_standard_ids" colspan="4">
+                        <tree editable="bottom">
+                            <field name="operation_standard_id"/>
+                            <field name="active"/>
+                        </tree>
+                    </field>
+                    <field name="operation_specifique_ids" colspan="4">
+                        <tree>
+                            <field name="operation"/>
+                            <field name="photo" widget='image' class="oe_left oe_avatar" />
+                            <field name="temps_etape"/>
+                        </tree>
+                        <form>
+                            <group>
+                                <field name="operation"/>
+	                            <field name="photo" widget='image' class="oe_left oe_avatar" />
+	                            <field name="temps_etape"/>
+                            </group>
+                        </form>
+                    </field>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_gamme_mur_qualite_search_view" >
+            <field name="name">is.ctrl100.gamme.mur.qualite.search</field>
+            <field name="model">is.ctrl100.gamme.mur.qualite</field>
+            <field name="arch" type="xml">
+                <search string="Gamme mur qualité">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_ctrl100_gamme_mur_qualite_action">
+            <field name="name">"Gamme mur qualité"</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ctrl100.gamme.mur.qualite</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Typologie de produit -->
+        <record model="ir.ui.view" id="is_ctrl100_typologie_produit_tree_view">
+            <field name="name">is.ctrl100.typologie.produit.tree</field>
+            <field name="model">is.ctrl100.typologie.produit</field>
+            <field name="arch" type="xml">
+                <tree string="Typologie de produit">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_typologie_produit_form_view">
+            <field name="name">is.ctrl100.typologie.produit.form</field>
+            <field name="model">is.ctrl100.typologie.produit</field>
+            <field name="arch" type="xml">
+            <form string="Typologie de produit">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_typologie_produit_search_view" >
+            <field name="name">is.ctrl100.typologie.produit.search</field>
+            <field name="model">is.ctrl100.typologie.produit</field>
+            <field name="arch" type="xml">
+                <search string="Typologie de produit">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_ctrl100_typologie_produit_action">
+            <field name="name">"Typologie de produit"</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ctrl100.typologie.produit</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</openerp>

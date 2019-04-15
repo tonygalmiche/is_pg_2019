@@ -31,10 +31,6 @@
             <field name="groups_id" eval="[(6,0,[ref('is_plastigray.is_gestionnaire_tables_group')])]"/>
         </record>
 
-
-
-
-
         <!-- Head View -->
         <menuitem id="menu_action_is_head_model_form" sequence="30"  parent="base.menu_res_company_global" action="action_is_head_model_form" />
 
@@ -54,6 +50,17 @@
         <menuitem id="menu_action_is_ot_travaux_a_valider_state"  sequence="106" parent="is_gestion_des_ot_menu"          action="action_is_ot_travaux_a_valider"   name="Travaux à valider"/>
         <menuitem id="menu_action_is_ot_annule_state"             sequence="107" parent="is_gestion_des_ot_menu"          action="action_is_ot_annule"              name="Annulé"/>
         <menuitem id="menu_action_is_ot_termine_state"            sequence="108" parent="is_gestion_des_ot_menu"          action="action_is_ot_termine"             name="Terminé"/>
+
+        <!-- Contrôle 100% -->
+        <record id="menu_is_controle_100" model="ir.ui.menu" >
+            <field name="name">Contrôle 100%</field>
+            <field name="sequence">43</field>
+            <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
+        </record>
+
+        <menuitem id="menu_is_ctrl100_operation_standard" sequence="1" name="Opérations standard"  parent="menu_is_controle_100" action="is_ctrl100_operation_standard_action" />
+        <menuitem id="menu_is_ctrl100_gamme_mur_qualite"  sequence="2" name="Gamme mur qualité"    parent="menu_is_controle_100" action="is_ctrl100_gamme_mur_qualite_action" />
+        <menuitem id="menu_is_ctrl100_typologie_produit"  sequence="3" name="Typologie de produit" parent="menu_is_controle_100" action="is_ctrl100_typologie_produit_action" />
 
     </data>
 </openerp>
