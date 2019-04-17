@@ -8,8 +8,8 @@
             <field name="model">is.ctrl100.operation.standard</field>
             <field name="arch" type="xml">
                 <tree string="Opérations standard">
-                    <field name="name"/>
                     <field name="order"/>
+                    <field name="name"/>
                     <field name="active"/>
                 </tree>
             </field>
@@ -22,7 +22,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name"/>
+                            <field name="name" required="True"/>
                             <field name="active"/>
                         </group>
                         <group>
@@ -44,7 +44,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_ctrl100_operation_standard_action">
-            <field name="name">"Opérations standard"</field>
+            <field name="name">Opérations standard</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ctrl100.operation.standard</field>
             <field name="view_mode">tree,form</field>
@@ -85,7 +85,7 @@
                     </group>
                     <field name="operation_standard_ids" colspan="4">
                         <tree editable="bottom">
-                            <field name="operation_standard_id"/>
+                            <field name="operation_standard_id" required="True" />
                             <field name="active"/>
                         </tree>
                     </field>
@@ -97,7 +97,7 @@
                         </tree>
                         <form>
                             <group>
-                                <field name="operation"/>
+                                <field name="operation" />
 	                            <field name="photo" widget='image' class="oe_left oe_avatar" />
 	                            <field name="temps_etape"/>
                             </group>
@@ -117,7 +117,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_ctrl100_gamme_mur_qualite_action">
-            <field name="name">"Gamme mur qualité"</field>
+            <field name="name">Gamme mur qualité</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ctrl100.gamme.mur.qualite</field>
             <field name="view_mode">tree,form</field>
@@ -141,7 +141,7 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="name"/>
+                            <field name="name" required="True"/>
                         </group>
                         <group>
                         </group>
@@ -160,7 +160,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_ctrl100_typologie_produit_action">
-            <field name="name">"Typologie de produit"</field>
+            <field name="name">Typologie de produit</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ctrl100.typologie.produit</field>
             <field name="view_mode">tree,form</field>
