@@ -116,14 +116,21 @@
                 border: 0px solid black;
             }
             .imgclass {
+
+                /*
+
                 text-align:center;
-                max-height: 30mm;
                 text-align: center;
+                max-height: 30mm;
                 max-width: 40mm;
                 vertical-align: middle;
-                padding-left:20px;
+                padding-left:5px;
                 padding-top:5px;
                 padding-bottom:5px;
+                */
+                padding:1mm;
+                padding-top:3mm;
+                padding-bottom:3mm;
                 border: 0px solid black;
             }
             .imgclass1 {
@@ -898,52 +905,46 @@
                                 </table>
                             </t>
                             
+
+                            <!-- avec 1 encrier -->
                             <t t-if="o.image_encrier1_vsb and not o.image_encrier2_vsb and not o.image_encrier3_vsb">
                                 <table style="border-collapse: collapse;" width="100%">
                                     <tr>
-                                        <td width="26%"
-                                            class="rowcenter1">
-                                            <div>
-                                                Marquage à réaliser
-                                            </div>
+                                        <td style="width:50mm" class="rowcenter1">
+                                            Marquage à réaliser
                                         </td>
-                                        <td width="74%"
-                                            class="rowcenter1">
-                                            <div>
-                                                Réglages machines
-                                            </div>
+                                        <td style="width:150mm" class="rowcenter1">
+                                            Réglages machines
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td width="26%"
-                                            class="classlrborder">
-                                            <table width="100">
+                                        <td style="width:50mm" class="classlrborder">
+                                            <table width="100%">
                                                 <tr>
-                                                    <td >
-                                                            <img t-if="o.image_finale"
-                                                                t-att-src="'data:image/png;base64,%s' % o.image_finale"
-                                                                class="imgclass" />
+                                                    <td style="text-align:center" width="100%">
+                                                        <img t-if="o.image_finale"
+                                                            t-att-src="'data:image/png;base64,%s' % o.image_finale"
+                                                            class="imgclass"
+                                                            style="max-width:50mm"
+                                                        />
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td width="74%" class="classtoptable">
+                                        <td style="width:150mm" class="classtoptable">
                                             <table width="100%">
                                                 <tr>
-                                                    <td width="50%"
-                                                        class="classrborder">
+                                                    <td style="width:50mm" class="classrborder">
                                                         N°encrier
                                                     </td>
-                                                    <td width="50%"
-                                                        class="classlrborder">
+                                                    <td style="width:100mm" class="classlrborder">
                                                         1
                                                     </td>
                                                 </tr>
                                                 <t t-set="reglage_values" t-value="o.get_reglage_data()" />
                                                 <t t-foreach="reglage_values" t-as="rec">
                                                     <tr>
-                                                        <td width="50%"
-                                                            class="colleftalign1">
+                                                        <td style="width:50mm"  class="colleftalign1">
                                                             <div>
                                                                 <span t-esc="rec" />
                                                             </div>
@@ -958,8 +959,7 @@
                                                                 <t t-set="dict_2" t-value="line" />
                                                             </t>
                                                         </t>
-                                                        <td width="50%"
-                                                            class="colcenteralign">
+                                                        <td style="width:100mm" class="colcenteralign">
                                                             <div>
                                                                 <span t-esc="dict_1.get('type_reglage','')" />
                                                             </div>
@@ -972,56 +972,49 @@
                                 </table>
                             </t>
                             
+
+                            <!-- avec 2 encriers -->
                             <t t-if="o.image_encrier2_vsb and not o.image_encrier3_vsb">
                                 <table style="border-collapse: collapse;" width="100%">
                                     <tr>
-                                        <td width="26%"
-                                            class="rowcenter1">
-                                            <div>
-                                                Marquage à réaliser
-                                            </div>
+                                        <td style="width:50mm" class="rowcenter1">
+                                            Marquage à réaliser
                                         </td>
-                                        <td width="74%"
-                                            class="rowcenter1">
-                                            <div>
-                                                Réglages machines
-                                            </div>
+                                        <td style="width:150mm" class="rowcenter1">
+                                            Réglages machines
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td width="26%"
-                                            class="classlrborder">
-                                            <table width="100">
+                                        <td style="width:50mm" class="classlrborder">
+                                            <table width="100%">
                                                 <tr>
-                                                    <td >
-                                                            <img t-if="o.image_finale"
-                                                                t-att-src="'data:image/png;base64,%s' % o.image_finale"
-                                                                class="imgclass" />
+                                                    <td style="text-align:center" width="100%">
+                                                        <img t-if="o.image_finale"
+                                                            t-att-src="'data:image/png;base64,%s' % o.image_finale"
+                                                            class="imgclass"
+                                                            style="max-width:50mm"
+                                                        />
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
-                                        <td width="74%" class="classtoptable">
+                                        <td style="width:150mm" class="classtoptable">
                                             <table width="100%">
                                                 <tr>
-                                                    <td width="40%"
-                                                        class="classrborder">
+                                                    <td style="width:50mm" class="classrborder">
                                                         N°encrier
                                                     </td>
-                                                    <td width="30%"
-                                                        class="classlrborder">
+                                                    <td style="width:50mm" class="classlrborder">
                                                         1
                                                     </td>
-                                                    <td width="30%"
-                                                        class="classlborder">
+                                                    <td style="width:50mm" class="classlborder">
                                                         2
                                                     </td>
                                                 </tr>
                                                 <t t-set="reglage_values" t-value="o.get_reglage_data()" />
                                                 <t t-foreach="reglage_values" t-as="rec">
                                                     <tr>
-                                                        <td width="40%"
-                                                            class="colleftalign1">
+                                                        <td style="width:50mm" class="colleftalign1">
                                                             <div>
                                                                 <span t-esc="rec" />
                                                             </div>
@@ -1036,14 +1029,12 @@
                                                                 <t t-set="dict_2" t-value="line" />
                                                             </t>
                                                         </t>
-                                                        <td width="30%"
-                                                            class="colcenteralign">
+                                                        <td style="width:50mm" class="colcenteralign">
                                                             <div>
                                                                 <span t-esc="dict_1.get('type_reglage','')" />
                                                             </div>
                                                         </td>
-                                                        <td width="30%"
-                                                            class="colcenteralign">
+                                                        <td style="width:50mm" class="colcenteralign">
                                                             <div>
                                                                 <span t-esc="dict_2.get('type_reglage','')" />
                                                             </div>
@@ -1056,6 +1047,9 @@
                                 </table>
                                 </t>
                                 
+
+
+                                <!-- avec 3 encriers -->
                                 <t t-if="o.image_encrier3_vsb">
                                     <table style="border-collapse: collapse;" width="100%">
                                         <tr>
@@ -1077,10 +1071,12 @@
                                                 class="classlrborder">
                                                 <table width="100">
                                                     <tr>
-                                                        <td >
-                                                                <img t-if="o.image_finale"
-                                                                    t-att-src="'data:image/png;base64,%s' % o.image_finale"
-                                                                    class="imgclass" />
+                                                        <td style="text-align:center">
+                                                            <img t-if="o.image_finale"
+                                                                t-att-src="'data:image/png;base64,%s' % o.image_finale"
+                                                                class="imgclass"
+                                                                style="max-width:35mm"
+                                                            />
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -1154,28 +1150,29 @@
                                     </table>
                                 </t>
                                 
+
+                                <!-- avec 1 encrier -->
                                 <t t-if="o.image_encrier1_vsb and not o.image_encrier2_vsb and not o.image_encrier3_vsb">
                                     <table style="border-collapse: collapse;" width="100%">
                                      <tr class="classborder">
-                                         <td width="26%">
+                                         <td style="width:95mm">
                                               <table width="100">
                                                 <tr>
-                                                    <td>
-                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass"/>
-                                                    </td>
+                                                    <td style="text-align:center">
+                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass" style="width:70mm"/>                                                    </td>
                                                 </tr>
                                             </table>
                                          </td>
-                                         <td width="74%">
+                                         <td style="width:105mm">
                                              <table style="border-collapse: collapse;" width="100%">
                                                  <tr>
-                                                     <td width="50%">
-
-                                                     </td>
-                                                     <td width="50%">
-                                                         <img t-if="o.image_encrier1_vsb and o.image_encrier1"
-                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
-                                                             class="imgclass0" />
+                                                     <td style="width:100%;text-align:center">
+                                                        <img 
+                                                            t-if="o.image_encrier1_vsb and o.image_encrier1"
+                                                            t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
+                                                            class="imgclass" 
+                                                            style="max-width:90mm;max-height:70mm"
+                                                        />
                                                      </td>
                                                  </tr>
                                              </table>
@@ -1183,33 +1180,38 @@
                                      </tr>
                                     </table>
                                 </t>
+
+                                <!-- avec 2 encriers -->
                                 <t t-if="o.image_encrier2_vsb and not o.image_encrier3_vsb">
                                     <table style="border-collapse: collapse;" width="100%">
                                      <tr class="classborder">
-                                         <td width="26%">
+                                         <td style="width:95mm">
                                               <table width="100">
                                                 <tr>
                                                     <td>
-                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass"/>
+                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass" style="width:70mm"/>
                                                     </td>
                                                 </tr>
                                             </table>
                                          </td>
-                                         <td width="74%">
+                                         <td style="width:105mm">
                                              <table style="border-collapse: collapse;" width="100%">
                                                  <tr>
-                                                     <td width="40%">
-
+                                                     <td style="width:50%;text-align:center">
+                                                        <img 
+                                                            t-if="o.image_encrier1_vsb and o.image_encrier1"
+                                                            t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
+                                                            class="imgclass" 
+                                                            style="max-width:50mm"
+                                                        />
                                                      </td>
-                                                     <td width="30%">
-                                                         <img t-if="o.image_encrier1_vsb and o.image_encrier1"
-                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
-                                                             class="imgclass" />
-                                                     </td>
-                                                     <td width="30%">
-                                                         <img t-if="o.image_encrier2_vsb and o.image_encrier2"
-                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
-                                                             class="imgclass" />
+                                                     <td style="width:50%;text-align:center">
+                                                        <img 
+                                                            t-if="o.image_encrier2_vsb and o.image_encrier2"
+                                                            t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
+                                                            class="imgclass" 
+                                                            style="max-width:50mm"
+                                                        />
                                                      </td>
                                                  </tr>
                                              </table>
@@ -1217,38 +1219,46 @@
                                      </tr>
                                     </table>
                                 </t>
+
+
+                                <!-- avec 3 encriers -->
                                 <t t-if="o.image_encrier3_vsb">
                                     <table style="border-collapse: collapse;" width="100%">
                                      <tr class="classborder">
-                                         <td width="19%">
+                                         <td style="width:95mm">
                                             <table width="100">
                                                 <tr>
-                                                    <td>
-                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass"/>
+                                                    <td style="text-align:center">
+                                                        <img src='/is_pg_2019/static/img/tampographie-axes.png' class="imgclass" style="width:70mm"/>
                                                     </td>
                                                 </tr>
                                             </table>
                                          </td>
-                                         <td width="81%">
+                                         <td style="width:105mm">
                                              <table style="border-collapse: collapse;" width="100%">
                                                  <tr>
-                                                     <td width="34%">
-
-                                                     </td>
-                                                     <td width="22%" >
-                                                         <img t-if="o.image_encrier1_vsb and o.image_encrier1"
+                                                     <td style="width:33%;text-align:center">
+                                                        <img t-if="o.image_encrier1_vsb and o.image_encrier1"
                                                              t-att-src="'data:image/png;base64,%s' % o.image_encrier1"
-                                                             class="imgclass" />
+                                                             class="imgclass"
+                                                             style="max-width:34mm"
+                                                        />
                                                      </td>
-                                                     <td width="22%">
-                                                         <img t-if="o.image_encrier2_vsb and o.image_encrier2"
-                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
-                                                             class="imgclass" />
+                                                     <td style="width:33%;text-align:center">
+                                                        <img
+                                                            t-if="o.image_encrier2_vsb and o.image_encrier2"
+                                                            t-att-src="'data:image/png;base64,%s' % o.image_encrier2"
+                                                            class="imgclass"
+                                                            style="max-width:34mm"
+                                                        />
                                                      </td>
-                                                     <td width="22%">
-                                                         <img t-if="o.image_encrier3_vsb and o.image_encrier3"
-                                                             t-att-src="'data:image/png;base64,%s' % o.image_encrier3"
-                                                             class="imgclass" />
+                                                     <td style="width:33%;text-align:center">
+                                                        <img
+                                                            t-if="o.image_encrier3_vsb and o.image_encrier3"
+                                                            t-att-src="'data:image/png;base64,%s' % o.image_encrier3"
+                                                            class="imgclass"
+                                                            style="max-width:34mm"
+                                                        />
                                                      </td>
                                                  </tr>
                                              </table>
@@ -1256,6 +1266,7 @@
                                      </tr>
                                     </table>
                                 </t>
+
                                 <table width="100%">
                                     <tr>
                                         <td
