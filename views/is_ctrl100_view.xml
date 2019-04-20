@@ -98,8 +98,8 @@
                         <form>
                             <group>
                                 <field name="operation" />
-	                            <field name="photo" widget='image' class="oe_left oe_avatar" />
-	                            <field name="temps_etape"/>
+                                <field name="photo" widget='image' class="oe_left oe_avatar" />
+                                <field name="temps_etape"/>
                             </group>
                         </form>
                     </field>
@@ -163,6 +163,119 @@
             <field name="name">Typologie de produit</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ctrl100.typologie.produit</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Défauthèque -->
+        <record model="ir.ui.view" id="is_ctrl100_defautheque_tree_view">
+            <field name="name">is.ctrl100.defautheque.tree</field>
+            <field name="model">is.ctrl100.defautheque</field>
+            <field name="arch" type="xml">
+                <tree string="Défauthèque">
+                    <field name="name"/>
+                    <field name="gamme_id"/>
+                    <field name="defaut"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_defautheque_form_view">
+            <field name="name">is.ctrl100.defautheque.form</field>
+            <field name="model">is.ctrl100.defautheque</field>
+            <field name="arch" type="xml">
+            <form string="Défauthèque">
+                <sheet>
+                    <field name="photo" widget="image" class="oe_avatar oe_left" />
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="gamme_id" required="True" />
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="defaut" required="True"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_ctrl100_defautheque_action">
+            <field name="name">Défauthèque</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ctrl100.defautheque</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Défauts -->
+        <record model="ir.ui.view" id="is_ctrl100_defaut_tree_view">
+            <field name="name">is.ctrl100.defaut.tree</field>
+            <field name="model">is.ctrl100.defaut</field>
+            <field name="arch" type="xml">
+                <tree string="Défauts">
+                    <field name="name"/>
+                    <field name="gamme_id"/>
+                    <field name="tracabilite"/>
+                    <field name="createur_id"/>
+                    <field name="date_saisie"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_defaut_form_view">
+            <field name="name">is.ctrl100.defaut.form</field>
+            <field name="model">is.ctrl100.defaut</field>
+            <field name="arch" type="xml">
+            <form string="Défauts">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="True" />
+                            <field name="gamme_id" required="True" />
+                            <field name="tracabilite"/>
+                            <field name="product_id"    attrs="{'invisible': [('tracabilite', '!=', 'article')], 'required': [('tracabilite', '=', 'article')]}"/>
+                            <field name="production_id" attrs="{'invisible': [('tracabilite', '!=', 'of')], 'required': [('tracabilite', '=', 'of')]}"/>
+                            <field name="picking_id"    attrs="{'invisible': [('tracabilite', '!=', 'reception')], 'required': [('tracabilite', '=', 'reception')]}"/>
+                        </group>
+                        <group>
+                            <field name="createur_id" required="True" />
+                            <field name="date_saisie" required="True" />
+                            <field name="nb_pieces_controlees" required="True" />
+                            <field name="tps_passe" />
+                        </group>
+                    </group>
+                    <field name="defautheque_ids" colspan="4">
+                        <tree>
+                            <field name="defaut_id" widget="many2one_clickable"/>
+                            <field name="defaut_text" />
+                            <field name="nb_rebuts"/>
+                            <field name="nb_repris"/>
+                            <field name="employe_id" />
+                        </tree>
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="defaut_id" />
+                                    <field name="defaut_text" readonly="True" />
+                                    <field name="nb_rebuts"/>
+                                    <field name="nb_repris"/>
+                                    <field name="employe_id" required="True" />
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_ctrl100_defaut_action">
+            <field name="name">Défauts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ctrl100.defaut</field>
             <field name="view_mode">tree,form</field>
         </record>
 
