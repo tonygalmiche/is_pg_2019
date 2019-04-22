@@ -207,6 +207,14 @@ class is_ctrl100_defaut(models.Model):
                     raise Warning(_("Nombre de rebuts or Nombre de repris must be greater than 0"))
         return res
 
+    @api.multi
+    def get_employee(self):
+        emp_ids = self.env['hr.employee'].search([('user_id', '=', self.env.uid)],limit=1) or False
+        if emp_ids:
+            return emp_ids and emp_ids[0].id
+        else:
+            return False
+
     @api.model
     def default_get(self, default_fields):
         res = super(is_ctrl100_defaut, self).default_get(default_fields)
@@ -215,7 +223,8 @@ class is_ctrl100_defaut(models.Model):
         defautheque_ids = defautheque_obj.search([('active', '=', True)])
         for num in defautheque_ids:
             lst.append((0,0, {
-                'defaut_id': num.id, 
+                'defaut_id': num.id,
+                'employe_id': self.get_employee()
             }))
         res['defautheque_ids'] = lst
         return res
