@@ -39,9 +39,9 @@
             }
             .imgclass0 {
                 text-align:center;
-                height: 80px;
+                height: 80mm;
                 text-align: center;
-                width: 120px;
+                width: 80mm;
                 vertical-align: middle;
                 padding-left:8px;
                 padding-top:5px;
@@ -111,7 +111,7 @@
                                 <div class="tdcolor">Défauthèque</div>
                             </td>
                             <td rowspan="1">
-                                <div>Le <span t-field="o.date_creation" /></div>
+                                <div>Le <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_creation,'%Y-%m-%d'))"/></div>
                             </td>
                         </tr>
                         <tr>
@@ -153,7 +153,7 @@
                                     <div>Code contrôleur</div>
                                 </th>
                                 <th width="21%">
-                                    <div>Traçabilité produit (ex OF)</div>
+                                    <div>Traçabilité produit</div>
                                 </th>
                                 <th width="12%">
                                     <div>Date contrôle</div>
@@ -182,10 +182,10 @@
                                             <span t-esc="rec['tracabilite_nm']" />
                                         </td>
                                         <td width="12%">
-                                            <span t-esc="rec['date_saisie']" />
+                                            <span t-esc="time.strftime('%d/%m/%Y',time.strptime(rec['date_saisie'],'%Y-%m-%d'))"/>
                                         </td>
                                         <td width="10%">
-                                            <span t-esc="rec['tps_passe']" />
+                                            <span t-esc="'%02d:%02d' % (int(rec['tps_passe']), rec['tps_passe'] % 1 * 60)" />
                                         </td>
                                         <td width="10%">
                                             <span t-esc="rec['nb_pieces_controlees']" />
@@ -225,7 +225,7 @@
                                             <span t-esc="rec['name']" />
                                         </td>
                                         <td width="21%">
-                                            <span t-esc="rec['defaut']" />
+                                            <t t-raw="rec['defaut'].replace('\n', '&lt;br&gt;')" />
                                         </td>
                                         <td width="12%">
                                             <div>

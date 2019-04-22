@@ -59,9 +59,9 @@
             }
             .imgclass0 {
                 text-align:center;
-                height: 80px;
+                height: 80mm;
                 text-align: center;
-                width: 120px;
+                width: 80mm;
                 vertical-align: middle;
                 padding-left:8px;
                 padding-top:5px;
@@ -131,7 +131,7 @@
                                 <div class="tdcolor">Gamme mur qualité</div>
                             </td>
                             <td rowspan="1">
-                                <div>Le <span t-field="o.date_creation" /></div>
+                                <div>Le <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_creation,'%Y-%m-%d'))"/></div>
                             </td>
                         </tr>
                         <tr>
@@ -190,7 +190,7 @@
                                                 </td>
                                                 <td width="32%">
                                                     <div>
-                                                        <span t-field="o.date_creation" />
+                                                        <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_creation,'%Y-%m-%d'))"/>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -208,7 +208,9 @@
                                                 </td>
                                                 <td width="32%">
                                                     <div>
-                                                        <span t-field="o.date_fin_validite" />
+                                                        <t t-if="o.date_fin_validite">
+                                                            <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_fin_validite,'%Y-%m-%d'))"/>
+                                                        </t>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -310,7 +312,7 @@
                                     <tr>
                                         <td width="45%">
                                             <div align="left">
-                                                <span t-esc="rec.operation" />
+                                                <t t-raw="rec.operation.replace('\n', '&lt;br&gt;')" />
                                             </div>
                                         </td>
                                         <td width="35%">

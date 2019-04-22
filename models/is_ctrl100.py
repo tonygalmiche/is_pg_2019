@@ -4,6 +4,10 @@ from openerp import pooler
 from openerp import models, fields, api
 from openerp.tools.translate import _
 from collections import defaultdict
+from openerp.exceptions import except_orm, Warning, RedirectWarning
+# from pytz import timezone
+# import pytz
+from datetime import datetime, timedelta
 
 
 class is_ctrl100_operation_standard(models.Model):
@@ -21,8 +25,15 @@ class is_ctrl100_gamme_standard(models.Model):
     _description = u"Opérations gamme standard"
     _order       = 'operation_standard_id desc'
 
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        context = self._context or {}
+        args += ['|', ('active', '=', True), ('active', '=', False)]
+        return super(is_ctrl100_gamme_standard, self).search(args, offset, limit, order, count=count)
+
+
     operation_standard_id  = fields.Many2one('is.ctrl100.operation.standard', u"Opérations standard")
-    active                 = fields.Boolean("Active")
+    active                 = fields.Boolean("Active", default=True)
     gamme_qualite_id       = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité")
 
 
@@ -102,7 +113,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                         'date_saisie': rec.date_saisie,
                         'tps_passe': rec.tps_passe,
                         'nb_pieces_controlees': rec.nb_pieces_controlees,
-                        'employe_id': data.employe_id and data.employe_id.id,
+                        'employe_id': self.env.user.login,
                         'nb_rebuts': data.nb_rebuts,
                         'nb_repris': data.nb_repris,
                         'defaut_id': data.defaut_id.name
@@ -176,7 +187,38 @@ class is_ctrl100_defaut(models.Model):
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].get('is.ctrl100.defaut') or ''
-        return super(is_ctrl100_defaut, self).create(vals)
+        res = super(is_ctrl100_defaut, self).create(vals)
+        for data in self:
+            if data.nb_pieces_controlees <= 0:
+                raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
+            for line in data.defautheque_ids:
+                if line.nb_rebuts <= 0 and line.nb_repris <= 0:
+                    raise Warning(_("Nombre de rebuts or Nombre de repris must be greater than 0"))
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(is_ctrl100_defaut, self).write(vals)
+        for data in self:
+            if data.nb_pieces_controlees <= 0:
+                raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
+            for line in data.defautheque_ids:
+                if line.nb_rebuts <= 0 and line.nb_repris <= 0:
+                    raise Warning(_("Nombre de rebuts or Nombre de repris must be greater than 0"))
+        return res
+
+    @api.model
+    def default_get(self, default_fields):
+        res = super(is_ctrl100_defaut, self).default_get(default_fields)
+        defautheque_obj = self.env['is.ctrl100.defautheque']
+        lst = []
+        defautheque_ids = defautheque_obj.search([('active', '=', True)])
+        for num in defautheque_ids:
+            lst.append((0,0, {
+                'defaut_id': num.id, 
+            }))
+        res['defautheque_ids'] = lst
+        return res
 
     name                 = fields.Char(u"N° du défaut")
     gamme_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
@@ -200,11 +242,16 @@ class is_ctrl100_defaut_line(models.Model):
     _description = u"Défauts Line"
     _order       = 'defaut_id desc'
 
-    defaut_id   = fields.Many2one("is.ctrl100.defautheque", u"N° du défaut")
-    defaut_text = fields.Text("Défaut", related="defaut_id.defaut")
-    nb_rebuts   = fields.Integer("Nombre de rebuts")
-    nb_repris   = fields.Integer("Nombre de repris")
-    employe_id  = fields.Many2one("hr.employee", u"Employé")
-    defautid    = fields.Many2one("is.ctrl100.defaut", u"N° du défaut")
+    @api.returns('self')
+    def _get_employee(self):
+        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)],limit=1) or False
+
+    defaut_id    = fields.Many2one("is.ctrl100.defautheque", u"N° du défaut")
+    defaut_text  = fields.Text("Défaut", related="defaut_id.defaut")
+    defaut_photo = fields.Binary("Photo", related="defaut_id.photo")
+    nb_rebuts    = fields.Integer("Nombre de rebuts")
+    nb_repris    = fields.Integer("Nombre de repris")
+    employe_id   = fields.Many2one("hr.employee", u"Employé", default=_get_employee)
+    defautid     = fields.Many2one("is.ctrl100.defaut", u"N° du défaut")
 
 

@@ -83,7 +83,7 @@
                             <field name="date_fin_validite"/>
                         </group>
                     </group>
-                    <field name="operation_standard_ids" colspan="4">
+                    <field name="operation_standard_ids" colspan="4" context="{'active_test':True}">
                         <tree editable="bottom">
                             <field name="operation_standard_id" required="True" />
                             <field name="active"/>
@@ -175,7 +175,6 @@
                     <field name="name"/>
                     <field name="gamme_id"/>
                     <field name="defaut"/>
-                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -185,21 +184,27 @@
             <field name="arch" type="xml">
             <form string="Défauthèque">
                 <sheet>
-                    <field name="photo" widget="image" class="oe_avatar oe_left" />
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name" readonly="1"/></h1>
-                    </div>
                     <group>
                         <group>
-                            <field name="gamme_id" required="True" />
+                            <field name="name" />
                         </group>
                         <group>
-                            <field name="active"/>
+                            <field name="gamme_id" required="True" />
                         </group>
                     </group>
                     <group>
                         <field name="defaut" required="True"/>
+                    </group>
+                    <group>
+                        <div style="text-align:center"> 
+                            <field 
+                                name="photo" widget='image' class="oe_center oe_avatar" 
+                                options='{"preview_image": "photo", "size": [900, 900]}'
+                            />
+                        </div>
+                    </group>
+                    <group>
+                        <field name="active"/>
                     </group>
                 </sheet>
             </form>
@@ -220,7 +225,7 @@
                 <tree string="Défauts">
                     <field name="name"/>
                     <field name="gamme_id"/>
-                    <field name="tracabilite"/>
+                    <field name="tracabilite" />
                     <field name="createur_id"/>
                     <field name="date_saisie"/>
                 </tree>
@@ -236,7 +241,7 @@
                         <group>
                             <field name="name" readonly="True" />
                             <field name="gamme_id" required="True" />
-                            <field name="tracabilite"/>
+                            <field name="tracabilite" required="True" />
                             <field name="product_id"    attrs="{'invisible': [('tracabilite', '!=', 'article')], 'required': [('tracabilite', '=', 'article')]}"/>
                             <field name="production_id" attrs="{'invisible': [('tracabilite', '!=', 'of')], 'required': [('tracabilite', '=', 'of')]}"/>
                             <field name="picking_id"    attrs="{'invisible': [('tracabilite', '!=', 'reception')], 'required': [('tracabilite', '=', 'reception')]}"/>
@@ -245,7 +250,7 @@
                             <field name="createur_id" required="True" />
                             <field name="date_saisie" required="True" />
                             <field name="nb_pieces_controlees" required="True" />
-                            <field name="tps_passe" />
+                            <field name="tps_passe" widget="float_time" />
                         </group>
                     </group>
                     <field name="defautheque_ids" colspan="4">
@@ -257,15 +262,23 @@
                             <field name="employe_id" />
                         </tree>
                         <form>
-                            <group>
                                 <group>
-                                    <field name="defaut_id" />
+                                    <field name="defaut_id" required="True"  domain="[('gamme_id','=',parent.gamme_id)]" />
                                     <field name="defaut_text" readonly="True" />
+                                </group>
+                                <group>
+                                    <div style="text-align:center"> 
+                                        <field readonly="True"
+                                            name="defaut_photo" widget='image' class="oe_center oe_avatar" 
+                                            options='{"preview_image": "defaut_photo", "size": [900, 900]}'
+                                        />
+                                    </div>
+                                </group>
+                                <group>
                                     <field name="nb_rebuts"/>
                                     <field name="nb_repris"/>
                                     <field name="employe_id" required="True" />
                                 </group>
-                            </group>
                         </form>
                     </field>
                 </sheet>
