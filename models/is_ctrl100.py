@@ -188,7 +188,7 @@ class is_ctrl100_defaut(models.Model):
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].get('is.ctrl100.defaut') or ''
         res = super(is_ctrl100_defaut, self).create(vals)
-        for data in self:
+        for data in res:
             if data.nb_pieces_controlees <= 0:
                 raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
             for line in data.defautheque_ids:
