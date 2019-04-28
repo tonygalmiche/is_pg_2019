@@ -480,40 +480,6 @@
               sequence="20"/>
 
 
-    <!-- Ilot -->
-    <!--
-    <record model="ir.ui.view" id="is_ilot_tree_view">
-        <field name="name">is.ilot.tree</field>
-        <field name="model">is.ilot</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-    <record model="ir.ui.view" id="is_ilot_form_view">
-        <field name="name">is.ilot.form</field>
-        <field name="model">is.ilot</field>
-        <field name="arch" type="xml">
-        <form>
-            <sheet>
-                <group>
-                    <field name="name"/>
-                </group>
-            </sheet>
-        </form>
-        </field>
-    </record>
-    <record model="ir.ui.view" id="is_ilot_search_view" >
-        <field name="name">is.ilot.search</field>
-        <field name="model">is.ilot</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name"/>
-            </search>
-        </field>
-    </record>
-    -->
     <record model="ir.actions.act_window" id="is_theia_ilot_action">
         <field name="name">Ilot</field>
         <field name="type">ir.actions.act_window</field>

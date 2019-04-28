@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report 
+            id="bilan_fin_of_reports"
+            model="is.of"
+            string="Bilan de fin d'OF"
+            report_type="qweb-pdf"
+            name="is_pg_2019.bilan_fin_of_report"
+            file="is_pg_2019.bilan_fin_of_report"
+        />
+        <record id="bilan_fin_of_reports" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="is_pg_2019.bilan_fin_of_paperformat"/>
+        </record>
+    </data>
+</openerp>
