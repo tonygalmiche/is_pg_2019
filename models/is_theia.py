@@ -379,7 +379,7 @@ class is_of(models.Model):
             name='bilan-fin-of.pdf'
 
             #** Génération du PDF **********************************************
-            pdf = self.env['report'].get_pdf(obj, 'is_cpi_raspberry.bilan_fin_of_report')
+            pdf = self.env['report'].get_pdf(obj, 'is_pg_2019.bilan_fin_of_report')
 
             #** Recherche si une pièce jointe est déja associèe ****************
             model=self._name
