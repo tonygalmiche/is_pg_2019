@@ -581,8 +581,8 @@ class is_equipement(models.Model):
 
     is_database_origine_id                   = fields.Integer("Id d'origine", readonly=True, select=True)
     active                                   = fields.Boolean('Active', default=True)
-    type_id                                  = fields.Many2one("is.equipement.type", u"Type équipement", required=True)
-    numero_equipement                        = fields.Char(u"Numéro d'équipement", required=True)
+    type_id                                  = fields.Many2one("is.equipement.type", u"Type équipement", required=True, select=True)
+    numero_equipement                        = fields.Char(u"Numéro d'équipement", required=True, select=True)
     designation                              = fields.Char(u"Désignation", required=True)
     database_id                              = fields.Many2one("is.database", "Site", required=True)
     
