@@ -76,9 +76,14 @@
                                 <field name="name" readonly="1"  attrs="{'readonly': [('state', '!=', 'creation')]}" />
                                 <field name="date_creation"      readonly="1" />
                                 <field name="type_equipement_id" attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"/>
+
                                 <field 
-                                    name="equipement_id"      
-                                    attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}" 
+                                    name="equipement_id"
+                                    attrs="{
+                                        'readonly':  [('state', 'not in', ['creation','analyse_ot'])],
+                                        'invisible': [('type_equipement_id', '=', False)],
+                                        'required':  [('type_equipement_id', '!=', False)]
+                                    }" 
                                     domain="[('type_id','=',type_equipement_id),('database_id','=',site_id)]"
                                 />
                                 <field name="gravite" attrs="{'readonly': [('state', '!=', 'creation')]}"/>

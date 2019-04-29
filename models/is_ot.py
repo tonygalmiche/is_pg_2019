@@ -41,7 +41,7 @@ class is_ot(models.Model):
             count += 1
         if count == 0 or count > 1:
             raise except_orm(_('Configuration!'),
-                             _(" it is obligatory to enter one of these fields to create the form : Equipement or Moule or Dossier F "))
+                             _("Il est obligatoire de saisir un équipement, un moule ou un dossier F"))
         if self._uid:
             user_data = self.env['res.users'].browse(self._uid)
             if user_data and not user_data.is_site_id:
@@ -70,7 +70,7 @@ class is_ot(models.Model):
                 count += 1
             if count == 0 or count > 1:
                 raise except_orm(_('Configuration!'),
-                                 _(" it is obligatory to enter one of these fields to create the form : Equipement or Moule or Dossier F "))
+                                 _("Il faut choisir entre équipement, moule ou dossier F (un seul choix possible)"))
         return res
 
     @api.multi
