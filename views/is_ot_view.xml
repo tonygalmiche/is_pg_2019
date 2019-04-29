@@ -89,8 +89,9 @@
                                 <field name="gravite" attrs="{'readonly': [('state', '!=', 'creation')]}"/>
                             </group>
                             <group>
-                                <field name="site_id"      readonly="1" />
-                                <field name="demandeur_id" readonly="1" />
+                                <field name="site_id"      readonly="1"/>
+                                <field name="emplacement"  readonly="1"/>
+                                <field name="demandeur_id" readonly="1"/>
                                 <field 
                                     name="moule_id"
                                     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"

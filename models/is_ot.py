@@ -145,6 +145,17 @@ class is_ot(models.Model):
             obj.code_gravite = obj.gravite
 
 
+    @api.depends('equipement_id','moule_id')
+    def _compute_emplacement(self):
+        for obj in self:
+            emplacement=''
+            if obj.equipement_id:
+                emplacement = obj.equipement_id.emplacement_affectation_pe
+            if obj.moule_id:
+                emplacement = obj.moule_id.emplacement
+            obj.emplacement = emplacement
+
+
     name                = fields.Char(u"N° de l'OT")
     state               = fields.Selection([
             ('creation', u'Création'),
@@ -155,6 +166,7 @@ class is_ot(models.Model):
             ('termine', u'Terminé'),
             ], "State", readonly=True, default="creation")
     site_id             = fields.Many2one("is.database", "Site", help="Site must be filled in its user form")
+    emplacement         = fields.Char("Emplacement", store=True, readonly=True, compute='_compute_emplacement')
     date_creation       = fields.Date(u"Date de création", copy=False, default=fields.Date.context_today, readonly=True)
     demandeur_id        = fields.Many2one("res.users", "Demandeur", default=lambda self: self.env.uid, readonly=True)
     type_equipement_id  = fields.Many2one("is.equipement.type", u"Type d'équipement")
