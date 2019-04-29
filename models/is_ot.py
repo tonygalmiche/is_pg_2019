@@ -27,6 +27,7 @@ class is_ot_temps_passe(models.Model):
 
 class is_ot(models.Model):
     _name = 'is.ot'
+    _order = 'name desc'
 
     @api.model
     def create(self, vals):
@@ -138,6 +139,11 @@ class is_ot(models.Model):
                 res['site_id'] = user_data.is_site_id.id
         return res
 
+    @api.depends('gravite')
+    def _compute_gravite(self):
+        for obj in self:
+            obj.code_gravite = obj.gravite
+
 
     name                = fields.Char(u"N° de l'OT")
     state               = fields.Selection([
@@ -156,10 +162,11 @@ class is_ot(models.Model):
     moule_id            = fields.Many2one("is.mold", "Moule")
     dossierf_id         = fields.Many2one("is.dossierf", "Dossier F")
     gravite             = fields.Selection([
-            ('1', u"risque de rupture client suite panne moule/machine ; risque pour outillage ou équipement ; risque sécurité ; risque environnemental"),
-            ('2', u"moule ou équipement en production mais en mode dégradé"),
-            ('3', u"action d'amélioration ou de modification"),
+            ('1', u"1-risque de rupture client suite panne moule/machine ; risque pour outillage ou équipement ; risque sécurité ; risque environnemental"),
+            ('2', u"2-moule ou équipement en production mais en mode dégradé"),
+            ('3', u"3-action d'amélioration ou de modification"),
             ], u"Gravité", required=True)
+    code_gravite        = fields.Char(u"Gravité",help="Code gravité", store=True, readonly=True, compute='_compute_gravite')
     numero_qrci         = fields.Char(u"Numéro de QRCI")
     descriptif          = fields.Text('Descriptif')
     complement          = fields.Text(u"Complément d'information")
@@ -172,11 +179,11 @@ class is_ot(models.Model):
             ('changement_de_version', "Changement de version"),
             ], "Nature")
     affectation_id      = fields.Many2one("is.ot.affectation", "Affectation")
-    delai_previsionnel  = fields.Float(u"Délai prévisionnel (H)", digits=(14, 2))
+    delai_previsionnel  = fields.Float(u"Temps d'intervention prévisionnel (H)", digits=(14, 2))
     validation_ot       = fields.Selection([
             ("non", "Non"),
             ("oui", "Oui"),
-        ], "Validation OT")
+        ], "Travaux à valider")
     motif               = fields.Char("Motif")
     temps_passe_ids     = fields.One2many('is.ot.temps.passe', 'ot_id', u"Temps passé")
     

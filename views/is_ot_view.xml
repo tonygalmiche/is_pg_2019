@@ -2,6 +2,7 @@
 <openerp>
     <data>
 
+
         <!-- Is OT Affectation-->
         <record id="is_ot_affectation_view_tree" model="ir.ui.view">
             <field name="name">is.ot.affectation.view.tree</field>
@@ -74,15 +75,27 @@
                             <group>
                                 <field name="name" readonly="1"  attrs="{'readonly': [('state', '!=', 'creation')]}" />
                                 <field name="date_creation"      readonly="1" />
-                                <field name="type_equipement_id" attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}" />
-                                <field name="equipement_id"      attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}" domain="[('type_id','=',type_equipement_id)]"/>
-                                <field name="gravite"            attrs="{'readonly': [('state', '!=', 'creation')]}" />
+                                <field name="type_equipement_id" attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"/>
+                                <field 
+                                    name="equipement_id"      
+                                    attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}" 
+                                    domain="[('type_id','=',type_equipement_id),('database_id','=',site_id)]"
+                                />
+                                <field name="gravite" attrs="{'readonly': [('state', '!=', 'creation')]}"/>
                             </group>
                             <group>
                                 <field name="site_id"      readonly="1" />
                                 <field name="demandeur_id" readonly="1" />
-                                <field name="moule_id"     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}" />
-                                <field name="dossierf_id"  attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}" />
+                                <field 
+                                    name="moule_id"
+                                    attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
+                                    domain="[('is_database_id','=',site_id)]"
+                                />
+                                <field
+                                    name="dossierf_id"
+                                    attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
+                                    domain="[('is_database_id','=',site_id)]"
+                                />
                                 <field name="numero_qrci"  attrs="{'readonly': [('state', '!=', 'creation')]}" />
                             </group>
                         </group>
@@ -91,12 +104,26 @@
                         </group>
                         <group>
                             <group>
-                                <field name="affectation_id" attrs="{'invisible': [('state', '=', 'creation')], 'readonly': [('state', '!=', 'analyse_ot')], 'required': [('state', '=', 'analyse_ot')]}" />
                                 <field name="validation_ot"  attrs="{'invisible': [('state', '=', 'creation')], 'required': [('state', '=', 'analyse_ot')], 'readonly': [('state', '!=', 'analyse_ot')]}" />
                                 <field name="motif"          attrs="{'invisible': ['|',('validation_ot', '!=', 'non'),('state', '=', 'creation')], 'required': [('validation_ot', '=', 'non')], 'readonly': [('state', '!=', 'analyse_ot')]}" />
                             </group>
                             <group>
-                                <field name="nature"             attrs="{'invisible': [('state', '=', 'creation')], 'readonly': [('state', '!=', 'analyse_ot')], 'required': [('state', '=', 'analyse_ot')]}" />
+                                <field 
+                                    name="affectation_id"
+                                    attrs="{
+                                        'invisible': ['|',('state', '=', 'creation'),('validation_ot', '!=', 'oui')],
+                                        'readonly': [('state', '!=', 'analyse_ot')],
+                                        'required': [('state', '=', 'analyse_ot'),('validation_ot', '=', 'oui')]
+                                    }"
+                                />
+                                <field
+                                    name="nature"
+                                    attrs="{
+                                        'invisible': ['|',('state', '=', 'creation'),('validation_ot', '!=', 'oui')],
+                                        'readonly': [('state', '!=', 'analyse_ot')],
+                                        'required': [('state', '=', 'analyse_ot'),('validation_ot', '=', 'oui')]
+                                    }"
+                                />
                                 <field name="delai_previsionnel" attrs="{'invisible': [('state', '=', 'creation')], 'readonly': [('state', '!=', 'analyse_ot')]}" />
                             </group>
                         </group>
@@ -127,6 +154,24 @@
                 </form>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="is_ot_search_view" >
+            <field name="name">is_ot_search_view</field>
+            <field name="model">is.ot</field>
+            <field name="arch" type="xml">
+                <search string="Opérations standard">
+                    <field name="name"/>
+                    <field name="descriptif"/>
+                    <field name="demandeur_id"/>
+                    <field name="type_equipement_id"/>
+                    <field name="equipement_id"/>
+                    <field name="moule_id"/>
+                    <field name="dossierf_id"/>
+                    <field name="code_gravite"/>
+                </search>
+            </field>
+        </record>
+
         <record id="action_is_ot" model="ir.actions.act_window">
             <field name="name">Gestion des OT</field>
             <field name="type">ir.actions.act_window</field>
@@ -143,10 +188,12 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
+                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
-                    <field name="gravite" />
+                    <field name="code_gravite"/>
+                    <field name="descriptif"/>
                     <field name="numero_qrci" />
                 </tree>
             </field>
@@ -177,10 +224,12 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
+                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
-                    <field name="gravite" />
+                    <field name="code_gravite"/>
+                    <field name="descriptif"/>
                     <field name="numero_qrci" />
                     <field name="affectation_id" />
                     <field name="nature" />
@@ -223,10 +272,12 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
+                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
-                    <field name="gravite" />
+                    <field name="code_gravite"/>
+                    <field name="descriptif"/>
                     <field name="numero_qrci" />
                     <field name="affectation_id" />
                     <field name="nature" />

@@ -289,7 +289,9 @@ class is_equipement(models.Model):
         if not args:
             args = []
         if name:
-            ids = self.search(cr, user, ['|',('numero_equipement','ilike', name),('designation','ilike', name)], limit=limit, context=context)
+            args.append(['numero_equipement','ilike', name])
+            #ids = self.search(cr, user, ['|',('numero_equipement','ilike', name),('designation','ilike', name)], limit=limit, context=context)
+            ids = self.search(cr, user, args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)
