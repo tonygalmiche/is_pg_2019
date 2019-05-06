@@ -87,6 +87,7 @@
                         <tree editable="bottom">
                             <field name="operation_standard_id" required="True" />
                             <field name="active"/>
+                            <field name="temps_etape"/>
                         </tree>
                     </field>
                     <field name="operation_specifique_ids" colspan="4">
@@ -103,6 +104,11 @@
                             </group>
                         </form>
                     </field>
+                    <group>
+                        <field name="cout_ctrl_qualite"/>
+                        <field name="cout_previsionnel"/>
+                        <field name="cadence_previsionnelle"/>
+                    </group>
                 </sheet>
             </form>
             </field>

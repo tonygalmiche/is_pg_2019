@@ -23,7 +23,7 @@ class is_ctrl100_operation_standard(models.Model):
 class is_ctrl100_gamme_standard(models.Model):
     _name        = 'is.ctrl100.gamme.standard'
     _description = u"Opérations gamme standard"
-    _order       = 'operation_standard_id desc'
+    _order       = 'operation_standard_id'
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
@@ -32,14 +32,16 @@ class is_ctrl100_gamme_standard(models.Model):
         return super(is_ctrl100_gamme_standard, self).search(args, offset, limit, order, count=count)
 
 
+    gamme_qualite_id       = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité")
     operation_standard_id  = fields.Many2one('is.ctrl100.operation.standard', u"Opérations standard")
     active                 = fields.Boolean("Active", default=True)
-    gamme_qualite_id       = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité")
+    temps_etape            = fields.Float(u"Temps de l'étape  (Seconde / Pièce) ", digits=(14, 2))
 
 
 class is_ctrl100_operation_specifique(models.Model):
     _name        = 'is.ctrl100.operation.specifique'
     _description = u"Opérations spécifiques"
+    _order       = 'operation'
 
     operation        = fields.Text(u"Opération")
     photo            = fields.Binary('Photo')
@@ -141,6 +143,35 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
         res['operation_standard_ids'] = lst
         return res
 
+
+    @api.returns('self')
+    def _get_cout_ctrl_qualite(self):
+        user = self.env['res.users'].browse(self.env.uid)
+        cout = 0
+        if user:
+            cout = user.company_id.is_cout_ctrl_qualite or 0
+        return cout
+
+
+    @api.depends('cout_ctrl_qualite','operation_standard_ids','operation_specifique_ids')
+    def _compute_cout(self):
+        for obj in self:
+            tps = 0
+            for line in obj.operation_standard_ids:
+                if line.temps_etape:
+                    tps+=line.temps_etape
+            for line in obj.operation_specifique_ids:
+                if line.temps_etape:
+                    tps+=line.temps_etape
+
+            cadence_previsionnelle = 0
+            if tps>0:
+                cadence_previsionnelle = 3600/tps
+            cout = obj.cout_ctrl_qualite*tps/3600
+            obj.cout_previsionnel      = cout
+            obj.cadence_previsionnelle = cadence_previsionnelle
+
+
     name                     = fields.Char(u"N°de gamme", readonly=True)
     type_gamme               = fields.Selection([
                                     ("qualification_process", "Qualification Process"),
@@ -160,6 +191,9 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     date_fin_validite        = fields.Date(u"Date de fin de validité")
     operation_standard_ids   = fields.One2many('is.ctrl100.gamme.standard', 'gamme_qualite_id', u"Opérations standard")
     operation_specifique_ids = fields.One2many('is.ctrl100.operation.specifique', 'gamme_qualite_id',  u"Opérations spécifiques")
+    cout_ctrl_qualite        = fields.Float(u"Coût horaire vendu contrôle qualité", digits=(12, 2), default=_get_cout_ctrl_qualite)
+    cout_previsionnel        = fields.Float(u"Coût prévisionnel par pièce", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
+    cadence_previsionnelle   = fields.Float(u"Cadence de contrôle prévisionnelle (pcs/h)", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
 
 
 class is_ctrl100_defautheque(models.Model):

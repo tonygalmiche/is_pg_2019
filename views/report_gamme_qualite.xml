@@ -172,7 +172,7 @@
                                                 </td>
                                                 <td width="32%">
                                                     <div>
-                                                        xxx
+                                                         <span t-field="o.create_uid.name"/>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -225,16 +225,14 @@
                                                     Cadence de contrôle prévisionnelle
                                                 </td>
                                                 <td width="28%">
-                                                    <div>
-                                                        xxx   pièces/h
-                                                    </div>
+                                                    <span t-field="o.cadence_previsionnelle" /> pièces/h
                                                 </td>
                                                 <td width="25%">
                                                     Soit un coût de contrôle de
                                                 </td>
                                                 <td width="20%">
                                                     <div>
-                                                        xxx
+                                                         <span t-field="o.cout_previsionnel"/> €
                                                     </div>
                                                 </td>
                                             </tr>
@@ -244,7 +242,7 @@
                                                 </td>
                                                 <td width="28%">
                                                     <div>
-                                                        xxx €/h
+                                                         <span t-field="o.cout_ctrl_qualite"/> €/H
                                                     </div>
                                                 </td>
                                                 <td width="25%">
@@ -285,13 +283,11 @@
                                 <t t-foreach="o.operation_standard_ids" t-as="rec">
                                     <t t-if="rec.active">
                                     <tr>
-                                        <td width="80%">
-                                            <div align="left">
-                                                <span t-esc="rec.operation_standard_id.name" />
-                                            </div>
+                                        <td width="80%"  style="text-align: left">
+                                            <span t-esc="rec.operation_standard_id.name" />
                                         </td>
-                                        <td width="20%">
-                                            xxx
+                                        <td width="20%" style="text-align: right">
+                                            <span t-esc="rec.temps_etape" />
                                         </td>
                                     </tr>
                                     </t>
