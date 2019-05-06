@@ -272,16 +272,31 @@
                                 <field name="pression_maximum" 
                                     attrs="{'invisible': [('pression_maximum_vsb', '!=', True)], 'required':  [('pression_maximum_obl', '=', True)]}"/>
                                 
+                                <field name="pression_maximum2_vsb" invisible="1" />
+                                <field name="pression_maximum2_obl" invisible="1" />
+                                <field name="pression_maximum2" 
+                                    attrs="{'invisible': [('pression_maximum2_vsb', '!=', True)], 'required':  [('pression_maximum2_obl', '=', True)]}"/>
+
                                 <field name="vis_mn_vsb" invisible="1" />
                                 <field name="vis_mn_obl" invisible="1" />
                                 <field name="vis_mn" 
                                     attrs="{'invisible': [('vis_mn_vsb', '!=', True)], 'required':  [('vis_mn_obl', '=', True)]}"/>
+
+                                <field name="vis_mn2_vsb" invisible="1" />
+                                <field name="vis_mn2_obl" invisible="1" />
+                                <field name="vis_mn2" 
+                                    attrs="{'invisible': [('vis_mn2_vsb', '!=', True)], 'required':  [('vis_mn2_obl', '=', True)]}"/>
                                 
                                 <field name="volume_injectable_vsb" invisible="1" />
                                 <field name="volume_injectable_obl" invisible="1" />
                                 <field name="volume_injectable" 
                                     attrs="{'invisible': [('volume_injectable_vsb', '!=', True)], 'required':  [('volume_injectable_obl', '=', True)]}"/>
                                 
+                                <field name="volume_injectable2_vsb" invisible="1" />
+                                <field name="volume_injectable2_obl" invisible="1" />
+                                <field name="volume_injectable2" 
+                                    attrs="{'invisible': [('volume_injectable2_vsb', '!=', True)], 'required':  [('volume_injectable2_obl', '=', True)]}"/>
+
                                 <field name="course_ejection_vsb" invisible="1" />
                                 <field name="course_ejection_obl" invisible="1" />
                                 <field name="course_ejection" 
@@ -297,6 +312,12 @@
                                 <field name="centrage_moule" 
                                     attrs="{'invisible': [('centrage_moule_vsb', '!=', True)], 'required':  [('centrage_moule_obl', '=', True)]}"/>
                                 
+                                <field name="centrage_moule2_vsb" invisible="1" />
+                                <field name="centrage_moule2_obl" invisible="1" />
+                                <field name="centrage_moule2" 
+                                    attrs="{'invisible': [('centrage_moule2_vsb', '!=', True)], 'required':  [('centrage_moule2_obl', '=', True)]}"/>
+
+
                                 <field name="centrage_presse_vsb" invisible="1" />
                                 <field name="centrage_presse_obl" invisible="1" />
                                 <field name="centrage_presse" 
@@ -582,10 +603,12 @@
                     <field name="coefficient_vis"   invisible="context.get('capacite_injection',True)"/>
                     <field name="type_de_clapet"    invisible="context.get('capacite_injection',True)"/>
                     <field name="coefficient_vis"   invisible="context.get('capacite_injection',True)"/>
-                    <field name="volume_injectable" invisible="context.get('capacite_injection',True)"/>
+                    <field name="volume_injectable"  invisible="context.get('capacite_injection',True)"/>
+                    <field name="volume_injectable2" invisible="context.get('capacite_injection',True)"/>
                     <field name="course_ejection"   invisible="context.get('course',True)"/>
                     <field name="course_ouverture"  invisible="context.get('course',True)"/>
                     <field name="centrage_moule"    invisible="context.get('centrage',True)"/>
+                    <field name="centrage_moule2"   invisible="context.get('centrage',True)"/>
                     <field name="centrage_presse"   invisible="context.get('centrage',True)"/>
                     <field name="hauteur_porte_sol" invisible="context.get('hauteur',True)"/>
                     <field name="bridage_rapide"           invisible="context.get('bridage',True)"/>
@@ -662,6 +685,7 @@
                     <field name="puissance_de_refroidissement"   invisible="context.get('caracteristiques_techniques',True)"/>
                     <field name="debit_maximum"                  invisible="context.get('caracteristiques_techniques',True)"/>
                     <field name="pression_maximum"               invisible="context.get('caracteristiques_techniques',True)"/>
+                    <field name="pression_maximum2"              invisible="context.get('caracteristiques_techniques',True)"/>
                     <field name="mesure_debit"                   invisible="context.get('caracteristiques_techniques',True)"/>
                     <field name="is_database_origine_id"/>
                 </tree>

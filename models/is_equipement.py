@@ -415,11 +415,15 @@ class is_equipement(models.Model):
             'coefficient_vis'                       : tools.ustr(equp.coefficient_vis or ''),
             'type_de_clapet'                        : equp.type_de_clapet,
             'pression_maximum'                      : tools.ustr(equp.pression_maximum),
+            'pression_maximum2'                     : tools.ustr(equp.pression_maximum2),
             'vis_mn'                                : tools.ustr(equp.vis_mn),
+            'vis_mn2'                               : tools.ustr(equp.vis_mn2),
             'volume_injectable'                     : tools.ustr(equp.volume_injectable),
+            'volume_injectable2'                    : tools.ustr(equp.volume_injectable2),
             'course_ejection'                       : tools.ustr(equp.course_ejection),
             'course_ouverture'                      : tools.ustr(equp.course_ouverture),
             'centrage_moule'                        : tools.ustr(equp.centrage_moule),
+            'centrage_moule2'                       : tools.ustr(equp.centrage_moule2),
             'centrage_presse'                       : tools.ustr(equp.centrage_presse),
             'hauteur_porte_sol'                     : tools.ustr(equp.hauteur_porte_sol),
             'bridage_rapide_entre_axe'              : tools.ustr(equp.bridage_rapide_entre_axe),
@@ -697,18 +701,30 @@ class is_equipement(models.Model):
             ("4", u"à bille"),
         ], "Type de clapet")
     
-    pression_maximum_vsb                     = fields.Boolean("Pression Maximum (bar)", compute='_compute')
-    pression_maximum_obl                     = fields.Boolean("Pression Maximum (bar)", compute='_compute')
-    pression_maximum                         = fields.Integer("Pression Maximum (bar)")
+    pression_maximum_vsb                     = fields.Boolean("Pression matière 1 maximum (bar)", compute='_compute')
+    pression_maximum_obl                     = fields.Boolean("Pression matière 1 maximum (bar)", compute='_compute')
+    pression_maximum                         = fields.Integer("Pression matière 1 maximum (bar)")
     
-    vis_mn_vsb                               = fields.Boolean("Ø Vis (mm)", compute='_compute')
-    vis_mn_obl                               = fields.Boolean("Ø Vis (mm)", compute='_compute')
-    vis_mn                                   = fields.Integer("Ø Vis (mm)")
+    pression_maximum2_vsb                    = fields.Boolean("Pression matière 2 maximum (bar)", compute='_compute')
+    pression_maximum2_obl                    = fields.Boolean("Pression matière 2 maximum (bar)", compute='_compute')
+    pression_maximum2                        = fields.Integer("Pression matière 2 maximum (bar)")
+
+    vis_mn_vsb                               = fields.Boolean("Ø Vis 1 (mm)", compute='_compute')
+    vis_mn_obl                               = fields.Boolean("Ø Vis 1 (mm)", compute='_compute')
+    vis_mn                                   = fields.Integer("Ø Vis 1 (mm)")
     
-    volume_injectable_vsb                    = fields.Boolean("Volume injectable (cm3)", compute='_compute')
-    volume_injectable_obl                    = fields.Boolean("Volume injectable (cm3)", compute='_compute')
-    volume_injectable                        = fields.Integer("Volume injectable (cm3)")
+    vis_mn2_vsb                              = fields.Boolean("Ø Vis 2 (mm)", compute='_compute')
+    vis_mn2_obl                              = fields.Boolean("Ø Vis 2 (mm)", compute='_compute')
+    vis_mn2                                  = fields.Integer("Ø Vis 2 (mm)")
+
+    volume_injectable_vsb                    = fields.Boolean("Volume injectable 1 (cm3)", compute='_compute')
+    volume_injectable_obl                    = fields.Boolean("Volume injectable 1 (cm3)", compute='_compute')
+    volume_injectable                        = fields.Integer("Volume injectable 1 (cm3)")
     
+    volume_injectable2_vsb                    = fields.Boolean("Volume injectable 2 (cm3)", compute='_compute')
+    volume_injectable2_obl                    = fields.Boolean("Volume injectable 2 (cm3)", compute='_compute')
+    volume_injectable2                        = fields.Integer("Volume injectable 2 (cm3)")
+
     course_ejection_vsb                      = fields.Boolean(u"Course éjection (mm)", compute='_compute')
     course_ejection_obl                      = fields.Boolean(u"Course éjection (mm)", compute='_compute')
     course_ejection                          = fields.Integer(u"Course éjection (mm)")
@@ -717,9 +733,13 @@ class is_equipement(models.Model):
     course_ouverture_obl                     = fields.Boolean("Course ouverture (mm)", compute='_compute')
     course_ouverture                         = fields.Integer("Course ouverture (mm)")
     
-    centrage_moule_vsb                       = fields.Boolean("Ø centrage moule (mm)", compute='_compute')
-    centrage_moule_obl                       = fields.Boolean("Ø centrage moule (mm)", compute='_compute')
-    centrage_moule                           = fields.Integer("Ø centrage moule (mm)")
+    centrage_moule_vsb                       = fields.Boolean("Ø centrage moule 1 (mm)", compute='_compute')
+    centrage_moule_obl                       = fields.Boolean("Ø centrage moule 1 (mm)", compute='_compute')
+    centrage_moule                           = fields.Integer("Ø centrage moule 1 (mm)")
+
+    centrage_moule2_vsb                      = fields.Boolean("Ø centrage moule 2 (mm)", compute='_compute')
+    centrage_moule2_obl                      = fields.Boolean("Ø centrage moule 2 (mm)", compute='_compute')
+    centrage_moule2                          = fields.Integer("Ø centrage moule 2 (mm)")
     
     centrage_presse_vsb                      = fields.Boolean("Ø centrage presse (mm)", compute='_compute')
     centrage_presse_obl                      = fields.Boolean("Ø centrage presse (mm)", compute='_compute')
