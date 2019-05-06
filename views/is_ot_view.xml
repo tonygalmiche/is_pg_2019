@@ -147,14 +147,31 @@
                         <group>
                             <group>
                                 <field name="valideur_id"   attrs="{'invisible': [('state', 'in', ['creation','analyse_ot','travaux_a_realiser','annule'])]}" readonly="1" />
-                                <field name="nouveau_delai" attrs="{'invisible': ['|',('validation_travaux', '!=', 'non_ok'),('state', 'in', ['creation','analyse_ot','travaux_a_realiser','annule'])], 'readonly': [('state', '!=', 'travaux_a_valider')], 'required': [('validation_travaux', '=', 'non_ok')]}" />
+                                <field 
+                                    name="nouveau_delai"
+                                    attrs="{
+                                        'invisible': [('state', '!=', 'travaux_a_valider'),('nouveau_delai', '=', False)], 
+                                        'readonly':  [('state', '!=', 'travaux_a_valider')], 
+                                        'required':  [('validation_travaux', '=', 'non_ok')]
+                                    }" />
                             </group>
                             <group>
                                 <field name="validation_travaux" attrs="{'invisible': [('state', 'in', ['creation','analyse_ot','travaux_a_realiser','annule'])], 'readonly': [('state', '!=', 'travaux_a_valider')], 'required': [('state', '=', 'travaux_a_valider')]}" />
                             </group>
                         </group>
+
+                        <!--
+                                    'invisible': ['|',('validation_travaux', '!=', 'non_ok'),('state', 'in', ['creation','analyse_ot','travaux_a_realiser','annule'])], 
+                                    'invisible': ['|',('validation_travaux', '!=', 'non_ok'),('state', 'in', ['creation','analyse_ot','travaux_a_realiser','annule'])], 
+                        -->
                         <group>
-                            <field name="commentaires_non_ok" attrs="{'invisible': ['|',('validation_travaux', '!=', 'non_ok'),('state', 'in', ['creation','analyse_ot','travaux_a_realiser','annule'])], 'readonly': [('state', '!=', 'travaux_a_valider')], 'required': [('validation_travaux', '=', 'non_ok')]}" />
+                            <field 
+                                name="commentaires_non_ok" 
+                                attrs="{
+                                    'invisible': [('state', '!=', 'travaux_a_valider'),('commentaires_non_ok', '=', False)], 
+                                    'readonly':  [('state', '!=', 'travaux_a_valider')], 
+                                    'required':  [('validation_travaux', '=', 'non_ok')]}"
+                            />
                         </group>
                     </sheet>
                 </form>
@@ -190,7 +207,7 @@
             <field name="name">is.ot.creation.view.tree</field>
             <field name="model">is.ot</field>
             <field name="arch" type="xml">
-                <tree string="Gestion des OT">
+                <tree string="Création">
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
@@ -213,6 +230,25 @@
             <field name="domain">[('state', '=', 'creation')]</field>
             <field name="view_id" ref="is_ot_creation_view_tree"/>
         </record>
+
+        <record id="is_ot_analyse_view_tree" model="ir.ui.view">
+            <field name="name">is.ot.analyse.view.tree</field>
+            <field name="model">is.ot</field>
+            <field name="arch" type="xml">
+                <tree string="Analyse de l'OT" create="false">
+                    <field name="name" />
+                    <field name="date_creation" />
+                    <field name="demandeur_id" />
+                    <field name="type_equipement_id"/>
+                    <field name="equipement_id" />
+                    <field name="moule_id" />
+                    <field name="dossierf_id" />
+                    <field name="code_gravite"/>
+                    <field name="descriptif"/>
+                    <field name="numero_qrci" />
+                </tree>
+            </field>
+        </record>
         <record id="action_is_ot_analyse_ot" model="ir.actions.act_window">
             <field name="name">Analyse de l'OT</field>
             <field name="type">ir.actions.act_window</field>
@@ -220,13 +256,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state', '=', 'analyse_ot')]</field>
-            <field name="view_id" ref="is_ot_creation_view_tree"/>
+            <field name="view_id" ref="is_ot_analyse_view_tree"/>
         </record>
+
         <record id="is_ot_travaux_a_realiser_view_tree" model="ir.ui.view">
             <field name="name">is.ot.travaux.realiser.view.tree</field>
             <field name="model">is.ot</field>
             <field name="arch" type="xml">
-                <tree string="Gestion des OT">
+                <tree string="Travaux à réaliser" create="false">
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
@@ -252,6 +289,28 @@
             <field name="domain">[('state', '=', 'travaux_a_realiser')]</field>
             <field name="view_id" ref="is_ot_travaux_a_realiser_view_tree"/>
         </record>
+
+        <record id="is_ot_travaux_a_valider_view_tree" model="ir.ui.view">
+            <field name="name">is.ot.travaux.valider.view.tree</field>
+            <field name="model">is.ot</field>
+            <field name="arch" type="xml">
+                <tree string="Travaux à valider" create="false">
+                    <field name="name" />
+                    <field name="date_creation" />
+                    <field name="demandeur_id" />
+                    <field name="type_equipement_id"/>
+                    <field name="equipement_id" />
+                    <field name="moule_id" />
+                    <field name="dossierf_id" />
+                    <field name="code_gravite"/>
+                    <field name="descriptif"/>
+                    <field name="numero_qrci" />
+                    <field name="affectation_id" />
+                    <field name="nature" />
+                    <field name="delai_previsionnel" />
+                </tree>
+            </field>
+        </record>
         <record id="action_is_ot_travaux_a_valider" model="ir.actions.act_window">
             <field name="name">Travaux à valider</field>
             <field name="type">ir.actions.act_window</field>
@@ -259,7 +318,31 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state', '=', 'travaux_a_valider')]</field>
-            <field name="view_id" ref="is_ot_travaux_a_realiser_view_tree"/>
+            <field name="view_id" ref="is_ot_travaux_a_valider_view_tree"/>
+        </record>
+
+
+
+        <record id="is_ot_travaux_annule_view_tree" model="ir.ui.view">
+            <field name="name">is.ot.travaux.annule.view.tree</field>
+            <field name="model">is.ot</field>
+            <field name="arch" type="xml">
+                <tree string="Travaux annulés" create="false">
+                    <field name="name" />
+                    <field name="date_creation" />
+                    <field name="demandeur_id" />
+                    <field name="type_equipement_id"/>
+                    <field name="equipement_id" />
+                    <field name="moule_id" />
+                    <field name="dossierf_id" />
+                    <field name="code_gravite"/>
+                    <field name="descriptif"/>
+                    <field name="numero_qrci" />
+                    <field name="affectation_id" />
+                    <field name="nature" />
+                    <field name="delai_previsionnel" />
+                </tree>
+            </field>
         </record>
         <record id="action_is_ot_annule" model="ir.actions.act_window">
             <field name="name">Annulé</field>
@@ -268,13 +351,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state', '=', 'annule')]</field>
-            <field name="view_id" ref="is_ot_creation_view_tree"/>
+            <field name="view_id" ref="is_ot_travaux_annule_view_tree"/>
         </record>
+
         <record id="is_ot_termine_view_tree" model="ir.ui.view">
             <field name="name">is.ot.termine.view.tree</field>
             <field name="model">is.ot</field>
             <field name="arch" type="xml">
-                <tree string="Gestion des OT">
+                <tree string="Terminé" create="false">
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
