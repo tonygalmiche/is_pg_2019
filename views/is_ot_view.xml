@@ -95,12 +95,10 @@
                                 <field 
                                     name="moule_id"
                                     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
-                                    domain="[('is_database_id','=',site_id)]"
                                 />
                                 <field
                                     name="dossierf_id"
                                     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
-                                    domain="[('is_database_id','=',site_id)]"
                                 />
                                 <field name="numero_qrci"  attrs="{'readonly': [('state', '!=', 'creation')]}" />
                             </group>
