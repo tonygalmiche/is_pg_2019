@@ -48,6 +48,16 @@
               parent="menu_is_cpi_indicateurs" sequence="20" />
 
 
+    <record model="ir.actions.act_url" id="is_url_indicateur_trs_new_action">
+        <field name="name">is_url_indicateur_trs_new_action</field>
+        <field name="url">http://localhost</field>
+        <field name="type">ir.actions.act_url</field>
+    </record>
+
+    <menuitem name="TRS (new)" id="is_url_indicateur_trs_new_menu" action="is_url_indicateur_trs_new_action"
+              parent="menu_is_cpi_indicateurs" sequence="21" />
+
+
     <!-- presse.cycle -->
     <record model="ir.ui.view" id="is_presse_cycle_tree_view">
         <field name="name">is.presse.cycle.tree</field>
