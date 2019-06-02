@@ -45,84 +45,6 @@ class is_etat_presse(models.Model):
     _defaults = {}
 
 
-#class is_presse(models.Model):
-
-#    def arret_raspberry(self, cr, uid, ids, context=None):
-#        for obj in self.browse(cr, uid, ids, context=context):
-#            if obj.raspberry_id:
-#                IP=obj.raspberry_id.name
-#                cmd="ssh root@"+IP+" halt"
-#                os.system(cmd)
-#        return
-
-#    def reboot_raspberry(self, cr, uid, ids, context=None):
-#        for obj in self.browse(cr, uid, ids, context=context):
-#            if obj.raspberry_id:
-#                IP=obj.raspberry_id.name
-#                cmd="ssh root@"+IP+" reboot"
-#                os.system(cmd)
-#        return
-
-#    def rafraichir_raspberry(self, cr, uid, ids, context=None):
-#        for obj in self.browse(cr, uid, ids, context=context):
-#            if obj.raspberry_id:
-#                IP=obj.raspberry_id.name
-#                cmd="ssh root@"+IP+" killall midori"
-#                os.system(cmd)
-#        return
-
-#    def interface_presse(self, cr, uid, ids, context=None):
-#        presse=""
-#        for obj in self.browse(cr, uid, ids, context=context):
-#            presse = obj.name
-#            user   = self.pool['res.users'].browse(cr, uid, [uid], context=context)[0]
-#            soc    = user.company_id.is_code_societe
-#        url = "http://raspberry-cpi/presse.php?soc="+str(soc)+"&presse="+presse
-#        return {
-#            'name'     : 'Go to website',
-#            'res_model': 'ir.actions.act_url',
-#            'type'     : 'ir.actions.act_url',
-#            'target'   : 'current',
-#            'url'      : url
-#        }
-
-
-#    @api.depends('name')
-#    def _couleur(self):
-#        for obj in self:
-#            couleur=""
-#            for color in colors:
-#                if obj.etat_presse_id.couleur==color[0]:
-#                    couleur=color[1]
-#            obj.couleur=couleur
-
-
-#    @api.depends('name')
-#    def _nb_cycles(self):
-#        return
-
-
-#    _name = 'is.presse'
-#    _description = u"Presse"
-#    _order='name'
-
-#    name           = fields.Char('Code' , required=True)
-#    intitule       = fields.Char('Intitulé', required=True)
-#    ordre          = fields.Integer('Ordre', required=False)
-#    ilot_id        = fields.Many2one('is.ilot', u"Ilot", required=False)
-#    raspberry_id   = fields.Many2one('is.raspberry', u"Raspberry", required=False)
-#    etat_presse_id = fields.Many2one('is.etat.presse', u"État Presse", required=False)
-#    couleur        = fields.Char('Couleur'            , compute='_couleur')
-#    nb_cycles      = fields.Integer('Nombre de cycles', compute='_nb_cycles')
-#    prioritaire    = fields.Boolean('Presse prioritaire')
-
-#    _sql_constraints = [
-#        ('name_uniq', 'unique(name)', u"Le code de la presse doit être unique !"),
-#    ]
-#    _defaults = {}
-
-
-
 class is_raspberry(models.Model):
     _name = 'is.raspberry'
     _description = u"raspberry"
@@ -533,4 +455,25 @@ class is_type_defaut(models.Model):
     ]
     _defaults = {}
 
+
+class is_theia_trs(models.Model):
+    _name = 'is.theia.trs'
+    _description = u"Table calculée pour optimiser temps de réponse analyse TRS"
+    _order='presse,date_heure desc,of'
+
+    date_heure   = fields.Datetime(u'Heure début' , required=True, select=True)
+    presse       = fields.Char(u'Presse'          , required=True, select=True)
+    presse_id    = fields.Many2one('is.equipement', u"Presse", required=True, select=True)
+    ilot         = fields.Char(u'Ilot', select=True)
+    etat         = fields.Char(u'État'            , required=True, select=True)
+    etat_id      = fields.Many2one('is.etat.presse', u"État", required=True, select=True)
+    couleur      = fields.Char(u'Couleur Etat')
+    of           = fields.Char(u'OF'              , required=True, select=True)
+    of_id        = fields.Many2one('is.of', u"OF" , select=True)
+    code_article = fields.Char('Code article', select=True)
+    categorie    = fields.Char('Catégorie', select=True)
+    moule        = fields.Char(u'Moule'           , required=True, select=True)
+    coef_theia   = fields.Float("Coefficient Theia", digits=(14,1), defaut=1)
+    duree_etat   = fields.Float("Durée dans cet état")
+    duree_of     = fields.Float("Durée par OF")
 

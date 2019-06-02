@@ -63,3 +63,10 @@ access_is_ctrl100_defautheque_qualite,access_is_ctrl100_defautheque,model_is_ctr
 access_is_ctrl100_defaut_qualite,access_is_ctrl100_defaut,model_is_ctrl100_defaut,is_plastigray.is_qualite_group,1,1,1,1
 access_is_ctrl100_defaut_line_qualite,access_is_ctrl100_defaut_line,model_is_ctrl100_defaut_line,is_plastigray.is_qualite_group,1,1,1,1
 
+access_is_theia_trs,access_is_theia_trs,model_is_theia_trs,base.group_user,1,0,0,0
+
+
+
+
+
+

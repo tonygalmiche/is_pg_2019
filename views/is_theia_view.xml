@@ -654,7 +654,89 @@
     </record>
 
 
-
+    <!-- is.theia.trs -->
+    <record model="ir.ui.view" id="is_theia_trs_tree_view">
+        <field name="name">is.theia.trs.tree</field>
+        <field name="model">is.theia.trs</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_heure"/>
+                <field name="presse"/>
+                <field name="ilot"/>
+                <field name="etat"/>
+                <field name="couleur" widget='pgcolor'/>
+                <field name="of"/>
+                <field name="code_article"/>
+                <field name="categorie"/>
+                <field name="moule"/>
+                <field name="duree_of"   widget="float_time" sum="Total"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_trs_form_view">
+        <field name="name">is.theia.trs.form</field>
+        <field name="model">is.theia.trs</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="date_heure"/>
+                    <field name="presse_id"/>
+                    <field name="ilot"/>
+                    <field name="etat_id"/>
+                    <field name="couleur"/>
+                    <field name="of_id"/>
+                    <field name="code_article"/>
+                    <field name="categorie"/>
+                    <field name="moule"/>
+                    <field name="coef_theia"/>
+                    <field name="duree_etat" widget="float_time"/>
+                    <field name="duree_of"   widget="float_time"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_trs_search_view" >
+        <field name="name">is.theia.trs.search</field>
+        <field name="model">is.theia.trs</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="presse"/>
+                <field name="ilot"/>
+                <field name="etat"/>
+                <field name="of"/>
+                <field name="code_article"/>
+                <field name="categorie"/>
+                <field name="moule"/>
+                <group expand="0" string="Regroupé par...">
+                  <filter name="group_annee"        string="Année"     context="{'group_by':'date_heure:year'}"/>
+                  <filter name="group_mois"         string="Mois"      context="{'group_by':'date_heure:month'}"/>
+                  <filter name="group_semaine"      string="Semaine"   context="{'group_by':'date_heure:week'}"/>
+                  <filter name="group_jour"         string="Jour"      context="{'group_by':'date_heure:day'}"/>
+                  <filter name="group_presse"       string="Presse"    context="{'group_by':'presse'}"/>
+                  <filter name="group_ilot"         string="Ilot"      context="{'group_by':'ilot'}"/>
+                  <filter name="group_etat"         string="Etat"      context="{'group_by':'etat'}"/>
+                  <filter name="group_of"           string="OF"        context="{'group_by':'of'}"/>
+                  <filter name="group_code_article" string="Article"   context="{'group_by':'code_article'}"/>
+                  <filter name="group_categorie"    string="Catégorie" context="{'group_by':'categorie'}"/>
+                  <filter name="group_moule"        string="Moule"     context="{'group_by':'moule'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_theia_trs_action">
+        <field name="name">Table TRS</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.theia.trs</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem 
+        action="is_theia_trs_action" 
+        id="menu_is_theia_trs" 
+        parent="menu_is_cpi_indicateurs" 
+        sequence="90"
+    />
 
 </data>
 </openerp>
