@@ -378,7 +378,7 @@
                         </tr>
                         <tr>
                             <td class="rowcenter4">
-                                <span t-field="o.is_mold_dossierf" />
+                                <span t-field="o.mold_tampo_id" />
                             </td>
                             <td class="rowcenter4">
                                 <div>

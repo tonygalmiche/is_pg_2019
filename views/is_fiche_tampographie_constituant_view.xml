@@ -89,6 +89,7 @@
                     <field name="article_injection_id" />
                     <field name="is_mold_dossierf" />
                     <field name="article_tampo_id" />
+                    <field name="mold_tampo_id" />
                     <field name="temps_cycle" />
                     <field name="nettoyage_materiel_id" />
                     <field name="date_redaction" />
@@ -146,6 +147,7 @@
                                 <field name="article_injection_id" />
                                 <field name="is_mold_dossierf" />
                                 <field name="article_tampo_id" />
+                                <field name="mold_tampo_id" />
                                 <field name="temps_cycle" />
                                 <field name="nettoyage_materiel_id" domain="[('is_category_id.name','=','71')]" />
                                 <field name="nettoyage_piece_id" domain="[('is_category_id.name','=','71')]" />
@@ -193,6 +195,21 @@
                 </form>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="is_fiche_tampographie_search_view" >
+            <field name="name">is_fiche_tampographie_search_view</field>
+            <field name="model">is.fiche.tampographie</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="article_injection_id"/>
+                    <field name="is_mold_dossierf"/>
+                    <field name="article_tampo_id"/>
+                    <field name="mold_tampo_id"/>
+                </search>
+            </field>
+        </record>
+
         <record id="action_is_fiche_tampographie" model="ir.actions.act_window">
             <field name="name">Tampographie</field>
             <field name="type">ir.actions.act_window</field>

@@ -267,8 +267,9 @@ class is_fiche_tampographie(models.Model):
 
     name                  = fields.Char(u'Désignation', required=True)
     article_injection_id  = fields.Many2one('product.product', u'Référence pièce sortie injection', required=True)
-    is_mold_dossierf      = fields.Char('Moule', related='article_injection_id.is_mold_dossierf', readonly=True)
+    is_mold_dossierf      = fields.Char(u'Moule pièce sortie injection', related='article_injection_id.is_mold_dossierf', readonly=True)
     article_tampo_id      = fields.Many2one('product.product', u'Référence pièce tampographiée', required=True)
+    mold_tampo_id         = fields.Char(u'Moule pièce tampographiée', related='article_tampo_id.is_mold_dossierf', readonly=True)
     temps_cycle           = fields.Integer('Temps de cycle (s)')
     recette_ids           = fields.One2many('is.fiche.tampographie.recette', 'tampographie_id', 'Recette', copy=True)
     reglage_ids           = fields.One2many('is.fiche.tampographie.reglage', 'tampographie_id', 'Reglage', copy=True)
