@@ -182,7 +182,7 @@ class is_ot(models.Model):
             ], u"Gravité", required=True)
     code_gravite        = fields.Char(u"Gravité",help="Code gravité", store=True, readonly=True, compute='_compute_gravite')
     date_intervention_demandee = fields.Date(u"Date intervention demandée", copy=False)
-    numero_qrci         = fields.Char(u"Numéro de QRCI")
+    numero_qrci         = fields.Char(u"Numéro de QRCI/TPM")
     descriptif          = fields.Text('Descriptif')
     complement          = fields.Text(u"Complément d'information")
     nature              = fields.Selection([
