@@ -76,6 +76,8 @@ class is_ot(models.Model):
     @api.multi
     def vers_travaux_a_valider(self):
         for data in self:
+            if not data.date_realisation_travaux:
+                data.date_realisation_travaux = datetime.datetime.today()
             data.signal_workflow('travaux_a_valider')
         return True
 
@@ -179,6 +181,7 @@ class is_ot(models.Model):
             ('3', u"3-action d'amélioration ou de modification"),
             ], u"Gravité", required=True)
     code_gravite        = fields.Char(u"Gravité",help="Code gravité", store=True, readonly=True, compute='_compute_gravite')
+    date_intervention_demandee = fields.Date(u"Date intervention demandée", copy=False)
     numero_qrci         = fields.Char(u"Numéro de QRCI")
     descriptif          = fields.Text('Descriptif')
     complement          = fields.Text(u"Complément d'information")
@@ -190,12 +193,14 @@ class is_ot(models.Model):
             ('predictif', u"Prédictif"),
             ('changement_de_version', "Changement de version"),
             ], "Nature")
-    affectation_id      = fields.Many2one("is.ot.affectation", "Affectation")
-    delai_previsionnel  = fields.Float(u"Temps d'intervention prévisionnel (H)", digits=(14, 2))
+    affectation_id                   = fields.Many2one("is.ot.affectation", "Affectation")
+    delai_previsionnel               = fields.Float(u"Temps d'intervention prévisionnel (H)", digits=(14, 2))
+    date_previsionnelle_intervention = fields.Date(u"Date prévisionnelle d'intervention", copy=False)
+    date_realisation_travaux         = fields.Date(u"Date de réalisation des travaux", copy=False)
     validation_ot       = fields.Selection([
             ("non", "Non"),
             ("oui", "Oui"),
-        ], "Travaux à valider")
+        ], "Travaux à réaliser")
     motif               = fields.Char("Motif")
     temps_passe_ids     = fields.One2many('is.ot.temps.passe', 'ot_id', u"Temps passé")
     

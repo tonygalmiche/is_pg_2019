@@ -87,6 +87,7 @@
                                     domain="[('type_id','=',type_equipement_id),('database_id','=',site_id)]"
                                 />
                                 <field name="gravite" attrs="{'readonly': [('state', '!=', 'creation')]}"/>
+                                <field name="date_intervention_demandee" attrs="{'readonly': [('state', '!=', 'creation')]}"/>
                             </group>
                             <group>
                                 <field name="site_id"      readonly="1"/>
@@ -128,7 +129,28 @@
                                         'required': [('state', '=', 'analyse_ot'),('validation_ot', '=', 'oui')]
                                     }"
                                 />
-                                <field name="delai_previsionnel" attrs="{'invisible': [('state', '=', 'creation')], 'readonly': [('state', '!=', 'analyse_ot')]}" />
+                                <field
+                                    name="delai_previsionnel"
+                                    attrs="{
+                                        'invisible': ['|',('state', '=', 'creation'),('validation_ot', '!=', 'oui')],
+                                        'readonly': [('state', '!=', 'analyse_ot')]
+                                    }"
+                                />
+                                <field 
+                                    name="date_previsionnelle_intervention" 
+                                    attrs="{
+                                        'invisible': ['|',('state', '=', 'creation'),('validation_ot', '!=', 'oui')],
+                                        'readonly': [('state', '!=', 'analyse_ot')]
+                                    }"
+                                />
+                                <field 
+                                    name="date_realisation_travaux" 
+                                    attrs="{
+                                        'invisible': ['|',('state', 'in', ['creation','analyse_ot','annule']),('validation_ot', '!=', 'oui')],
+                                        'readonly': [('state', '!=', 'travaux_a_realiser')]
+                                    }"
+                                />
+
                             </group>
                         </group>
                         <group>
@@ -189,6 +211,14 @@
                     <field name="moule_id"/>
                     <field name="dossierf_id"/>
                     <field name="code_gravite"/>
+                    <group expand="0" string="Regroupé par...">
+                      <filter name="group_demandeur_id"       string="Demandeur"       context="{'group_by':'demandeur_id'}"/>
+                      <filter name="group_type_equipement_id" string="Type équipement" context="{'group_by':'type_equipement_id'}"/>
+                      <filter name="group_equipement_id"      string="Équipement"      context="{'group_by':'equipement_id'}"/>
+                      <filter name="group_moule_id"           string="Moule"           context="{'group_by':'moule_id'}"/>
+                      <filter name="group_dossierf_id"        string="Dossier F"       context="{'group_by':'dossierf_id'}"/>
+                      <filter name="group_affectation_id"     string="Affectation"     context="{'group_by':'affectation_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -214,6 +244,7 @@
                     <field name="moule_id" />
                     <field name="dossierf_id" />
                     <field name="code_gravite"/>
+                    <field name="date_intervention_demandee"/>
                     <field name="descriptif"/>
                     <field name="numero_qrci" />
                 </tree>
@@ -275,6 +306,7 @@
                     <field name="affectation_id" />
                     <field name="nature" />
                     <field name="delai_previsionnel" />
+                    <field name="date_previsionnelle_intervention" />
                 </tree>
             </field>
         </record>
@@ -306,6 +338,7 @@
                     <field name="affectation_id" />
                     <field name="nature" />
                     <field name="delai_previsionnel" />
+                    <field name="date_previsionnelle_intervention" />
                 </tree>
             </field>
         </record>
@@ -339,6 +372,7 @@
                     <field name="affectation_id" />
                     <field name="nature" />
                     <field name="delai_previsionnel" />
+                    <field name="date_previsionnelle_intervention" />
                 </tree>
             </field>
         </record>
@@ -370,6 +404,7 @@
                     <field name="affectation_id" />
                     <field name="nature" />
                     <field name="delai_previsionnel" />
+                    <field name="date_previsionnelle_intervention" />
                     <field name="valideur_id" />
                 </tree>
             </field>
