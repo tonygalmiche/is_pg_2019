@@ -35,21 +35,22 @@
         <menuitem id="menu_action_is_head_model_form" sequence="30"  parent="base.menu_res_company_global" action="action_is_head_model_form" />
 
         <!-- Production / Gestion des OT -->
+        <menuitem id="menu_action_is_ot_affectation_form" sequence="100" parent="is_plastigray.menu_is_dt_tables" action="action_is_ot_affectation" name="Gestion des OT Affectation"/>
         <record id="is_gestion_des_ot_menu" model="ir.ui.menu" >
             <field name="name">Gestion des OT</field>
             <field name="sequence">28</field>
             <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
             <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
         </record>
+        <menuitem id="menu_action_is_ot_form"                     sequence="10" parent="is_gestion_des_ot_menu" action="action_is_ot" />
+        <menuitem id="menu_action_is_ot_creation_state"           sequence="30" parent="is_gestion_des_ot_menu" action="action_is_ot_creation"            name="Création"/>
+        <menuitem id="menu_action_is_ot_analyse_ot_state"         sequence="40" parent="is_gestion_des_ot_menu" action="action_is_ot_analyse_ot"          name="Analyse de l'OT"/>
+        <menuitem id="menu_action_is_ot_travaux_a_realiser_state" sequence="50" parent="is_gestion_des_ot_menu" action="action_is_ot_travaux_a_realiser"  name="Travaux à réaliser"/>
+        <menuitem id="menu_action_is_ot_travaux_a_valider_state"  sequence="60" parent="is_gestion_des_ot_menu" action="action_is_ot_travaux_a_valider"   name="Travaux à valider"/>
+        <menuitem id="menu_action_is_ot_annule_state"             sequence="70" parent="is_gestion_des_ot_menu" action="action_is_ot_annule"              name="Annulé"/>
+        <menuitem id="menu_action_is_ot_termine_state"            sequence="80" parent="is_gestion_des_ot_menu" action="action_is_ot_termine"             name="Terminé"/>
+        <menuitem id="is_ot_indicateur_menu"                      sequence="90" parent="is_gestion_des_ot_menu" action="is_ot_indicateur_action"          name="Indicateurs"/>
 
-        <menuitem id="menu_action_is_ot_form"                     sequence="1"   parent="is_gestion_des_ot_menu"          action="action_is_ot" />
-        <menuitem id="menu_action_is_ot_affectation_form"         sequence="102" parent="is_plastigray.menu_is_dt_tables" action="action_is_ot_affectation"         name="Gestion des OT Affectation"/>
-        <menuitem id="menu_action_is_ot_creation_state"           sequence="103" parent="is_gestion_des_ot_menu"          action="action_is_ot_creation"            name="Création"/>
-        <menuitem id="menu_action_is_ot_analyse_ot_state"         sequence="104" parent="is_gestion_des_ot_menu"          action="action_is_ot_analyse_ot"          name="Analyse de l'OT"/>
-        <menuitem id="menu_action_is_ot_travaux_a_realiser_state" sequence="105" parent="is_gestion_des_ot_menu"          action="action_is_ot_travaux_a_realiser"  name="Travaux à réaliser"/>
-        <menuitem id="menu_action_is_ot_travaux_a_valider_state"  sequence="106" parent="is_gestion_des_ot_menu"          action="action_is_ot_travaux_a_valider"   name="Travaux à valider"/>
-        <menuitem id="menu_action_is_ot_annule_state"             sequence="107" parent="is_gestion_des_ot_menu"          action="action_is_ot_annule"              name="Annulé"/>
-        <menuitem id="menu_action_is_ot_termine_state"            sequence="108" parent="is_gestion_des_ot_menu"          action="action_is_ot_termine"             name="Terminé"/>
 
         <!-- Contrôle 100% -->
         <record id="menu_is_controle_100" model="ir.ui.menu" >

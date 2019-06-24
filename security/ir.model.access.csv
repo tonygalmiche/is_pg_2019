@@ -24,6 +24,7 @@ access_user_is_ot,access_is_ot,model_is_ot,base.group_user,1,1,1,0
 access_user_is_ot_temps_passe,access_is_ot_temps_passe,model_is_ot_temps_passe,base.group_user,1,1,1,0
 access_is_gestionnaire_tables_group_affectation,access_is_ot_affectation,model_is_ot_temps_passe,is_plastigray.is_gestionnaire_tables_group,1,1,1,1
 access_user_is_ot_affectation,access_is_ot_affectation,model_is_ot_affectation,base.group_user,1,0,0,0
+access_is_ot_indicateur,access_is_ot_indicateur,model_is_ot_indicateur,base.group_user,1,1,1,1
 
 access_is_raspberry,access_is_raspberry,model_is_raspberry,base.group_user,1,0,0,0
 access_is_presse_cycle,access_is_presse_cycle,model_is_presse_cycle,base.group_user,1,0,0,0

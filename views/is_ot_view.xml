@@ -2,6 +2,46 @@
 <openerp>
     <data>
 
+        <!-- is.ot.indicateur-->
+        <record id="is_ot_indicateur_form_view" model="ir.ui.view">
+            <field name="name">is_ot_indicateur_form_view</field>
+            <field name="model">is.ot.indicateur</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="date_debut"/>
+                            <field name="date_fin"/>
+                            <field name="nb_heures_technicien"/>
+                            <field name="nb_heures_nature"/>
+                            <field name="nb_heures_equipement"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="is_ot_indicateur_tree_view" model="ir.ui.view">
+            <field name="name">is_ot_indicateur_tree_view</field>
+            <field name="model">is.ot.indicateur</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date_debut"/>
+                    <field name="date_fin"/>
+                    <field name="nb_heures_technicien"/>
+                    <field name="nb_heures_nature"/>
+                    <field name="nb_heures_equipement"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_ot_indicateur_action" model="ir.actions.act_window">
+            <field name="name">Indicateur sur les OTs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ot.indicateur</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('create_uid','=',uid)]</field>
+        </record>
+
 
         <!-- Is OT Affectation-->
         <record id="is_ot_affectation_view_tree" model="ir.ui.view">
@@ -306,6 +346,7 @@
                     <field name="affectation_id" />
                     <field name="nature" />
                     <field name="delai_previsionnel" />
+                    <field name="date_intervention_demandee" />
                     <field name="date_previsionnelle_intervention" />
                 </tree>
             </field>
@@ -339,6 +380,7 @@
                     <field name="nature" />
                     <field name="delai_previsionnel" />
                     <field name="date_previsionnelle_intervention" />
+                    <field name="date_realisation_travaux" />
                 </tree>
             </field>
         </record>
@@ -406,6 +448,7 @@
                     <field name="delai_previsionnel" />
                     <field name="date_previsionnelle_intervention" />
                     <field name="valideur_id" />
+                    <field name="date_realisation_travaux" />
                 </tree>
             </field>
         </record>

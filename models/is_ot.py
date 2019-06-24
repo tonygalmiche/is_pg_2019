@@ -10,6 +10,16 @@ from openerp import SUPERUSER_ID
 from lxml import etree
 
 
+_NATURE=[
+    ('preventif', u"Préventif"),
+    ('curatif', "Curatif"),
+    ('amelioratif', u"Amélioratif"),
+    ('securite', u"Sécurité"),
+    ('predictif', u"Prédictif"),
+    ('changement_de_version', "Changement de version"),
+]
+
+
 class is_ot_affectation(models.Model):
     _name = 'is.ot.affectation'
 
@@ -185,14 +195,7 @@ class is_ot(models.Model):
     numero_qrci         = fields.Char(u"Numéro de QRCI/TPM")
     descriptif          = fields.Text('Descriptif')
     complement          = fields.Text(u"Complément d'information")
-    nature              = fields.Selection([
-            ('preventif', u"Préventif"),
-            ('curatif', "Curatif"),
-            ('amelioratif', u"Amélioratif"),
-            ('securite', u"Sécurité"),
-            ('predictif', u"Prédictif"),
-            ('changement_de_version', "Changement de version"),
-            ], "Nature")
+    nature              = fields.Selection(_NATURE, "Nature")
     affectation_id                   = fields.Many2one("is.ot.affectation", "Affectation")
     delai_previsionnel               = fields.Float(u"Temps d'intervention prévisionnel (H)", digits=(14, 2))
     date_previsionnelle_intervention = fields.Date(u"Date prévisionnelle d'intervention", copy=False)
@@ -211,4 +214,151 @@ class is_ot(models.Model):
         ], "Validation travaux")
     nouveau_delai       = fields.Date(u"Nouveau délai")
     commentaires_non_ok = fields.Text("Commentaire")
+
+
+
+class is_ot_indicateur(models.Model):
+    _name = 'is.ot.indicateur'
+    _rec_name = "date_debut"
+    _order = 'id desc'
+
+    date_debut           = fields.Date("Date de début", required=True)
+    date_fin             = fields.Date("Date de fin"  , required=True)
+    nb_heures_technicien = fields.Boolean(u"Nombre d'heures par technicien", default=True)
+    nb_heures_nature     = fields.Boolean(u"Nombre d'heures par nature"    , default=True)
+    nb_heures_equipement = fields.Boolean(u"Nombre d'heures par équipement", default=True)
+
+
+    @api.multi
+    def get_nb_heures_technicien(self):
+        """Nombre d'heures par technicien"""
+        cr = self._cr
+        r=[]
+        for obj in self:
+            SQL="""
+                SELECT rp.name, sum(temps_passe)
+                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+                              inner join res_users ru on iotp.technicien_id=ru.id
+                              inner join res_partner rp on ru.partner_id=rp.id
+                WHERE 
+                    io.date_creation>='"""+str(obj.date_debut)+"""' and
+                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                GROUP BY rp.name
+                ORDER BY rp.name
+            """
+            cr.execute(SQL)
+            res = cr.fetchall()
+            for row in res:
+                r.append(row)
+        return r
+
+
+    @api.multi
+    def get_nb_heures_nature(self):
+        """Nombre d'heures par nature"""
+        cr = self._cr
+        r=[]
+        for obj in self:
+            SQL="""
+                SELECT io.nature, sum(temps_passe)
+                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+                              inner join res_users ru on iotp.technicien_id=ru.id
+                              inner join res_partner rp on ru.partner_id=rp.id
+                WHERE 
+                    io.date_creation>='"""+str(obj.date_debut)+"""' and
+                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                GROUP BY io.nature
+                ORDER BY io.nature
+            """
+            cr.execute(SQL)
+            res = cr.fetchall()
+            for row in res:
+                nature=row[0]
+                for l in _NATURE:
+                    if l[0]==row[0]:
+                        nature=l[1]
+                line=[nature,row[1]]
+                r.append(line)
+        return r
+
+
+    @api.multi
+    def get_nb_heures_equipement(self):
+        """Nombre d'heures par equipement"""
+        cr = self._cr
+        r=[]
+        for obj in self:
+            SQL="""
+                SELECT iet.name, sum(temps_passe)
+                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+                              inner join res_users ru on iotp.technicien_id=ru.id
+                              inner join res_partner rp on ru.partner_id=rp.id
+                              inner join is_equipement_type iet on io.type_equipement_id=iet.id
+                WHERE 
+                    io.date_creation>='"""+str(obj.date_debut)+"""' and
+                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                GROUP BY iet.name
+                ORDER BY iet.name
+            """
+            cr.execute(SQL)
+            res = cr.fetchall()
+            for row in res:
+                r.append(row)
+        return r
+
+
+
+    @api.multi
+    def get_nb_heures_moule(self):
+        """Nombre d'heures par moule"""
+        cr = self._cr
+        r=[]
+        for obj in self:
+            SQL="""
+                SELECT im.name, sum(temps_passe)
+                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+                              inner join res_users ru on iotp.technicien_id=ru.id
+                              inner join res_partner rp on ru.partner_id=rp.id
+                              inner join is_mold im on io.moule_id=im.id
+                WHERE 
+                    io.date_creation>='"""+str(obj.date_debut)+"""' and
+                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                GROUP BY im.name
+                ORDER BY im.name
+            """
+            cr.execute(SQL)
+            res = cr.fetchall()
+            for row in res:
+                r.append(row)
+        return r
+
+
+    @api.multi
+    def get_nb_heures_dossierf(self):
+        """Nombre d'heures par dossierf"""
+        cr = self._cr
+        r=[]
+        for obj in self:
+            SQL="""
+                SELECT id.name, sum(temps_passe)
+                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+                              inner join res_users ru on iotp.technicien_id=ru.id
+                              inner join res_partner rp on ru.partner_id=rp.id
+                              inner join is_dossierf id on io.dossierf_id=id.id
+                WHERE 
+                    io.date_creation>='"""+str(obj.date_debut)+"""' and
+                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                GROUP BY id.name
+                ORDER BY id.name
+            """
+            cr.execute(SQL)
+            res = cr.fetchall()
+            for row in res:
+                r.append(row)
+        return r
+
+
+
+
+
 
