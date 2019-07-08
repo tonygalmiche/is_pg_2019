@@ -141,6 +141,14 @@
                                     name="dossierf_id"
                                     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
                                 />
+                                <field
+                                    name="gabarit_id"
+                                    attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
+                                />
+                                <field
+                                    name="instrument_id"
+                                    attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
+                                />
                                 <field name="numero_qrci"  attrs="{'readonly': [('state', '!=', 'creation')]}" />
                             </group>
                         </group>
@@ -250,14 +258,19 @@
                     <field name="equipement_id"/>
                     <field name="moule_id"/>
                     <field name="dossierf_id"/>
+                    <field name="gabarit_id"/>
+                    <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <group expand="0" string="Regroupé par...">
-                      <filter name="group_demandeur_id"       string="Demandeur"       context="{'group_by':'demandeur_id'}"/>
-                      <filter name="group_type_equipement_id" string="Type équipement" context="{'group_by':'type_equipement_id'}"/>
-                      <filter name="group_equipement_id"      string="Équipement"      context="{'group_by':'equipement_id'}"/>
-                      <filter name="group_moule_id"           string="Moule"           context="{'group_by':'moule_id'}"/>
-                      <filter name="group_dossierf_id"        string="Dossier F"       context="{'group_by':'dossierf_id'}"/>
-                      <filter name="group_affectation_id"     string="Affectation"     context="{'group_by':'affectation_id'}"/>
+                      <filter name="group_demandeur_id"       string="Demandeur"            context="{'group_by':'demandeur_id'}"/>
+                      <filter name="group_type_equipement_id" string="Type équipement"      context="{'group_by':'type_equipement_id'}"/>
+                      <filter name="group_equipement_id"      string="Équipement"           context="{'group_by':'equipement_id'}"/>
+                      <filter name="group_moule_id"           string="Moule"                context="{'group_by':'moule_id'}"/>
+                      <filter name="group_dossierf_id"        string="Dossier F"            context="{'group_by':'dossierf_id'}"/>
+                      <filter name="group_dossierf_id"        string="Dossier F"            context="{'group_by':'dossierf_id'}"/>
+                      <filter name="group_gabarit_id"         string="Gabarit de Contrôle"  context="{'group_by':'gabarit_id'}"/>
+                      <filter name="group_instrument_id"      string="Instrument de mesure" context="{'group_by':'instrument_id'}"/>
+                      <filter name="group_affectation_id"     string="Affectation"          context="{'group_by':'affectation_id'}"/>
                     </group>
                 </search>
             </field>
@@ -279,14 +292,17 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
-                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
+                    <field name="gabarit_id"/>
+                    <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <field name="date_intervention_demandee"/>
                     <field name="descriptif"/>
-                    <field name="numero_qrci" />
+                    <field name="numero_qrci"/>
+                    <field name="pj" invisible="1"/>
+                    <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -308,13 +324,16 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
-                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
+                    <field name="gabarit_id"/>
+                    <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <field name="descriptif"/>
                     <field name="numero_qrci" />
+                    <field name="pj" invisible="1"/>
+                    <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -336,10 +355,11 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
-                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
+                    <field name="gabarit_id"/>
+                    <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <field name="descriptif"/>
                     <field name="numero_qrci" />
@@ -348,6 +368,8 @@
                     <field name="delai_previsionnel" />
                     <field name="date_intervention_demandee" />
                     <field name="date_previsionnelle_intervention" />
+                    <field name="pj" invisible="1"/>
+                    <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -369,10 +391,11 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
-                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
+                    <field name="gabarit_id"/>
+                    <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <field name="descriptif"/>
                     <field name="numero_qrci" />
@@ -381,6 +404,8 @@
                     <field name="delai_previsionnel" />
                     <field name="date_previsionnelle_intervention" />
                     <field name="date_realisation_travaux" />
+                    <field name="pj" invisible="1"/>
+                    <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -404,10 +429,11 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
-                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
+                    <field name="gabarit_id"/>
+                    <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <field name="descriptif"/>
                     <field name="numero_qrci" />
@@ -415,6 +441,8 @@
                     <field name="nature" />
                     <field name="delai_previsionnel" />
                     <field name="date_previsionnelle_intervention" />
+                    <field name="pj" invisible="1"/>
+                    <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -436,10 +464,11 @@
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
-                    <field name="type_equipement_id"/>
                     <field name="equipement_id" />
                     <field name="moule_id" />
                     <field name="dossierf_id" />
+                    <field name="gabarit_id"/>
+                    <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <field name="descriptif"/>
                     <field name="numero_qrci" />
@@ -449,6 +478,8 @@
                     <field name="date_previsionnelle_intervention" />
                     <field name="valideur_id" />
                     <field name="date_realisation_travaux" />
+                    <field name="pj" invisible="1"/>
+                    <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
                 </tree>
             </field>
         </record>

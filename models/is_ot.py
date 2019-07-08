@@ -49,9 +49,13 @@ class is_ot(models.Model):
             count += 1
         if vals and vals.get('dossierf_id'):
             count += 1
+        if vals and vals.get('gabarit_id'):
+            count += 1
+        if vals and vals.get('instrument_id'):
+            count += 1
         if count == 0 or count > 1:
             raise except_orm(_('Configuration!'),
-                             _("Il est obligatoire de saisir un équipement, un moule ou un dossier F"))
+                             _("Il est obligatoire de saisir un équipement, un moule, un dossier F, un gabarit ou un instrument (un seul choix possible)"))
         if self._uid:
             user_data = self.env['res.users'].browse(self._uid)
             if user_data and not user_data.is_site_id:
@@ -78,9 +82,13 @@ class is_ot(models.Model):
                 count += 1
             if data.dossierf_id:
                 count += 1
+            if data.gabarit_id:
+                count += 1
+            if data.instrument_id:
+                count += 1
             if count == 0 or count > 1:
                 raise except_orm(_('Configuration!'),
-                                 _("Il faut choisir entre équipement, moule ou dossier F (un seul choix possible)"))
+                                 _("Il est obligatoire de saisir un équipement, un moule, un dossier F, un gabarit ou un instrument (un seul choix possible)"))
         return res
 
     @api.multi
@@ -129,6 +137,13 @@ class is_ot(models.Model):
             self.envoi_mail(email_from, email_to, subject, body_html)
         return self.write({'state': 'annule'})
 
+
+    @api.multi
+    def pj_action(self):
+        for obj in self:
+            print obj
+
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:context = {}
         res = super(is_ot, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
@@ -167,6 +182,13 @@ class is_ot(models.Model):
                 emplacement = obj.moule_id.emplacement
             obj.emplacement = emplacement
 
+    def _compute_pj(self):
+        for obj in self:
+            attachments = self.env['ir.attachment'].search([('res_model','=',self._name),('res_id','=',obj.id)])
+            pj=False
+            if attachments:
+                pj=True
+            obj.pj=pj
 
     name                = fields.Char(u"N° de l'OT")
     state               = fields.Selection([
@@ -185,6 +207,8 @@ class is_ot(models.Model):
     equipement_id       = fields.Many2one("is.equipement", "Équipement")
     moule_id            = fields.Many2one("is.mold", "Moule")
     dossierf_id         = fields.Many2one("is.dossierf", "Dossier F")
+    gabarit_id          = fields.Many2one("is.gabarit.controle", u"Gabarit de Contrôle")
+    instrument_id       = fields.Many2one("is.instrument.mesure", u"Instrument de mesure")
     gravite             = fields.Selection([
             ('1', u"1-risque de rupture client suite panne moule/machine ; risque pour outillage ou équipement ; risque sécurité ; risque environnemental"),
             ('2', u"2-moule ou équipement en production mais en mode dégradé"),
@@ -214,6 +238,7 @@ class is_ot(models.Model):
         ], "Validation travaux")
     nouveau_delai       = fields.Date(u"Nouveau délai")
     commentaires_non_ok = fields.Text("Commentaire")
+    pj                  = fields.Boolean(u"Pièce jointe", store=False, readonly=True, compute='_compute_pj')
 
 
 
@@ -241,8 +266,9 @@ class is_ot_indicateur(models.Model):
                               inner join res_users ru on iotp.technicien_id=ru.id
                               inner join res_partner rp on ru.partner_id=rp.id
                 WHERE 
-                    io.date_creation>='"""+str(obj.date_debut)+"""' and
-                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and
+                    io.state in ('termine','travaux_a_valider') 
                 GROUP BY rp.name
                 ORDER BY rp.name
             """
@@ -265,8 +291,9 @@ class is_ot_indicateur(models.Model):
                               inner join res_users ru on iotp.technicien_id=ru.id
                               inner join res_partner rp on ru.partner_id=rp.id
                 WHERE 
-                    io.date_creation>='"""+str(obj.date_debut)+"""' and
-                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+                    io.state in ('termine','travaux_a_valider') 
                 GROUP BY io.nature
                 ORDER BY io.nature
             """
@@ -295,8 +322,9 @@ class is_ot_indicateur(models.Model):
                               inner join res_partner rp on ru.partner_id=rp.id
                               inner join is_equipement_type iet on io.type_equipement_id=iet.id
                 WHERE 
-                    io.date_creation>='"""+str(obj.date_debut)+"""' and
-                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+                    io.state in ('termine','travaux_a_valider') 
                 GROUP BY iet.name
                 ORDER BY iet.name
             """
@@ -321,8 +349,9 @@ class is_ot_indicateur(models.Model):
                               inner join res_partner rp on ru.partner_id=rp.id
                               inner join is_mold im on io.moule_id=im.id
                 WHERE 
-                    io.date_creation>='"""+str(obj.date_debut)+"""' and
-                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+                    io.state in ('termine','travaux_a_valider') 
                 GROUP BY im.name
                 ORDER BY im.name
             """
@@ -346,8 +375,9 @@ class is_ot_indicateur(models.Model):
                               inner join res_partner rp on ru.partner_id=rp.id
                               inner join is_dossierf id on io.dossierf_id=id.id
                 WHERE 
-                    io.date_creation>='"""+str(obj.date_debut)+"""' and
-                    io.date_creation<='"""+str(obj.date_fin)+"""'
+                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+                    io.state in ('termine','travaux_a_valider') 
                 GROUP BY id.name
                 ORDER BY id.name
             """

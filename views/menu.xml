@@ -42,7 +42,7 @@
             <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
             <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
         </record>
-        <menuitem id="menu_action_is_ot_form"                     sequence="10" parent="is_gestion_des_ot_menu" action="action_is_ot" />
+        <!--<menuitem id="menu_action_is_ot_form"                     sequence="10" parent="is_gestion_des_ot_menu" action="action_is_ot" />-->
         <menuitem id="menu_action_is_ot_creation_state"           sequence="30" parent="is_gestion_des_ot_menu" action="action_is_ot_creation"            name="Création"/>
         <menuitem id="menu_action_is_ot_analyse_ot_state"         sequence="40" parent="is_gestion_des_ot_menu" action="action_is_ot_analyse_ot"          name="Analyse de l'OT"/>
         <menuitem id="menu_action_is_ot_travaux_a_realiser_state" sequence="50" parent="is_gestion_des_ot_menu" action="action_is_ot_travaux_a_realiser"  name="Travaux à réaliser"/>
