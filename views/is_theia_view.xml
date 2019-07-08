@@ -499,7 +499,7 @@
     <menuitem action="is_theia_ilot_action"
               id="is_theia_ilot_menu"
               parent="is_theia_parametres_menu"
-              sequence="30" groups="base.group_erp_manager"/>
+              sequence="35" groups="base.group_erp_manager"/>
 
 
 
@@ -554,6 +554,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="regroupement_id"/>
                 <field name="production_serie"/>
                 <field name="couleur"/>
                 <field name="colonne"/>
@@ -569,6 +570,7 @@
             <sheet>
                 <group>
                     <field name="name"/>
+                    <field name="regroupement_id"/>
                     <field name="production_serie"/>
                     <field name="couleur"/>
                     <field name="colonne"/>
@@ -584,6 +586,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="regroupement_id"/>
                 <field name="production_serie"/>
                 <field name="couleur"/>
                 <field name="colonne"/>
@@ -602,6 +605,54 @@
               id="menu_is_etat_presse" 
               parent="is_theia_parametres_menu" 
               sequence="15" groups="base.group_erp_manager"/>
+
+
+    <!-- Regroupement État Presse -->
+    <record model="ir.ui.view" id="is_etat_presse_regroupement_tree_view">
+        <field name="name">is.etat.presse.regroupement.tree</field>
+        <field name="model">is.etat.presse.regroupement</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="couleur"/>
+                <field name="ordre"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_etat_presse_regroupement_form_view">
+        <field name="name">is.etat.presse.regroupement.form</field>
+        <field name="model">is.etat.presse.regroupement</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="couleur"/>
+                    <field name="ordre"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_etat_presse_regroupement_search_view" >
+        <field name="name">is.etat.presse.regroupement.search</field>
+        <field name="model">is.etat.presse.regroupement</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_etat_presse_regroupement_action">
+        <field name="name">Regroupement État presse</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.etat.presse.regroupement</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_etat_presse_regroupement_action" 
+              id="menu_is_etat_presse_regroupement" 
+              parent="is_theia_parametres_menu" 
+              sequence="20" groups="base.group_erp_manager"/>
 
 
     <!-- raspberry -->
@@ -645,7 +696,7 @@
     <menuitem action="is_raspberry_action" 
               id="menu_is_raspberry" 
               parent="is_theia_parametres_menu" 
-              sequence="20" groups="base.group_erp_manager"/>
+              sequence="25" groups="base.group_erp_manager"/>
 
 
     <!-- Lancement automatisé du calcul du bilan de fin d'OF -->

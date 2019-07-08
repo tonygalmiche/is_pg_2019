@@ -28,12 +28,29 @@ colors=[
 ]
 
 
+
+
+class is_etat_presse_regroupement(models.Model):
+    _name = 'is.etat.presse.regroupement'
+    _description = u"Regroupement État Presse"
+    _order='ordre,name'
+
+    name             = fields.Char('Intitulé' , required=True)
+    couleur          = fields.Selection(couleurs, 'Couleur', required=False, help="Couleur affichée dans l'interface à la presse")
+    ordre            = fields.Integer('Ordre', required=False, default=0)
+
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', u"L'intulé doit être unique !"),
+    ]
+
+
 class is_etat_presse(models.Model):
     _name = 'is.etat.presse'
     _description = u"État Presse"
     _order='name'    #Ordre de tri par defaut des listes
 
     name             = fields.Char('Intitulé' , required=True)
+    regroupement_id  = fields.Many2one('is.etat.presse.regroupement', u"Regroupement État Presse")
     production_serie = fields.Boolean('Production série',help='Cocher cette case si cet état correspond à la production série')
     couleur          = fields.Selection(couleurs, 'Couleur', required=False, help="Couleur affichée dans l'interface à la presse")
     ligne            = fields.Integer('Ligne', required=False)
@@ -43,6 +60,9 @@ class is_etat_presse(models.Model):
         ('name_uniq', 'unique(name)', u"L'intulé doit être unique !"),
     ]
     _defaults = {}
+
+
+
 
 
 class is_raspberry(models.Model):
