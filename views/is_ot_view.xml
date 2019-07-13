@@ -10,6 +10,7 @@
                 <form>
                     <sheet>
                         <group>
+                            <field name="site_id"/>
                             <field name="date_debut"/>
                             <field name="date_fin"/>
                             <field name="nb_heures_technicien"/>

@@ -247,11 +247,23 @@ class is_ot_indicateur(models.Model):
     _rec_name = "date_debut"
     _order = 'id desc'
 
+
+    site_id              = fields.Many2one("is.database")
     date_debut           = fields.Date("Date de début", required=True)
     date_fin             = fields.Date("Date de fin"  , required=True)
     nb_heures_technicien = fields.Boolean(u"Nombre d'heures par technicien", default=True)
     nb_heures_nature     = fields.Boolean(u"Nombre d'heures par nature"    , default=True)
     nb_heures_equipement = fields.Boolean(u"Nombre d'heures par équipement", default=True)
+
+
+    @api.model
+    def default_get(self, default_fields):
+        res = super(is_ot_indicateur, self).default_get(default_fields)
+        if self._uid:
+            user_data = self.env['res.users'].browse(self._uid)
+            if user_data and user_data.is_site_id:
+                res['site_id'] = user_data.is_site_id.id
+        return res
 
 
     @api.multi
@@ -266,6 +278,7 @@ class is_ot_indicateur(models.Model):
                               inner join res_users ru on iotp.technicien_id=ru.id
                               inner join res_partner rp on ru.partner_id=rp.id
                 WHERE 
+                    io.site_id="""+str(obj.site_id.id)+""" and
                     io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
                     io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and
                     io.state in ('termine','travaux_a_valider') 
@@ -291,6 +304,7 @@ class is_ot_indicateur(models.Model):
                               inner join res_users ru on iotp.technicien_id=ru.id
                               inner join res_partner rp on ru.partner_id=rp.id
                 WHERE 
+                    io.site_id="""+str(obj.site_id.id)+""" and
                     io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
                     io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
                     io.state in ('termine','travaux_a_valider') 
@@ -309,83 +323,187 @@ class is_ot_indicateur(models.Model):
         return r
 
 
-    @api.multi
-    def get_nb_heures_equipement(self):
-        """Nombre d'heures par equipement"""
-        cr = self._cr
-        r=[]
-        for obj in self:
-            SQL="""
-                SELECT iet.name, sum(temps_passe)
-                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
-                              inner join res_users ru on iotp.technicien_id=ru.id
-                              inner join res_partner rp on ru.partner_id=rp.id
-                              inner join is_equipement_type iet on io.type_equipement_id=iet.id
-                WHERE 
-                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
-                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
-                    io.state in ('termine','travaux_a_valider') 
-                GROUP BY iet.name
-                ORDER BY iet.name
-            """
-            cr.execute(SQL)
-            res = cr.fetchall()
-            for row in res:
-                r.append(row)
-        return r
 
+    @api.multi
+    def get_natures(self):
+        """Liste des natures"""
+        return _NATURE
 
 
     @api.multi
-    def get_nb_heures_moule(self):
-        """Nombre d'heures par moule"""
+    def get_nb_heures(self,type_equipement):
+        """Nombre d'heures par equipement et par nature"""
         cr = self._cr
-        r=[]
+        r={}
         for obj in self:
-            SQL="""
-                SELECT im.name, sum(temps_passe)
-                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
-                              inner join res_users ru on iotp.technicien_id=ru.id
-                              inner join res_partner rp on ru.partner_id=rp.id
-                              inner join is_mold im on io.moule_id=im.id
-                WHERE 
-                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
-                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
-                    io.state in ('termine','travaux_a_valider') 
-                GROUP BY im.name
-                ORDER BY im.name
-            """
+            if type_equipement=='equipement':
+                SQL="""
+                    SELECT iet.name, io.nature, sum(temps_passe)
+                    FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+                                  inner join res_users ru on iotp.technicien_id=ru.id
+                                  inner join res_partner rp on ru.partner_id=rp.id
+                                  inner join is_equipement_type iet on io.type_equipement_id=iet.id
+                    WHERE 
+                        io.site_id="""+str(obj.site_id.id)+""" and
+                        io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+                        io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+                        io.state in ('termine','travaux_a_valider') 
+                    GROUP BY iet.name, io.nature
+                    ORDER BY iet.name, io.nature
+                """
+
+            if type_equipement=='moule':
+                SQL="""
+                    SELECT im.name, io.nature, sum(temps_passe)
+                    FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+                                  inner join res_users ru on iotp.technicien_id=ru.id
+                                  inner join res_partner rp on ru.partner_id=rp.id
+                                  inner join is_mold im on io.moule_id=im.id
+                    WHERE 
+                        io.site_id="""+str(obj.site_id.id)+""" and
+                        io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+                        io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+                        io.state in ('termine','travaux_a_valider') 
+                    GROUP BY im.name, io.nature
+                    ORDER BY im.name, io.nature
+                """
+
+            if type_equipement=='dossierf':
+                SQL="""
+                    SELECT id.name, io.nature, sum(temps_passe)
+                    FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+                                  inner join res_users ru on iotp.technicien_id=ru.id
+                                  inner join res_partner rp on ru.partner_id=rp.id
+                                  inner join is_dossierf id on io.dossierf_id=id.id
+                    WHERE 
+                        io.site_id="""+str(obj.site_id.id)+""" and
+                        io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+                        io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+                        io.state in ('termine','travaux_a_valider') 
+                    GROUP BY id.name, io.nature
+                    ORDER BY id.name, io.nature
+                """
+
             cr.execute(SQL)
             res = cr.fetchall()
             for row in res:
-                r.append(row)
-        return r
+                equipement = row[0]
+                nature     = row[1]
+                if equipement not in r:
+                    r[equipement]={}
+                r[equipement][nature] = row[2]
+        ro = OrderedDict(sorted(r.items()))
+
+        #** Calcul des totaux **************************************************
+        total={}
+        total_general=0
+        for line in ro:
+            for n in _NATURE:
+                nature = n[0]
+                tps = ro[line].get(nature,'')
+                if nature not in total:
+                    total[nature] = 0
+                if tps!='':
+                    total[nature]+=tps
+                    total_general+=tps
+        #***********************************************************************
 
 
-    @api.multi
-    def get_nb_heures_dossierf(self):
-        """Nombre d'heures par dossierf"""
-        cr = self._cr
-        r=[]
-        for obj in self:
-            SQL="""
-                SELECT id.name, sum(temps_passe)
-                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
-                              inner join res_users ru on iotp.technicien_id=ru.id
-                              inner join res_partner rp on ru.partner_id=rp.id
-                              inner join is_dossierf id on io.dossierf_id=id.id
-                WHERE 
-                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
-                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
-                    io.state in ('termine','travaux_a_valider') 
-                GROUP BY id.name
-                ORDER BY id.name
-            """
-            cr.execute(SQL)
-            res = cr.fetchall()
-            for row in res:
-                r.append(row)
-        return r
+        #** Résultat HTML ******************************************************
+        res=[]
+        for line in ro:
+            tr='<tr><td style="text-align:left">'+line+'</td>'
+            total_ligne=0
+            for n in _NATURE:
+                nature = n[0]
+                tps = ro[line].get(nature,'')
+                tr+='<td>'+str(tps)+'</td>'
+                if tps!='':
+                    total_ligne+=tps
+            pourcent=''
+            if total_general>0:
+                pourcent=round(100*total_ligne/total_general,1);
+            tr+='<td style="text-align:right"><b>'+str(round(total_ligne,1))+'</b></td>'
+            tr+='<td style="text-align:right"><b>'+str(pourcent)+'%</b></td>'
+            tr+='</tr>'
+            res.append(tr)
+        tr='<tr><th style="text-align:left">Total : </th>'
+        for n in _NATURE:
+            nature = n[0]
+            tps=total.get(nature,0)
+            tr+='<th>'+str(tps)+'</th>'
+        tr+='<th>'+str(round(total_general,1))+'</th>'
+        tr+='<th>100%</th>'
+        tr+='</tr>'
+        res.append(tr)
+        tr='<tr><td style="text-align:left"></td>'
+        for n in _NATURE:
+            nature = n[0]
+            tps=total.get(nature,0)
+            pourcent=0
+            if total_general>0:
+                pourcent=round(100*tps/total_general,1);
+            tr+='<td>'+str(pourcent)+'%</td>'
+        tr+='<td></td>'
+        tr+='<td></td>'
+        tr+='</tr>'
+        res.append(tr)
+        return res
+        #***********************************************************************
+
+
+#    @api.multi
+#    def get_nb_heures_moule(self):
+#        """Nombre d'heures par moule"""
+#        cr = self._cr
+#        r=[]
+#        for obj in self:
+#            SQL="""
+#                SELECT im.name, sum(temps_passe)
+#                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+#                              inner join res_users ru on iotp.technicien_id=ru.id
+#                              inner join res_partner rp on ru.partner_id=rp.id
+#                              inner join is_mold im on io.moule_id=im.id
+#                WHERE 
+#                    io.site_id="""+str(obj.site_id.id)+""" and
+#                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+#                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+#                    io.state in ('termine','travaux_a_valider') 
+#                GROUP BY im.name
+#                ORDER BY im.name
+#            """
+#            cr.execute(SQL)
+#            res = cr.fetchall()
+#            for row in res:
+#                r.append(row)
+#        return r
+
+
+#    @api.multi
+#    def get_nb_heures_dossierf(self):
+#        """Nombre d'heures par dossierf"""
+#        cr = self._cr
+#        r=[]
+#        for obj in self:
+#            SQL="""
+#                SELECT id.name, sum(temps_passe)
+#                FROM is_ot io inner join is_ot_temps_passe iotp on io.id=iotp.ot_id 
+#                              inner join res_users ru on iotp.technicien_id=ru.id
+#                              inner join res_partner rp on ru.partner_id=rp.id
+#                              inner join is_dossierf id on io.dossierf_id=id.id
+#                WHERE 
+#                    io.site_id="""+str(obj.site_id.id)+""" and
+#                    io.date_realisation_travaux>='"""+str(obj.date_debut)+"""' and
+#                    io.date_realisation_travaux<='"""+str(obj.date_fin)+"""' and 
+#                    io.state in ('termine','travaux_a_valider') 
+#                GROUP BY id.name
+#                ORDER BY id.name
+#            """
+#            cr.execute(SQL)
+#            res = cr.fetchall()
+#            for row in res:
+#                r.append(row)
+#        return r
 
 
 
