@@ -131,24 +131,33 @@
                                 <field name="date_intervention_demandee" attrs="{'readonly': [('state', '!=', 'creation')]}"/>
                             </group>
                             <group>
-                                <field name="site_id"      readonly="1"/>
+                                <field 
+                                    name="site_id"
+                                    attrs="{
+                                        'readonly':  [('state', 'not in', ['creation'])],
+                                    }" 
+                                />
                                 <field name="emplacement"  readonly="1"/>
                                 <field name="demandeur_id" readonly="1"/>
                                 <field 
                                     name="moule_id"
                                     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
+                                    domain="[('is_database_id','=',site_id)]"
                                 />
                                 <field
                                     name="dossierf_id"
                                     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
+                                    domain="[('is_database_id','=',site_id)]"
                                 />
                                 <field
                                     name="gabarit_id"
                                     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
+                                    domain="[('site_id','=',site_id)]"
                                 />
                                 <field
                                     name="instrument_id"
                                     attrs="{'readonly': [('state', 'not in', ['creation','analyse_ot'])]}"
+                                    domain="[('site_id','=',site_id)]"
                                 />
                                 <field name="numero_qrci"  attrs="{'readonly': [('state', '!=', 'creation')]}" />
                             </group>
@@ -268,21 +277,35 @@
                       <filter name="group_equipement_id"      string="Équipement"           context="{'group_by':'equipement_id'}"/>
                       <filter name="group_moule_id"           string="Moule"                context="{'group_by':'moule_id'}"/>
                       <filter name="group_dossierf_id"        string="Dossier F"            context="{'group_by':'dossierf_id'}"/>
-                      <filter name="group_dossierf_id"        string="Dossier F"            context="{'group_by':'dossierf_id'}"/>
                       <filter name="group_gabarit_id"         string="Gabarit de Contrôle"  context="{'group_by':'gabarit_id'}"/>
                       <filter name="group_instrument_id"      string="Instrument de mesure" context="{'group_by':'instrument_id'}"/>
                       <filter name="group_affectation_id"     string="Affectation"          context="{'group_by':'affectation_id'}"/>
+                      <filter name="group_site_id"            string="Site"                 context="{'group_by':'site_id'}"/>
                     </group>
                 </search>
             </field>
         </record>
+
+
+
+        <record id="is_ot_graph_view" model="ir.ui.view">
+             <field name="name">is_ot_graph_view</field>
+             <field name="model">is.ot</field>
+             <field name="arch" type="xml">
+                 <graph type="pivot">
+                     <field name="demandeur_id"  type="row"/>
+                     <field name="date_creation" type="col" interval="month"/>
+                 </graph>
+             </field>
+        </record>
+
 
         <record id="action_is_ot" model="ir.actions.act_window">
             <field name="name">Gestion des OT</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ot</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
         </record>
 
         <record id="is_ot_creation_view_tree" model="ir.ui.view">
@@ -312,7 +335,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ot</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('state', '=', 'creation')]</field>
             <field name="view_id" ref="is_ot_creation_view_tree"/>
         </record>
@@ -343,7 +366,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ot</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('state', '=', 'analyse_ot')]</field>
             <field name="view_id" ref="is_ot_analyse_view_tree"/>
         </record>
@@ -379,7 +402,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ot</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('state', '=', 'travaux_a_realiser')]</field>
             <field name="view_id" ref="is_ot_travaux_a_realiser_view_tree"/>
         </record>
@@ -415,7 +438,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ot</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('state', '=', 'travaux_a_valider')]</field>
             <field name="view_id" ref="is_ot_travaux_a_valider_view_tree"/>
         </record>
@@ -452,7 +475,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ot</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('state', '=', 'annule')]</field>
             <field name="view_id" ref="is_ot_travaux_annule_view_tree"/>
         </record>
@@ -462,6 +485,7 @@
             <field name="model">is.ot</field>
             <field name="arch" type="xml">
                 <tree string="Terminé" create="false">
+                    <field name="site_id" />
                     <field name="name" />
                     <field name="date_creation" />
                     <field name="demandeur_id" />
@@ -489,7 +513,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ot</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('state', '=', 'termine')]</field>
             <field name="view_id" ref="is_ot_termine_view_tree"/>
         </record>
