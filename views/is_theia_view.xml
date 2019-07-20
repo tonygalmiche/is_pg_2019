@@ -554,11 +554,14 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="regroupement_id"/>
                 <field name="production_serie"/>
                 <field name="couleur"/>
                 <field name="colonne"/>
                 <field name="ligne"/>
+                <field name="name5x5"/>
+                <field name="colonne5x5"/>
+                <field name="ligne5x5"/>
+                <field name="regroupement_id"/>
             </tree>
         </field>
     </record>
@@ -569,12 +572,21 @@
         <form>
             <sheet>
                 <group>
-                    <field name="name"/>
-                    <field name="regroupement_id"/>
+                    <group string="4x4">
+                        <field name="name"/>
+                        <field name="colonne"/>
+                        <field name="ligne"/>
+                    </group>
+                    <group string="5x5">
+                        <field name="name5x5"/>
+                        <field name="colonne5x5"/>
+                        <field name="ligne5x5"/>
+                        <field name="regroupement_id"/>
+                    </group>
+                </group>
+                <group>
                     <field name="production_serie"/>
                     <field name="couleur"/>
-                    <field name="colonne"/>
-                    <field name="ligne"/>
                 </group>
             </sheet>
         </form>
@@ -586,12 +598,10 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="name5x5"/>
                 <field name="regroupement_id"/>
                 <field name="production_serie"/>
                 <field name="couleur"/>
-                <field name="colonne"/>
-                <field name="ligne"/>
-
             </search>
         </field>
     </record>

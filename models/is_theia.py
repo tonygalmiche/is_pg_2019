@@ -49,20 +49,20 @@ class is_etat_presse(models.Model):
     _description = u"État Presse"
     _order='name'    #Ordre de tri par defaut des listes
 
-    name             = fields.Char('Intitulé' , required=True)
+    name             = fields.Char(u'Intitulé (4x4)'  , required=True)
+    ligne            = fields.Integer(u'Ligne (4x4)'  , required=False)
+    colonne          = fields.Integer(u'Colonne (4x4)', required=False)
+    name5x5          = fields.Char(u'Intitulé (5x5)'  , required=False)
+    ligne5x5         = fields.Integer(u'Ligne (5x5)'  , required=False)
+    colonne5x5       = fields.Integer(u'Colonne (5x5)', required=False)
     regroupement_id  = fields.Many2one('is.etat.presse.regroupement', u"Regroupement État Presse")
-    production_serie = fields.Boolean('Production série',help='Cocher cette case si cet état correspond à la production série')
     couleur          = fields.Selection(couleurs, 'Couleur', required=False, help="Couleur affichée dans l'interface à la presse")
-    ligne            = fields.Integer('Ligne', required=False)
-    colonne          = fields.Char('Colonne', required=False)
+    production_serie = fields.Boolean('Production série',help='Cocher cette case si cet état correspond à la production série')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', u"L'intulé doit être unique !"),
     ]
     _defaults = {}
-
-
-
 
 
 class is_raspberry(models.Model):
