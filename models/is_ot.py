@@ -190,6 +190,15 @@ class is_ot(models.Model):
                 pj=True
             obj.pj=pj
 
+
+    @api.depends('temps_passe_ids')
+    def _compute_temps_passe_total(self):
+        for obj in self:
+            temps_passe_total = 0
+            for line in obj.temps_passe_ids:
+                temps_passe_total+=line.temps_passe
+            obj.temps_passe_total = temps_passe_total
+
     name                = fields.Char(u"N° de l'OT")
     state               = fields.Selection([
             ('creation', u'Création'),
@@ -230,7 +239,7 @@ class is_ot(models.Model):
         ], "Travaux à réaliser")
     motif               = fields.Char("Motif")
     temps_passe_ids     = fields.One2many('is.ot.temps.passe', 'ot_id', u"Temps passé")
-    
+    temps_passe_total   = fields.Float(u"Temps passé total", digits=(14, 2), store=True, readonly=True, compute='_compute_temps_passe_total')
     valideur_id         = fields.Many2one("res.users", "Valideur", default=lambda self: self.env.uid)
     validation_travaux  = fields.Selection([
             ("ok", "Ok"),

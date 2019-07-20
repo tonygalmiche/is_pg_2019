@@ -223,6 +223,9 @@
                             </tree>
                         </field>
                         <group>
+                            <field name="temps_passe_total" widget="float_time"/>
+                        </group>
+                        <group>
                             <group>
                                 <field name="valideur_id"   attrs="{'invisible': [('state', 'in', ['creation','analyse_ot','travaux_a_realiser','annule'])]}" readonly="1" />
                                 <field 
@@ -293,8 +296,9 @@
              <field name="model">is.ot</field>
              <field name="arch" type="xml">
                  <graph type="pivot">
-                     <field name="demandeur_id"  type="row"/>
-                     <field name="date_creation" type="col" interval="month"/>
+                     <field name="demandeur_id"       type="row"/>
+                     <field name="date_creation"      type="col" interval="month"/>
+                     <field name="temps_passe_total"  type="measure"/>
                  </graph>
              </field>
         </record>
@@ -500,9 +504,8 @@
                     <field name="affectation_id" />
                     <field name="nature" />
                     <field name="delai_previsionnel" />
-                    <field name="date_previsionnelle_intervention" />
-                    <field name="valideur_id" />
                     <field name="date_realisation_travaux" />
+                    <field name="temps_passe_total" widget="float_time" />
                     <field name="pj" invisible="1"/>
                     <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
                 </tree>
