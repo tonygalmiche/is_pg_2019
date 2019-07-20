@@ -139,70 +139,127 @@
                     <div class="page">
                         <div class="oe_structure" />
                         <div class="row">
-                            <t t-if="o.nb_heures_technicien">
-                                <h1>Nombre d'heures par technicien</h1>
-                                <table class="tablecls" width="40%">
-                                    <thead>
-                                        <tr>
-                                            <th>Technicien</th>
-                                            <th>Nb Heures</th>
-                                        </tr>
-                                    </thead>
-                                    <t t-set="total" t-value="0"/>
-                                    <tbody>
-                                        <t t-foreach="o.get_nb_heures_technicien()" t-as="l">
-                                            <t t-set="total" t-value="total + l[1]"/>
-                                            <tr>
-                                                <td style="text-align:left"><t t-esc="l[0]"/></td>
-                                                <td style="text-align:right"><t t-esc="l[1]"/></td>
-                                            </tr>
+                            <table width="100%">
+                                <tr>
+                                    <td  width="45%">
+                                        <t t-if="o.nb_heures_technicien">
+                                            <h1>Nombre d'heures par technicien</h1>
+                                            <table class="tablecls" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Technicien</th>
+                                                        <th>Nb Heures</th>
+                                                    </tr>
+                                                </thead>
+                                                <t t-set="total" t-value="0"/>
+                                                <tbody>
+                                                    <t t-foreach="o.get_nb_heures_technicien()" t-as="l">
+                                                        <t t-set="total" t-value="total + l[1]"/>
+                                                        <tr>
+                                                            <td style="text-align:left"><t t-esc="l[0]"/></td>
+                                                            <td style="text-align:right"><t t-esc="l[1]"/></td>
+                                                        </tr>
+                                                    </t>
+                                                    <tr>
+                                                        <td style="text-align:left"><b>Total : </b></td>
+                                                        <td style="text-align:right"><b><t t-esc="total"/></b></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </t>
-                                        <tr>
-                                            <td style="text-align:left"><b>Total : </b></td>
-                                            <td style="text-align:right"><b><t t-esc="total"/></b></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </t>
+                                    </td>
+                                    <td  width="10%">
+                                    </td>
+                                    <td  width="45%">
+                                        <t t-if="o.nb_heures_nature">
+                                        <h1>Nombre d'heures par nature</h1>
+                                            <table class="tablecls" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nature</th>
+                                                        <th>Nb Heures</th>
+                                                    </tr>
+                                                </thead>
+                                                <t t-set="total"   t-value="0"/>
+                                                <t t-set="curatif" t-value="0"/>
+                                                <t t-set="preventif" t-value="0"/>
+                                                <tbody>
+                                                    <t t-foreach="o.get_nb_heures_nature()" t-as="l">
+                                                        <t t-set="total" t-value="total + l[1]"/>
+                                                        <t t-if="l[0] == 'Curatif'">
+                                                            <t t-set="curatif" t-value="l[1]"/>
+                                                        </t>
+                                                        <t t-if="l[0] == 'Préventif'">
+                                                            <t t-set="preventif" t-value="l[1]"/>
+                                                        </t>
 
-                            <t t-if="o.nb_heures_nature">
-                            <h1>Nombre d'heures par nature</h1>
-                                <table class="tablecls" width="40%">
-                                    <thead>
-                                        <tr>
-                                            <th>Nature</th>
-                                            <th>Nb Heures</th>
-                                        </tr>
-                                    </thead>
-                                    <t t-set="total"   t-value="0"/>
-                                    <t t-set="curatif" t-value="0"/>
-                                    <tbody>
-                                        <t t-foreach="o.get_nb_heures_nature()" t-as="l">
-                                            <t t-set="total" t-value="total + l[1]"/>
-                                            <t t-if="l[0] == 'Curatif'">
-                                                <t t-set="curatif" t-value="l[1]"/>
-                                            </t>
-                                            <tr>
-                                                <td style="text-align:left"><t t-esc="l[0]"/></td>
-                                                <td style="text-align:right"><t t-esc="l[1]"/></td>
-                                            </tr>
+                                                        <tr>
+                                                            <td style="text-align:left"><t t-esc="l[0]"/></td>
+                                                            <td style="text-align:right"><t t-esc="l[1]"/></td>
+                                                        </tr>
+                                                    </t>
+                                                    <tr>
+                                                        <td style="text-align:left"><b>Total : </b></td>
+                                                        <td style="text-align:right"><b><t t-esc="total"/></b></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:left"><b>Curatif / Total : </b></td>
+                                                        <t t-set="ratio" t-value="int(100*round(curatif/total,2))"/>
+                                                        <td style="text-align:right"><b><t t-esc="ratio"/>%</b></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:left"><b>Préventif / Total : </b></td>
+                                                        <t t-set="ratio" t-value="int(100*round(preventif/total,2))"/>
+                                                        <td style="text-align:right"><b><t t-esc="ratio"/>%</b></td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
                                         </t>
-                                        <tr>
-                                            <td style="text-align:left"><b>Total : </b></td>
-                                            <td style="text-align:right"><b><t t-esc="total"/></b></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align:left"><b>Curatif / Total : </b></td>
-                                            <t t-set="ratio" t-value="int(100*round(curatif/total,2))"/>
-                                            <td style="text-align:right"><b><t t-esc="ratio"/>%</b></td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </t>
+                                    </td>
+                                </tr>
+                            </table>
 
                             <t t-if="o.nb_heures_equipement">
                             <h1>Nombre d'heures par équipement</h1>
+                                <table class="tablecls" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Equipement</th>
+                                            <t t-foreach="o.get_natures()" t-as="l">
+                                                <th><t t-esc="l[1]"/></th>
+                                            </t>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.get_nb_heures('batiment',0,1)" t-as="line">
+                                            <div t-raw="line"/>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <br />
+
+
+                                <table class="tablecls" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Equipement</th>
+                                            <t t-foreach="o.get_natures()" t-as="l">
+                                                <th><t t-esc="l[1]"/></th>
+                                            </t>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="o.get_nb_heures('presse',0,1)" t-as="line">
+                                            <div t-raw="line"/>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <br />
+
+
                                 <table class="tablecls" width="100%">
                                     <thead>
                                         <tr>
@@ -215,50 +272,59 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <t t-foreach="o.get_nb_heures('equipement')" t-as="line">
+                                        <t t-foreach="o.get_nb_heures('equipement',1,1)" t-as="line">
                                             <div t-raw="line"/>
                                         </t>
                                     </tbody>
                                 </table>
                                 <br />
 
-                                <table class="tablecls" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Moule</th>
-                                            <t t-foreach="o.get_natures()" t-as="l">
-                                                <th><t t-esc="l[1]"/></th>
-                                            </t>
-                                            <th>Total</th>
-                                            <th>%</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="o.get_nb_heures('moule')" t-as="line">
-                                            <div t-raw="line"/>
-                                        </t>
-                                    </tbody>
-                                </table>
-                                <br />
 
-                                <table class="tablecls" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Dossier F</th>
-                                            <t t-foreach="o.get_natures()" t-as="l">
-                                                <th><t t-esc="l[1]"/></th>
+
+
+
+                                <t t-set="res" t-value="o.get_nb_heures('moule',0,1)"/>
+                                <t t-if="res">
+                                    <table class="tablecls" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Moule</th>
+                                                <t t-foreach="o.get_natures()" t-as="l">
+                                                    <th><t t-esc="l[1]"/></th>
+                                                </t>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="res" t-as="line">
+                                                <div t-raw="line"/>
                                             </t>
-                                            <th>Total</th>
-                                            <th>%</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="o.get_nb_heures('dossierf')" t-as="line">
-                                            <div t-raw="line"/>
-                                        </t>
-                                    </tbody>
-                                </table>
-                                <br />
+                                        </tbody>
+                                    </table>
+                                    <br />
+                                </t>
+
+                                
+                                <t t-set="res" t-value="o.get_nb_heures('dossierf',0,1)"/>
+                                <t t-if="res">
+                                    <table class="tablecls" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Dossier F</th>
+                                                <t t-foreach="o.get_natures()" t-as="l">
+                                                    <th><t t-esc="l[1]"/></th>
+                                                </t>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="res" t-as="line">
+                                                <div t-raw="line"/>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                    <br />
+                                </t>
 
 
 
