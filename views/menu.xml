@@ -64,6 +64,7 @@
         <menuitem id="menu_is_ctrl100_typologie_produit"  sequence="3" name="Typologie de produit" parent="menu_is_controle_100" action="is_ctrl100_typologie_produit_action" />
         <menuitem id="menu_is_ctrl100_defautheque"        sequence="4" name="Défauthèque"          parent="menu_is_controle_100" action="is_ctrl100_defautheque_action" />
         <menuitem id="menu_is_ctrl100_defaut"             sequence="5" name="Défauts"              parent="menu_is_controle_100" action="is_ctrl100_defaut_action" />
+        <menuitem id="menu_is_ctrl100_rapport_controle"   sequence="6" name="Rapport de contrôle"  parent="menu_is_controle_100" action="is_ctrl100_rapport_controle_action" />
 
     </data>
 </openerp>

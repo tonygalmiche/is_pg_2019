@@ -298,5 +298,45 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <!-- Rapport de contrôle -->
+        <record model="ir.ui.view" id="view_is_ctrl100_rapport_controle_tree">
+            <field name="name">view.is.ctrl100.rapport.controle.tree</field>
+            <field name="model">is.ctrl100.rapport.controle</field>
+            <field name="arch" type="xml">
+                <tree string="Rapport de contrôle">
+                    <field name="gamme_id"/>
+                    <field name="createur_id"/>
+                    <field name="date_debut"/>
+                    <field name="date_fin"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_ctrl100_rapport_controle_form">
+            <field name="name">view.is.ctrl100.rapport.controle.form</field>
+            <field name="model">is.ctrl100.rapport.controle</field>
+            <field name="arch" type="xml">
+            <form string="Rapport de contrôle">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="gamme_id"/>
+                            <field name="createur_id"/>
+                        </group>
+                        <group>
+                            <field name="date_debut"/>
+                            <field name="date_fin"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_ctrl100_rapport_controle_action">
+            <field name="name">Rapport de contrôle</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ctrl100.rapport.controle</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
     </data>
 </openerp>

@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="report_controle_transfert_style">
+            .tablecls1 {
+                font-size:10pt;
+                vertical-align:middle;
+                text-align:left;
+                padding-right:4px;
+                padding-top:4px;
+                padding-left:4px;
+                padding-bottom:4px;
+            }
+            .tablecls td {
+                font-size:8pt;
+                vertical-align:middle;
+                text-align:center;
+                border: 1px solid #046dce;
+                vertical-align:middle;
+                text-align:center;
+                padding-right:4px;
+                padding-top:4px;
+                padding-left:4px;
+                padding-bottom:4px;
+            }
+            .tablecls th {
+                font-size:10pt;
+                vertical-align:middle;
+                font-weight: bold;
+                text-align:center;
+                border: 1px solid #046dce;
+                vertical-align:middle;
+                text-align:center;
+                background-color:#58ACFA;
+                padding-right:4px;
+                padding-top:4px;
+                padding-left:4px;
+                padding-bottom:4px;
+            }
+            .tdcolor {
+                font-size:16pt;
+                font-weight: bold;
+                vertical-align:middle;
+                text-align:center;
+                border: 0px solid #046dce;
+                background-color:#58ACFA;
+            }
+            .imgclass0 {
+                text-align:center;
+                height: 80mm;
+                text-align: center;
+                width: 80mm;
+                vertical-align: middle;
+                padding-left:8px;
+                padding-top:5px;
+                padding-bottom:5px;
+                border: 0px solid black;
+            }
+			.chart rect {
+			  fill: steelblue;
+			}
+			
+			.chart text {
+			  fill: white;
+			  font: 10px sans-serif;
+			  text-anchor: end;
+			}
+			.bar {
+			  fill: #d81c3f;
+			}
+			
+			.bar:hover {
+			  fill: darkgray;
+			}
+			
+			.axis {
+			  font: 10px sans-serif;
+			}
+			
+			.axis path,
+			.axis line {
+			  fill: none;
+			  stroke: #000;
+			  shape-rendering: crispEdges;
+			}
+			
+			.x.axis path {
+			  display: none;
+			}
+			
+			            
+        </template>
+
+        <template id="is_ctrl100_rapport_controle_layout" inherit_id="web.layout" primary="True">
+            <!-- Add report attributes -->
+            <xpath expr="//html" position="attributes">
+                <attribute name="t-att-data-report-margin-top">data_report_margin_top if data_report_margin_top else None</attribute>
+                <attribute name="t-att-data-report-header-spacing">data_report_header_spacing if data_report_header_spacing else None</attribute>
+                <attribute name="t-att-data-report-dpi">data_report_dpi if data_report_dpi else None</attribute>
+            </xpath>
+            <!-- Add report style -->
+            <xpath expr="//head" position="inside">
+                <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+                <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+                <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+                <style type="text/css">
+                    <t t-call="report.style"/>
+                    <t t-call="is_pg_2019.report_controle_transfert_style"/>
+                </style>
+            </xpath>
+            <!-- Remove conflicting style -->
+            <xpath expr="//head/link[@href='/web/static/src/css/full.css']" position="replace"></xpath>
+        </template>
+
+
+
+        <template id="is_ctrl100_rapport_controle_html_container">
+            <t t-set="body_classname" t-value="'container'"/>
+            <t t-call="is_pg_2019.is_ctrl100_rapport_controle_layout">
+                <t t-raw="0"/>
+            </t>
+        </template>
+
+        <template id="is_ctrl100_rapport_controle_external_layout">
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id" />
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company" />
+            </t>
+            <t t-call="is_pg_2019.is_ctrl100_rapport_controle_external_layout_header" />
+            <t t-raw="0" />
+        </template>
+
+        <template id="is_ctrl100_rapport_controle_external_layout_header">
+            <div class="header">
+                <div class="row">
+                    <table class="tablecls" width="100%">
+                        <tr>
+                            <td width="15%" rowspan="3" class="classborder">
+                                <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo" style="max-height: 60px;"/>
+                            </td>
+                            <td width="65%" rowspan="1">
+                                <div style="font-size:16px">Site de production de Gray</div>
+                            </td>
+                            <td width="20%" rowspan="1">
+                                <div>FO-0-PROD-</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="tdcolor" rowspan="2">
+                                <div class="tdcolor">Rapport de contrôle</div>
+                            </td>
+                            <td rowspan="1">
+                                <div>Le <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_debut,'%Y-%m-%d'))"/></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  rowspan="1">
+                                <div>
+                                    Page <span class="page" />/<span class="topage" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </template>
+
+        <template id="is_ctrl100_rapport_controle">
+            <t t-call="is_pg_2019.is_ctrl100_rapport_controle_html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="is_pg_2019.is_ctrl100_rapport_controle_external_layout">
+                    <t t-call="report.internal_layout">
+                    <div class="page">
+                        <div class="oe_structure" />
+                        <div class="row">
+                            <table class="tablecls1" width="100%">
+                                <tr>
+                                    <td width="100%">
+                                        <table width="100%">
+                                            <tr>
+                                                <td width="15%">
+                                                    Gamme n° :
+                                                </td>
+                                                <td width="35%">
+                                                    <div>
+                                                        <span t-field="o.gamme_id.name" />
+                                                    </div>
+                                                </td>
+                                                <td width="18%">
+                                                    Créée par :
+                                                </td>
+                                                <td width="32%">
+                                                    <div>
+                                                         <span t-field="o.create_uid.name"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="15%">
+                                                    Type :
+                                                </td>
+                                                <td width="35%">
+                                                    <div>
+                                                    </div>
+                                                </td>
+                                                <td width="18%">
+                                                    Le :
+                                                </td>
+                                                <td width="32%">
+                                                    <div>
+                                                         <span t-field="o.date_debut"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="15%">
+                                                    Produit :
+                                                </td>
+                                                <td width="35%">
+                                                    <div>
+                                                    </div>
+                                                </td>
+                                                <td width="18%">
+                                                    Date de fin de validité : 
+                                                </td>
+                                                <td width="32%">
+                                                    <div>
+                                                         <span t-field="o.date_fin"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br/>
+                            
+                            <t t-set="default_values" t-value="o.get_default_data(o.gamme_id,o.date_debut,o.date_fin)" />
+                            <t t-if="default_values">
+                                <table class="tablecls" width="100%">
+                                    <th width="5%">
+                                        <div>Rang</div>
+                                    </th>
+                                    <th width="31%">
+                                        <div>Description</div>
+                                    </th>
+                                    <th width="44%">
+                                        <div>Photo</div>
+                                    </th>
+                                    <th width="10%">
+                                        <div>Quantité</div>
+                                    </th>
+                                    <th width="10%">
+                                        <div>Pourcentage</div>
+                                    </th>
+                                    <t t-foreach="default_values" t-as="rec">
+                                        <tr>
+                                            <td width="15%">
+                                                <span t-esc="rec['seq_no']" />
+                                            </td>
+                                            <td width="21%">
+                                                <span t-esc="rec['desc']" />
+                                            </td>
+                                            <td width="12%">
+                                                <img t-if="rec['photo']"
+                                                            t-att-src="'data:image/png;base64,%s' % rec['photo']"
+                                                            class="imgclass0" />
+                                            </td>
+                                            <td width="10%">
+                                                <span t-esc="rec['qty']" />
+                                            </td>
+                                            <td width="10%">
+                                                <span t-esc="rec['perc']" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </t>
+                            <br/>
+                            
+                            <table class="tablecls" width="100%">
+                                <tr>
+                                    <td width="100%">
+                                        <img t-if="o.get_chart_img()"
+                                                            t-att-src="'data:image/png;base64,%s' % o.get_chart_img()"
+                                                            class="imgclass0" />
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br/>
+                            <table class="tablecls" width="100%">
+                                <tr>
+                                    <td width="100%">
+                                        <h1>SVG Vertical Bar Chart</h1>
+
+                                        <!-- <svg class="chart" width="960" height="500">
+                                            <g transform="translate(40,20)">
+                                                <g class="x axis" transform="translate(0,450)">
+											        <g class="tick" transform="translate(25.5,0)" style="opacity: 1;"><line y2="4" x2="0"></line>
+											            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">A</text>
+											            <rect x="4.5" width="15" y="14" height="350"></rect>
+											        </g>
+											        <g class="tick" transform="translate(25.5,0)" style="opacity: 1;">
+			                                            <rect width="20" height="140"></rect>
+			                                            <text x="17" y="9.5" dy=".35em">14</text>
+        	                                        </g>
+											        <g class="tick" transform="translate(59.5,0)" style="opacity: 1;"><line y2="4" x2="0"></line>
+											            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">B</text>
+											            <rect x="58.5"  width="20" height="140"></rect>
+											        </g>
+											        <g class="tick" transform="translate(59.5,0)" style="opacity: 1;">
+                                                        <rect width="20" height="440"></rect>
+                                                        <text x="17" y="9.5" dy=".35em">14</text>
+                                                    </g>
+											        <path class="domain" d="M0,6V0H900V6"></path>
+											    </g>
+                                            </g>
+                                        </svg> -->
+
+                                        <!-- <svg class="chart" width="120" height="420">
+										  <g transform="translate(0,0)">
+										    <rect width="20" height="140"></rect>
+										    <text x="17" y="9.5" dy=".35em">14</text>
+										  </g>
+										  <g transform="translate(25,0)">
+                                            <rect width="20" height="40"></rect>
+                                            <text x="17" y="9.5" dy=".35em">4</text>
+                                          </g>
+										</svg> -->
+
+
+<svg width="960" height="500">
+    <g transform="translate(40,20)">
+    <g class="x axis" transform="translate(0,450)">
+            <g class="tick" transform="translate(25.5,0)" style="opacity: 1;"><line y2="6" x2="0"></line>
+            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">A</text>
+        </g>
+            <g class="tick" transform="translate(59.5,0)" style="opacity: 1;"><line y2="6" x2="0"></line>
+            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">B</text>
+        </g>
+            <g class="tick" transform="translate(93.5,0)" style="opacity: 1;"><line y2="6" x2="0"></line>
+            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">C</text>
+        </g>
+            <g class="tick" transform="translate(127.5,0)" style="opacity: 1;"><line y2="6" x2="0"></line>
+            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">D</text>
+        </g>
+            
+        <path class="domain" d="M0,6V0H900V6"></path>
+    </g>
+        <g class="y axis">
+            <g class="tick" transform="translate(0,450)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">0%</text>
+        </g>
+            <g class="tick" transform="translate(0,414.57250826641473)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">1%</text>
+        </g>
+            <g class="tick" transform="translate(0,379.14501653282946)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">2%</text>
+        </g>
+            <g class="tick" transform="translate(0,343.71752479924425)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">3%</text>
+        </g>
+            <g class="tick" transform="translate(0,308.290033065659)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">4%</text>
+        </g>
+            <g class="tick" transform="translate(0,272.86254133207365)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">5%</text>
+        </g>
+            <g class="tick" transform="translate(0,237.43504959848843)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">6%</text>
+        </g>
+            <g class="tick" transform="translate(0,202.0075578649031)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">7%</text>
+        </g>
+            <g class="tick" transform="translate(0,166.5800661313179)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">8%</text>
+        </g>
+            <g class="tick" transform="translate(0,131.15257439773262)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">9%</text>
+        </g>
+            <g class="tick" transform="translate(0,95.72508266414734)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">10%</text>
+        </g>
+            <g class="tick" transform="translate(0,60.297590930562116)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">11%</text>
+        </g>
+            <g class="tick" transform="translate(0,24.87009919697684)" style="opacity: 1;"><line x2="-6" y2="0"></line>
+            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">12%</text>
+        </g>
+        <path class="domain" d="M-6,0H0V450H-6"></path>
+        <text transform="rotate(-90)" y="6" dy=".71em" style="text-anchor: end;">Frequency</text>
+    </g>
+        <rect class="bar" x="10" width="31" y="160.66367501180912" height="289.3363249881909"></rect>
+        <rect class="bar" x="44" width="31" y="397.1421823334908" height="52.85781766650922"></rect>
+        <rect class="bar" x="78" width="31" y="351.4407179971658" height="98.55928200283421"></rect>
+    </g>
+</svg>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    </t>
+                </t>
+            </t>
+            </t>
+        </template>
+
+        <report id="report_is_ctrl100_rapport_controle" model="is.ctrl100.rapport.controle"
+            string="Rapport de contrôle" report_type="qweb-pdf"
+            name="is_pg_2019.is_ctrl100_rapport_controle" file="is_pg_2019.is_ctrl100_rapport_controle" />
+
+        <record id="is_ctrl100_rapport_controle_paperformat" model="report.paperformat">
+            <field name="name">A4 - Rapport de contrôle</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">25</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="report_is_ctrl100_rapport_controle" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="is_pg_2019.is_ctrl100_rapport_controle_paperformat" />
+        </record>
+
+    </data>
+</openerp>
