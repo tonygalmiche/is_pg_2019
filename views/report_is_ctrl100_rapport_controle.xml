@@ -57,39 +57,49 @@
                 padding-bottom:5px;
                 border: 0px solid black;
             }
-			.chart rect {
-			  fill: steelblue;
-			}
-			
-			.chart text {
-			  fill: white;
-			  font: 10px sans-serif;
-			  text-anchor: end;
-			}
-			.bar {
-			  fill: #d81c3f;
-			}
-			
-			.bar:hover {
-			  fill: darkgray;
-			}
-			
-			.axis {
-			  font: 10px sans-serif;
-			}
-			
-			.axis path,
-			.axis line {
-			  fill: none;
-			  stroke: #000;
-			  shape-rendering: crispEdges;
-			}
-			
-			.x.axis path {
-			  display: none;
-			}
-			
-			            
+            .imgclass1 {
+                height: 80mm;
+                text-align: middle;
+                width: 80mm;
+                vertical-align: middle;
+                padding-left:8px;
+                padding-top:5px;
+                padding-bottom:5px;
+                border: 0px solid black;
+            }
+            .chart rect {
+              fill: steelblue;
+            }
+            
+            .chart text {
+              fill: white;
+              font: 10px sans-serif;
+              text-anchor: end;
+            }
+            .bar {
+              fill: #d81c3f;
+            }
+            
+            .bar:hover {
+              fill: darkgray;
+            }
+            
+            .axis {
+              font: 10px sans-serif;
+            }
+            
+            .axis path,
+            .axis line {
+              fill: none;
+              stroke: #000;
+              shape-rendering: crispEdges;
+            }
+            
+            .x.axis path {
+              display: none;
+            }
+            
+                        
         </template>
 
         <template id="is_ctrl100_rapport_controle_layout" inherit_id="web.layout" primary="True">
@@ -204,6 +214,7 @@
                                                 </td>
                                                 <td width="35%">
                                                     <div>
+                                                        <span t-field="o.gamme_id.type_gamme" />
                                                     </div>
                                                 </td>
                                                 <td width="18%">
@@ -211,7 +222,7 @@
                                                 </td>
                                                 <td width="32%">
                                                     <div>
-                                                         <span t-field="o.date_debut"/>
+                                                         <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.gamme_id.date_creation,'%Y-%m-%d'))"/>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -221,14 +232,58 @@
                                                 </td>
                                                 <td width="35%">
                                                     <div>
+                                                        <span t-field="o.gamme_id.product_id.name" />
                                                     </div>
                                                 </td>
                                                 <td width="18%">
                                                     Date de fin de validité : 
                                                 </td>
                                                 <td width="32%">
+                                                    <t t-if="o.gamme_id.date_fin_validite">
+                                                        <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.gamme_id.date_fin_validite,'%Y-%m-%d'))"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br/>
+                            <table class="tablecls1" width="100%">
+                                <tr>
+                                    <td width="100%">
+                                        <table width="100%">
+                                            <tr>
+                                                <td width="100%">
+                                                    Typologie de produit contrôlé : <span t-field="o.gamme_id.typologie_produit_id.name" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br/>
+                            <table class="tablecls1" width="100%">
+                                <tr>
+                                    <td width="100%">
+                                        <table width="100%">
+                                            <tr>
+                                                <td width="10%">
+                                                    Contrôle du :
+                                                </td>
+                                                <td width="40%">
                                                     <div>
-                                                         <span t-field="o.date_fin"/>
+                                                        <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_debut,'%Y-%m-%d'))"/> au <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_fin,'%Y-%m-%d'))"/>
+                                                    </div>
+                                                </td>
+                                                <td width="18%">
+                                                    Coût du contrôle : 
+                                                </td>
+                                                <td width="32%">
+                                                    <div>
+                                                         <span t-field="o.gamme_id.cout_ctrl_qualite"/> €/H
                                                     </div>
                                                 </td>
                                             </tr>
@@ -237,6 +292,57 @@
                                 </tr>
                             </table>
                             
+                            <br/>
+                            <table class="tablecls1" width="100%">
+                                <tr>
+                                    <td width="100%">
+                                        <table width="100%">
+                                            <tr>
+                                                <td width="20%">
+                                                    Quantité contrôlée :
+                                                </td>
+                                                <td width="80%">
+                                                    <div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">
+                                                    Quantité NOK :
+                                                </td>
+                                                <td width="80%">
+                                                    <div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%">
+                                                    Quantité reprise :
+                                                </td>
+                                                <td width="80%">
+                                                    <div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <br/>
+                            <table class="tablecls1" width="100%">
+                                <tr>
+                                    <td width="100%">
+                                        <table width="100%">
+                                            <tr>
+                                                <td width="100%">
+                                                    Pareto des défauts trouvés
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
                             <br/>
                             
                             <t t-set="default_values" t-value="o.get_default_data(o.gamme_id,o.date_debut,o.date_fin)" />
@@ -263,7 +369,7 @@
                                                 <span t-esc="rec['seq_no']" />
                                             </td>
                                             <td width="21%">
-                                                <span t-esc="rec['desc']" />
+                                                <t t-raw="rec['desc'].replace('\n', '&lt;br&gt;')" />
                                             </td>
                                             <td width="12%">
                                                 <img t-if="rec['photo']"
@@ -287,53 +393,62 @@
                                     <td width="100%">
                                         <img t-if="o.get_chart_img()"
                                                             t-att-src="'data:image/png;base64,%s' % o.get_chart_img()"
-                                                            class="imgclass0" />
+                                                            class="imgclass1" />
                                     </td>
                                 </tr>
                             </table>
                             
                             <br/>
+                            <table>
+                                <tr>
+                                    <td width="100%">
+                                        <span t-esc="o.remove_chart_img()" />
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- 
                             <table class="tablecls" width="100%">
                                 <tr>
                                     <td width="100%">
                                         <h1>SVG Vertical Bar Chart</h1>
 
-                                        <!-- <svg class="chart" width="960" height="500">
+                                        <svg class="chart" width="960" height="500">
                                             <g transform="translate(40,20)">
                                                 <g class="x axis" transform="translate(0,450)">
-											        <g class="tick" transform="translate(25.5,0)" style="opacity: 1;"><line y2="4" x2="0"></line>
-											            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">A</text>
-											            <rect x="4.5" width="15" y="14" height="350"></rect>
-											        </g>
-											        <g class="tick" transform="translate(25.5,0)" style="opacity: 1;">
-			                                            <rect width="20" height="140"></rect>
-			                                            <text x="17" y="9.5" dy=".35em">14</text>
-        	                                        </g>
-											        <g class="tick" transform="translate(59.5,0)" style="opacity: 1;"><line y2="4" x2="0"></line>
-											            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">B</text>
-											            <rect x="58.5"  width="20" height="140"></rect>
-											        </g>
-											        <g class="tick" transform="translate(59.5,0)" style="opacity: 1;">
+                                                    <g class="tick" transform="translate(25.5,0)" style="opacity: 1;"><line y2="4" x2="0"></line>
+                                                        <text dy=".71em" y="9" x="0" style="text-anchor: middle;">A</text>
+                                                        <rect x="4.5" width="15" y="14" height="350"></rect>
+                                                    </g>
+                                                    <g class="tick" transform="translate(25.5,0)" style="opacity: 1;">
+                                                        <rect width="20" height="140"></rect>
+                                                        <text x="17" y="9.5" dy=".35em">14</text>
+                                                    </g>
+                                                    <g class="tick" transform="translate(59.5,0)" style="opacity: 1;"><line y2="4" x2="0"></line>
+                                                        <text dy=".71em" y="9" x="0" style="text-anchor: middle;">B</text>
+                                                        <rect x="58.5"  width="20" height="140"></rect>
+                                                    </g>
+                                                    <g class="tick" transform="translate(59.5,0)" style="opacity: 1;">
                                                         <rect width="20" height="440"></rect>
                                                         <text x="17" y="9.5" dy=".35em">14</text>
                                                     </g>
-											        <path class="domain" d="M0,6V0H900V6"></path>
-											    </g>
+                                                    <path class="domain" d="M0,6V0H900V6"></path>
+                                                </g>
                                             </g>
                                         </svg> -->
 
                                         <!-- <svg class="chart" width="120" height="420">
-										  <g transform="translate(0,0)">
-										    <rect width="20" height="140"></rect>
-										    <text x="17" y="9.5" dy=".35em">14</text>
-										  </g>
-										  <g transform="translate(25,0)">
+                                          <g transform="translate(0,0)">
+                                            <rect width="20" height="140"></rect>
+                                            <text x="17" y="9.5" dy=".35em">14</text>
+                                          </g>
+                                          <g transform="translate(25,0)">
                                             <rect width="20" height="40"></rect>
                                             <text x="17" y="9.5" dy=".35em">4</text>
                                           </g>
-										</svg> -->
+                                        </svg> -->
 
-
+<!-- 
 <svg width="960" height="500">
     <g transform="translate(40,20)">
     <g class="x axis" transform="translate(0,450)">
@@ -400,10 +515,11 @@
         <rect class="bar" x="78" width="31" y="351.4407179971658" height="98.55928200283421"></rect>
     </g>
 </svg>
-
+ 
                                     </td>
                                 </tr>
                             </table>
+ -->
                         </div>
                     </div>
                     </t>

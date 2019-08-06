@@ -8,8 +8,12 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 # from pytz import timezone
 # import pytz
 from datetime import datetime, timedelta
+import matplotlib
+matplotlib.use('Agg')
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 
 
@@ -308,45 +312,54 @@ class is_ctrl100_rapport_controle(models.Model):
 
     @api.multi
     def get_default_data(self, gamme_id, date_debut, date_fin):
-        defaut_line_obj = self.env['is.ctrl100.defaut.line']
+        defautheque_obj = self.env['is.ctrl100.defautheque']
         self._cr.execute("select is_ctrl100_defaut_line.defaut_id, sum(nb_rebuts) from is_ctrl100_defaut_line inner join is_ctrl100_defaut on is_ctrl100_defaut.id=is_ctrl100_defaut_line.defautid \
         where is_ctrl100_defaut.gamme_id=%s and is_ctrl100_defaut.date_saisie > %s and \
         is_ctrl100_defaut.date_saisie <= %s group by is_ctrl100_defaut_line.defaut_id", (gamme_id.id,date_debut,date_fin))
         listdisct = []
-        performance = []
+        x = []
         res_ids = self._cr.fetchall()
         seq_no = 1
+        popularity = []
         for res in res_ids:
-            print "Res..........",res, res[0], res[1]
-            defautheque_data = defaut_line_obj.browse(res[0])
-            performance.append(res[1])
+            defautheque_data = defautheque_obj.browse(res[0])
+            x.append(seq_no)
+            popularity.append(res[1])
             recdict = {
                 'seq_no': seq_no,
-                'desc': defautheque_data.defaut_id.defaut,
-                'photo': defautheque_data.defaut_id.photo,
+                'desc': defautheque_data.defaut or '',
+                'photo': defautheque_data.photo or '',
                 'qty': res[1],
-                'perc': res[1],
+                'perc': str(res[1]) + '%',
             }
             seq_no += 1
             listdisct.append(recdict)
-        
-        vrt = []
-        for i in range(1, len(res_ids)+1):
-            vrt.append(i)
-        print "NM",vrt
-        y_pos = np.arange(len(vrt))
-        plt.bar(y_pos, performance, align='center', alpha=0.5)
-        rect1 = plt.xticks(y_pos, vrt)
+        x_pos = [i for i, _ in enumerate(x)]
+        fig, ax = plt.subplots()
+        rects1 = ax.bar(x_pos, popularity, color='b')
+        plt.xticks(x_pos, x)
+        for rect in rects1:
+            height = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+                    height, ha='center', va='bottom')
         plt.savefig('/tmp/books_read.png')
         return listdisct
 
     @api.multi
     def get_chart_img(self):
         import base64
-        image = open('/tmp/books_read.png', 'rb')
+        file_nm = '/tmp/books_read.png'
+        image = open(file_nm, 'rb')
         image_read = image.read()
         image_64_encode = base64.encodestring(image_read)
+#         os.system("rm -f "+file_nm)
         return image_64_encode
+
+    @api.multi
+    def remove_chart_img(self):
+        file_nm = '/tmp/books_read.png'
+        os.system("rm -f "+file_nm)
+        return ''
 
 
     gamme_id    = fields.Many2one("is.ctrl100.gamme.mur.qualite", string=u"N°gamme", required=True)
