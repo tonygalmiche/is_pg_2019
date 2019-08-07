@@ -350,7 +350,6 @@ class is_ctrl100_rapport_controle(models.Model):
                 perc = float(res[1])*100/sum_nb_rebuts
 #                 perc = round(perc, 2)
             recdict = {
-                'seq_no': seq_no,
                 'desc': defautheque_data.name + ' - ' + defautheque_data.defaut or '',
                 'photo': defautheque_data.photo or '',
                 'qty': res[1],
@@ -358,7 +357,12 @@ class is_ctrl100_rapport_controle(models.Model):
             }
             seq_no += 1
             listdisct.append(recdict)
+        
+        listdisct = sorted(listdisct, key = lambda i: i['qty'], reverse=True) 
         popularity.sort(reverse=True)
+        plt.rcParams.update({'font.size': 22})
+#         my_dpi=96
+#         plt.figure(figsize=(900/my_dpi, 600/my_dpi), dpi=my_dpi)
         x_pos = [i for i, _ in enumerate(x)]
         fig, ax = plt.subplots()
         rects1 = ax.bar(x_pos, popularity, color='#5dade2')
@@ -366,9 +370,13 @@ class is_ctrl100_rapport_controle(models.Model):
         plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
         for rect in rects1:
             height = rect.get_height()
-            ax.text(rect.get_x() + rect.get_width()/2., 0.81*height,
+            ax.text(rect.get_x() + rect.get_width()/2., 0.40*height,
                     height, ha='center', va='bottom', color="white")
-        plt.savefig('/tmp/books_read.png')
+#         plt.savefig('/tmp/books_read.png',dpi=my_dpi)
+        fig = plt.gcf()
+        fig.set_size_inches(18.5, 10.5)
+        fig.savefig('test2png.png', dpi=100)
+        fig.savefig('/tmp/books_read.png',dpi=46)
         return listdisct
 
     @api.multi

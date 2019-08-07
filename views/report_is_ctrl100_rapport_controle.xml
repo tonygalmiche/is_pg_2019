@@ -4,7 +4,7 @@
 
         <template id="report_controle_transfert_style">
             .tablecls1 {
-                font-size:10pt;
+                font-size:11pt;
                 vertical-align:middle;
                 text-align:left;
                 padding-right:4px;
@@ -13,7 +13,7 @@
                 padding-bottom:4px;
             }
             .tablecls td {
-                font-size:8pt;
+                font-size:11pt;
                 vertical-align:middle;
                 text-align:center;
                 border: 1px solid #046dce;
@@ -25,7 +25,7 @@
                 padding-bottom:4px;
             }
             .tablecls th {
-                font-size:10pt;
+                font-size:11pt;
                 vertical-align:middle;
                 font-weight: bold;
                 text-align:center;
@@ -58,9 +58,9 @@
                 border: 0px solid black;
             }
             .imgclass1 {
-                height: 120mm;
+                height: 80mm;
                 text-align: middle;
-                width: 340mm;
+                width: 80mm;
                 vertical-align: middle;
                 padding-left:8px;
                 padding-top:5px;
@@ -186,6 +186,7 @@
                     <div class="page">
                         <div class="oe_structure" />
                         <div class="row">
+                            <br/>
                             <table class="tablecls1" width="100%">
                                 <tr>
                                     <td width="100%">
@@ -347,7 +348,7 @@
                                 </tr>
                             </table>
                             <br/>
-                            
+                            <t t-set="i" t-value="1" />
                             <t t-set="default_values" t-value="o.get_default_data(o.gamme_id,o.date_debut,o.date_fin)" />
                             <t t-if="default_values">
                                 <table class="tablecls" width="100%">
@@ -369,7 +370,7 @@
                                     <t t-foreach="default_values" t-as="rec">
                                         <tr>
                                             <td width="15%">
-                                                <span t-esc="rec['seq_no']" />
+                                                <span t-esc="i" />
                                             </td>
                                             <td width="21%">
                                                 <t t-raw="rec['desc'].replace('\n', '&lt;br&gt;')" />
@@ -386,16 +387,18 @@
                                                 <t t-esc="round(rec['perc'],2)"/> %
                                             </td>
                                         </tr>
+                                        <t t-set="i" t-value="i+1"/>
                                     </t>
                                 </table>
                             </t>
                             <br/>
+                            
                             <table class="tablecls" width="100%">
                                 <tr>
-                                    <td width="80%">
+                                    <td width="100%">
                                         <img t-if="o.get_chart_img()"
                                                             t-att-src="'data:image/png;base64,%s' % o.get_chart_img()"
-                                                            class="imgclass1" />
+                                                             />
                                     </td>
                                 </tr>
                             </table>
