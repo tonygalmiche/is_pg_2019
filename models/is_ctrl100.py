@@ -365,8 +365,6 @@ class is_ctrl100_rapport_controle(models.Model):
 #         plt.figure(figsize=(900/my_dpi, 600/my_dpi), dpi=my_dpi)
         x_pos = [i for i, _ in enumerate(x)]
         fig, ax = plt.subplots()
-        plt.xlabel("Languages")
-        plt.ylabel("Popularity")
         rects1 = ax.bar(x_pos, popularity, align="center", color='#5dade2')
         plt.xticks(x_pos, x)
         plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
