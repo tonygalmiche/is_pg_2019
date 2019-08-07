@@ -256,19 +256,34 @@ class is_ctrl100_defaut(models.Model):
         else:
             return False
 
-    @api.model
-    def default_get(self, default_fields):
-        res = super(is_ctrl100_defaut, self).default_get(default_fields)
-        defautheque_obj = self.env['is.ctrl100.defautheque']
+    @api.onchange('gamme_id')
+    def _onchange_gamme_id(self):
         lst = []
-        defautheque_ids = defautheque_obj.search([('active', '=', True)])
-        for num in defautheque_ids:
-            lst.append((0,0, {
-                'defaut_id': num.id,
-                'employe_id': self.get_employee()
+        defautheque_obj = self.env['is.ctrl100.defautheque']
+        if not self.gamme_id:
+            return {'value': {'defautheque_ids': False}}
+        res = {}
+        defautheque_ids = defautheque_obj.search([('active', '=', True), ('gamme_id','=',self.gamme_id.id)])
+        for defau in defautheque_ids:
+            lst.append((0, 0, {
+                'defaut_id': defau.id,
+                'employe_id': self.get_employee(),
             }))
-        res['defautheque_ids'] = lst
-        return res
+        self.defautheque_ids = lst
+
+#     @api.model
+#     def default_get(self, default_fields):
+#         res = super(is_ctrl100_defaut, self).default_get(default_fields)
+#         defautheque_obj = self.env['is.ctrl100.defautheque']
+#         lst = []
+#         defautheque_ids = defautheque_obj.search([('active', '=', True)])
+#         for num in defautheque_ids:
+#             lst.append((0,0, {
+#                 'defaut_id': num.id,
+#                 'employe_id': self.get_employee()
+#             }))
+#         res['defautheque_ids'] = lst
+#         return res
 
     name                 = fields.Char(u"N° du défaut")
     gamme_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
