@@ -354,11 +354,12 @@ class is_ctrl100_rapport_controle(models.Model):
                 'qty': res[1],
                 'perc': perc,
             }
-            x.append(defautheque_data.name + ' - ' + defautheque_data.defaut or ' ')
             seq_no += 1
             listdisct.append(recdict)
         
-        listdisct = sorted(listdisct, key = lambda i: i['qty'], reverse=True) 
+        listdisct = sorted(listdisct, key = lambda i: i['qty'], reverse=True)
+        for l in listdisct:
+            x.append(l['desc'])
         popularity.sort(reverse=True)
         plt.rcParams.update({'font.size': 22})
 #         my_dpi=96
