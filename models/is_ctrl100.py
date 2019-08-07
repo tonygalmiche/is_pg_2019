@@ -309,9 +309,14 @@ class is_ctrl100_rapport_controle(models.Model):
     _name        = 'is.ctrl100.rapport.controle'
     _description = u"Rapport de contrôle"
     _order       = 'gamme_id desc'
+    _rec_name    = 'gamme_id'
 
     @api.multi
     def get_default_data(self, gamme_id, date_debut, date_fin):
+        quantite_controlee_data = self.get_quantite_controlee(gamme_id, date_debut, date_fin)
+        sum_nb_rebuts = 0
+        if quantite_controlee_data:
+            sum_nb_rebuts = quantite_controlee_data['nb_rebuts']
         defautheque_obj = self.env['is.ctrl100.defautheque']
         self._cr.execute("select is_ctrl100_defaut_line.defaut_id, sum(nb_rebuts) from is_ctrl100_defaut_line inner join is_ctrl100_defaut on is_ctrl100_defaut.id=is_ctrl100_defaut_line.defautid \
         where is_ctrl100_defaut.gamme_id=%s and is_ctrl100_defaut.date_saisie > %s and \
@@ -325,23 +330,29 @@ class is_ctrl100_rapport_controle(models.Model):
             defautheque_data = defautheque_obj.browse(res[0])
             x.append(seq_no)
             popularity.append(res[1])
+            perc = 0.0
+            if sum_nb_rebuts:
+                perc = float(res[1])*100/sum_nb_rebuts
+#                 perc = round(perc, 2)
             recdict = {
                 'seq_no': seq_no,
-                'desc': defautheque_data.defaut or '',
+                'desc': defautheque_data.name + ' - ' + defautheque_data.defaut or '',
                 'photo': defautheque_data.photo or '',
                 'qty': res[1],
-                'perc': str(res[1]) + '%',
+                'perc': perc,
             }
             seq_no += 1
             listdisct.append(recdict)
+        popularity.sort(reverse=True)
         x_pos = [i for i, _ in enumerate(x)]
         fig, ax = plt.subplots()
-        rects1 = ax.bar(x_pos, popularity, color='b')
+        rects1 = ax.bar(x_pos, popularity, color='#5dade2')
         plt.xticks(x_pos, x)
+        plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
         for rect in rects1:
             height = rect.get_height()
-            ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-                    height, ha='center', va='bottom')
+            ax.text(rect.get_x() + rect.get_width()/2., 0.81*height,
+                    height, ha='center', va='bottom', color="white")
         plt.savefig('/tmp/books_read.png')
         return listdisct
 
@@ -352,7 +363,6 @@ class is_ctrl100_rapport_controle(models.Model):
         image = open(file_nm, 'rb')
         image_read = image.read()
         image_64_encode = base64.encodestring(image_read)
-#         os.system("rm -f "+file_nm)
         return image_64_encode
 
     @api.multi
@@ -360,6 +370,32 @@ class is_ctrl100_rapport_controle(models.Model):
         file_nm = '/tmp/books_read.png'
         os.system("rm -f "+file_nm)
         return ''
+
+    @api.multi
+    def get_quantite_controlee(self, gamme_id, date_debut, date_fin):
+        self._cr.execute("select is_ctrl100_defaut_line.defaut_id, coalesce(sum(nb_rebuts),0), coalesce(sum(nb_repris),0) from is_ctrl100_defaut_line inner join is_ctrl100_defaut on is_ctrl100_defaut.id=is_ctrl100_defaut_line.defautid \
+            where is_ctrl100_defaut.gamme_id=%s and is_ctrl100_defaut.date_saisie > %s and \
+            is_ctrl100_defaut.date_saisie <= %s group by is_ctrl100_defaut_line.defaut_id", (gamme_id.id,date_debut,date_fin))
+        listdisct = []
+        x = []
+        res_ids = self._cr.fetchall()
+        nb_rebuts = 0
+        nb_repris = 0
+        for res in res_ids:
+            nb_rebuts += res[1]
+            nb_repris += res[2]
+        x = {'nb_rebuts':nb_rebuts, 'nb_repris': nb_repris}
+        return x
+
+    @api.multi
+    def get_quantite(self, date_debut, date_fin):
+        quantite = 0
+        self._cr.execute("select sum(nb_pieces_controlees) from is_ctrl100_defaut \
+            where date_saisie > %s and date_saisie <= %s ", (date_debut,date_fin))
+        res_ids = self._cr.fetchall()
+        for res in res_ids:
+            quantite = res[0]
+        return quantite
 
 
     gamme_id    = fields.Many2one("is.ctrl100.gamme.mur.qualite", string=u"N°gamme", required=True)

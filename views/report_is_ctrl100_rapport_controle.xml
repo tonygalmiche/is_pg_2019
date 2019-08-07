@@ -58,9 +58,9 @@
                 border: 0px solid black;
             }
             .imgclass1 {
-                height: 80mm;
+                height: 120mm;
                 text-align: middle;
-                width: 80mm;
+                width: 340mm;
                 vertical-align: middle;
                 padding-left:8px;
                 padding-top:5px;
@@ -299,25 +299,28 @@
                                         <table width="100%">
                                             <tr>
                                                 <td width="20%">
-                                                    Quantité contrôlée :
+                                                    Quantité contrôlée :  <span t-esc="o.get_quantite(o.date_debut, o.date_fin)" />
                                                 </td>
                                                 <td width="80%">
                                                     <div>
+                                                        <td width="100%">
+                                                        </td>
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td width="20%">
-                                                    Quantité NOK :
+                                                    Quantité NOK :  <span t-esc="o.get_quantite_controlee(o.gamme_id, o.date_debut, o.date_fin)['nb_rebuts']" />
                                                 </td>
                                                 <td width="80%">
                                                     <div>
+                                                        
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td width="20%">
-                                                    Quantité reprise :
+                                                    Quantité reprise :  <span t-esc="o.get_quantite_controlee(o.gamme_id, o.date_debut, o.date_fin)['nb_repris']" />
                                                 </td>
                                                 <td width="80%">
                                                     <div>
@@ -380,17 +383,16 @@
                                                 <span t-esc="rec['qty']" />
                                             </td>
                                             <td width="10%">
-                                                <span t-esc="rec['perc']" />
+                                                <t t-esc="round(rec['perc'],2)"/> %
                                             </td>
                                         </tr>
                                     </t>
                                 </table>
                             </t>
                             <br/>
-                            
                             <table class="tablecls" width="100%">
                                 <tr>
-                                    <td width="100%">
+                                    <td width="80%">
                                         <img t-if="o.get_chart_img()"
                                                             t-att-src="'data:image/png;base64,%s' % o.get_chart_img()"
                                                             class="imgclass1" />
