@@ -343,7 +343,6 @@ class is_ctrl100_rapport_controle(models.Model):
         popularity = []
         for res in res_ids:
             defautheque_data = defautheque_obj.browse(res[0])
-            x.append(seq_no)
             popularity.append(res[1])
             perc = 0.0
             if sum_nb_rebuts:
@@ -355,6 +354,7 @@ class is_ctrl100_rapport_controle(models.Model):
                 'qty': res[1],
                 'perc': perc,
             }
+            x.append(defautheque_data.name + ' - ' + defautheque_data.defaut or ' ')
             seq_no += 1
             listdisct.append(recdict)
         
@@ -365,7 +365,9 @@ class is_ctrl100_rapport_controle(models.Model):
 #         plt.figure(figsize=(900/my_dpi, 600/my_dpi), dpi=my_dpi)
         x_pos = [i for i, _ in enumerate(x)]
         fig, ax = plt.subplots()
-        rects1 = ax.bar(x_pos, popularity, color='#5dade2')
+        plt.xlabel("Languages")
+        plt.ylabel("Popularity")
+        rects1 = ax.bar(x_pos, popularity, align="center", color='#5dade2')
         plt.xticks(x_pos, x)
         plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
         for rect in rects1:
