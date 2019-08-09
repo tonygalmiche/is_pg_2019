@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <record id="view_is_mold_form_inherited_preventif" model="ir.ui.view">
+            <field name="name">view.is.mold.form.inherited.preventif</field>
+            <field name="model">is.mold</field>
+            <field name="inherit_id" ref="is_mold.is_mold_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/*" position="before">
+                    <header>
+                        <button 
+                            name="vers_nouveau_preventif_mold"
+                            string="Nouveau préventif"
+                            type="object"
+                            class="oe_highlight"
+                        />
+                    </header>
+                </xpath>
+                <xpath expr="/form/sheet/*" position="inside">
+                    <notebook colspan="4">
+                        <page string="Préventif" attrs="{'invisible': [('is_base_check','!=',True)]}">
+                            <group>
+                                <group>
+                                    <field name="nb_cycles_actuel"/>
+                                </group>
+                                <group>
+                                    <field name="periodicite_maintenance_moule"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="gamme_preventif_ids" widget="many2many_tags"/>
+                                <field name="is_base_check" invisible="1" />
+                            </group>
+                        </page>
+                        <page string="Préventif Moule">
+                            <field name="is_preventif_moule" readonly="1">
+                                <tree>
+                                    <field name="date_preventif"/>
+                                    <field name="fiche_preventif_ids"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Préventif Moule -->
+        <record model="ir.ui.view" id="view_is_preventif_moule_tree">
+            <field name="name">view.is.preventif.moule.tree</field>
+            <field name="model">is.preventif.moule</field>
+            <field name="arch" type="xml">
+                <tree string="Préventif Moule">
+                    <field name="moule"/>
+                    <field name="date_preventif"/>
+                    <field name="fiche_preventif_ids"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_preventif_moule_form">
+            <field name="name">view.is.preventif.moule.form</field>
+            <field name="model">is.preventif.moule</field>
+            <field name="arch" type="xml">
+            <form string="Préventif Moule">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="moule"/>
+                        </group>
+                        <group>
+                            <field name="date_preventif"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="fiche_preventif_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_preventif_moule_action">
+            <field name="name">Préventif Moule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.preventif.moule</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</openerp>
+

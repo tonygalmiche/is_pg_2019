@@ -68,6 +68,8 @@ access_is_ctrl100_defaut_line_qualite,access_is_ctrl100_defaut_line,model_is_ctr
 access_is_theia_trs,access_is_theia_trs,model_is_theia_trs,base.group_user,1,0,0,0
 
 access_is_ctrl100_rapport_controle_user,access_is_ctrl100_rapport_controle,model_is_ctrl100_rapport_controle,is_plastigray.is_qualite_group,1,1,1,1
+access_is_preventif_moule_user,access_is_preventif_moule,model_is_preventif_moule,base.group_user,1,0,0,0
+access_is_preventif_moule_tech,access_is_preventif_moule_tech,model_is_preventif_moule,is_plastigray.is_technicien_maintenance_group,1,1,1,1
 
 
 
