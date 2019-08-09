@@ -267,6 +267,7 @@
                     <field name="name"/>
                     <field name="descriptif"/>
                     <field name="demandeur_id"/>
+                    <field name="valideur_id"/>
                     <field name="type_equipement_id"/>
                     <field name="equipement_id"/>
                     <field name="moule_id"/>
@@ -274,8 +275,10 @@
                     <field name="gabarit_id"/>
                     <field name="instrument_id"/>
                     <field name="code_gravite"/>
+                    <field name="site_id"/>
                     <group expand="0" string="Regroupé par...">
                       <filter name="group_demandeur_id"       string="Demandeur"            context="{'group_by':'demandeur_id'}"/>
+                      <filter name="group_valideur_id"        string="Valideur"             context="{'group_by':'valideur_id'}"/>
                       <filter name="group_type_equipement_id" string="Type équipement"      context="{'group_by':'type_equipement_id'}"/>
                       <filter name="group_equipement_id"      string="Équipement"           context="{'group_by':'equipement_id'}"/>
                       <filter name="group_moule_id"           string="Moule"                context="{'group_by':'moule_id'}"/>
@@ -489,23 +492,24 @@
             <field name="model">is.ot</field>
             <field name="arch" type="xml">
                 <tree string="Terminé" create="false">
-                    <field name="site_id" />
-                    <field name="name" />
-                    <field name="date_creation" />
-                    <field name="demandeur_id" />
-                    <field name="equipement_id" />
-                    <field name="moule_id" />
-                    <field name="dossierf_id" />
+                    <field name="site_id"/>
+                    <field name="name"/>
+                    <field name="date_creation"/>
+                    <field name="demandeur_id"/>
+                    <field name="valideur_id"/>
+                    <field name="equipement_id"/>
+                    <field name="moule_id"/>
+                    <field name="dossierf_id"/>
                     <field name="gabarit_id"/>
                     <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <field name="descriptif"/>
-                    <field name="numero_qrci" />
-                    <field name="affectation_id" />
-                    <field name="nature" />
-                    <field name="delai_previsionnel" />
-                    <field name="date_realisation_travaux" />
-                    <field name="temps_passe_total" widget="float_time" />
+                    <field name="numero_qrci"/>
+                    <field name="affectation_id"/>
+                    <field name="nature"/>
+                    <field name="delai_previsionnel"/>
+                    <field name="date_realisation_travaux"/>
+                    <field name="temps_passe_total" widget="float_time"/>
                     <field name="pj" invisible="1"/>
                     <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
                 </tree>
