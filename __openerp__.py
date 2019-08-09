@@ -31,7 +31,6 @@ InfoSaône - Module Odoo pour Plastigray en 2019
         "views/is_ot_workflow.xml",
         "views/is_ot_view.xml",
         "views/is_ctrl100_view.xml",
-        "views/menu.xml",
         "security/ir.model.access.csv",
         "views/report_gamme_defautheque.xml",
         "views/report_gamme_qualite.xml",
@@ -41,6 +40,7 @@ InfoSaône - Module Odoo pour Plastigray en 2019
         "views/report.xml",
         "views/report_is_ctrl100_rapport_controle.xml",
         "views/is_preventif_view.xml",
+        "views/menu.xml",
     ], 
     "qweb": [
     ],
