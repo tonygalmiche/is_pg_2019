@@ -157,12 +157,12 @@
                                                         <t t-set="total" t-value="total + l[1]"/>
                                                         <tr>
                                                             <td style="text-align:left"><t t-esc="l[0]"/></td>
-                                                            <td style="text-align:right"><t t-esc="l[1]"/></td>
+                                                            <td style="text-align:right"><t t-esc="'%.2f'%l[1]"/></td>
                                                         </tr>
                                                     </t>
                                                     <tr>
                                                         <td style="text-align:left"><b>Total : </b></td>
-                                                        <td style="text-align:right"><b><t t-esc="total"/></b></td>
+                                                        <td style="text-align:right"><b><t t-esc="'%.2f'%total"/></b></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -182,25 +182,20 @@
                                                 </thead>
                                                 <t t-set="total"   t-value="0"/>
                                                 <t t-set="curatif" t-value="0"/>
-                                                <t t-set="preventif" t-value="0"/>
                                                 <tbody>
                                                     <t t-foreach="o.get_nb_heures_nature()" t-as="l">
                                                         <t t-set="total" t-value="total + l[1]"/>
                                                         <t t-if="l[0] == 'Curatif'">
                                                             <t t-set="curatif" t-value="l[1]"/>
                                                         </t>
-                                                        <t t-if="l[0] == 'Préventif'">
-                                                            <t t-set="preventif" t-value="l[1]"/>
-                                                        </t>
-
                                                         <tr>
                                                             <td style="text-align:left"><t t-esc="l[0]"/></td>
-                                                            <td style="text-align:right"><t t-esc="l[1]"/></td>
+                                                            <td style="text-align:right"><t t-esc="'%.2f'%(l[1])"/></td>
                                                         </tr>
                                                     </t>
                                                     <tr>
                                                         <td style="text-align:left"><b>Total : </b></td>
-                                                        <td style="text-align:right"><b><t t-esc="total"/></b></td>
+                                                        <td style="text-align:right"><b><t t-esc="'%.2f'%total"/></b></td>
                                                     </tr>
                                                     <tr>
                                                         <td style="text-align:left"><b>Curatif / Total : </b></td>
@@ -209,7 +204,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td style="text-align:left"><b>Préventif / Total : </b></td>
-                                                        <t t-set="ratio" t-value="int(100*round(preventif/total,2))"/>
+                                                        <t t-set="ratio" t-value="int(100*round((total-curatif)/total,2))"/>
                                                         <td style="text-align:right"><b><t t-esc="ratio"/>%</b></td>
                                                     </tr>
 
@@ -230,10 +225,11 @@
                                                 <th><t t-esc="l[1]"/></th>
                                             </t>
                                             <th>Total</th>
+                                            <th>% Préventif</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <t t-foreach="o.get_nb_heures('batiment',0,1)" t-as="line">
+                                        <t t-foreach="o.get_nb_heures('batiment',0,0)" t-as="line">
                                             <div t-raw="line"/>
                                         </t>
                                     </tbody>
@@ -249,10 +245,11 @@
                                                 <th><t t-esc="l[1]"/></th>
                                             </t>
                                             <th>Total</th>
+                                            <th>% Préventif</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <t t-foreach="o.get_nb_heures('presse',0,1)" t-as="line">
+                                        <t t-foreach="o.get_nb_heures('presse',0,0)" t-as="line">
                                             <div t-raw="line"/>
                                         </t>
                                     </tbody>
@@ -268,11 +265,12 @@
                                                 <th><t t-esc="l[1]"/></th>
                                             </t>
                                             <th>Total</th>
-                                            <th>%</th>
+                                            <th>% du Total</th>
+                                            <th>% Préventif</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <t t-foreach="o.get_nb_heures('equipement',1,1)" t-as="line">
+                                        <t t-foreach="o.get_nb_heures('equipement',1,0)" t-as="line">
                                             <div t-raw="line"/>
                                         </t>
                                     </tbody>
@@ -283,7 +281,7 @@
 
 
 
-                                <t t-set="res" t-value="o.get_nb_heures('moule',0,1)"/>
+                                <t t-set="res" t-value="o.get_nb_heures('moule',0,0)"/>
                                 <t t-if="res">
                                     <table class="tablecls" width="100%">
                                         <thead>
@@ -293,6 +291,7 @@
                                                     <th><t t-esc="l[1]"/></th>
                                                 </t>
                                                 <th>Total</th>
+                                                <th>% Préventif</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -305,7 +304,7 @@
                                 </t>
 
                                 
-                                <t t-set="res" t-value="o.get_nb_heures('dossierf',0,1)"/>
+                                <t t-set="res" t-value="o.get_nb_heures('dossierf',0,0)"/>
                                 <t t-if="res">
                                     <table class="tablecls" width="100%">
                                         <thead>
@@ -315,6 +314,7 @@
                                                     <th><t t-esc="l[1]"/></th>
                                                 </t>
                                                 <th>Total</th>
+                                                <th>% Préventif</th>
                                             </tr>
                                         </thead>
                                         <tbody>

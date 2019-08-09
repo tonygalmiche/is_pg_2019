@@ -433,30 +433,47 @@ class is_ot_indicateur(models.Model):
         for line in ro:
             tr='<tr><td style="text-align:left">'+line+'</td>'
             total_ligne=0
+            curatif = 0
             for n in _NATURE:
                 nature = n[0]
                 tps = ro[line].get(nature,'')
-                tr+='<td>'+str(tps)+'</td>'
+                if tps!='':
+                    x='%.2f'%tps
+                else:
+                    x=''
+                tr+='<td>'+x+'</td>'
                 if tps!='':
                     total_ligne+=tps
+                    if nature == 'curatif':
+                        curatif+=tps
             pourcent=''
             if total_general>0:
                 pourcent=round(100*total_ligne/total_general,1);
-            tr+='<td style="text-align:right"><b>'+str(round(total_ligne,1))+'</b></td>'
-
+            tr+='<td style="text-align:right"><b>'+'%.2f'%total_ligne+'</b></td>'
             if affiche_total:
-                tr+='<td style="text-align:right"><b>'+str(pourcent)+'%</b></td>'
+                tr+='<td style="text-align:right"><b>'+'%.1f'%pourcent+'%</b></td>'
+            pourcentage_preventif = 0
+            if total_ligne>0:
+                pourcentage_preventif = 100*(1 - curatif / total_ligne)
+                tr+='<td style="text-align:right"><b>'+'%.1f'%pourcentage_preventif+'%</b></td>'
             tr+='</tr>'
             res.append(tr)
 
         if affiche_total and res:
             tr='<tr><th style="text-align:left">Total : </th>'
+            curatif = 0
             for n in _NATURE:
                 nature = n[0]
                 tps=total.get(nature,0)
+                if nature == 'curatif':
+                    curatif=tps
                 tr+='<th>'+str(tps)+'</th>'
             tr+='<th>'+str(round(total_general,1))+'</th>'
             tr+='<th>100%</th>'
+            pourcentage_preventif = 0
+            if total_general>0:
+                pourcentage_preventif = 100*(1 - curatif / total_general)
+            tr+='<th>'+'%.1f'%pourcentage_preventif+'%</th>'
             tr+='</tr>'
             res.append(tr)
 
@@ -471,6 +488,7 @@ class is_ot_indicateur(models.Model):
                 tr+='<td>'+str(pourcent)+'%</td>'
             tr+='<td></td>'
             if affiche_total:
+                tr+='<td></td>'
                 tr+='<td></td>'
             tr+='</tr>'
             res.append(tr)
