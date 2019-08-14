@@ -376,7 +376,7 @@ class is_ctrl100_rapport_controle(models.Model):
 #         plt.savefig('/tmp/books_read.png',dpi=my_dpi)
         fig = plt.gcf()
         fig.set_size_inches(18.5, 10.5)
-        fig.savefig('test2png.png', dpi=100)
+        #fig.savefig('test2png.png', dpi=100)
         fig.savefig('/tmp/books_read.png',dpi=46)
         return listdisct
 
