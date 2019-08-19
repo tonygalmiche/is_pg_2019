@@ -39,7 +39,7 @@
                             </group>
                             <group string="Opérations systématiques">
                                 <field name="systematique_ids" nolabel="1">
-                                    <tree>
+                                    <tree editable="bottom">
                                         <field name="operation_systematique_id"/>
                                         <field name="activer"/>
                                         <field name="frequence_preventif_id"/>
@@ -48,7 +48,7 @@
                             </group>
                             <group string="Opérations spécifiques">
                                 <field name="specifique_ids" nolabel="1">
-                                    <tree>
+                                    <tree editable="bottom">
                                         <field name="operation_specifique_id"/>
                                         <field name="activer"/>
                                         <field name="frequence_preventif_id"/>
@@ -57,7 +57,7 @@
                             </group>
                             <group string="Spécifications particulières">
                                 <field name="specification_ids" nolabel="1">
-                                    <tree>
+                                    <tree editable="bottom">
                                         <field name="specification_particuliere_id"/>
                                         <field name="activer"/>
                                         <field name="frequence_preventif_id"/>
@@ -150,8 +150,6 @@
                     <group>
                         <group>
                             <field name="name" />
-                        </group>
-                        <group>
                             <field name="active" />
                         </group>
                     </group>
@@ -186,8 +184,6 @@
                     <group>
                         <group>
                             <field name="name" />
-                        </group>
-                        <group>
                             <field name="active" />
                         </group>
                     </group>
@@ -222,8 +218,6 @@
                     <group>
                         <group>
                             <field name="name" />
-                        </group>
-                        <group>
                             <field name="active" />
                         </group>
                     </group>
@@ -258,8 +252,6 @@
                     <group>
                         <group>
                             <field name="name" />
-                        </group>
-                        <group>
                             <field name="active" />
                         </group>
                     </group>
@@ -291,7 +283,7 @@
             <form string="Pièces spécifiques">
                 <sheet>
                     <group>
-                        <field name="name" />
+                        <field name="name" required="True" />
                     </group>
                 </sheet>
             </form>
@@ -321,7 +313,7 @@
             <form string="Surface d'aspect">
                 <sheet>
                     <group>
-                        <field name="name" />
+                        <field name="name" required="True" />
                     </group>
                 </sheet>
             </form>

@@ -372,16 +372,18 @@
                                             </tr>
                                             <t t-set="i" t-value="1" />
                                             <t t-foreach="o.systematique_ids" t-as="syst">
+                                                <t t-if="syst.activer">
                                                 <tr>
                                                     <td width="4%">
                                                     </td>
                                                     <td width="60%" class="tdborder">
-                                                        <span t-esc="i" /> - <span t-field="syst.operation_systematique_id.name" />
+                                                        <span t-esc="i" /> - <span t-field="syst.operation_systematique_id.name" /> <t t-if="syst.frequence_preventif_id"> / <span t-field="syst.frequence_preventif_id.name" /></t>
                                                     </td>
                                                     <td width="20%"> </td>
                                                     <td width="6%"> </td>
                                                 </tr>
                                                 <t t-set="i" t-value="i+1"/>
+                                                </t>
                                             </t>
                                         </table>
                                         
@@ -399,16 +401,18 @@
                                             </tr>
                                             <t t-set="i" t-value="1" />
                                             <t t-foreach="o.specifique_ids" t-as="spec">
+                                                <t t-if="spec.activer">
                                                 <tr>
                                                     <td width="4%">
                                                     </td>
                                                     <td width="60%" class="tdborder">
-                                                        <span t-esc="i" /> - <span t-field="spec.operation_specifique_id.name" />
+                                                        <span t-esc="i" /> - <span t-field="spec.operation_specifique_id.name" /> <t t-if="spec.frequence_preventif_id"> / <span t-field="spec.frequence_preventif_id.name" /></t>
                                                     </td>
                                                     <td width="20%"> </td>
                                                     <td width="6%"> </td>
                                                 </tr>
                                                 <t t-set="i" t-value="i+1"/>
+                                                </t>
                                             </t>
                                         </table>
                                         
@@ -426,16 +430,18 @@
                                             </tr>
                                             <t t-set="i" t-value="1" />
                                             <t t-foreach="o.specification_ids" t-as="par">
+                                                <t t-if="par.activer">
                                                 <tr>
                                                     <td width="4%">
                                                     </td>
                                                     <td width="60%" class="tdborder">
-                                                        <span t-esc="i" /> - <span t-field="par.specification_particuliere_id.name" />
+                                                        <span t-esc="i" /> - <span t-field="par.specification_particuliere_id.name" /> <t t-if="par.frequence_preventif_id"> / <span t-field="par.frequence_preventif_id.name" /></t>
                                                     </td>
                                                     <td width="20%"> </td>
                                                     <td width="6%"> </td>
                                                 </tr>
                                                 <t t-set="i" t-value="i+1"/>
+                                                </t>
                                             </t>
                                             <tr>
                                                 <td width="4%">
@@ -457,22 +463,22 @@
                                                     <table width="100%">
                                                         <tr>
                                                             <td width="4%">
-			                                                </td>
-			                                                <td width="96%" class="tdborderbr" colspan="2">
-			                                                    <b>Pièces spécifiques de rechange en stock / Specific parts in stock</b>
-			                                                </td>
+                                                            </td>
+                                                            <td width="96%" class="tdborderbr" colspan="2">
+                                                                <b>Pièces spécifiques de rechange en stock / Specific parts in stock</b>
+                                                            </td>
                                                         </tr>
                                                         <t t-set="i" t-value="1" />
-			                                            <t t-foreach="o.piece_specifique_ids" t-as="piece">
-			                                                <tr>
-			                                                    <td width="4%">
-			                                                    </td>
-			                                                    <td width="96%" class="tdborderbr">
-			                                                        <span t-esc="i" /> - <span t-field="piece.name" />
-			                                                    </td>
-			                                                </tr>
-			                                                <t t-set="i" t-value="i+1"/>
-			                                            </t>
+                                                        <t t-foreach="o.piece_specifique_ids" t-as="piece">
+                                                            <tr>
+                                                                <td width="4%">
+                                                                </td>
+                                                                <td width="96%" class="tdborderbr">
+                                                                    <span t-esc="i" /> - <span t-field="piece.name" />
+                                                                </td>
+                                                            </tr>
+                                                            <t t-set="i" t-value="i+1"/>
+                                                        </t>
                                                     </table>
                                                 </td>
                                                 <td width="40%">
@@ -553,6 +559,24 @@
                                                     <b>Année d'expiration / Year of end:</b>
                                                 </td>
                                             </tr>
+                                            
+                                            <t t-foreach="o.dateur_ids" t-as="dt">
+                                                <tr>
+                                                    <td width="4%">
+	                                                    
+	                                                </td>
+	                                                <td width="46%" class="tdborder">
+	                                                    <span t-field="dt.type_dateur" /> / <span t-field="dt.date_peremption" />
+	                                                </td>
+	                                                <td width="4%">
+	                                                    
+	                                                </td>
+	                                                <td width="46%" class="tdborder">
+	                                                    <span t-field="dt.diametre_dateur" /> / <span t-field="dt.commentaire" />
+	                                                </td>
+                                                </tr>
+                                            </t>
+                                            
                                             <tr>
                                                 <td width="4%" colspan="1">
                                                 </td>
@@ -627,14 +651,14 @@
                                                         <span t-esc="i" /> - <span t-field="syst.operation_systematique_id.name" />
                                                     </td>
                                                     <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborder"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborder"> </td>
                                                 </tr>
                                                 <t t-set="i" t-value="i+1"/>
                                             </t>
@@ -687,14 +711,14 @@
                                                         <span t-esc="i" /> - <span t-field="piece.name" />
                                                     </td>
                                                     <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborderbr"> </td>
-	                                                <td width="4%" class="tdborder"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborderbr"> </td>
+                                                    <td width="4%" class="tdborder"> </td>
                                                 </tr>
                                                 <t t-set="i" t-value="i+1"/>
                                             </t>
