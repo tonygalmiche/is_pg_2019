@@ -2,6 +2,28 @@
 <openerp>
     <data>
 
+
+        <record id="is_article_menu" model="ir.ui.menu" >
+            <field name="name">Articles de tous les sites (intégré)</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" eval="ref('is_plastigray.menu_is_articles')"/>
+            <field name="action"    ref="is_plastigray.is_article_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_base_principale_grp'),
+            ])]"/>
+        </record>
+        <record id="is_article_actualiser_menu" model="ir.ui.menu" >
+            <field name="name">Actualiser les articles</field>
+            <field name="sequence">50</field>
+            <field name="parent_id" eval="ref('is_plastigray.menu_is_articles')"/>
+            <field name="action"    ref="is_plastigray.is_article_actualiser_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_base_principale_grp'),
+            ])]"/>
+        </record>
+
+
+
         <menuitem id="menu_is_dt_tables_is_fiche_tampographie_constituant" sequence="100" name="Constituant Tampographie"  parent="is_plastigray.menu_is_dt_tables" action="action_is_fiche_tampographie_constituant"/>
         <menuitem id="menu_is_fiche_tampographie_type_reglage"             sequence="101" name="Type réglage Tampographie" parent="is_plastigray.menu_is_dt_tables" action="action_is_fiche_tampographie_type_reglage"/>
 
@@ -73,6 +95,17 @@
             <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
         </record>
         <menuitem id="menu_is_preventif_moule" sequence="30" parent="is_preventif_moule_menu" action="is_preventif_moule_action" name="Préventif Moule" />
+
+
+        <!-- Production / Etiquettes GALIA -->
+        <record id="is_galia_base_main_menu" model="ir.ui.menu" >
+            <field name="name">Étiquettes GALIA</field>
+            <field name="sequence">110</field>
+            <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
+        </record>
+        <menuitem id="is_galia_base_menu" sequence="10" parent="is_pg_2019.is_galia_base_main_menu" name="Étiquettes GALIA" action="is_plastigray.is_galia_base_action"/>
+
 
         <!-- Tables Moules -->
         <record id="menu_tables_moules" model="ir.ui.menu" >
