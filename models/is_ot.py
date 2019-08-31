@@ -65,6 +65,9 @@ class is_ot(models.Model):
 
     @api.multi
     def write(self, vals):
+        for data in self:
+            if data.state == 'travaux_a_valider':
+                vals['valideur_id'] = self._uid
         res = super(is_ot, self).write(vals)
         for data in self:
             if data.state == 'analyse_ot' and data.validation_ot == 'oui':
@@ -240,7 +243,7 @@ class is_ot(models.Model):
     motif               = fields.Char("Motif")
     temps_passe_ids     = fields.One2many('is.ot.temps.passe', 'ot_id', u"Temps passé")
     temps_passe_total   = fields.Float(u"Temps passé total", digits=(14, 2), store=True, readonly=True, compute='_compute_temps_passe_total')
-    valideur_id         = fields.Many2one("res.users", "Valideur", default=lambda self: self.env.uid)
+    valideur_id         = fields.Many2one("res.users", "Valideur")
     validation_travaux  = fields.Selection([
             ("ok", "Ok"),
             ("non_ok", "Non Ok"),

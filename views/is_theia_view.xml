@@ -13,11 +13,21 @@
     <menuitem name="Indicateurs" id="menu_is_cpi_indicateurs" 
               parent="is_theia_root_menu" sequence="30"/>
 
+
+
+    <!--
     <menuitem name="Paramètres" id="is_theia_parametres_menu" 
               parent="is_theia_root_menu" sequence="40" groups="base.group_erp_manager"/>
-
-
-
+    -->
+    <record id="is_theia_parametres_menu" model="ir.ui.menu" >
+        <field name="name">Paramètres</field>
+        <field name="sequence">40</field>
+        <field name="parent_id" eval="ref('is_theia_root_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+            ref('base.group_erp_manager'),
+            ref('is_plastigray.group_gestionnaire_cpi_raspberry'),
+        ])]"/>
+    </record>
 
 
     <!-- Parc des presses -->
@@ -602,6 +612,10 @@
                 <field name="regroupement_id"/>
                 <field name="production_serie"/>
                 <field name="couleur"/>
+                <group expand="0" string="Regroupé par...">
+                  <filter name="group_couleur"         string="Couleur"                  context="{'group_by':'couleur'}"/>
+                  <filter name="group_regroupement_id" string="Regroupement État Presse" context="{'group_by':'regroupement_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -614,7 +628,7 @@
     <menuitem action="is_etat_presse_action" 
               id="menu_is_etat_presse" 
               parent="is_theia_parametres_menu" 
-              sequence="15" groups="base.group_erp_manager"/>
+              sequence="15" groups="base.group_user"/>
 
 
     <!-- Regroupement État Presse -->
