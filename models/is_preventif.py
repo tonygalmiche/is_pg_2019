@@ -39,6 +39,7 @@ class is_mold(models.Model):
         for num in systematique_ids:
             systematique_lst.append((0,0, {
                 'operation_systematique_id': num.id,
+                'activer'                  : True,
             }))
         res['systematique_ids'] = systematique_lst
         specifique_obj = self.env['is.mold.operation.specifique']
@@ -47,6 +48,7 @@ class is_mold(models.Model):
         for num in specifique_ids:
             specifique_lst.append((0,0, {
                 'operation_specifique_id': num.id,
+                'activer'                : True,
             }))
         res['specifique_ids'] = specifique_lst
         specification_obj = self.env['is.mold.specification.particuliere']
@@ -55,6 +57,7 @@ class is_mold(models.Model):
         for num in specification_ids:
             specification_lst.append((0,0, {
                 'specification_particuliere_id': num.id,
+                'activer'                      : True,
             }))
         res['specification_ids'] = specification_lst
         return res

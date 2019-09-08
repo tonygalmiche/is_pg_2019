@@ -219,31 +219,20 @@
                 <div class="row">
                     <table style="border-collapse: collapse;" width="100%">
                         <tr>
-                            <td colspan="3" class="footerbold">
-                                <b>Crée par / Create by</b>
+                            <td class="footerbold">
+                                <b>Crée par / Create by</b> : <span t-esc="o.createur_fiche_id.name" />
                             </td>
-                            <td colspan="5" class="footerbold">
-                                <div>
-                                    <span t-esc="o.createur_fiche_id.name" />
-                                </div>
+                            <td class="footerbold">
+                                <b>Date création / Date creation</b> : <span t-esc="o.date_creation_fiche"/>
                             </td>
-                            <td colspan="5" class="footerbold">
-                                <b>Date création / Date creation</b>
+                            <td class="footerbold">
+                                <b>Modifié le / Modified</b> : <span t-esc="o.date_modification_fiche" />
                             </td>
-                            <td colspan="5" class="footerbold">
-                                <div>
-                                    <span t-esc="o.date_creation" />
-                                </div>
-                            </td>
-                            <td colspan="3" class="footerbold">
-                                <b>Modifié le / Modified</b>
-                            </td>
-                            <td colspan="5" class="footerbold">
-                                <div>
-                                    <span t-esc="o.date_modification_fiche" />
-                                </div>
+                            <td class="footerbold">
+                                <b>Indice</b> : <span t-esc="o.indice_creation_fiche" />
                             </td>
                         </tr>
+                        <!--
                         <tr>
                             <td width="3.85%" class="footerbold">A</td>
                             <td width="3.85%" class="footerbold">B</td>
@@ -272,6 +261,7 @@
                             <td width="3.85%" class="footerbold">Y</td>
                             <td width="3.85%" class="footerbold">Z</td>
                         </tr>
+                        -->
                     </table>
                 </div>
             </div>
@@ -290,14 +280,12 @@
                                 <div style="font-size:22px">            Preventive maintenance level 2</div>
                             </td>
                             <td width="20%" rowspan="1">
-                                <div>Page</div>
+                                FO-0-MAI-09-5
                             </td>
                         </tr>
                         <tr>
                             <td  rowspan="2">
-                                <div>
-                                    <span class="page" />/<span class="topage" />
-                                </div>
+                                Page <span class="page" />/<span class="topage" />
                             </td>
                         </tr>
                     </table>
@@ -341,7 +329,7 @@
                                                     Tous les / All
                                                 </td>
                                                 <td width="14%">
-                                                    <u>           </u>
+                                                     <span t-field="o.periodicite_maintenance_moule"/>
                                                 </td>
                                                 <td width="13%">
                                                     cycles / cycles
@@ -349,14 +337,16 @@
                                             </tr>
                                             <tr>
                                                 <td width="100%" colspan="5">
-                                                    Mouliste / Moldmaker:
+                                                    Mouliste / Moldmaker: <span t-field="o.mouliste_id.name" />
                                                 </td>
                                             </tr>
+                                            <!--
                                             <tr>
                                                 <td width="100%" colspan="5">
                                                     Mouliste préconisé pour la maintenance / Moldmaker for maintenance:
                                                 </td>
                                             </tr>
+                                            -->
                                         </table>
                                         <table class="tablecls1" width="100%">
                                             <tr><td> </td></tr>
@@ -443,6 +433,7 @@
                                                 <t t-set="i" t-value="i+1"/>
                                                 </t>
                                             </t>
+                                            <!--
                                             <tr>
                                                 <td width="4%">
                                                 </td>
@@ -452,6 +443,7 @@
                                                 <td width="20%"> </td>
                                                 <td width="6%"> </td>
                                             </tr>
+                                            -->
                                         </table>
                                         
                                         <table class="tablecls1" width="100%">
@@ -581,10 +573,9 @@
                                                 <td width="4%" colspan="1">
                                                 </td>
                                                 <td colspan="1">
-                                                    <b>Garantie de vie de l'outillage (CDC spécifiques)/ Guarantee tool life (specification book) :</b>
+                                                    <b>Garantie de vie de l'outillage (CDC spécifiques) / Guarantee tool life (specification book) : </b><span t-field="o.garantie_outillage" />
                                                 </td>
                                                 <td colspan="2">
-                                                    
                                                 </td>
                                             </tr>
                                         </table>
