@@ -427,56 +427,68 @@
                                                 </td>
                                                 <td width="40%">
                                                     <table width="100%">
-                                                        <tr>
+                                                        <tr t-if="o.surface_aspect_id">
                                                             <td width="8%">
                                                             </td>
                                                             <td width="84%" class="tdborder" colspan="2">
                                                                 <center><b>Surface d'aspect / Visible side:</b></center>
-                                                            </td>
-                                                            <td width="8%">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td width="8%">
-                                                            </td>
-                                                            <td width="84%" class="tdborder" colspan="2">
                                                                 <center><span t-esc="o.surface_aspect_id.name" /></center>
                                                             </td>
                                                             <td width="8%">
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        <tr t-if="o.reference_grain">
                                                             <td width="8%">
                                                             </td>
                                                             <td width="84%" class="tdborder" colspan="2">
                                                                 <center><b>Référence du grain utilisé / Reference texture used:</b></center>
-                                                            </td>
-                                                            <td width="8%">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td width="8%">
-                                                            </td>
-                                                            <td width="84%" class="tdborder" colspan="2">
                                                                 <center><span t-esc="o.reference_grain" /></center>
                                                             </td>
                                                             <td width="8%">
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        <tr t-if="o.graineur_id">
                                                             <td width="8%">
                                                             </td>
                                                             <td width="84%" class="tdborder" colspan="2">
                                                                 <center><b>Graineur / Texture maker:</b></center>
+                                                                <center><span t-esc="o.graineur_id.name" /></center>
                                                             </td>
                                                             <td width="8%">
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        <tr t-if="o.diametre_seuil">
                                                             <td width="8%">
                                                             </td>
                                                             <td width="84%" class="tdborder" colspan="2">
-                                                                <center><span t-esc="o.graineur_id.name" /></center>
+                                                                <center>
+                                                                    <b>Diamètre seuil:</b><br />
+                                                                    <span t-esc="o.diametre_seuil"/>
+                                                                </center>
+                                                            </td>
+                                                            <td width="8%">
+                                                            </td>
+                                                        </tr>
+                                                        <tr t-if="o.fournisseur_bloc_chaud_id">
+                                                            <td width="8%">
+                                                            </td>
+                                                            <td width="84%" class="tdborder" colspan="2">
+                                                                <center>
+                                                                    <b>Fournisseur du bloc chaud:</b><br />
+                                                                    <span t-esc="o.fournisseur_bloc_chaud_id.name"/>
+                                                                </center>
+                                                            </td>
+                                                            <td width="8%">
+                                                            </td>
+                                                        </tr>
+                                                        <tr t-if="o.num_systeme">
+                                                            <td width="8%">
+                                                            </td>
+                                                            <td width="84%" class="tdborder" colspan="2">
+                                                                <center>
+                                                                    <b>N° du système:</b><br />
+                                                                    <span t-esc="o.num_systeme"/>
+                                                                </center>
                                                             </td>
                                                             <td width="8%">
                                                             </td>
