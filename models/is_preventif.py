@@ -25,6 +25,7 @@ class is_mold(models.Model):
             }
         return True
 
+
     @api.model
     def default_get(self, default_fields):
         res = super(is_mold, self).default_get(default_fields)
@@ -48,7 +49,7 @@ class is_mold(models.Model):
         for num in specifique_ids:
             specifique_lst.append((0,0, {
                 'operation_specifique_id': num.id,
-                'activer'                : True,
+                'activer'                : False,
             }))
         res['specifique_ids'] = specifique_lst
         specification_obj = self.env['is.mold.specification.particuliere']
@@ -57,7 +58,7 @@ class is_mold(models.Model):
         for num in specification_ids:
             specification_lst.append((0,0, {
                 'specification_particuliere_id': num.id,
-                'activer'                      : True,
+                'activer'                      : False,
             }))
         res['specification_ids'] = specification_lst
         return res

@@ -47,13 +47,13 @@ class add_is_mold_preventif_data(models.TransientModel):
                     specifique_array_obj.create({
                         'operation_specifique_id': num.id,
                         'mold_id': data,
-                        'activer': True,
+                        'activer': False,
                     })
                 for num in specification_ids:
                     specification_array_obj.create({
                         'specification_particuliere_id': num.id,
                         'mold_id': data,
-                        'activer': True,
+                        'activer': False,
                     })
         return True
 
