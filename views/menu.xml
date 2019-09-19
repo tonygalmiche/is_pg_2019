@@ -89,12 +89,14 @@
         <menuitem id="menu_is_ctrl100_rapport_controle"   sequence="6" name="Rapport de contrôle"  parent="menu_is_controle_100" action="is_ctrl100_rapport_controle_action" />
 
         <!-- Production / Préventif moule -->
-        <record id="is_preventif_moule_menu" model="ir.ui.menu" >
+        <record id="is_preventif_moule_main_menu" model="ir.ui.menu" >
             <field name="name">Préventif moule</field>
             <field name="sequence">29</field>
             <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
         </record>
-        <menuitem id="menu_is_preventif_moule" sequence="30" parent="is_preventif_moule_menu" action="is_preventif_moule_action" name="Préventif Moule" />
+        <menuitem id="is_mold_preventif_menu"  sequence="10" parent="is_preventif_moule_main_menu" action="is_mold_preventif_action"  name="Préventif Moules"/>
+        <menuitem id="is_preventif_moule_menu" sequence="20" parent="is_preventif_moule_main_menu" action="is_preventif_moule_action" name="Historique des préventifs"/>
+        <menuitem id="is_mold_cycle_menu"      sequence="30" parent="is_preventif_moule_main_menu" action="is_mold_cycle_action"      name="Cycles des moules"/>
 
 
         <!-- Production / Etiquettes GALIA -->

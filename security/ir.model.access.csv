@@ -86,7 +86,7 @@ access_is_mold_specification_array_user,access_is_mold_specification_array,model
 access_is_mold_piece_specifique_user,access_is_mold_piece_specifique,model_is_mold_piece_specifique,base.group_user,1,1,1,1
 access_is_mold_surface_aspect_user,access_is_mold_surface_aspect,model_is_mold_surface_aspect,base.group_user,1,1,1,1
 
-
+access_is_mold_cycle,access_is_mold_cycle,model_is_mold_cycle,base.group_user,1,0,0,0
 
 
 

@@ -72,9 +72,13 @@ class is_mold(models.Model):
                 obj.is_base_check = True
 
 
-    nb_cycles_actuel              = fields.Integer(string="Nombre de cycles actuel")
-    periodicite_maintenance_moule = fields.Integer(string=u"Périodicité maintenance moule (nb cycles)")
+    date_dernier_preventif        = fields.Date(u"Date dernier préventif")
+    nb_cycles_dernier_preventif   = fields.Integer(u"Nb cycles dernier préventif")
+    nb_cycles_actuel              = fields.Integer(u"Nb cycles actuel")
+    nb_cycles_avant_preventif     = fields.Integer(u"Nb cycles avant préventif")
+    periodicite_maintenance_moule = fields.Integer(u"Périodicité maintenance moule (nb cycles)")
     gamme_preventif_ids           = fields.Many2many('ir.attachment', 'is_mold_attachment_rel', 'mold_id', 'file_id', u"Gamme préventif")
+
     is_base_check                 = fields.Boolean(string="Is Base", compute="_check_base_db")
     is_preventif_moule            = fields.One2many('is.preventif.moule', 'moule', u'Préventif Moule')
     systematique_ids              = fields.One2many('is.mold.systematique.array', 'mold_id',  u'Opérations systématiques')
@@ -94,9 +98,20 @@ class is_mold(models.Model):
     date_modification_fiche       = fields.Date(string='Date Modfication Fiche')
 
 
+class is_mold_cycle(models.Model):
+    _name = 'is.mold.cycle'
+    _rec_name = 'moule_id'
+    _order = 'moule_id, mois desc'
+
+    moule_id  = fields.Many2one('is.mold', string='Moule',select=True,required=True)
+    mois      = fields.Char(u'Mois',select=True,required=True)
+    nb_cycles = fields.Integer(u"Nb cycles")
+
+
 class is_preventif_moule(models.Model):
     _name = 'is.preventif.moule'
     _rec_name = 'moule'
+    _order = 'moule, date_preventif desc'
 
     @api.model
     def default_get(self, default_fields):
@@ -105,8 +120,9 @@ class is_preventif_moule(models.Model):
             res['moule'] = self._context.get('moule')
         return res
 
-    moule               = fields.Many2one('is.mold', string='Moule')
-    date_preventif      = fields.Date(string=u'Date du préventif', default=fields.Date.context_today)
+    moule               = fields.Many2one('is.mold', string='Moule',select=True)
+    date_preventif      = fields.Date(string=u'Date du préventif', default=fields.Date.context_today,select=True)
+    periodicite         = fields.Integer(u"Périodicité préventif")
     fiche_preventif_ids = fields.Many2many('ir.attachment', 'is_preventif_moule_attachment_rel', 'preventif_id', 'file_id', u"Fiche de réalisation du préventif")
 
 
