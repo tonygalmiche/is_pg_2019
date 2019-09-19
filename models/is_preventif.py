@@ -122,6 +122,7 @@ class is_preventif_moule(models.Model):
 
     moule               = fields.Many2one('is.mold', string='Moule',select=True)
     date_preventif      = fields.Date(string=u'Date du préventif', default=fields.Date.context_today,select=True)
+    nb_cycles           = fields.Integer(u"Nb cycles")
     periodicite         = fields.Integer(u"Périodicité préventif")
     fiche_preventif_ids = fields.Many2many('ir.attachment', 'is_preventif_moule_attachment_rel', 'preventif_id', 'file_id', u"Fiche de réalisation du préventif")
 

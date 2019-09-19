@@ -133,6 +133,7 @@
                 <tree string="Préventif Moule">
                     <field name="moule"/>
                     <field name="date_preventif"/>
+                    <field name="nb_cycles" sum="Total"/>
                     <field name="periodicite"/>
                     <field name="fiche_preventif_ids"/>
                 </tree>
