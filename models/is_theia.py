@@ -48,6 +48,7 @@ class is_etat_presse(models.Model):
     _name = 'is.etat.presse'
     _description = u"État Presse"
     _order='name'    #Ordre de tri par defaut des listes
+    _rec_name = 'name5x5'
 
     name             = fields.Char(u'Intitulé (4x4)'  , required=True)
     ligne            = fields.Integer(u'Ligne (4x4)'  , required=False)
