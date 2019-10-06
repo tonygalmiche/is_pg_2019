@@ -68,6 +68,8 @@
                                 <field name="is_preventif_moule" readonly="1" nolabel="1">
                                     <tree>
                                         <field name="date_preventif"/>
+                                        <field name="nb_cycles"/>
+                                        <field name="periodicite"/>
                                         <field name="fiche_preventif_ids"/>
                                     </tree>
                                 </field>
@@ -131,8 +133,8 @@
             <field name="model">is.preventif.moule</field>
             <field name="arch" type="xml">
                 <tree string="Préventif Moule">
-                    <field name="moule"/>
                     <field name="date_preventif"/>
+                    <field name="moule"/>
                     <field name="nb_cycles" sum="Total"/>
                     <field name="periodicite"/>
                     <field name="fiche_preventif_ids"/>
@@ -147,11 +149,31 @@
                 <sheet>
                     <group>
                         <field name="moule" required="1" />
+                        <field name="nb_cycles"/>
+                        <field name="periodicite"/>
                         <field name="date_preventif" required="1" />
                         <field name="fiche_preventif_ids" widget="many2many_binary"/>
                     </group>
                 </sheet>
             </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_moule_search_view" >
+            <field name="name">is_preventif_moule_search_view</field>
+            <field name="model">is.preventif.moule</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="moule"/>
+                    <field name="date_preventif"/>
+                    <field name="periodicite"/>
+                    <group expand="0" string="Regroupé par...">
+                        <filter name="group_annee"        string="Année"     context="{'group_by':'date_preventif:year'}"/>
+                        <filter name="group_mois"         string="Mois"      context="{'group_by':'date_preventif:month'}"/>
+                        <filter name="group_semaine"      string="Semaine"   context="{'group_by':'date_preventif:week'}"/>
+                        <filter name="group_jour"         string="Jour"      context="{'group_by':'date_preventif:day'}"/>
+                        <filter name="group_moule"        string="Moule"     context="{'group_by':'moule'}"/>
+                    </group>
+                </search>
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_preventif_moule_action">
@@ -181,14 +203,30 @@
                 <form string="Cycles des moules">
                     <sheet>
                         <group>
-                            <field name="moule_id"/>
                             <field name="mois"/>
+                            <field name="moule_id"/>
                             <field name="nb_cycles" sum="Total"/>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
+        <record model="ir.ui.view" id="is_mold_cycle_search_view" >
+            <field name="name">is_mold_cycle_search_view</field>
+            <field name="model">is.mold.cycle</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="moule_id"/>
+                    <field name="mois"/>
+                    <group expand="0" string="Regroupé par...">
+                        <filter name="group_moule" string="Moule" context="{'group_by':'moule_id'}"/>
+                        <filter name="group_mois"  string="Mois"  context="{'group_by':'mois'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
         <record model="ir.actions.act_window" id="is_mold_cycle_action">
             <field name="name">Cycles des moules</field>
             <field name="type">ir.actions.act_window</field>

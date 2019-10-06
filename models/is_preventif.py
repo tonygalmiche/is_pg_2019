@@ -101,7 +101,7 @@ class is_mold(models.Model):
 class is_mold_cycle(models.Model):
     _name = 'is.mold.cycle'
     _rec_name = 'moule_id'
-    _order = 'moule_id, mois desc'
+    _order = 'mois desc,moule_id'
 
     moule_id  = fields.Many2one('is.mold', string='Moule',select=True,required=True)
     mois      = fields.Char(u'Mois',select=True,required=True)
@@ -111,7 +111,7 @@ class is_mold_cycle(models.Model):
 class is_preventif_moule(models.Model):
     _name = 'is.preventif.moule'
     _rec_name = 'moule'
-    _order = 'moule, date_preventif desc'
+    _order = 'date_preventif desc,moule'
 
     @api.model
     def default_get(self, default_fields):
@@ -120,11 +120,35 @@ class is_preventif_moule(models.Model):
             res['moule'] = self._context.get('moule')
         return res
 
+
+    @api.depends('moule')
+    def _compute(self):
+        cr = self._cr
+        for obj in self:
+            nb_cycles=0
+            cr.execute("select sum(nb_cycles) from is_mold_cycle where moule_id = %s ",[obj.moule.id])
+            res_ids = cr.fetchall()
+            for res in res_ids:
+                nb_cycles = res[0]
+            obj.nb_cycles = nb_cycles
+            obj.periodicite = obj.moule.periodicite_maintenance_moule
+
     moule               = fields.Many2one('is.mold', string='Moule',select=True)
     date_preventif      = fields.Date(string=u'Date du préventif', default=fields.Date.context_today,select=True)
-    nb_cycles           = fields.Integer(u"Nb cycles")
-    periodicite         = fields.Integer(u"Périodicité préventif")
+    nb_cycles           = fields.Integer(u"Nb cycles"            , compute="_compute", store=True, readonly=True)
+    periodicite         = fields.Integer(u"Périodicité préventif", compute="_compute", store=True, readonly=True)
     fiche_preventif_ids = fields.Many2many('ir.attachment', 'is_preventif_moule_attachment_rel', 'preventif_id', 'file_id', u"Fiche de réalisation du préventif")
+
+
+    @api.model
+    def create(self, vals):
+        obj = super(is_preventif_moule, self).create(vals)
+        if obj and 'moule' in vals:
+                obj.moule.nb_cycles_dernier_preventif = obj.nb_cycles
+                obj.moule.nb_cycles_actuel            = obj.nb_cycles
+                obj.moule.date_dernier_preventif      = obj.date_preventif
+                obj.moule.nb_cycles_avant_preventif   = obj.periodicite
+        return obj
 
 
 class is_mold_operation_systematique(models.Model):
