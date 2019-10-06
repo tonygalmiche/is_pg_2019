@@ -11,7 +11,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="90"/>
             <field name="arch" type="xml">
-                <tree>
+                <tree colors="red:nb_cycles_avant_preventif &lt; 0">
                     <field name="name"/>
                     <field name="designation"/>
                     <field name="project"/>
@@ -30,7 +30,8 @@
             <field name="res_model">is.mold</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-             <field name="view_id" ref="is_mold_preventif_tree_view"/>
+            <field name="view_id" ref="is_mold_preventif_tree_view"/>
+            <field name="limit">200</field>
         </record>
 
 
