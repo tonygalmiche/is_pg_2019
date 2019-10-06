@@ -125,13 +125,14 @@ class is_preventif_moule(models.Model):
     def _compute(self):
         cr = self._cr
         for obj in self:
-            nb_cycles=0
-            cr.execute("select sum(nb_cycles) from is_mold_cycle where moule_id = %s ",[obj.moule.id])
-            res_ids = cr.fetchall()
-            for res in res_ids:
-                nb_cycles = res[0]
-            obj.nb_cycles = nb_cycles
-            obj.periodicite = obj.moule.periodicite_maintenance_moule
+            if obj.moule.id:
+                nb_cycles=0
+                cr.execute("select sum(nb_cycles) from is_mold_cycle where moule_id = %s ",[obj.moule.id])
+                res_ids = cr.fetchall()
+                for res in res_ids:
+                    nb_cycles = res[0]
+                obj.nb_cycles = nb_cycles
+                obj.periodicite = obj.moule.periodicite_maintenance_moule
 
     moule               = fields.Many2one('is.mold', string='Moule',select=True)
     date_preventif      = fields.Date(string=u'Date du préventif', default=fields.Date.context_today,select=True)
