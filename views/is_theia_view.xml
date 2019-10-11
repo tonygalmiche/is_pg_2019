@@ -136,6 +136,7 @@
                 <field name="origine"/>
                 <field name="tps_arret" widget="float_time" sum="Total"/>
                 <field name="of_ids"/>
+                <field name="employee_id"/>
             </tree>
         </field>
     </record>
@@ -152,6 +153,7 @@
                     <field name="origine"                         readonly="1"/>
                     <field name="tps_arret" widget="float_time"   readonly="1"/>
                     <field name="of_ids" widget="many2many_tags"  readonly="1"/>
+                    <field name="employee_id"                     readonly="1"/>
                 </group>
             </sheet>
         </form>
@@ -164,7 +166,8 @@
             <search>
                 <field name="presse_id"/>
                 <field name="type_arret_id"/>
-                <field name="of_ids" />
+                <field name="of_ids"/>
+                <field name="employee_id"/>
                 <filter string="Production série + Essai" name="production_serie_essai" domain="['|',('type_arret_id','=',1),('type_arret_id','=',13)]"/>
                 <group expand="0" string="Regroupé par...">
                   <filter name="group_presse_id"     string="Presse"       context="{'group_by':'presse_id'}"/>
@@ -289,21 +292,22 @@
                         <field name="ordre"         readonly="1"/>
                     </group>
                     <group>
-                        <field name="qt"                readonly="1"/>
-                        <field name="nb_cycles"         invisible="1"/>
-                        <field name="qt_theorique"      readonly="1"/>
-                        <field name="qt_declaree"       readonly="1"/>
-                        <field name="qt_restante"       readonly="1"/>
-                        <field name="qt_rebut"          readonly="1"/>
-                        <field name="qt_rebut_theo"     readonly="1"/>
-                        <field name="taux_rebut"        readonly="1"/>
-                        <field name="taux_rebut_theo"   readonly="1"/>
-                        <field name="cycle_gamme"       readonly="1"/>
-                        <field name="cycle_moyen"       readonly="1"/>
-                        <field name="cycle_moyen_serie" readonly="1"/>
-                        <field name="tps_restant"       readonly="1" widget="float_time"/>
-                        <field name="heure_debut"       readonly="1"/>
-                        <field name="heure_fin"         readonly="1"/>
+                        <field name="qt"                 readonly="1"/>
+                        <field name="nb_cycles"          invisible="1"/>
+                        <field name="qt_theorique"       readonly="1"/>
+                        <field name="qt_declaree"        readonly="1"/>
+                        <field name="qt_restante"        readonly="1"/>
+                        <field name="qt_rebut"           readonly="1"/>
+                        <field name="qt_rebut_theo"      readonly="1"/>
+                        <field name="taux_rebut"         readonly="1"/>
+                        <field name="taux_rebut_theo"    readonly="1"/>
+                        <field name="cycle_gamme"        readonly="1"/>
+                        <field name="cycle_moyen"        readonly="1"/>
+                        <field name="cycle_moyen_serie"  readonly="1"/>
+                        <field name="tps_restant"        readonly="1" widget="float_time"/>
+                        <field name="heure_debut"        readonly="1"/>
+                        <field name="heure_fin"          readonly="1"/>
+                        <field name="employee_id"        readonly="1"/>
                         <field name="heure_fin_planning" readonly="1"/>
                     </group>
                 </group>
@@ -449,6 +453,7 @@
                 <field name="qt_bonne"/>
                 <field name="qt_rebut"/>
                 <field name="defaut_id"/>
+                <field name="employee_id"/>
             </tree>
         </field>
     </record>
@@ -465,6 +470,7 @@
                     <field name="qt_bonne"/>
                     <field name="qt_rebut"/>
                     <field name="defaut_id"/>
+                    <field name="employee_id"/>
                 </group>
             </sheet>
         </form>
@@ -479,6 +485,7 @@
                 <field name="of_id"/>
                 <field name="num_carton"/>
                 <field name="defaut_id"/>
+                <field name="employee_id"/>
                 <group expand="0" string="Regroupé par...">
                   <filter name="group_of_id"     string="OF"             context="{'group_by':'of_id'}"/>
                   <filter name="group_defaut_id" string="Type de défaut" context="{'group_by':'defaut_id'}"/>
@@ -563,15 +570,18 @@
         <field name="model">is.etat.presse</field>
         <field name="arch" type="xml">
             <tree>
+                <!--
                 <field name="name"/>
-                <field name="production_serie"/>
-                <field name="couleur"/>
                 <field name="colonne"/>
                 <field name="ligne"/>
+                -->
                 <field name="name5x5"/>
+                <field name="couleur"/>
                 <field name="colonne5x5"/>
                 <field name="ligne5x5"/>
                 <field name="regroupement_id"/>
+                <field name="production_serie"/>
+                <field name="action_id"/>
             </tree>
         </field>
     </record>
@@ -582,6 +592,14 @@
         <form>
             <sheet>
                 <group>
+                    <field name="name5x5"/>
+                    <field name="colonne5x5"/>
+                    <field name="ligne5x5"/>
+                    <field name="regroupement_id"/>
+                    <field name="production_serie"/>
+                    <field name="couleur"/>
+                    <field name="action_id"/>
+                    <!--
                     <group string="4x4">
                         <field name="name"/>
                         <field name="colonne"/>
@@ -593,10 +611,7 @@
                         <field name="ligne5x5"/>
                         <field name="regroupement_id"/>
                     </group>
-                </group>
-                <group>
-                    <field name="production_serie"/>
-                    <field name="couleur"/>
+                    -->
                 </group>
             </sheet>
         </form>
@@ -607,7 +622,6 @@
         <field name="model">is.etat.presse</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
                 <field name="name5x5"/>
                 <field name="regroupement_id"/>
                 <field name="production_serie"/>
@@ -821,6 +835,120 @@
         id="menu_is_theia_trs" 
         parent="menu_is_cpi_indicateurs" 
         sequence="90"
+    />
+
+
+
+
+
+
+    <!--Gestion des autorisations -->
+    <record id="is_theia_autorisation_menu" model="ir.ui.menu" >
+        <field name="name">Gestion des autorisations</field>
+        <field name="sequence">39</field>
+        <field name="parent_id" eval="ref('is_theia_root_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+            ref('base.group_erp_manager'),
+            ref('is_plastigray.group_gestionnaire_cpi_raspberry'),
+        ])]"/>
+    </record>
+
+    <!-- is.theia.validation.groupe -->
+    <record model="ir.ui.view" id="is_theia_validation_groupe_tree_view">
+        <field name="name">is.theia.validation.groupe.tree</field>
+        <field name="model">is.theia.validation.groupe</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="employee_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_validation_groupe_form_view">
+        <field name="name">is.theia.validation.groupe.form</field>
+        <field name="model">is.theia.validation.groupe</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="employee_ids" widget="many2many_tags"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_validation_groupe_search_view" >
+        <field name="name">is.theia.validation.groupe.search</field>
+        <field name="model">is.theia.validation.groupe</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_theia_validation_groupe_action">
+        <field name="name">Groupes de validation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.theia.validation.groupe</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem 
+        id="is_theia_validation_groupe_menu" 
+        action="is_theia_validation_groupe_action" 
+        parent="is_theia_autorisation_menu" 
+        sequence="10"
+    />
+
+
+    <!-- is.theia.validation.action -->
+    <record model="ir.ui.view" id="is_theia_validation_action_tree_view">
+        <field name="name">is.theia.validation.action.tree</field>
+        <field name="model">is.theia.validation.action</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="groupe_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_validation_action_form_view">
+        <field name="name">is.theia.validation.action.form</field>
+        <field name="model">is.theia.validation.action</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="groupe_ids" widget="many2many_tags"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_validation_action_search_view" >
+        <field name="name">is.theia.validation.action.search</field>
+        <field name="model">is.theia.validation.action</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_theia_validation_action_action">
+        <field name="name">Actions de validation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.theia.validation.action</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem 
+        id="is_theia_validation_action_menu" 
+        action="is_theia_validation_action_action" 
+        parent="is_theia_autorisation_menu" 
+        sequence="20"
     />
 
 </data>

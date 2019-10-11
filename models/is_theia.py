@@ -47,18 +47,20 @@ class is_etat_presse_regroupement(models.Model):
 class is_etat_presse(models.Model):
     _name = 'is.etat.presse'
     _description = u"État Presse"
-    _order='name'    #Ordre de tri par defaut des listes
+    _order='name5x5'    #Ordre de tri par defaut des listes
     _rec_name = 'name5x5'
 
-    name             = fields.Char(u'Intitulé (4x4)'  , required=True)
+    name             = fields.Char(u'Intitulé (4x4)'  , required=False)
     ligne            = fields.Integer(u'Ligne (4x4)'  , required=False)
     colonne          = fields.Integer(u'Colonne (4x4)', required=False)
-    name5x5          = fields.Char(u'Intitulé (5x5)'  , required=False)
-    ligne5x5         = fields.Integer(u'Ligne (5x5)'  , required=False)
-    colonne5x5       = fields.Integer(u'Colonne (5x5)', required=False)
+    name5x5          = fields.Char(u'Intitulé'  , required=False)
+    ligne5x5         = fields.Integer(u'Ligne'  , required=False)
+    colonne5x5       = fields.Integer(u'Colonne', required=False)
     regroupement_id  = fields.Many2one('is.etat.presse.regroupement', u"Regroupement État Presse")
     couleur          = fields.Selection(couleurs, 'Couleur', required=False, help="Couleur affichée dans l'interface à la presse")
     production_serie = fields.Boolean('Production série',help='Cocher cette case si cet état correspond à la production série')
+    action_id        = fields.Many2one('is.theia.validation.action', u"Action de validation")
+
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', u"L'intulé doit être unique !"),
@@ -114,6 +116,7 @@ class is_of(models.Model):
     tps_restant       = fields.Float('Temps de production restant', required=False)
     heure_debut       = fields.Datetime('Heure de début de production', select=True, required=False)
     heure_fin         = fields.Datetime('Heure de fin de production', required=False, select=True)
+    employee_id       = fields.Many2one("hr.employee", "Employé")
     heure_fin_planning= fields.Datetime('Heure de fin du planning')
     tps_ids           = fields.One2many('is.of.tps'  , 'of_id', u"Répartition des temps d'arrêt")
     rebut_ids         = fields.One2many('is.of.rebut', 'of_id', u"Répartition des rebuts")
@@ -409,12 +412,13 @@ class is_of_declaration(models.Model):
     _rec_name = "name"
     _order='name desc'
 
-    name       = fields.Datetime("Date Heure",required=True)
-    of_id      = fields.Many2one('is.of', u"OF", required=True)
-    num_carton = fields.Integer('N°Carton', required=False)
-    qt_bonne   = fields.Integer('Qt bonne', required=False)
-    qt_rebut   = fields.Integer('Qt rebut', required=False)
-    defaut_id  = fields.Many2one('is.type.defaut', u"Type de défaut", required=False)
+    name        = fields.Datetime("Date Heure",required=True)
+    of_id       = fields.Many2one('is.of', u"OF", required=True)
+    num_carton  = fields.Integer('N°Carton', required=False)
+    qt_bonne    = fields.Integer('Qt bonne', required=False)
+    qt_rebut    = fields.Integer('Qt rebut', required=False)
+    defaut_id   = fields.Many2one('is.type.defaut', u"Type de défaut", required=False)
+    employee_id = fields.Many2one("hr.employee", "Employé")
 
     _defaults = {}
 
@@ -459,6 +463,7 @@ class is_presse_arret(models.Model):
     origine       = fields.Char("Origine du changement d'état")
     tps_arret     = fields.Float("Durée dans cet état", required=False)
     of_ids        = fields.Many2many('is.of', 'is_presse_arret_of_rel', 'is_of_id', 'is_presse_arret_id', 'OF', readonly=False, required=False)
+    employee_id   = fields.Many2one("hr.employee", "Employé")
 
     _sql_constraints = []
     _defaults = {}
@@ -497,4 +502,25 @@ class is_theia_trs(models.Model):
     coef_theia   = fields.Float("Coefficient Theia", digits=(14,1), defaut=1)
     duree_etat   = fields.Float("Durée dans cet état")
     duree_of     = fields.Float("Durée par OF")
+
+
+class is_theia_validation_groupe(models.Model):
+    _name = 'is.theia.validation.groupe'
+    _description = u"Groupes de validation THEIA"
+    _order='name'
+
+    name         = fields.Char(u'Groupe de validation THEIA', required=True)
+    employee_ids = fields.Many2many("hr.employee", "is_theia_validation_groupe_employee_rel", "groupe_id", "employee_id", "Employés")
+
+
+class is_theia_validation_action(models.Model):
+    _name = 'is.theia.validation.action'
+    _description = u"Actions de validation THEIA"
+    _order='name'
+
+    name       = fields.Char(u'Action de validation THEIA', required=True)
+    code       = fields.Char(u'Code', required=True)
+    groupe_ids = fields.Many2many("is.theia.validation.groupe", "is_theia_validation_action_groupe_rel", "action_id", "groupe_id", "Groupes")
+
+
 

@@ -818,8 +818,8 @@
         <!--<field name="view_id" ref="is_theia_presse_tree_view"/>-->
         <field name="view_ids" eval="[
             (5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('is_pg_2019.is_theia_presse_tree_view')}),
-            (0, 0, {'view_mode': 'form', 'view_id': ref('is_pg_2019.is_theia_presse_form_view')})
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('is_pg_2019.is_theia_presse_tree_view'), 'sequence': 1}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('is_pg_2019.is_theia_presse_form_view'), 'sequence': 2})
         ]"/>
     </record>
 
