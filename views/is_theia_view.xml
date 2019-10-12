@@ -920,8 +920,8 @@
         <form>
             <sheet>
                 <group>
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" readonly="1"/>
+                    <field name="code" readonly="1"/>
                     <field name="groupe_ids" widget="many2many_tags"/>
                 </group>
             </sheet>

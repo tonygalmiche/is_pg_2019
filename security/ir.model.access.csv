@@ -90,7 +90,10 @@ access_is_mold_cycle,access_is_mold_cycle,model_is_mold_cycle,base.group_user,1,
 
 access_is_theia_validation_groupe,access_is_theia_validation_groupe,model_is_theia_validation_groupe,base.group_user,1,0,0,0
 access_is_theia_validation_groupe_gest,access_is_theia_validation_groupe_gest,model_is_theia_validation_groupe,is_plastigray.group_gestionnaire_cpi_raspberry,1,1,1,1
+
+
 access_is_theia_validation_action,access_is_theia_validation_action,model_is_theia_validation_action,base.group_user,1,0,0,0
+access_is_theia_validation_action_gest,access_is_theia_validation_action_gest,model_is_theia_validation_action,is_plastigray.group_gestionnaire_cpi_raspberry,1,1,0,0
 
 
 
