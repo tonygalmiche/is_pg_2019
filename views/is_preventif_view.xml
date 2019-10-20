@@ -123,7 +123,7 @@
                     </notebook>
                 </xpath>
                 <xpath expr="//field[@name='emplacement']" position='after'>
-                    <field name="garantie_outillage" />
+                    <field name="garantie_outillage" required="1"/>
                 </xpath>
             </field>
         </record>
