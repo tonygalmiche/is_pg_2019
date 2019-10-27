@@ -122,5 +122,46 @@
         <menuitem id="menu_is_mold_piece_specifique" sequence="5" parent="menu_tables_moules" action="is_mold_piece_specifique_action" name="Pièces spécifiques" />
         <menuitem id="menu_is_mold_surface_aspect" sequence="6" parent="menu_tables_moules" action="is_mold_surface_aspect_action" name="Surface d'aspect" />
         
+
+        <!-- Contrôle bugétaire -->
+        <record id="is_ctrl_budget_tdb_main_menu" model="ir.ui.menu" >
+            <field name="name">Contrôle bugétaire Tdb</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" eval="ref('account.menu_finance')"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
+        </record>
+        <menuitem 
+            action="is_ctrl_budget_tdb_saisie_action" 
+            id="is_ctrl_budget_tdb_saisie_menu" 
+            parent="is_ctrl_budget_tdb_main_menu" 
+            sequence="10"
+        />
+        <menuitem 
+            action="is_ctrl_budget_tdb_intitule_action" 
+            id="is_ctrl_budget_tdb_intitule_menu" 
+            parent="is_ctrl_budget_tdb_main_menu" 
+            sequence="20"
+        />
+        <menuitem 
+            action="is_ctrl_budget_tdb_famille_action" 
+            id="is_ctrl_budget_tdb_famille_menu" 
+            parent="is_ctrl_budget_tdb_main_menu" 
+            sequence="30"
+        />
+
+
+<!--
+is_pg_2019.is_base_principale_grp","Menu: Principale Group
+is_pg_2019.is_base_secondaire_grp","Menu: Secondaire Group
+-->
+
+
+
+
+
+
+
+
+
     </data>
 </openerp>
