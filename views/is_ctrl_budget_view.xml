@@ -121,34 +121,35 @@
             </tree>
         </field>
     </record>
+
     <record id="is_ctrl_budget_tdb_saisie_form_view" model="ir.ui.view">
         <field name="name">is_ctrl_budget_tdb_saisie_form_view</field>
         <field name="model">is.ctrl.budget.tdb.saisie</field>
         <field name="arch" type="xml">
-        <header>
-            <button name="lignes_action" type="object" string="Lignes"/>
-        </header>
-        <form>
-            <sheet>
-                <group>
-                    <field name="annee"/>
-                    <field name="mois"/>
-                    <field name="destination"/>
-                </group>
-                <field name="famille_ids" nolabel="1">
-                    <tree editable="bottom">
-                        <button 
-                            string="Lignes de cette famille" 
-                            name= "lignes_famille_action" type="object" icon="gtk-justify-fill"
-                        />
-                        <field name="famille_id"/>
-                    </tree>
-                </field>
-
-            </sheet>
-        </form>
+            <form>
+                <header>
+                    <button name="lignes_action" type="object" string="Lignes"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="annee"/>
+                        <field name="mois"/>
+                        <field name="destination"/>
+                    </group>
+                    <field name="famille_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <button 
+                                string="Lignes de cette famille" 
+                                name= "lignes_famille_action" type="object" icon="gtk-justify-fill"
+                            />
+                            <field name="famille_id"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
         </field>
     </record>
+
     <record id="is_ctrl_budget_tdb_saisie_search_view" model="ir.ui.view">
         <field name="name">is_ctrl_budget_tdb_saisie_search_view</field>
         <field name="model">is.ctrl.budget.tdb.saisie</field>
