@@ -123,9 +123,9 @@
         <menuitem id="menu_is_mold_surface_aspect" sequence="6" parent="menu_tables_moules" action="is_mold_surface_aspect_action" name="Surface d'aspect" />
         
 
-        <!-- Contrôle bugétaire -->
+        <!-- Contrôle budgétaire Tdb -->
         <record id="is_ctrl_budget_tdb_main_menu" model="ir.ui.menu" >
-            <field name="name">Contrôle bugétaire Tdb</field>
+            <field name="name">Ctrl budgétaire Tdb</field>
             <field name="sequence">3</field>
             <field name="parent_id" eval="ref('account.menu_finance')"/>
             <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
@@ -150,18 +150,19 @@
         />
 
 
-<!--
-is_pg_2019.is_base_principale_grp","Menu: Principale Group
-is_pg_2019.is_base_secondaire_grp","Menu: Secondaire Group
--->
-
-
-
-
-
-
-
-
+        <!-- Contrôle budgétaire Analytique -->
+        <record id="is_ctrl_budget_ana_main_menu" model="ir.ui.menu" >
+            <field name="name">Ctrl budgétaire Analytique</field>
+            <field name="sequence">3</field>
+            <field name="parent_id" eval="ref('account.menu_finance')"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_secondaire_grp')])]"/>
+        </record>
+        <menuitem 
+            action="is_ctrl_budget_ana_annee_action" 
+            id="is_ctrl_budget_ana_annee_menu" 
+            parent="is_ctrl_budget_ana_main_menu" 
+            sequence="10"
+        />
 
     </data>
 </openerp>
