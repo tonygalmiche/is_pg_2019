@@ -18,14 +18,38 @@ class is_ctrl_budget_ana_annee(models.Model):
     @api.multi
     def initialiser_articles(self):
         for obj in self:
-            obj.product_ids.unlink()
+            #** Recherche des articles actifs **********************************
             products = self.env['product.product'].search([('segment_id','=',16),('is_code','>=','6')])
+            products_ids=[]
             for product in products:
-                vals={
-                    'annee_id'  : obj.id,
-                    'product_id': product.id,
-                }
-                self.env['is.ctrl.budget.ana.product'].create(vals)
+                products_ids.append(product.id)
+            #*******************************************************************
+            
+            #** Suppression des lignes inactives *******************************
+            filtre=[
+                ('annee_id','=',obj.id),
+                ('product_id','not in',products_ids),
+            ]
+            lignes = self.env['is.ctrl.budget.ana.product'].search(filtre)
+            lignes.unlink()
+            #*******************************************************************
+
+            #** Recherche des lignes actuelles *********************************
+            lignes = self.env['is.ctrl.budget.ana.product'].search([])
+            ligne_ids=[]
+            for ligne in lignes:
+                ligne_ids.append(ligne.product_id.id)
+            #*******************************************************************
+
+            #** Création des lignes si elles n'existent pas ********************
+            for product in products:
+                if product.id not in ligne_ids:
+                    vals={
+                        'annee_id'  : obj.id,
+                        'product_id': product.id,
+                    }
+                    self.env['is.ctrl.budget.ana.product'].create(vals)
+            #*******************************************************************
 
 
     @api.multi
