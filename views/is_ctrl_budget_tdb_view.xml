@@ -26,6 +26,7 @@
                     <field name="name"/>
                     <field name="variable"/>
                     <field name="fixe"/>
+                    <field name="active"/>
                 </group>
             </sheet>
         </form>
@@ -73,6 +74,7 @@
                     <field name="famille_id"/>
                     <field name="name"/>
                     <field name="intitule"/>
+                    <field name="active"/>
                 </group>
             </sheet>
         </form>
@@ -136,8 +138,8 @@
                         <field name="mois"/>
                         <field name="destination"/>
                     </group>
-                    <field name="famille_ids" nolabel="1">
-                        <tree editable="bottom">
+                    <field name="famille_ids" nolabel="1" readonly="1">
+                        <tree>
                             <button 
                                 string="Lignes de cette famille" 
                                 name= "lignes_famille_action" type="object" icon="gtk-justify-fill"
@@ -173,7 +175,7 @@
         <field name="name">is_ctrl_budget_tdb_tree_view</field>
         <field name="model">is.ctrl.budget.tdb</field>
         <field name="arch" type="xml">
-            <tree editable="bottom">
+            <tree editable="bottom" create="false">
                 <field name="famille_id"/>
                 <field name="intitule_id" readonly="1"/>
                 <field name="montant_variable" sum="Total"/>

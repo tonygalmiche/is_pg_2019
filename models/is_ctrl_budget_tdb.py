@@ -29,6 +29,7 @@ class is_ctrl_budget_tdb_famille(models.Model):
     ordre    = fields.Integer(u'Ordre', select=True, required=True)
     variable = fields.Boolean(u'Montant variable', default=True)
     fixe     = fields.Boolean(u'Montant fixe'    , default=True)
+    active   = fields.Boolean(u'Active'          , default=True)
 
 
 class is_ctrl_budget_tdb_famille_rel(models.Model):
@@ -36,7 +37,7 @@ class is_ctrl_budget_tdb_famille_rel(models.Model):
     _description = u"Contrôle bugétaire - Budget Tableau de bord - Famille - Relation"
     _order='id'
 
-    saisie_id  = fields.Many2one("is.ctrl.budget.tdb.saisie", "Saisie")
+    saisie_id  = fields.Many2one("is.ctrl.budget.tdb.saisie", "Saisie", ondelete='cascade')
     famille_id = fields.Many2one('is.ctrl.budget.tdb.famille', u"Famille")
 
 
@@ -77,13 +78,14 @@ class is_ctrl_budget_tdb_intitule(models.Model):
     def name_get(self):
         res=[]
         for obj in self:
-            name=obj.intitule+u' ('+str(obj.name)+')'
+            name=str(obj.name)+u' - '+obj.intitule
             res.append((obj.id, name))
         return res
 
     famille_id  = fields.Many2one('is.ctrl.budget.tdb.famille', u"Famille", required=True)
     name        = fields.Integer(u'Code', select=True, required=True)
     intitule    = fields.Char(u'Intitulé Ligne', required=True)
+    active      = fields.Boolean(u'Actif', default=True)
 
 
 class is_ctrl_budget_tdb_saisie(models.Model):
@@ -139,14 +141,40 @@ class is_ctrl_budget_tdb_saisie(models.Model):
     @api.multi
     def initialiser_lignes(self):
         for obj in self:
-            obj.ligne_ids.unlink()
+            #** Recherche des intitules actifs *********************************
             intitules = self.env['is.ctrl.budget.tdb.intitule'].search([])
+            intitules_ids=[]
             for intitule in intitules:
-                vals={
-                    'saisie_id'  : obj.id,
-                    'intitule_id': intitule.id,
-                }
-                self.env['is.ctrl.budget.tdb'].create(vals)
+                intitules_ids.append(intitule.id)
+            #*******************************************************************
+            
+            #** Suppression des lignes inactives *******************************
+            filtre=[
+                ('saisie_id','=',obj.id),
+                ('intitule_id','not in',intitules_ids),
+            ]
+            lignes = self.env['is.ctrl.budget.tdb'].search(filtre)
+            lignes.unlink()
+            #*******************************************************************
+
+            #** Recherche des intitules actifs *********************************
+            lignes = self.env['is.ctrl.budget.tdb'].search([])
+            ligne_ids=[]
+            for ligne in lignes:
+                ligne_ids.append(ligne.intitule_id.id)
+            #*******************************************************************
+
+            #** Création des lignes si elles n'existent pas ********************
+            for intitule in intitules:
+                if intitule.id not in ligne_ids:
+                    vals={
+                        'saisie_id'  : obj.id,
+                        'intitule_id': intitule.id,
+                    }
+                    self.env['is.ctrl.budget.tdb'].create(vals)
+            #*******************************************************************
+
+            #** Création des lignes des familles *******************************
             obj.famille_ids.unlink()
             familles = self.env['is.ctrl.budget.tdb.famille'].search([])
             for famille in familles:
@@ -155,6 +183,7 @@ class is_ctrl_budget_tdb_saisie(models.Model):
                     'famille_id': famille.id,
                 }
                 self.env['is.ctrl.budget.tdb.famille.rel'].create(vals)
+            #*******************************************************************
 
 
 class is_ctrl_budget_tdb(models.Model):
@@ -169,17 +198,11 @@ class is_ctrl_budget_tdb(models.Model):
             obj.famille_id  = obj.intitule_id.famille_id.id
 
 
-    saisie_id        = fields.Many2one("is.ctrl.budget.tdb.saisie", "Saisie")
+    saisie_id        = fields.Many2one("is.ctrl.budget.tdb.saisie", "Saisie", ondelete='cascade')
     intitule_id      = fields.Many2one('is.ctrl.budget.tdb.intitule', u"Intitulé", required=True)
     famille_id       = fields.Many2one("is.ctrl.budget.tdb.famille", "Famille", select=True, store=True, readonly=True, compute='_compute')
-    #annee            = fields.Char(u'Année'                        , select=True, store=True, readonly=True, compute='_compute')
-    #mois             = fields.Integer(u'Mois'                      , select=True, store=True, readonly=True, compute='_compute')
-    #destination      = fields.Selection(_DESTINATION, "Destination", select=True, store=True, readonly=True, compute='_compute')
-
-    #ligne            = fields.Integer('Ligne', select=True, required=True)
-    montant_variable = fields.Integer('Montant Variable')
-    montant_fixe     = fields.Integer('Montant Fixe')
-
+    montant_variable = fields.Float('Montant Variable', digits=(14,2))
+    montant_fixe     = fields.Float('Montant Fixe'    , digits=(14,2))
 
 
 
