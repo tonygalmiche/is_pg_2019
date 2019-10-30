@@ -150,7 +150,10 @@ class is_ctrl_budget_tdb_saisie(models.Model):
             #*******************************************************************
 
             #** Recherche des intitules actifs *********************************
-            lignes = self.env['is.ctrl.budget.tdb'].search([])
+            filtre=[
+                ('saisie_id','=',obj.id),
+            ]
+            lignes = self.env['is.ctrl.budget.tdb'].search(filtre)
             ligne_ids=[]
             for ligne in lignes:
                 ligne_ids.append(ligne.intitule_id.id)
