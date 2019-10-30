@@ -59,8 +59,9 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="famille_id"/>
-                <field name="name"/>
+                <field name="ordre"/>
                 <field name="intitule"/>
+                <field name="code"/>
             </tree>
         </field>
     </record>
@@ -72,8 +73,9 @@
             <sheet>
                 <group>
                     <field name="famille_id"/>
-                    <field name="name"/>
+                    <field name="ordre"/>
                     <field name="intitule"/>
+                    <field name="code"/>
                     <field name="active"/>
                 </group>
             </sheet>
@@ -86,8 +88,9 @@
         <field name="arch" type="xml">
             <search>
                 <field name="famille_id"/>
-                <field name="name"/>
+                <field name="ordre"/>
                 <field name="intitule"/>
+                <field name="code"/>
             </search>
         </field>
     </record>
@@ -177,7 +180,9 @@
         <field name="arch" type="xml">
             <tree editable="bottom" create="false">
                 <field name="famille_id"/>
+                <field name="ordre"       readonly="1"/>
                 <field name="intitule_id" readonly="1"/>
+                <field name="code"        readonly="1"/>
                 <field name="montant_variable" sum="Total"/>
                 <field name="montant_fixe"     sum="Total" invisible="context.get('montant_fixe',True)"/>
             </tree>
@@ -190,8 +195,10 @@
         <form>
             <sheet>
                 <group>
-                    <field name="intitule_id"/>
                     <field name="famille_id"/>
+                    <field name="ordre"/>
+                    <field name="intitule_id"/>
+                    <field name="code"/>
                     <field name="montant_variable"/>
                     <field name="montant_fixe"/>
                 </group>
@@ -204,7 +211,9 @@
         <field name="model">is.ctrl.budget.tdb</field>
         <field name="arch" type="xml">
             <search>
+                <field name="ordre"/>
                 <field name="intitule_id"/>
+                <field name="code"/>
                 <field name="famille_id"/>
                 <filter name="montant_fixe_filter" filter_domain="[]" context="{'montant_fixe':False}" string="Afficher Montant Fixe"/>
             </search>

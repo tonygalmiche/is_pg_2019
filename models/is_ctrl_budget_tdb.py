@@ -70,20 +70,12 @@ class is_ctrl_budget_tdb_famille_rel(models.Model):
 class is_ctrl_budget_tdb_intitule(models.Model):
     _name = 'is.ctrl.budget.tdb.intitule'
     _description = u"Contrôle bugétaire - Budget Tableau de bord -Ligne"
-    _order='famille_id, name'
-
-    # La fonction name_get est une fonction standard d'Odoo permettant de définir le nom des fiches (dans les relations x2x)
-    # La fonction name_search permet de définir les résultats des recherches dans les relations x2x. En général, elle appelle la fonction name_get
-    @api.multi
-    def name_get(self):
-        res=[]
-        for obj in self:
-            name=str(obj.name)+u' - '+obj.intitule
-            res.append((obj.id, name))
-        return res
+    _order='ordre'
+    _rec_name='intitule'
 
     famille_id  = fields.Many2one('is.ctrl.budget.tdb.famille', u"Famille", required=True)
-    name        = fields.Integer(u'Code', select=True, required=True)
+    ordre       = fields.Integer(u'Ordre', select=True, required=True)
+    code        = fields.Integer(u'Code', select=True, required=True)
     intitule    = fields.Char(u'Intitulé Ligne', required=True)
     active      = fields.Boolean(u'Actif', default=True)
 
@@ -169,7 +161,9 @@ class is_ctrl_budget_tdb_saisie(models.Model):
                 if intitule.id not in ligne_ids:
                     vals={
                         'saisie_id'  : obj.id,
+                        'ordre'      : intitule.ordre,
                         'intitule_id': intitule.id,
+                        'code'       : intitule.code,
                     }
                     self.env['is.ctrl.budget.tdb'].create(vals)
             #*******************************************************************
@@ -189,7 +183,7 @@ class is_ctrl_budget_tdb_saisie(models.Model):
 class is_ctrl_budget_tdb(models.Model):
     _name = 'is.ctrl.budget.tdb'
     _description = u"Contrôle bugétaire - Budget Tableau de bord"
-    _order='intitule_id'
+    _order='ordre'
 
 
     @api.depends('intitule_id')
@@ -199,7 +193,9 @@ class is_ctrl_budget_tdb(models.Model):
 
 
     saisie_id        = fields.Many2one("is.ctrl.budget.tdb.saisie", "Saisie", ondelete='cascade')
+    ordre            = fields.Integer(u'Ordre', select=True, required=True)
     intitule_id      = fields.Many2one('is.ctrl.budget.tdb.intitule', u"Intitulé", required=True)
+    code             = fields.Integer(u'Code', select=True, required=True)
     famille_id       = fields.Many2one("is.ctrl.budget.tdb.famille", "Famille", select=True, store=True, readonly=True, compute='_compute')
     montant_variable = fields.Float('Montant Variable', digits=(14,2))
     montant_fixe     = fields.Float('Montant Fixe'    , digits=(14,2))
