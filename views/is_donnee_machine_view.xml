@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record id="is_donnee_machine_tree_view" model="ir.ui.view">
+        <field name="name">is_donnee_machine_tree_view</field>
+        <field name="model">is.donnee.machine</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_heure"/>
+                <field name="name" />
+                <field name="of"/>
+                <field name="of_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="is_donnee_machine_form_view" model="ir.ui.view">
+        <field name="name">is_donnee_machine_form_view</field>
+        <field name="model">is.donnee.machine</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="date_heure"/>
+                    <field name="name" />
+                    <field name="of"/>
+                    <field name="of_id"/>
+                </group>
+                <group>
+                    <field name="line_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="valeur"/>
+                            <field name="of_id"/>
+                        </tree>
+                    </field>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record id="is_donnee_machine_search_view" model="ir.ui.view">
+        <field name="name">is_donnee_machine_search_view</field>
+        <field name="model">is.donnee.machine</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="date_heure"/>
+                <field name="of"/>
+                <field name="of_id"/>
+            </search>
+        </field>
+    </record>
+    <record id="is_donnee_machine_action" model="ir.actions.act_window" >
+        <field name="name">Données machines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.donnee.machine</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Données machines" id="is_donnee_machine_main_menu" parent="is_theia_root_menu" sequence="60"/>
+    <menuitem 
+        action="is_donnee_machine_action" 
+        id="is_donnee_machine_menu" 
+        parent="is_donnee_machine_main_menu" 
+        sequence="10"
+    />
+
+
+
+</data>
+</openerp>

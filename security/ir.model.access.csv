@@ -100,4 +100,11 @@ access_is_ctrl_budget_tdb_famille_rel,access_is_ctrl_budget_tdb_famille_rel,mode
 access_is_ctrl_budget_ana_annee,access_is_ctrl_budget_ana_annee,model_is_ctrl_budget_ana_annee,mrp.group_mrp_manager,1,1,1,1
 access_is_ctrl_budget_ana_product,access_is_ctrl_budget_ana_product,model_is_ctrl_budget_ana_product,mrp.group_mrp_manager,1,1,1,1
 
+access_is_donnee_machine,access_is_donnee_machine,model_is_donnee_machine,base.group_user,1,0,0,0
+access_is_donnee_machine_line,access_is_donnee_machine_line,model_is_donnee_machine_line,base.group_user,1,0,0,0
+
+
+
+
+
 
