@@ -22,7 +22,7 @@ class is_donnee_machine_line(models.Model):
     _description = u"Lignes des données des machines pour l'usine 4.0"
     _order='name'
 
-    donnee_id  = fields.Many2one("is.donnee.machine", u"Donnée machine")
+    donnee_id  = fields.Many2one("is.donnee.machine", u"Donnée machine", required=True, ondelete='cascade', readonly=True)
     name       = fields.Char('Donnée', select=True, required=True)
     valeur     = fields.Char('Valeur', select=True, required=True)
     of_id      = fields.Many2one("mrp.production", "Ordre de fabrication", select=True)
