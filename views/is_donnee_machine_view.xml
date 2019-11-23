@@ -33,7 +33,7 @@
                         <tree editable="bottom">
                             <field name="name"/>
                             <field name="valeur"/>
-                            <field name="of_id"/>
+                            <field name="of_id" widget="many2one_clickable"/>
                         </tree>
                     </field>
                 </group>
