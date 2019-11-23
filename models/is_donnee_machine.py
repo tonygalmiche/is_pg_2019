@@ -11,6 +11,7 @@ class is_donnee_machine(models.Model):
     _order='date_heure desc'
 
     name       = fields.Char('Machine', select=True, required=True)
+    fichier    = fields.Char('Fichier', select=True, required=True)
     date_heure = fields.Datetime('Date Heure', select=True, required=True)
     of         = fields.Char('OF', select=True, required=True)
     of_id      = fields.Many2one("mrp.production", "Ordre de fabrication", select=True)

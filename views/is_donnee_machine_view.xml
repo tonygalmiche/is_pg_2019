@@ -8,7 +8,8 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="date_heure"/>
-                <field name="name" />
+                <field name="name"/>
+                <field name="fichier"/>
                 <field name="of"/>
                 <field name="of_id"/>
             </tree>
@@ -22,7 +23,8 @@
             <sheet>
                 <group>
                     <field name="date_heure"/>
-                    <field name="name" />
+                    <field name="name"/>
+                    <field name="fichier"/>
                     <field name="of"/>
                     <field name="of_id"/>
                 </group>
@@ -44,7 +46,8 @@
         <field name="model">is.donnee.machine</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" />
+                <field name="name"/>
+                <field name="fichier"/>
                 <field name="date_heure"/>
                 <field name="of"/>
                 <field name="of_id"/>
