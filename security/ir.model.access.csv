@@ -102,9 +102,7 @@ access_is_ctrl_budget_ana_product,access_is_ctrl_budget_ana_product,model_is_ctr
 
 access_is_donnee_machine,access_is_donnee_machine,model_is_donnee_machine,base.group_user,1,0,0,0
 access_is_donnee_machine_line,access_is_donnee_machine_line,model_is_donnee_machine_line,base.group_user,1,0,0,0
-
-
-
+access_is_donnee_machine_line_report,access_is_donnee_machine_line_report,model_is_donnee_machine_line_report,base.group_user,1,0,0,0
 
 
 
