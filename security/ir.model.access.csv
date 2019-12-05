@@ -104,5 +104,10 @@ access_is_donnee_machine,access_is_donnee_machine,model_is_donnee_machine,base.g
 access_is_donnee_machine_line,access_is_donnee_machine_line,model_is_donnee_machine_line,base.group_user,1,0,0,0
 access_is_donnee_machine_line_report,access_is_donnee_machine_line_report,model_is_donnee_machine_line_report,base.group_user,1,0,0,0
 
+access_is_invest_global,access_is_invest_global,model_is_invest_global,mrp.group_mrp_manager,1,1,1,1
+access_is_invest_detail,access_is_invest_detail,model_is_invest_detail,mrp.group_mrp_manager,1,1,1,1
+access_is_invest_cde,access_is_invest_cde,model_is_invest_cde,base.group_user,1,0,0,0
+access_is_invest_compta,access_is_invest_compta,model_is_invest_compta,base.group_user,1,0,0,0
+
 
 
