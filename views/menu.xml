@@ -71,6 +71,7 @@
         <menuitem id="menu_action_is_ot_travaux_a_valider_state"  sequence="60" parent="is_gestion_des_ot_menu" action="action_is_ot_travaux_a_valider"   name="Travaux à valider"/>
         <menuitem id="menu_action_is_ot_annule_state"             sequence="70" parent="is_gestion_des_ot_menu" action="action_is_ot_annule"              name="Annulé"/>
         <menuitem id="menu_action_is_ot_termine_state"            sequence="80" parent="is_gestion_des_ot_menu" action="action_is_ot_termine"             name="Terminé"/>
+        <menuitem id="is_ot_tous_menu"                            sequence="85" parent="is_gestion_des_ot_menu" action="is_ot_tous_action"                name="Tous les OTs"/>
         <menuitem id="is_ot_indicateur_menu"                      sequence="90" parent="is_gestion_des_ot_menu" action="is_ot_indicateur_action"          name="Indicateurs"/>
 
 

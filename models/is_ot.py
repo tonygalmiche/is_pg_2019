@@ -210,7 +210,7 @@ class is_ot(models.Model):
             ('travaux_a_valider', u'Travaux à valider'),
             ('annule', u'Annulé'),
             ('termine', u'Terminé'),
-            ], "State", readonly=True, default="creation")
+            ], "Etat", readonly=True, default="creation")
     site_id             = fields.Many2one("is.database", "Site", required=True)
     emplacement         = fields.Char("Emplacement", store=True, readonly=True, compute='_compute_emplacement')
     date_creation       = fields.Date(u"Date de création", copy=False, default=fields.Date.context_today, readonly=True)

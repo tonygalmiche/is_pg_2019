@@ -274,6 +274,7 @@
                     <field name="instrument_id"/>
                     <field name="code_gravite"/>
                     <field name="site_id"/>
+                    <field name="state"/>
                     <group expand="0" string="Regroupé par...">
                       <filter name="group_demandeur_id"       string="Demandeur"            context="{'group_by':'demandeur_id'}"/>
                       <filter name="group_valideur_id"        string="Valideur"             context="{'group_by':'valideur_id'}"/>
@@ -285,6 +286,7 @@
                       <filter name="group_instrument_id"      string="Instrument de mesure" context="{'group_by':'instrument_id'}"/>
                       <filter name="group_affectation_id"     string="Affectation"          context="{'group_by':'affectation_id'}"/>
                       <filter name="group_site_id"            string="Site"                 context="{'group_by':'site_id'}"/>
+                      <filter name="group_state"              string="Etat"                 context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -522,6 +524,50 @@
             <field name="domain">[('state', '=', 'termine')]</field>
             <field name="view_id" ref="is_ot_termine_view_tree"/>
         </record>
+
+
+        <record id="is_ot_tous_tree_view" model="ir.ui.view">
+            <field name="name">is_ot_tous_view_tree</field>
+            <field name="model">is.ot</field>
+            <field name="arch" type="xml">
+                <tree string="Terminé" create="false">
+                    <field name="site_id"/>
+                    <field name="name"/>
+                    <field name="date_creation"/>
+                    <field name="demandeur_id"/>
+                    <field name="valideur_id"/>
+                    <field name="equipement_id"/>
+                    <field name="moule_id"/>
+                    <field name="dossierf_id"/>
+                    <field name="gabarit_id"/>
+                    <field name="instrument_id"/>
+                    <field name="code_gravite"/>
+                    <field name="descriptif"/>
+                    <field name="numero_qrci"/>
+                    <field name="affectation_id"/>
+                    <field name="nature"/>
+                    <field name="delai_previsionnel"/>
+                    <field name="date_realisation_travaux"/>
+                    <field name="temps_passe_total" widget="float_time"/>
+                    <field name="state"/>
+                    <field name="pj" invisible="1"/>
+                    <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="is_ot_tous_action" model="ir.actions.act_window">
+            <field name="name">Tous les OTs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ot</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="is_ot_tous_tree_view"/>
+        </record>
+
+
+
+
 
     </data>
 </openerp>
