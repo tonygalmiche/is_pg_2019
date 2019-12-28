@@ -54,6 +54,15 @@
             <field name="act_to" ref="act_analyse_ot"/>
             <field name="signal">creation_to_analyse</field>
         </record>
+
+        <record id="is_a_valider_analyse_ot" model="workflow.transition">
+            <field name="act_from" ref="act_travaux_a_valider"/>
+            <field name="act_to" ref="act_analyse_ot"/>
+            <field name="signal">a_valider_to_analyse</field>
+        </record>
+
+
+
         <record id="is_analyse_ot_travaux_a_realiser" model="workflow.transition">
             <field name="act_from" ref="act_analyse_ot"/>
             <field name="act_to" ref="act_travaux_a_realiser"/>

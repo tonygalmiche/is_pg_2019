@@ -75,7 +75,8 @@ class is_ot(models.Model):
             if data.state == 'analyse_ot' and data.validation_ot == 'non':
                 self.signal_workflow('annule')
             if data.state == 'travaux_a_valider' and data.validation_travaux == 'non_ok':
-                data.signal_workflow('travaux_a_realiser')
+                #data.signal_workflow('travaux_a_realiser')
+                data.signal_workflow('a_valider_to_analyse')
             if data.state == 'travaux_a_valider' and data.validation_travaux == 'ok':
                 data.signal_workflow('termine')
             count = 0
