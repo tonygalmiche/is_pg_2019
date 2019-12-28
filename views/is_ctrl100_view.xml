@@ -58,7 +58,10 @@
                 <tree string="Gamme mur qualité">
                     <field name="name"/>
                     <field name="type_gamme"/>
+                    <field name="gamme_sur"/>
+                    <field name="moule_dossierf"/>
                     <field name="date_creation"/>
+                    <field name="date_fin_validite"/>
                 </tree>
             </field>
         </record>
@@ -105,9 +108,14 @@
                         </form>
                     </field>
                     <group>
-                        <field name="cout_ctrl_qualite"/>
-                        <field name="cout_previsionnel"/>
-                        <field name="cadence_previsionnelle"/>
+                        <group>
+                            <field name="cout_ctrl_qualite"/>
+                            <field name="cout_previsionnel"/>
+                            <field name="cadence_previsionnelle"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -119,6 +127,9 @@
             <field name="arch" type="xml">
                 <search string="Gamme mur qualité">
                     <field name="name"/>
+                    <field name="type_gamme"/>
+                    <field name="gamme_sur"/>
+                    <field name="moule_dossierf"/>
                 </search>
             </field>
         </record>
@@ -173,17 +184,6 @@
         </record>
 
         <!-- Défauthèque -->
-        <record model="ir.ui.view" id="is_ctrl100_defautheque_tree_view">
-            <field name="name">is.ctrl100.defautheque.tree</field>
-            <field name="model">is.ctrl100.defautheque</field>
-            <field name="arch" type="xml">
-                <tree string="Défauthèque">
-                    <field name="name"/>
-                    <field name="gamme_id"/>
-                    <field name="defaut"/>
-                </tree>
-            </field>
-        </record>
         <record model="ir.ui.view" id="is_ctrl100_defautheque_form_view">
             <field name="name">is.ctrl100.defautheque.form</field>
             <field name="model">is.ctrl100.defautheque</field>
@@ -196,6 +196,7 @@
                         </group>
                         <group>
                             <field name="gamme_id" required="True" />
+                            <field name="moule_dossierf"/>
                         </group>
                     </group>
                     <group>
@@ -216,6 +217,30 @@
             </form>
             </field>
         </record>
+        <record model="ir.ui.view" id="is_ctrl100_defautheque_tree_view">
+            <field name="name">is.ctrl100.defautheque.tree</field>
+            <field name="model">is.ctrl100.defautheque</field>
+            <field name="arch" type="xml">
+                <tree string="Défauthèque">
+                    <field name="name"/>
+                    <field name="gamme_id"/>
+                    <field name="moule_dossierf"/>
+                    <field name="defaut"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_defautheque_search_view" >
+            <field name="name">is_ctrl100_defautheque_search_view</field>
+            <field name="model">is.ctrl100.defautheque</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="gamme_id"/>
+                    <field name="moule_dossierf"/>
+                    <field name="defaut"/>
+                </search>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="is_ctrl100_defautheque_action">
             <field name="name">Défauthèque</field>
             <field name="type">ir.actions.act_window</field>
@@ -223,20 +248,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+
         <!-- Défauts -->
-        <record model="ir.ui.view" id="is_ctrl100_defaut_tree_view">
-            <field name="name">is.ctrl100.defaut.tree</field>
-            <field name="model">is.ctrl100.defaut</field>
-            <field name="arch" type="xml">
-                <tree string="Défauts">
-                    <field name="name"/>
-                    <field name="gamme_id"/>
-                    <field name="tracabilite" />
-                    <field name="createur_id"/>
-                    <field name="date_saisie"/>
-                </tree>
-            </field>
-        </record>
         <record model="ir.ui.view" id="is_ctrl100_defaut_form_view">
             <field name="name">is.ctrl100.defaut.form</field>
             <field name="model">is.ctrl100.defaut</field>
@@ -253,10 +266,11 @@
                             <field name="picking_id"    attrs="{'invisible': [('tracabilite', '!=', 'reception')], 'required': [('tracabilite', '=', 'reception')]}"/>
                         </group>
                         <group>
-                            <field name="createur_id" required="True" />
-                            <field name="date_saisie" required="True" />
-                            <field name="nb_pieces_controlees" required="True" />
-                            <field name="tps_passe" widget="float_time" />
+                            <field name="createur_id" required="True"/>
+                            <field name="employe_id"/>
+                            <field name="date_saisie" required="True"/>
+                            <field name="nb_pieces_controlees" required="True"/>
+                            <field name="tps_passe" widget="float_time"/>
                         </group>
                     </group>
                     <field name="defautheque_ids" colspan="4">
@@ -265,30 +279,55 @@
                             <field name="defaut_text" />
                             <field name="nb_rebuts"/>
                             <field name="nb_repris"/>
-                            <field name="employe_id" />
                         </tree>
                         <form>
-                                <group>
-                                    <field name="defaut_id" required="True"  domain="[('gamme_id','=',parent.gamme_id)]" />
-                                    <field name="defaut_text" readonly="True" />
-                                </group>
-                                <group>
-                                    <div style="text-align:center"> 
-                                        <field readonly="True"
-                                            name="defaut_photo" widget='image' class="oe_center oe_avatar" 
-                                            options='{"preview_image": "defaut_photo", "size": [900, 900]}'
-                                        />
-                                    </div>
-                                </group>
-                                <group>
-                                    <field name="nb_rebuts"/>
-                                    <field name="nb_repris"/>
-                                    <field name="employe_id" required="True" />
-                                </group>
+                            <group>
+                                <field name="defaut_id" required="True"  domain="[('gamme_id','=',parent.gamme_id)]" />
+                                <field name="defaut_text" readonly="True" />
+                            </group>
+                            <group>
+                                <field name="nb_rebuts"/>
+                                <field name="nb_repris"/>
+                            </group>
+                            <group>
+                                <div style="text-align:center"> 
+                                    <field readonly="True"
+                                        name="defaut_photo" widget='image' class="oe_center oe_avatar" 
+                                        options='{"preview_image": "defaut_photo", "size": [900, 900]}'
+                                    />
+                                </div>
+                            </group>
                         </form>
                     </field>
                 </sheet>
             </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_defaut_tree_view">
+            <field name="name">is.ctrl100.defaut.tree</field>
+            <field name="model">is.ctrl100.defaut</field>
+            <field name="arch" type="xml">
+                <tree string="Défauts">
+                    <field name="name"/>
+                    <field name="gamme_id"/>
+                    <field name="tracabilite" />
+                    <field name="createur_id"/>
+                    <field name="employe_id"/>
+                    <field name="date_saisie"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_defaut_search_view" >
+            <field name="name">is_ctrl100_defaut_search_view</field>
+            <field name="model">is.ctrl100.defaut</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="gamme_id"/>
+                    <field name="tracabilite"/>
+                    <field name="createur_id"/>
+                    <field name="employe_id"/>
+                </search>
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_ctrl100_defaut_action">

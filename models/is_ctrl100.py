@@ -110,7 +110,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                         'date_saisie': rec.date_saisie,
                         'tps_passe': rec.tps_passe,
                         'nb_pieces_controlees': rec.nb_pieces_controlees,
-                        'employe_id': '',
+                        #'employe_id': '',
                         'nb_rebuts': '',
                         'nb_repris': '',
                         'defaut_id': ''
@@ -122,7 +122,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                         'date_saisie': rec.date_saisie,
                         'tps_passe': rec.tps_passe,
                         'nb_pieces_controlees': rec.nb_pieces_controlees,
-                        'employe_id': self.env.user.login,
+                        #'employe_id': self.env.user.login,
                         'nb_rebuts': data.nb_rebuts,
                         'nb_repris': data.nb_repris,
                         'defaut_id': data.defaut_id.name
@@ -179,6 +179,32 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
             obj.cadence_previsionnelle = cadence_previsionnelle
 
 
+    @api.depends('mold_id','dossierf_id','product_id')
+    def _compute_moule_dossierf(self):
+        for obj in self:
+            name=''
+            if obj.mold_id:
+                name = obj.mold_id.name
+            if obj.dossierf_id:
+                name = obj.dossierf_id.name
+            if obj.product_id:
+                name = obj.product_id.is_mold_dossierf
+            obj.moule_dossierf = name
+
+
+    @api.multi
+    def get_couleur(self):
+        for obj in self:
+            couleur='xx'
+            if obj.type_gamme=='qualification_process':
+                couleur='tdjaune'
+            if obj.type_gamme=='reprise':
+                couleur='tdorange'
+            if obj.type_gamme=='securisation':
+                couleur='tdviolet'
+            return couleur
+
+
     name                     = fields.Char(u"N°de gamme", readonly=True)
     type_gamme               = fields.Selection([
                                     ("qualification_process", "Qualification Process"),
@@ -193,14 +219,16 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     mold_id                  = fields.Many2one("is.mold", "Moule")
     dossierf_id              = fields.Many2one("is.dossierf", "Dossier F")
     product_id               = fields.Many2one("product.product", "Article")
+    moule_dossierf           = fields.Char(u"Moule / Dossier F", compute="_compute_moule_dossierf", store=True, readonly=True)
     date_creation            = fields.Date(u"Date de création", copy=False, default=fields.Date.context_today)
     typologie_produit_id     = fields.Many2one("is.ctrl100.typologie.produit", "Typologie de produit")
-    date_fin_validite        = fields.Date(u"Date de fin de validité")
+    date_fin_validite        = fields.Date(u"Date du rappel", required=True)
     operation_standard_ids   = fields.One2many('is.ctrl100.gamme.standard', 'gamme_qualite_id', u"Opérations standard")
     operation_specifique_ids = fields.One2many('is.ctrl100.operation.specifique', 'gamme_qualite_id',  u"Opérations spécifiques")
     cout_ctrl_qualite        = fields.Float(u"Coût horaire vendu contrôle qualité", digits=(12, 2), default=_get_cout_ctrl_qualite)
     cout_previsionnel        = fields.Float(u"Coût prévisionnel par pièce", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
     cadence_previsionnelle   = fields.Float(u"Cadence de contrôle prévisionnelle (pcs/h)", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
+    active                   = fields.Boolean(u"Gamme active", default=True)
 
 
 class is_ctrl100_defautheque(models.Model):
@@ -213,11 +241,20 @@ class is_ctrl100_defautheque(models.Model):
         vals['name'] = self.env['ir.sequence'].get('is.ctrl100.defautheque') or ''
         return super(is_ctrl100_defautheque, self).create(vals)
 
-    name      = fields.Char(u"N° du défaut")
-    gamme_id  = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
-    defaut    = fields.Text(u"Défaut")
-    photo     = fields.Binary("Photo")
-    active    = fields.Boolean("Active", default=True)
+    @api.depends('gamme_id','gamme_id.moule_dossierf')
+    def _compute_moule_dossierf(self):
+        for obj in self:
+            name=''
+            if obj.gamme_id:
+                name = obj.gamme_id.moule_dossierf
+            obj.moule_dossierf=name
+
+    name           = fields.Char(u"N° du défaut")
+    gamme_id       = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
+    moule_dossierf = fields.Char(u"Moule / Dossier F", compute="_compute_moule_dossierf", store=True, readonly=True)
+    defaut         = fields.Text(u"Défaut")
+    photo          = fields.Binary("Photo")
+    active         = fields.Boolean("Active", default=True)
 
 
 class is_ctrl100_defaut(models.Model):
@@ -230,22 +267,22 @@ class is_ctrl100_defaut(models.Model):
         vals['name'] = self.env['ir.sequence'].get('is.ctrl100.defaut') or ''
         res = super(is_ctrl100_defaut, self).create(vals)
         for data in res:
-            if data.nb_pieces_controlees <= 0:
-                raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
+            #if data.nb_pieces_controlees <= 0:
+            #    raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
             for line in data.defautheque_ids:
                 if line.nb_rebuts <= 0 and line.nb_repris <= 0:
-                    raise Warning(_("Nombre de rebuts or Nombre de repris must be greater than 0"))
+                    raise Warning("Le nombre de rebuts ou de repris doit être supérieur à 0")
         return res
 
     @api.multi
     def write(self, vals):
         res = super(is_ctrl100_defaut, self).write(vals)
         for data in self:
-            if data.nb_pieces_controlees <= 0:
-                raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
+            #if data.nb_pieces_controlees <= 0:
+            #    raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
             for line in data.defautheque_ids:
                 if line.nb_rebuts <= 0 and line.nb_repris <= 0:
-                    raise Warning(_("Nombre de rebuts or Nombre de repris must be greater than 0"))
+                    raise Warning("Le nombre de rebuts ou de repris doit être supérieur à 0")
         return res
 
     @api.multi
@@ -267,23 +304,15 @@ class is_ctrl100_defaut(models.Model):
         for defau in defautheque_ids:
             lst.append((0, 0, {
                 'defaut_id': defau.id,
-                'employe_id': self.get_employee(),
+                #'employe_id': self.get_employee(),
             }))
         self.defautheque_ids = lst
 
-#     @api.model
-#     def default_get(self, default_fields):
-#         res = super(is_ctrl100_defaut, self).default_get(default_fields)
-#         defautheque_obj = self.env['is.ctrl100.defautheque']
-#         lst = []
-#         defautheque_ids = defautheque_obj.search([('active', '=', True)])
-#         for num in defautheque_ids:
-#             lst.append((0,0, {
-#                 'defaut_id': num.id,
-#                 'employe_id': self.get_employee()
-#             }))
-#         res['defautheque_ids'] = lst
-#         return res
+    @api.returns('self')
+    def _get_employee(self):
+        id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)],limit=1) or False
+        #print self,id
+        return id
 
     name                 = fields.Char(u"N° du défaut")
     gamme_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
@@ -299,6 +328,7 @@ class is_ctrl100_defaut(models.Model):
     date_saisie          = fields.Date(u"Date saisie", copy=False, default=fields.Date.context_today)
     nb_pieces_controlees = fields.Integer("Nombre de pièces contrôlées")
     tps_passe            = fields.Float(u"Temps passé (H)", digits=(14, 2))
+    employe_id           = fields.Many2one("hr.employee", u"Employé", default=_get_employee)
     defautheque_ids      = fields.One2many("is.ctrl100.defaut.line", "defautid", u"Défauthèque")
 
 
@@ -307,16 +337,11 @@ class is_ctrl100_defaut_line(models.Model):
     _description = u"Défauts Line"
     _order       = 'defaut_id desc'
 
-    @api.returns('self')
-    def _get_employee(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)],limit=1) or False
-
     defaut_id    = fields.Many2one("is.ctrl100.defautheque", u"N° du défaut")
     defaut_text  = fields.Text("Défaut", related="defaut_id.defaut")
     defaut_photo = fields.Binary("Photo", related="defaut_id.photo")
     nb_rebuts    = fields.Integer("Nombre de rebuts")
     nb_repris    = fields.Integer("Nombre de repris")
-    employe_id   = fields.Many2one("hr.employee", u"Employé", default=_get_employee)
     defautid     = fields.Many2one("is.ctrl100.defaut", u"N° du défaut")
 
 

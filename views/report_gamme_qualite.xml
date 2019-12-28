@@ -43,7 +43,6 @@
                 border: 1px solid #046dce;
                 vertical-align:middle;
                 text-align:center;
-                background-color:#58ACFA;
                 padding-right:4px;
                 padding-top:4px;
                 padding-left:4px;
@@ -55,7 +54,15 @@
                 vertical-align:middle;
                 text-align:center;
                 border: 0px solid #046dce;
-                background-color:#58ACFA;
+            }
+            .tdjaune {
+                background-color:Yellow;
+            }
+            .tdorange {
+                background-color:Orange;
+            }
+            .tdviolet {
+                background-color:Violet;
             }
             .imgclass0 {
                 text-align:center;
@@ -127,7 +134,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="tdcolor" rowspan="2">
+                            <td t-att-class="o.get_couleur()" rowspan="2">
                                 <div class="tdcolor">Gamme mur qualité</div>
                             </td>
                             <td rowspan="1">
@@ -200,7 +207,9 @@
                                                 </td>
                                                 <td width="35%">
                                                     <div>
-                                                        <span t-field="o.product_id.name" />
+                                                        <span t-field="o.product_id.is_code"/>
+                                                        <span t-field="o.mold_id.name"/>
+                                                        <span t-field="o.dossierf_id.name"/>
                                                     </div>
                                                 </td>
                                                 <td width="18%">

@@ -176,7 +176,7 @@
                                 <t t-foreach="default_values" t-as="rec">
                                     <tr>
                                         <td width="15%">
-                                            <span t-esc="rec['employe_id']" />
+                                            <!--<span t-esc="rec['employe_id']" />-->
                                         </td>
                                         <td width="21%">
                                             <span t-esc="rec['tracabilite_nm']" />
