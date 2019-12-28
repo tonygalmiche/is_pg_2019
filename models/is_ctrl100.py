@@ -328,7 +328,7 @@ class is_ctrl100_defaut(models.Model):
     date_saisie          = fields.Date(u"Date saisie", copy=False, default=fields.Date.context_today)
     nb_pieces_controlees = fields.Integer("Nombre de pièces contrôlées")
     tps_passe            = fields.Float(u"Temps passé (H)", digits=(14, 2))
-    employe_id           = fields.Many2one("hr.employee", u"Employé", default=_get_employee)
+    employe_id           = fields.Many2one("hr.employee", u"Employé") #, default=_get_employee)
     defautheque_ids      = fields.One2many("is.ctrl100.defaut.line", "defautid", u"Défauthèque")
 
 
