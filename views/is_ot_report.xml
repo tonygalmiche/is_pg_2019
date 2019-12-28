@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="is_ot_report_style">
+            .header {
+                font-size:10pt;
+            }
+            .footer {
+                font-size:10pt;
+            }
+            .page {
+                font-size:11pt;
+            }
+            .titre {
+                font-size:15pt;
+                font-weight: bold;
+            }
+        </template>
+
+
+        <template id="is_ot_report_layout" inherit_id="web.layout" primary="True">
+            <xpath expr="//html" position="attributes">
+                <attribute name="t-att-data-report-margin-top">data_report_margin_top if data_report_margin_top else None</attribute>
+                <attribute name="t-att-data-report-header-spacing">data_report_header_spacing if data_report_header_spacing else None</attribute>
+                <attribute name="t-att-data-report-dpi">data_report_dpi if data_report_dpi else None</attribute>
+            </xpath>
+            <xpath expr="//head" position="inside">
+                <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+                <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+                <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+                <style type="text/css">
+                    <t t-call="report.style"/>
+                    <t t-call="is_pg_2019.is_ot_report_style"/>
+                </style>
+            </xpath>
+            <xpath expr="//head/link[@href='/web/static/src/css/full.css']" position="replace"></xpath>
+        </template>
+
+
+        <template id="is_ot_report_html_container">
+            <t t-set="body_classname" t-value="'container'"/>
+            <t t-call="is_pg_2019.is_ot_report_layout">
+                <t t-raw="0"/>
+            </t>
+        </template>
+
+
+        <template id="is_ot_report_external_layout_header">
+            <div class="header">
+                <div class="row">
+                    <div class="col-xs-3  text-left">
+                        <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 80px;"/>
+                    </div>
+                    <div class="col-xs-9 text-right titre">
+                        OT n°<span t-field="o.name"/> <span t-field="o.state"/>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+
+        <template id="is_ot_report_external_layout_footer">
+            <div class="footer">
+                <div class="text-center" style="border-top: 1px solid black">
+                    <table style="width:100%">
+                        <tr>
+                            <td class="text-right">
+                                Page <span class="page" style="font-size:10pt;"/> / <span class="topage"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <br />
+        </template>
+
+
+        <template id="is_ot_report_external_layout">
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"/>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+            <t t-call="is_pg_2019.is_ot_report_external_layout_header"/>
+            <t t-raw="0"/>
+            <t t-call="is_pg_2019.is_ot_report_external_layout_footer"/>
+        </template>
+
+
+        <template id="is_ot_report_document">
+            <t t-call="is_pg_2019.is_ot_report_external_layout">
+                <div class="page">
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <th style="width:24%">N° de l'OT</th>
+                                <td style="width:24%"><span t-field="o.name"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Site</th>
+                                <td style="width:24%"><span t-field="o.site_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%">Date de création</th>
+                                <td style="width:24%"><span t-field="o.date_creation"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Emplacement</th>
+                                <td style="width:24%"><span t-field="o.emplacement"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%">Type d'équipement</th>
+                                <td style="width:24%"><span t-field="o.type_equipement_id.name"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Demandeur</th>
+                                <td style="width:24%"><span t-field="o.demandeur_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%">Équipement</th>
+                                <td style="width:24%"><span t-field="o.equipement_id.numero_equipement"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Moule</th>
+                                <td style="width:24%"><span t-field="o.moule_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%">Gravité</th>
+                                <td style="width:24%"><span t-field="o.gravite"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Dossier F</th>
+                                <td style="width:24%"><span t-field="o.dossierf_id.name"/></td>
+                            </tr>
+
+                            <tr>
+                                <th style="width:24%"> </th>
+                                <td style="width:24%"> </td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Gabarit de Contrôle</th>
+                                <td style="width:24%"><span t-field="o.gabarit_id.code_pg"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%"> </th>
+                                <td style="width:24%"> </td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Instrument de mesure</th>
+                                <td style="width:24%"><span t-field="o.instrument_id.code_pg"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%"> </th>
+                                <td style="width:24%"> </td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Numéro de QRCI/TPM</th>
+                                <td style="width:24%"><span t-field="o.numero_qrci"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <th style="width:24%">Date intervention demandée</th>
+                                <td style="width:76%"><span t-field="o.date_intervention_demandee"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%">Descriptif</th>
+                                <td style="width:76%"><span t-field="o.descriptif"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <th style="width:24%">Travaux à réaliser</th>
+                                <td style="width:24%"><span t-field="o.validation_ot"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Affectation</th>
+                                <td style="width:24%"><span t-field="o.affectation_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%">Motif</th>
+                                <td style="width:24%"><span t-field="o.motif"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Nature</th>
+                                <td style="width:24%"><span t-field="o.nature"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%"> </th>
+                                <td style="width:24%"> </td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Temps d'intervention prévisionnel (H)</th>
+                                <td style="width:24%"><span t-field="o.delai_previsionnel"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%"> </th>
+                                <td style="width:24%"> </td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Date prévisionnelle d'intervention</th>
+                                <td style="width:24%"><span t-field="o.date_previsionnelle_intervention"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%"> </th>
+                                <td style="width:24%"> </td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Date de réalisation des travaux</th>
+                                <td style="width:24%"><span t-field="o.date_realisation_travaux"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%">Complément d'information</th>
+                                <td style="width:24%"><span t-field="o.complement"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%"></th>
+                                <td style="width:24%"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Nom du technicien</th>
+                                <th>Temps passé</th>
+                                <th>Descriptif des travaux</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.temps_passe_ids" t-as="l">
+                                <td><span t-field="l.technicien_id.name"/></td>
+                                <td><t t-esc="'%02d:%02d' % (int(l.temps_passe), l.temps_passe % 1 * 60)" /></td>
+                                <td><span t-field="l.descriptif"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <th style="width:24%">Temps passé total</th>
+                                <td style="width:24%"><t t-esc="'%02d:%02d' % (int(o.temps_passe_total), o.temps_passe_total % 1 * 60)" /></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%"></th>
+                                <td style="width:24%"></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%">Valideur</th>
+                                <td style="width:24%"><span t-field="o.valideur_id.name"/></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Validation des travaux</th>
+                                <td style="width:24%"><span t-field="o.validation_travaux"/></td>
+                            </tr>
+                            <tr>
+                                <th style="width:24%"></th>
+                                <td style="width:24%"></td>
+                                <td style="width:4%"></td>
+                                <th style="width:24%">Commentaire</th>
+                                <td style="width:24%"><span t-field="o.commentaires_non_ok"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="is_ot_report">
+            <t t-call="is_pg_2019.is_ot_report_html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="is_pg_2019.is_ot_report_document">
+                        <t t-raw="0"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>
