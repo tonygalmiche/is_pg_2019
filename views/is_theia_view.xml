@@ -16,6 +16,8 @@
     <menuitem name="OF" id="menu_is_of_root" 
               parent="is_theia_root_menu" sequence="20"/>
 
+
+
     <menuitem name="Indicateurs" id="menu_is_cpi_indicateurs" 
               parent="is_theia_root_menu" sequence="30"/>
 
@@ -851,7 +853,7 @@
     <!--Gestion des autorisations -->
     <record id="is_theia_autorisation_menu" model="ir.ui.menu" >
         <field name="name">Gestion des autorisations</field>
-        <field name="sequence">39</field>
+        <field name="sequence">35</field>
         <field name="parent_id" eval="ref('is_theia_root_menu')"/>
         <field name="groups_id" eval="[(6,0,[
             ref('base.group_erp_manager'),
@@ -955,6 +957,85 @@
         action="is_theia_validation_action_action" 
         parent="is_theia_autorisation_menu" 
         sequence="20"
+    />
+
+
+
+
+
+    <!-- is.theia.habilitation.operateur -->
+    <record model="ir.ui.view" id="is_theia_habilitation_operateur_tree_view">
+        <field name="name">is.theia.habilitation.operateur.tree</field>
+        <field name="model">is.theia.habilitation.operateur</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="heure_debut"/>
+                <field name="heure_fin"/>
+                <field name="moule"/>
+                <field name="presse_id"/>
+                <field name="operateur_id"/>
+                <field name="type_habilitation"/>
+                <field name="controleur_valide_id"/>
+                <field name="controleur_dequalifie_id"/>
+                <field name="tuteur_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_habilitation_operateur_form_view">
+        <field name="name">is.theia.habilitation.operateur.form</field>
+        <field name="model">is.theia.habilitation.operateur</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="heure_debut"/>
+                    <field name="heure_fin"/>
+                    <field name="moule"/>
+                    <field name="presse_id"/>
+                    <field name="operateur_id"/>
+                    <field name="type_habilitation"/>
+                    <field name="controleur_valide_id"/>
+                    <field name="controleur_dequalifie_id"/>
+                    <field name="tuteur_id"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_habilitation_operateur_search_view" >
+        <field name="name">is.theia.habilitation.operateur.search</field>
+        <field name="model">is.theia.habilitation.operateur</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="moule"/>
+                <field name="presse_id"/>
+                <field name="operateur_id"/>
+                <field name="type_habilitation"/>
+                <field name="controleur_valide_id"/>
+                <field name="controleur_dequalifie_id"/>
+                <field name="tuteur_id"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_theia_habilitation_operateur_action">
+        <field name="name">Habilitation Opérateur</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.theia.habilitation.operateur</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="is_theia_habilitation_operateur_main_menu" model="ir.ui.menu" >
+        <field name="name">Habilitation Opérateur</field>
+        <field name="sequence">37</field>
+        <field name="parent_id" eval="ref('is_theia_root_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+            ref('is_plastigray.group_gestionnaire_cpi_raspberry'),
+        ])]"/>
+    </record>
+    <menuitem 
+        id="is_theia_habilitation_operateur_menu" 
+        action="is_theia_habilitation_operateur_action" 
+        parent="is_theia_habilitation_operateur_main_menu" 
+        sequence="10"
     />
 
 </data>

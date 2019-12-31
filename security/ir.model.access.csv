@@ -117,6 +117,7 @@ access_is_invest_detail,access_is_invest_detail,model_is_invest_detail,mrp.group
 access_is_invest_cde,access_is_invest_cde,model_is_invest_cde,base.group_user,1,0,0,0
 access_is_invest_compta,access_is_invest_compta,model_is_invest_compta,base.group_user,1,0,0,0
 
+access_is_theia_habilitation_operateur,access_is_theia_habilitation_operateur,model_is_theia_habilitation_operateur,is_plastigray.group_gestionnaire_cpi_raspberry,1,1,1,1
 
 
 
