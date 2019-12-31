@@ -86,6 +86,9 @@
                             <field name="date_fin_validite"/>
                         </group>
                     </group>
+                    <group>
+                        <field name="operateur_ids" widget="many2many_tags"/>
+                    </group>
                     <field name="operation_standard_ids" colspan="4" context="{'active_test':True}">
                         <tree editable="bottom">
                             <field name="operation_standard_id" required="True" />
@@ -264,6 +267,7 @@
                             <field name="product_id"    attrs="{'invisible': [('tracabilite', '!=', 'article')], 'required': [('tracabilite', '=', 'article')]}"/>
                             <field name="production_id" attrs="{'invisible': [('tracabilite', '!=', 'of')], 'required': [('tracabilite', '=', 'of')]}"/>
                             <field name="picking_id"    attrs="{'invisible': [('tracabilite', '!=', 'reception')], 'required': [('tracabilite', '=', 'reception')]}"/>
+                            <field name="moule_dossierf"/>
                         </group>
                         <group>
                             <field name="createur_id" required="True"/>
@@ -311,9 +315,15 @@
                     <field name="name"/>
                     <field name="gamme_id"/>
                     <field name="tracabilite" />
+                    <field name="product_id" />
+                    <field name="production_id" />
+                    <field name="picking_id" />
+                    <field name="moule_dossierf"/>
                     <field name="createur_id"/>
                     <field name="employe_id"/>
                     <field name="date_saisie"/>
+                    <field name="nb_pieces_controlees"/>
+                    <field name="tps_passe" sum="Total"/>
                 </tree>
             </field>
         </record>
@@ -325,6 +335,10 @@
                     <field name="name"/>
                     <field name="gamme_id"/>
                     <field name="tracabilite"/>
+                    <field name="product_id" />
+                    <field name="production_id" />
+                    <field name="picking_id" />
+                    <field name="moule_dossierf"/>
                     <field name="createur_id"/>
                     <field name="employe_id"/>
                 </search>
@@ -377,5 +391,70 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+
+
+        <!-- is.ctrl100.pareto -->
+        <record model="ir.ui.view" id="view_is_ctrl100_pareto_form">
+            <field name="name">view.is.ctrl100.pareto.form</field>
+            <field name="model">is.ctrl100.pareto</field>
+            <field name="arch" type="xml">
+            <form string="Rapport de contrôle">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="gamme_id"/>
+                            <field name="date_debut"/>
+                            <field name="date_fin"/>
+                            <field name="moule"/>
+                            <field name="code_pg"/>
+                            <field name="of_debut_id"/>
+                            <field name="of_fin_id"/>
+                        </group>
+                        <group>
+                            <field name="date_creation"/>
+                            <field name="createur_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_ctrl100_pareto_tree">
+            <field name="name">view.is.ctrl100.pareto.tree</field>
+            <field name="model">is.ctrl100.pareto</field>
+            <field name="arch" type="xml">
+                <tree string="Rapport de contrôle">
+                    <field name="date_creation"/>
+                    <field name="createur_id"/>
+                    <field name="gamme_id"/>
+                    <field name="date_debut"/>
+                    <field name="date_fin"/>
+                    <field name="moule"/>
+                    <field name="code_pg"/>
+                    <field name="of_debut_id"/>
+                    <field name="of_fin_id"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_pareto_search_view" >
+            <field name="name">is_ctrl100_pareto_search_view</field>
+            <field name="model">is.ctrl100.pareto</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="createur_id"/>
+                    <field name="gamme_id"/>
+                    <field name="moule"/>
+                    <field name="code_pg"/>
+                    <field name="of_debut_id"/>
+                    <field name="of_fin_id"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_ctrl100_pareto_action">
+            <field name="name">Pareto</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ctrl100.pareto</field>
+            <field name="view_mode">tree,form</field>
+        </record>
     </data>
 </openerp>

@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
-
+import base64
 
 
 class is_ctrl100_operation_standard(models.Model):
@@ -228,6 +228,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     cout_ctrl_qualite        = fields.Float(u"Coût horaire vendu contrôle qualité", digits=(12, 2), default=_get_cout_ctrl_qualite)
     cout_previsionnel        = fields.Float(u"Coût prévisionnel par pièce", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
     cadence_previsionnelle   = fields.Float(u"Cadence de contrôle prévisionnelle (pcs/h)", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
+    operateur_ids            = fields.Many2many("res.users", "is_ctrl100_gamme_mur_qualite_operateur_rel", "gamme_id", "operateur_id", "Opérateurs autorisés en saisie")
     active                   = fields.Boolean(u"Gamme active", default=True)
 
 
@@ -314,6 +315,18 @@ class is_ctrl100_defaut(models.Model):
         #print self,id
         return id
 
+
+    @api.depends('product_id','production_id','picking_id')
+    def _compute_moule_dossierf(self):
+        for obj in self:
+            name=''
+            if obj.product_id:
+                name = obj.product_id.is_mold_dossierf
+            if obj.production_id:
+                name = obj.production_id.product_id.is_mold_dossierf
+            obj.moule_dossierf = name
+
+
     name                 = fields.Char(u"N° du défaut")
     gamme_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
     tracabilite                = fields.Selection([
@@ -324,6 +337,7 @@ class is_ctrl100_defaut(models.Model):
     product_id           = fields.Many2one("product.product", "Article")
     production_id        = fields.Many2one("mrp.production", "OF")
     picking_id           = fields.Many2one("stock.picking", "Réception", domain=[('picking_type_id.code','=','incoming')])
+    moule_dossierf       = fields.Char(u"Moule / Dossier F", compute="_compute_moule_dossierf", store=True, readonly=True)
     createur_id          = fields.Many2one("res.users", "Createur", default=lambda self: self.env.user)
     date_saisie          = fields.Date(u"Date saisie", copy=False, default=fields.Date.context_today)
     nb_pieces_controlees = fields.Integer("Nombre de pièces contrôlées")
@@ -394,6 +408,10 @@ class is_ctrl100_rapport_controle(models.Model):
         rects1 = ax.bar(x_pos, popularity, align="center", color='#5dade2')
         plt.xticks(x_pos, x)
         plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
+
+        print x,x_pos,popularity
+
+
         for rect in rects1:
             height = rect.get_height()
             ax.text(rect.get_x() + rect.get_width()/2., 0.40*height,
@@ -407,7 +425,7 @@ class is_ctrl100_rapport_controle(models.Model):
 
     @api.multi
     def get_chart_img(self):
-        import base64
+        #import base64
         file_nm = '/tmp/books_read.png'
         image = open(file_nm, 'rb')
         image_read = image.read()
@@ -451,4 +469,87 @@ class is_ctrl100_rapport_controle(models.Model):
     createur_id = fields.Many2one("res.users", "Createur", default=lambda self: self.env.user, required=True, writeable=True)
     date_debut  = fields.Date(u"Date de début", required=True)
     date_fin    = fields.Date("Date de fin", required=True)
+
+
+class is_ctrl100_pareto(models.Model):
+    _name        = 'is.ctrl100.pareto'
+    _description = u"Pareto"
+    _order       = 'date_creation desc'
+    _rec_name    = 'date_creation'
+
+    date_creation = fields.Date(u"Date de création", default=lambda *a: fields.datetime.now(), readonly=True)
+    createur_id   = fields.Many2one("res.users", u"Créateur", default=lambda self: self.env.user, readonly=True)
+    gamme_id      = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
+    date_debut    = fields.Date(u"Date de début")
+    date_fin      = fields.Date(u"Date de fin")
+    moule         = fields.Char(u"Moule / Dossier F")
+    code_pg       = fields.Char(u"Code PG (Partiel)")
+    of_debut_id   = fields.Many2one("mrp.production", u"OF début")
+    of_fin_id     = fields.Many2one("mrp.production", u"OF fin")
+
+
+    @api.multi
+    def get_chart_img(self):
+        cr = self._cr
+        for obj in self:
+            plt.rcParams.update({'font.size': 22})
+            SQL="""
+                SELECT d.moule_dossierf,sum(d.tps_passe)
+                FROM is_ctrl100_defaut d left outer join product_product  pp on d.product_id=pp.id
+                                         left outer join product_template pt on pp.product_tmpl_id=pt.id
+                                         left outer join mrp_production   mp on d.production_id=mp.id
+                WHERE d.id>0
+            """
+            if obj.date_debut:
+                SQL+=" and d.date_saisie>='"+str(obj.date_debut)+"' "
+            if obj.date_fin:
+                SQL+=" and d.date_saisie<='"+str(obj.date_fin)+"' "
+            if obj.gamme_id:
+                SQL+=" and d.gamme_id="+str(obj.gamme_id.id)+" "
+            if obj.code_pg:
+                SQL+=" and pt.is_code ilike '%"+str(obj.code_pg)+"%' "
+            if obj.moule:
+                SQL+=" and d.moule_dossierf ilike '%"+str(obj.moule)+"%' "
+            if obj.of_debut_id:
+                SQL+=" and mp.name>='"+str(obj.of_debut_id.name)+"' "
+            if obj.of_fin_id:
+                SQL+=" and mp.name<='"+str(obj.of_fin_id.name)+"' "
+            SQL+="""
+                GROUP BY d.moule_dossierf
+                ORDER BY sum(d.tps_passe) desc
+            """
+            cr.execute(SQL)
+            result = cr.fetchall()
+            labels=[]
+            x_pos=[]
+            values=[]
+            ct=0
+            for row in result:
+                labels.append(row[0])
+                values.append(row[1])
+                x_pos.append(ct)
+                ct+=1
+            fig, ax = plt.subplots()
+            rects1 = ax.bar(x_pos, values, align="center", color='#5dade2')
+            plt.xticks(x_pos, labels)
+            plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
+            for rect in rects1:
+                height = rect.get_height()
+                ax.text(
+                    rect.get_x() + rect.get_width()/2., 0.40*height,
+                    height, 
+                    ha='center', 
+                    va='bottom', 
+                    color="white"
+                )
+            fig = plt.gcf()
+            fig.set_size_inches(18.5, 10.5)
+            filename = '/tmp/ctrl100-parent-'+str(obj.id)+'.png'
+            fig.savefig(filename,dpi=46)
+            image = open(filename, 'rb')
+            image_read = image.read()
+            image_64_encode = base64.encodestring(image_read)
+            return image_64_encode
+        return True
+
 
