@@ -27,12 +27,13 @@ colors=[
     ("vert"   , "#5CB85C"),
 ]
 
-type_habilitation=[
-    ("poste"          , "En Poste"),
-    ("qualification"  , "Qualification"),
-    ("dequalification", "Déqualification"),
+states=[
+    ("attente-controleur", "Attente contrôleur"),
+    ("attente-tuteur"    , "Attente tuteur"),
+    ("poste"             , "En poste"),
+    ("qualification"     , "Qualification"),
+    ("dequalification"   , "Déqualification"),
 ]
-
 
 
 class is_etat_presse_regroupement(models.Model):
@@ -534,15 +535,13 @@ class is_theia_habilitation_operateur(models.Model):
     _rec_name = "heure_debut"
     _order='heure_debut desc'
 
-    heure_debut              = fields.Datetime(u'Heure de début de prise de poste', required=True , select=True)
-    heure_fin                = fields.Datetime(u'Heure de fin de prise de poste'  , required=True , select=True)
-    moule                    = fields.Char(u'Moule'                               , required=True , select=True)
-    presse_id                = fields.Many2one('is.equipement', u"Presse"         , required=False, select=True)
-    operateur_id             = fields.Many2one("hr.employee", u"Opérateur"        , required=True , select=True)
-    type_habilitation        = fields.Selection(type_habilitation, 'Type'         , required=True , select=True)
-    controleur_valide_id     = fields.Many2one("hr.employee", u"Contrôleur ayant validé la formation de l'opérateur"    , select=True)
-    controleur_dequalifie_id = fields.Many2one("hr.employee", u"Contrôleur ayant déqualifié la formation de l'opérateur", select=True)
-    tuteur_id                = fields.Many2one("hr.employee", u"Tuteur ayant validé la prise de poste")
+    heure_debut  = fields.Datetime(u'Heure de début'          , required=True , select=True)
+    heure_fin    = fields.Datetime(u'Heure de fin'            , required=False, select=True)
+    presse_id    = fields.Many2one('is.equipement', u"Presse" , required=True , select=True)
+    moule        = fields.Char(u'Moule'                       , required=True , select=True)
+    operateur_id = fields.Many2one("hr.employee", u"Opérateur", required=True , select=True)
+    valideur_id  = fields.Many2one("hr.employee", u"Valideur" , required=False, select=True)
+    state        = fields.Selection(states, 'État'            , required=True , select=True)
 
 
 #TODO : 

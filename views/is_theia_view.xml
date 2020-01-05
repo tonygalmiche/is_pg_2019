@@ -960,9 +960,6 @@
     />
 
 
-
-
-
     <!-- is.theia.habilitation.operateur -->
     <record model="ir.ui.view" id="is_theia_habilitation_operateur_tree_view">
         <field name="name">is.theia.habilitation.operateur.tree</field>
@@ -971,13 +968,11 @@
             <tree>
                 <field name="heure_debut"/>
                 <field name="heure_fin"/>
-                <field name="moule"/>
                 <field name="presse_id"/>
+                <field name="moule"/>
                 <field name="operateur_id"/>
-                <field name="type_habilitation"/>
-                <field name="controleur_valide_id"/>
-                <field name="controleur_dequalifie_id"/>
-                <field name="tuteur_id"/>
+                <field name="valideur_id"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -990,13 +985,11 @@
                 <group>
                     <field name="heure_debut"/>
                     <field name="heure_fin"/>
-                    <field name="moule"/>
                     <field name="presse_id"/>
+                    <field name="moule"/>
                     <field name="operateur_id"/>
-                    <field name="type_habilitation"/>
-                    <field name="controleur_valide_id"/>
-                    <field name="controleur_dequalifie_id"/>
-                    <field name="tuteur_id"/>
+                    <field name="valideur_id"/>
+                    <field name="state"/>
                 </group>
             </sheet>
         </form>
@@ -1007,13 +1000,11 @@
         <field name="model">is.theia.habilitation.operateur</field>
         <field name="arch" type="xml">
             <search>
-                <field name="moule"/>
                 <field name="presse_id"/>
+                <field name="moule"/>
                 <field name="operateur_id"/>
-                <field name="type_habilitation"/>
-                <field name="controleur_valide_id"/>
-                <field name="controleur_dequalifie_id"/>
-                <field name="tuteur_id"/>
+                <field name="valideur_id"/>
+                <field name="state"/>
             </search>
         </field>
     </record>
