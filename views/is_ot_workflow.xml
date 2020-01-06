@@ -25,7 +25,8 @@
             <field name="wkf_id" ref="wkf_is_ot"/>
             <field name="name">travaux_a_realiser</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'travaux_a_realiser'})</field>
+            <!--<field name="action">write({'state':'travaux_a_realiser'})</field>-->
+            <field name="action">vers_travaux_a_realiser()</field>
         </record>
         <record id="act_annule" model="workflow.activity">
             <field name="wkf_id" ref="wkf_is_ot"/>

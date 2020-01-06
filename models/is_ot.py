@@ -95,6 +95,13 @@ class is_ot(models.Model):
                                  _("Il est obligatoire de saisir un équipement, un moule, un dossier F, un gabarit ou un instrument (un seul choix possible)"))
         return res
 
+
+    @api.multi
+    def vers_travaux_a_realiser(self):
+        for obj in self:
+            obj.state='travaux_a_realiser'
+
+
     @api.multi
     def vers_travaux_a_valider(self):
         for data in self:
