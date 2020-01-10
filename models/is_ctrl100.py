@@ -228,7 +228,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     cout_ctrl_qualite        = fields.Float(u"Coût horaire vendu contrôle qualité", digits=(12, 2), default=_get_cout_ctrl_qualite)
     cout_previsionnel        = fields.Float(u"Coût prévisionnel par pièce", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
     cadence_previsionnelle   = fields.Float(u"Cadence de contrôle prévisionnelle (pcs/h)", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
-    operateur_ids            = fields.Many2many("res.users", "is_ctrl100_gamme_mur_qualite_operateur_rel", "gamme_id", "operateur_id", "Opérateurs autorisés en saisie")
+    operateur_ids            = fields.Many2many("res.users", "is_ctrl100_gamme_mur_qualite_operateur_rel", "gamme_id", "operateur_id", u"Operateurs autorisés en saisie et à faire le contrôle")
     active                   = fields.Boolean(u"Gamme active", default=True)
 
 
@@ -268,22 +268,26 @@ class is_ctrl100_defaut(models.Model):
         vals['name'] = self.env['ir.sequence'].get('is.ctrl100.defaut') or ''
         res = super(is_ctrl100_defaut, self).create(vals)
         for data in res:
-            #if data.nb_pieces_controlees <= 0:
-            #    raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
-            for line in data.defautheque_ids:
-                if line.nb_rebuts <= 0 and line.nb_repris <= 0:
-                    raise Warning("Le nombre de rebuts ou de repris doit être supérieur à 0")
+            if data.tps_passe <= 0:
+                raise Warning("Temps passé obligatoire")
+            if data.nb_pieces_controlees <= 0:
+                raise Warning("Nombre de pièces contrôlées obligatoire")
+            #for line in data.defautheque_ids:
+            #    if line.nb_rebuts <= 0 and line.nb_repris <= 0:
+            #        raise Warning("Le nombre de rebuts ou de repris doit être supérieur à 0")
         return res
 
     @api.multi
     def write(self, vals):
         res = super(is_ctrl100_defaut, self).write(vals)
         for data in self:
-            #if data.nb_pieces_controlees <= 0:
-            #    raise Warning(_("Nombre de pièces contrôlées value must be greater then 0 !"))
-            for line in data.defautheque_ids:
-                if line.nb_rebuts <= 0 and line.nb_repris <= 0:
-                    raise Warning("Le nombre de rebuts ou de repris doit être supérieur à 0")
+            if data.tps_passe <= 0:
+                raise Warning("Temps passé obligatoire")
+            if data.nb_pieces_controlees <= 0:
+                raise Warning("Nombre de pièces contrôlées obligatoire")
+            #for line in data.defautheque_ids:
+            #    if line.nb_rebuts <= 0 and line.nb_repris <= 0:
+            #        raise Warning("Le nombre de rebuts ou de repris doit être supérieur à 0")
         return res
 
     @api.multi

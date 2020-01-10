@@ -78,7 +78,7 @@ class is_mold(models.Model):
     nb_cycles_avant_preventif     = fields.Integer(u"Nb cycles avant préventif")
     periodicite_maintenance_moule = fields.Integer(u"Périodicité maintenance moule (nb cycles)")
     gamme_preventif_ids           = fields.Many2many('ir.attachment', 'is_mold_attachment_rel', 'mold_id', 'file_id', u"Gamme préventif")
-
+    preventif_inactif             = fields.Boolean(u"Préventif inactif suite FDV", default=False)
     is_base_check                 = fields.Boolean(string="Is Base", compute="_check_base_db")
     is_preventif_moule            = fields.One2many('is.preventif.moule', 'moule', u'Préventif Moule')
     systematique_ids              = fields.One2many('is.mold.systematique.array', 'mold_id',  u'Opérations systématiques')

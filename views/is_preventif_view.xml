@@ -31,6 +31,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="is_mold_preventif_tree_view"/>
+            <field name="domain">[('preventif_inactif', '=', False)]</field>
             <field name="limit">200</field>
         </record>
 
@@ -59,6 +60,7 @@
                                 <group>
                                     <field name="periodicite_maintenance_moule"/>
                                     <field name="date_dernier_preventif"      readonly="1"/>
+                                    <field name="preventif_inactif"/>
                                 </group>
                             </group>
                             <group>

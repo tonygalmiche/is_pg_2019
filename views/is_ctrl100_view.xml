@@ -270,11 +270,11 @@
                             <field name="moule_dossierf"/>
                         </group>
                         <group>
-                            <field name="createur_id" required="True"/>
+                            <field name="createur_id"                   required="True"/>
                             <field name="employe_id"/>
-                            <field name="date_saisie" required="True"/>
-                            <field name="nb_pieces_controlees" required="True"/>
-                            <field name="tps_passe" widget="float_time"/>
+                            <field name="date_saisie"                   required="True"/>
+                            <field name="nb_pieces_controlees"          required="True"/>
+                            <field name="tps_passe" widget="float_time" required="True"/>
                         </group>
                     </group>
                     <field name="defautheque_ids" colspan="4">
