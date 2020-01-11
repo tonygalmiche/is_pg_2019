@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Company Inherits -->
+        <record id="view_res_company_form_inherit_is_pg_2019" model="ir.ui.view">
+            <field name="name">view.res.company.form.inherit.is.pg.2019</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_gest_demande_transport_id']"
+                    position="after">
+                    <field name="is_responsable_rh_id" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Employee Inherits -->
+        <record id="view_hr_employee_form_inherit_is_pg_2019" model="ir.ui.view">
+            <field name="name">view.hr.employee.form.inherit.is.pg.2019</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="is_plastigray.is_view_employee_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Pointage']/group[1]/group[2]"
+                    position="after">
+                    <group string="Validation">
+                        <field name="is_valideur_n1" />
+                        <field name="is_valideur_n2" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Demande de congés -->
+        <record model="ir.ui.view" id="view_is_demande_conges_form">
+            <field name="name">view.is.demande.conges.form</field>
+            <field name="model">is.demande.conges</field>
+            <field name="arch" type="xml">
+                <form string="Demande de congés">
+                    <header>
+                        <button name="niveau1_send_mail_action" string="Vers Validation Niveau 1"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|',('state','!=','creation'),('valideur_n1', '=', False)]}" />
+                        <button name="%(action_is_gestion_des_absences_wiz)d" type="action"
+                            string="Vers Création" class="oe_highlight"
+                            attrs="{'invisible': [('vers_creation_annuler_btn_vsb','=',False)]}" />
+                        <button name="%(action_is_gestion_vers_annuler_wiz)d" type="action"
+                            string="Vers Annuler" class="oe_highlight"
+                            attrs="{'invisible': [('vers_creation_annuler_btn_vsb','=',False)]}" />
+                        <button name="niveau2_send_mail_action" string="Vers Validation Niveau 2"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|',('state','!=','validation_n1'),('valideur_n2', '=', False)]}" />
+                        <button name="rh_send_mail_action" string="Vers Validation RH"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|',('state','not in',['creation']),('valideur_n1', '!=', False)]}" />
+                        <button name="rh_send_mail_action" string="Vers Validation RH"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|',('state','not in',['validation_n1']),('valideur_n2', '!=', False)]}" />
+                        <button name="rh_send_mail_action" string="Vers Validation RH"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('state','not in',['validation_n2'])]}" />
+                        <button name="vers_solde_action" string="Vers Soldé" type="object"
+                            states="validation_rh" />
+                        <button name="vers_annule_action" string="Vers Annulé"
+                            type="object" states="solde" />
+                        <field name="state" widget="statusbar"
+                            statusbar_visible="creation,validation_n1,validation_n2,validation_rh,solde" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1" />
+                                <field name="date_creation" readonly="1" />
+                                <field name="valideur_n1" readonly="1" />
+                                <field name="valideur_n2" readonly="1" />
+                                <field name="responsable_rh_id" readonly="1" />
+                                <field name="type_demande" />
+                                <field name="rtt" />
+                                <field name="date_debut"
+                                    attrs="{'invisible': [('type_demande', '!=', 'cp_rtt_journee')]}" />
+                                <field name="le"
+                                    attrs="{'invisible': [('type_demande', 'not in', ['cp_rtt_demi_journee', 'rc_heures'])]}" />
+                                <field name="heure_debut"
+                                    attrs="{'invisible': [('type_demande', '!=', 'rc_heures')]}" />
+                                <field name="raison_du_retour" readonly="True" />
+                            </group>
+                            <group>
+                                <field name="createur_id" readonly="1" />
+                                <field name="demandeur_id" />
+                                <field name="date_validation_n1" readonly="1" />
+                                <field name="date_validation_n2" readonly="1" />
+                                <field name="date_validation_rh" readonly="1" />
+                                <field name="cp" />
+                                <field name="rc" />
+                                <field name="date_fin"
+                                    attrs="{'invisible': [('type_demande', '!=', 'cp_rtt_journee')]}" />
+                                <field name="matin_ou_apres_midi"
+                                    attrs="{'invisible': [('type_demande', '!=', 'cp_rtt_demi_journee')]}" />
+                                <field name="heure_fin"
+                                    attrs="{'invisible': [('type_demande', '!=', 'rc_heures')]}" />
+                                <field name="raison_annulation" readonly="True" />
+                                <field name="vers_creation_annuler_btn_vsb" invisible="1" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_demande_conges_tree">
+            <field name="name">view.is.demande.conges.tree</field>
+            <field name="model">is.demande.conges</field>
+            <field name="arch" type="xml">
+                <tree string="Demande de congés">
+                    <field name="name" />
+                    <field name="date_creation" />
+                    <field name="valideur_n1" />
+                    <field name="valideur_n2" />
+                    <field name="responsable_rh_id" />
+                    <field name="createur_id" />
+                    <field name="demandeur_id" />
+                    <field name="date_validation_n1" />
+                    <field name="date_validation_n2" />
+                    <field name="date_validation_rh" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_demande_conges_action">
+            <field name="name">Demande de congés</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.demande.conges</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_hr_gestion_des_absences" parent="hr.menu_hr_root"
+            name="Gestion des absences" sequence="1" />
+        <menuitem id="menu_is_of_en_cours" parent="menu_hr_gestion_des_absences"
+            name="Demande de congés" sequence="10" action="is_demande_conges_action" />
+
+        <!-- Demande d’absence -->
+        <record model="ir.ui.view" id="view_is_demande_absence_form">
+            <field name="name">view.is.demande.absence.form</field>
+            <field name="model">is.demande.absence</field>
+            <field name="arch" type="xml">
+                <form string="Demande d’absence">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" readonly="True" />
+                                <field name="createur_id" readonly="True" />
+                                <field name="type_absence" />
+                                <field name="employe_ids" widget="many2many_tags" />
+                            </group>
+                            <group>
+                                <field name="date_creation" readonly="True" />
+                                <field name="date_debut" />
+                                <field name="date_fin" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_demande_absence_tree">
+            <field name="name">view.is.demande.absence.tree</field>
+            <field name="model">is.demande.absence</field>
+            <field name="arch" type="xml">
+                <tree string="Demande d’absence">
+                    <field name="name" />
+                    <field name="createur_id" />
+                    <field name="type_absence" />
+                    <field name="date_creation" />
+                    <field name="date_debut" />
+                    <field name="date_fin" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_demande_absence_action">
+            <field name="name">Absence</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.demande.absence</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_is_demande_absence" parent="menu_hr_gestion_des_absences"
+            name="Absence" sequence="11" action="is_demande_absence_action" />
+
+        <!-- Type d’absence -->
+        <record model="ir.ui.view" id="view_is_demande_absence_type_form">
+            <field name="name">view.is.demande.absence.type.form</field>
+            <field name="model">is.demande.absence.type</field>
+            <field name="arch" type="xml">
+                <form string="Type d’absence">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_demande_absence_type_tree">
+            <field name="name">view.is.demande.absence.tree</field>
+            <field name="model">is.demande.absence.type</field>
+            <field name="arch" type="xml">
+                <tree string="Type d’absence">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_demande_absence_type_action">
+            <field name="name">Type d’absence</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.demande.absence.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_is_demande_absence_type" parent="menu_hr_gestion_des_absences"
+            name="Type d’absence" sequence="20" action="is_demande_absence_type_action" />
+
+    </data>
+</openerp>

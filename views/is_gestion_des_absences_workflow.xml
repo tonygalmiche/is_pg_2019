@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="wkf_is_demande_conges" model="workflow">
+            <field name="name">is.demande.conges.basic</field>
+            <field name="osv">is.demande.conges</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <!-- Activity -->
+        <record id="act_creation" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_demande_conges" />
+            <field name="flow_start">True</field>
+            <field name="name">creation</field>
+        </record>
+
+        <record id="act_validation_n1" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_demande_conges" />
+            <field name="name">validation_n1</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'validation_n1'})</field>
+        </record>
+        <record id="act_validation_n2" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_demande_conges" />
+            <field name="name">validation_n2</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'validation_n2'})</field>
+        </record>
+        <record id="act_validation_rh" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_demande_conges" />
+            <field name="name">validation_rh</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'validation_rh'})</field>
+        </record>
+        <record id="act_solde" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_demande_conges" />
+            <field name="name">solde</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'solde'})</field>
+        </record>
+        <record id="act_annule" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_demande_conges" />
+            <field name="name">annule</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'annule'})</field>
+        </record>
+
+        <!-- Transistion -->
+
+        <record id="is_creation_validation_n1" model="workflow.transition">
+            <field name="act_from" ref="act_creation" />
+            <field name="act_to" ref="act_validation_n1" />
+            <field name="signal">validation_n1</field>
+        </record>
+        <record id="is_validation_n1_validation_n2" model="workflow.transition">
+            <field name="act_from" ref="act_validation_n1" />
+            <field name="act_to" ref="act_validation_n2" />
+            <field name="signal">validation_n2</field>
+        </record>
+        <record id="is_creation_validation_rh" model="workflow.transition">
+            <field name="act_from" ref="act_creation" />
+            <field name="act_to" ref="act_validation_rh" />
+            <field name="signal">validation_rh</field>
+        </record>
+        <record id="is_validation_n1_validation_rh" model="workflow.transition">
+            <field name="act_from" ref="act_validation_n1" />
+            <field name="act_to" ref="act_validation_rh" />
+            <field name="signal">validation_rh</field>
+        </record>
+        <record id="is_validation_n2_validation_rh" model="workflow.transition">
+            <field name="act_from" ref="act_validation_n2" />
+            <field name="act_to" ref="act_validation_rh" />
+            <field name="signal">validation_rh</field>
+        </record>
+        <record id="is_validation_rh_solde" model="workflow.transition">
+            <field name="act_from" ref="act_validation_rh" />
+            <field name="act_to" ref="act_solde" />
+            <field name="signal">solde</field>
+        </record>
+        <record id="is_solde_annule" model="workflow.transition">
+            <field name="act_from" ref="act_solde" />
+            <field name="act_to" ref="act_annule" />
+            <field name="signal">annule</field>
+        </record>
+
+
+    </data>
+</openerp>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="is_demande_conges_creation_rule" model="ir.rule">
+            <field name="name">Demande de congés: Access to user in 'Création' state</field>
+            <field name="model_id" ref="model_is_demande_conges" />
+            <field name="domain_force">['&amp;', ('state','=','creation'), '|', '|', '|', '|',
+                ('createur_id', '=', user.id),
+                ('demandeur_id', '=', user.id),
+                ('valideur_n1','=',user.id),
+                ('valideur_n2','=',user.id),
+                ('responsable_rh_id','=',user.id) ]
+            </field>
+            <field eval="1" name="perm_unlink" />
+            <field eval="1" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="1" name="perm_create" />
+        </record>
+
+        <record id="is_demande_conges_validation_n1_read_rule" model="ir.rule">
+            <field name="name">Demande de congés: Read Access to user in 'niveau 1' state</field>
+            <field name="model_id" ref="model_is_demande_conges" />
+            <field name="domain_force">['&amp;', ('state','=','validation_n1'), '|',
+                ('createur_id', '=', user.id),
+                ('demandeur_id', '=', user.id)]
+            </field>
+            <field eval="0" name="perm_unlink" />
+            <field eval="0" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="0" name="perm_create" />
+        </record>
+        <record id="is_demande_conges_validation_n1_write_rule" model="ir.rule">
+            <field name="name">Demande de congés: Write Access to user in 'niveau 1' state</field>
+            <field name="model_id" ref="model_is_demande_conges" />
+            <field name="domain_force">['&amp;', ('state','=','validation_n1'), '|', '|',
+                ('valideur_n1', '=', user.id),
+                ('valideur_n2', '=', user.id),
+                ('responsable_rh_id', '=', user.id)]
+            </field>
+            <field eval="0" name="perm_unlink" />
+            <field eval="1" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="1" name="perm_create" />
+        </record>
+
+        <record id="is_demande_conges_validation_n2_read_rule" model="ir.rule">
+            <field name="name">Demande de congés: Read Access to user in 'niveau 2' state</field>
+            <field name="model_id" ref="model_is_demande_conges" />
+            <field name="domain_force">['&amp;', ('state','=','validation_n2'), '|', '|',
+                ('createur_id', '=', user.id),
+                ('demandeur_id', '=', user.id),
+                ('valideur_n1', '=', user.id)]
+            </field>
+            <field eval="0" name="perm_unlink" />
+            <field eval="0" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="0" name="perm_create" />
+        </record>
+        <record id="is_demande_conges_validation_n2_write_rule" model="ir.rule">
+            <field name="name">Demande de congés: Write Access to user in 'niveau 2' state</field>
+            <field name="model_id" ref="model_is_demande_conges" />
+            <field name="domain_force">['&amp;', ('state','=','validation_n2'), '|',
+                ('valideur_n2', '=', user.id),
+                ('responsable_rh_id', '=', user.id)]
+            </field>
+            <field eval="0" name="perm_unlink" />
+            <field eval="1" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="1" name="perm_create" />
+        </record>
+
+        <record id="is_demande_conges_validation_rh_read_rule" model="ir.rule">
+            <field name="name">Demande de congés: Read Access to user in 'validation rh' state</field>
+            <field name="model_id" ref="model_is_demande_conges" />
+            <field name="domain_force">['&amp;', ('state','=','validation_rh'), '|', '|', '|',
+                ('createur_id', '=', user.id),
+                ('demandeur_id', '=', user.id),
+                ('valideur_n1','=',user.id),
+                ('valideur_n2','=',user.id)]
+            </field>
+            <field eval="0" name="perm_unlink" />
+            <field eval="0" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="0" name="perm_create" />
+        </record>
+        <record id="is_demande_conges_validation_rh_write_rule" model="ir.rule">
+            <field name="name">Demande de congés: Write Access to user in 'validation rh' state</field>
+            <field name="model_id" ref="model_is_demande_conges" />
+            <field name="domain_force">[('state','=','validation_rh'), ('responsable_rh_id', '=', user.id)]
+            </field>
+            <field eval="0" name="perm_unlink" />
+            <field eval="1" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="1" name="perm_create" />
+        </record>
+
+        <record id="is_demande_conges_solde_annuel_rule" model="ir.rule">
+            <field name="name">Demande de congés: Access to user in 'Création' state</field>
+            <field name="model_id" ref="model_is_demande_conges" />
+            <field name="domain_force">['&amp;', ('state','in',['solde','annule']), '|', '|', '|', '|',
+                ('createur_id', '=', user.id),
+                ('demandeur_id', '=', user.id),
+                ('valideur_n1','=',user.id),
+                ('valideur_n2','=',user.id),
+                ('responsable_rh_id','=',user.id) ]
+            </field>
+            <field eval="0" name="perm_unlink" />
+            <field eval="0" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="0" name="perm_create" />
+        </record>
+
+        <!-- Gestionnaire des absences group -->
+        <record model="res.groups" id="is_gestionnaire_des_absences_group" >
+            <field name="name">Gestionnaire des absences</field>
+            <field name="comment"></field>
+            <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
+        </record>
+
+    </data>
+</openerp>

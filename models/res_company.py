@@ -43,4 +43,6 @@ class ResCompany(models.Model):
             principale_grp_id.write({'users': [(5, user) for user in base_group_id.users.ids]})
         return super(ResCompany, self).write(vals)
 
+    is_responsable_rh_id = fields.Many2one('res.users', string='Responsable RH')
+
 
