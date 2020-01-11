@@ -280,6 +280,19 @@
                                         </table>
                                     </td>
                                 </tr>
+
+
+                                <tr>
+                                    <td>
+                                        Operateurs autorisés en saisie et à faire le contrôle : 
+                                        <t t-foreach="o.operateur_ids" t-as="rec">
+                                            <span t-esc="rec.name"/>, 
+                                        </t>
+                                    </td>
+                                </tr>
+
+
+
                             </table>
                             <t t-if="o.operation_standard_ids">
                             <table class="tablecls" width="100%">
