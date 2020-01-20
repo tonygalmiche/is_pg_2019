@@ -35,7 +35,10 @@ class is_ctrl_budget_ana_annee(models.Model):
             #*******************************************************************
 
             #** Recherche des lignes actuelles *********************************
-            lignes = self.env['is.ctrl.budget.ana.product'].search([])
+            filtre=[
+                ('annee_id','=',obj.id),
+            ]
+            lignes = self.env['is.ctrl.budget.ana.product'].search(filtre)
             ligne_ids=[]
             for ligne in lignes:
                 ligne_ids.append(ligne.product_id.id)
