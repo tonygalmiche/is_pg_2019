@@ -61,8 +61,8 @@
                             attrs="{'invisible': ['|',('valid_btn_vsb','=',False),('state','not in',['validation_n2'])]}" />
                         <button name="vers_solde_action" string="Vers Soldé" type="object"
                             attrs="{'invisible': ['|',('valid_btn_vsb','=',False),('state','!=','validation_rh')]}" />
-                        <button name="vers_annule_action" string="Vers Annulé"
-                            type="object" states="solde" />
+                        <!-- <button name="vers_annule_action" string="Vers Annulé"
+                            type="object" states="solde" /> -->
                         <field name="state" widget="statusbar"
                             statusbar_visible="creation,validation_n1,validation_n2,validation_rh,solde" />
                     </header>
@@ -94,8 +94,8 @@
                                 <field name="date_validation_n1" readonly="1" />
                                 <field name="date_validation_n2" readonly="1" />
                                 <field name="date_validation_rh" readonly="1" />
-                                <field name="raison_annulation" readonly="True" />
-                                <field name="raison_du_retour" readonly="True" />
+                                <field name="raison_annulation" readonly="True" attrs="{'invisible': [('raison_annulation','=',False)]}"/>
+                                <field name="raison_du_retour" readonly="True" attrs="{'invisible': [('raison_du_retour','=',False)]}"/>
                                 <field name="vers_creation_annuler_btn_vsb" invisible="1" />
                                 <field name="valid_btn_vsb" invisible="1" />
                                 <field name="fld_vsb" invisible="1" />

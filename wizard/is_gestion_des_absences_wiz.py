@@ -28,6 +28,9 @@ class is_gestion_des_absences_wiz(models.TransientModel):
             """ 
             conges.sudo().raison_du_retour = self.conges_reason
             conges.sudo().envoi_mail(email_from, email_to, email_cc, subject, body_html)
+            conges.sudo().state = 'creation'
+            conges.sudo().delete_workflow()
+            conges.sudo().create_workflow()
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -56,5 +59,6 @@ class is_gestion_vers_annuler_wiz(models.TransientModel):
             """ 
             conges.sudo().raison_annulation = self.conges_reason
             conges.sudo().envoi_mail(email_from, email_to, email_cc, subject, body_html)
+            conges.sudo().signal_workflow('annule')
         return {'type': 'ir.actions.act_window_close'}
 
