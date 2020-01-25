@@ -133,19 +133,20 @@ class is_ot(models.Model):
     @api.multi
     def action_annule(self):
         for obj in self:
-            subject = u'[' + obj.name + u'] Gestion des OT - Annule'
-            email_to = obj.demandeur_id.email
-            user = self.env['res.users'].browse(self._uid)
-            email_from = user.email
-            nom = user.name
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.ot'
-            body_html = u""" 
-                <p>Bonjour,</p> 
-                <p>""" + nom + """ vient de passer la getion des ot <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Annule'.</p> 
-                <p>Merci d'en prendre connaissance.</p> 
-            """ 
-            self.envoi_mail(email_from, email_to, subject, body_html)
+            if obj.demandeur_id.id!=1:
+                subject = u'[' + obj.name + u'] Gestion des OT - Annule'
+                email_to = obj.demandeur_id.email
+                user = self.env['res.users'].browse(self._uid)
+                email_from = user.email
+                nom = user.name
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.ot'
+                body_html = u""" 
+                    <p>Bonjour,</p> 
+                    <p>""" + nom + """ vient de passer la getion des ot <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Annule'.</p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                """ 
+                self.envoi_mail(email_from, email_to, subject, body_html)
         return self.write({'state': 'annule'})
 
 
