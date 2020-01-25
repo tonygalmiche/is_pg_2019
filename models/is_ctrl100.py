@@ -71,6 +71,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
 
     @api.multi
     def get_defautheque_data(self):
+        cr = self._cr
         res = False
         defautheque = []
         rec_dict = defaultdict(list)
@@ -78,11 +79,23 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
         for obj in self:
             defautheque_ids = defautheque_obj.search([('gamme_id','=',obj.id)])
             for rec in defautheque_ids:
+                SQL = """
+                    select sum(l.nb_rebuts) 
+                    from is_ctrl100_defaut_line l inner join is_ctrl100_defaut d on d.id=l.defautid 
+                    where 
+                        d.gamme_id="""+str(obj.id)+""" and
+                        l.defaut_id="""+str(rec.id)+"""
+                """
+                cr.execute(SQL)
+                res_ids = cr.fetchall()
+                nb_rebuts = 0
+                for res in res_ids:
+                    nb_rebuts = res[0]
                 recdict = {
-                    'name': rec.name,
-                    'defaut': rec.defaut,
-                    'photo': rec.photo,
-                    'quantite': 'xxx',
+                    'name'     : rec.name,
+                    'defaut'   : rec.defaut,
+                    'photo'    : rec.photo,
+                    'nb_rebuts': nb_rebuts,
                 }
                 defautheque.append(recdict)
         return defautheque
@@ -110,19 +123,22 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                         'date_saisie': rec.date_saisie,
                         'tps_passe': rec.tps_passe,
                         'nb_pieces_controlees': rec.nb_pieces_controlees,
-                        #'employe_id': '',
                         'nb_rebuts': '',
                         'nb_repris': '',
                         'defaut_id': ''
                     }
                     default.append(recdict)
                 for data in rec.defautheque_ids:
+                    if rec.employe_id:
+                        controleur=rec.employe_id.name
+                    else:
+                        controleur=rec.createur_id.name
                     recdict = {
                         'tracabilite_nm': tracabilite_nm,
                         'date_saisie': rec.date_saisie,
+                        'controleur': controleur,
                         'tps_passe': rec.tps_passe,
                         'nb_pieces_controlees': rec.nb_pieces_controlees,
-                        #'employe_id': self.env.user.login,
                         'nb_rebuts': data.nb_rebuts,
                         'nb_repris': data.nb_repris,
                         'defaut_id': data.defaut_id.name

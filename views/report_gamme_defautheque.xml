@@ -149,34 +149,38 @@
                             <t t-set="default_values" t-value="o.get_default_data()" />
                             <t t-if="default_values">
                             <table class="tablecls" width="100%">
-                                <th width="15%">
-                                    <div>Code contrôleur</div>
-                                </th>
-                                <th width="21%">
-                                    <div>Traçabilité produit</div>
-                                </th>
-                                <th width="12%">
-                                    <div>Date contrôle</div>
-                                </th>
-                                <th width="10%">
-                                    <div>Temps contrôle</div>
-                                </th>
-                                <th width="10%">
-                                    <div>Quantité contrôlée</div>
-                                </th>
-                                <th width="10%">
-                                    <div>Quantité NOK</div>
-                                </th>
-                                <th width="10%">
-                                    <div>Quantité reprise</div>
-                                </th>
-                                <th width="12%">
-                                    <div>Codes des OP contrôlés</div>
-                                </th>
+                                <thead>
+                                    <tr>
+                                        <th width="15%">
+                                            <div>Contrôleur</div>
+                                        </th>
+                                        <th width="21%">
+                                            <div>Traçabilité produit</div>
+                                        </th>
+                                        <th width="12%">
+                                            <div>Date contrôle</div>
+                                        </th>
+                                        <th width="10%">
+                                            <div>Temps contrôle</div>
+                                        </th>
+                                        <th width="10%">
+                                            <div>Quantité contrôlée</div>
+                                        </th>
+                                        <th width="10%">
+                                            <div>Quantité NOK</div>
+                                        </th>
+                                        <th width="10%">
+                                            <div>Quantité reprise</div>
+                                        </th>
+                                        <th width="12%">
+                                            <div>Codes des OP contrôlés</div>
+                                        </th>
+                                    </tr>
+                                </thead>
                                 <t t-foreach="default_values" t-as="rec">
                                     <tr>
                                         <td width="15%">
-                                            <!--<span t-esc="rec['employe_id']" />-->
+                                            <span t-esc="rec['controleur']" />
                                         </td>
                                         <td width="21%">
                                             <span t-esc="rec['tracabilite_nm']" />
@@ -207,38 +211,36 @@
                             <t t-set="defautheque_values" t-value="o.get_defautheque_data()" />
                             <t t-if="defautheque_values">
                             <table class="tablecls" width="100%">
-                                <th width="20%">
-                                    <div>N° du défaut</div>
-                                </th>
-                                <th width="30%">
-                                    <div>Description</div>
-                                </th>
-                                <th width="30%">
-                                    <div>Photo</div>
-                                </th>
-                                <th width="20%">
-                                    <div>Quantité</div>
-                                </th>
-                                <t t-foreach="defautheque_values" t-as="rec">
+                                <thead>
                                     <tr>
-                                        <td width="15%">
-                                            <span t-esc="rec['name']" />
-                                        </td>
-                                        <td width="21%">
-                                            <t t-raw="rec['defaut'].replace('\n', '&lt;br&gt;')" />
-                                        </td>
-                                        <td width="12%">
-                                            <div>
-                                                <img t-if="rec['photo']"
-                                                             t-att-src="'data:image/png;base64,%s' % rec['photo']"
-                                                             class="imgclass0" />
-                                            </div>
-                                        </td>
-                                        <td width="10%">
-                                            <span t-esc="rec['quantite']" />
-                                        </td>
+                                        <th width="20%">N° du défaut</th>
+                                        <th width="30%">Description</th>
+                                        <th width="30%">Photo</th>
+                                        <th width="20%">Nb rebuts</th>
                                     </tr>
-                                </t>
+                                </thead>
+                                <tboby>
+                                    <t t-foreach="defautheque_values" t-as="rec">
+                                        <tr>
+                                            <td width="15%">
+                                                <span t-esc="rec['name']" />
+                                            </td>
+                                            <td width="21%">
+                                                <t t-raw="rec['defaut'].replace('\n', '&lt;br&gt;')" />
+                                            </td>
+                                            <td width="12%">
+                                                <div>
+                                                    <img t-if="rec['photo']"
+                                                                 t-att-src="'data:image/png;base64,%s' % rec['photo']"
+                                                                 class="imgclass0" />
+                                                </div>
+                                            </td>
+                                            <td width="10%">
+                                                <span t-esc="rec['nb_rebuts']" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tboby>
                             </table>
                             </t>
                         </div>
