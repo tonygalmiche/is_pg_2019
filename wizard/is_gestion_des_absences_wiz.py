@@ -26,8 +26,8 @@ class is_gestion_des_absences_wiz(models.TransientModel):
                 <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + conges.name + """</a> à l'état 'createur_id - raison_du_retour'.</p> 
                 <p>Merci d'en prendre connaissance.</p> 
             """ 
-            conges.raison_du_retour = self.conges_reason
-            conges.envoi_mail(email_from, email_to, email_cc, subject, body_html)
+            conges.sudo().raison_du_retour = self.conges_reason
+            conges.sudo().envoi_mail(email_from, email_to, email_cc, subject, body_html)
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -54,7 +54,7 @@ class is_gestion_vers_annuler_wiz(models.TransientModel):
                 <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + conges.name + """</a> à l'état 'createur_id - raison_annulation'.</p> 
                 <p>Merci d'en prendre connaissance.</p> 
             """ 
-            conges.raison_annulation = self.conges_reason
-            conges.envoi_mail(email_from, email_to, email_cc, subject, body_html)
+            conges.sudo().raison_annulation = self.conges_reason
+            conges.sudo().envoi_mail(email_from, email_to, email_cc, subject, body_html)
         return {'type': 'ir.actions.act_window_close'}
 

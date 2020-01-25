@@ -139,6 +139,21 @@ class is_demande_conges(models.Model):
                     if str(current_date) <= obj.date_debut:
                         if obj.responsable_rh_id and obj.responsable_rh_id.id == self._uid:
                             obj.vers_creation_annuler_btn_vsb = True
+# 
+    @api.depends('state','demandeur_id','createur_id','responsable_rh_id','valideur_n1','valideur_n1')
+    def _get_btn_visible(self):
+        for obj in self:
+            if obj.state == 'validation_n1' and obj.responsable_rh_id and obj.responsable_rh_id.id == self._uid \
+                                            or obj.valideur_n2 and obj.valideur_n2.id == self._uid:
+                obj.valid_btn_vsb = True
+            if obj.state == 'validation_rh' and obj.responsable_rh_id and obj.responsable_rh_id.id == self._uid:
+                obj.valid_btn_vsb = True
+            if obj.state in ['validation_n2','validation_n1','creation'] and obj.responsable_rh_id and obj.responsable_rh_id.id == self._uid:
+                obj.valid_btn_vsb = True
+            if self._uid == 1:
+                obj.valid_btn_vsb = True
+            if obj.responsable_rh_id and obj.responsable_rh_id.id == self._uid:
+                obj.fld_vsb = True
 
 
     name                          = fields.Char(u"N° demande")
@@ -178,6 +193,8 @@ class is_demande_conges(models.Model):
                                         ('solde', 'Soldé'),
                                         ('annule', u'Annulé')], string='State', readonly=True, default='creation')
     vers_creation_annuler_btn_vsb = fields.Boolean(string='Creation Annuler Btn Vsb', compute='_get_visible', default=False, readonly=True)
+    valid_btn_vsb                 = fields.Boolean(string='Valide Btn Vsb', compute='_get_btn_visible', default=False, readonly=True)
+    fld_vsb                       = fields.Boolean(string='Field Vsb', compute='_get_btn_visible', default=False, readonly=True)
 
 
 class is_demande_absence_type(models.Model):
