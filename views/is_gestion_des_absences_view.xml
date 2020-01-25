@@ -130,7 +130,11 @@
             <field name="res_model">is.demande.conges</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_hr_gestion_des_absences" parent="hr.menu_hr_root"
+        <menuitem name="Absences"
+            id="menu_absences_root"
+            groups="base.group_user"
+            sequence="89"/>
+        <menuitem id="menu_hr_gestion_des_absences" parent="menu_absences_root"
             name="Gestion des absences" sequence="1" />
         <menuitem id="menu_is_of_en_cours" parent="menu_hr_gestion_des_absences"
             name="Demande de congés" sequence="10" action="is_demande_conges_action" />
