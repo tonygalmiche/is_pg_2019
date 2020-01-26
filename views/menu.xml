@@ -116,6 +116,7 @@
             <field name="name">Préventif moule</field>
             <field name="sequence">29</field>
             <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
         </record>
         <menuitem id="is_mold_preventif_menu"  sequence="10" parent="is_preventif_moule_main_menu" action="is_mold_preventif_action"  name="Préventif Moules"/>
         <menuitem id="is_preventif_moule_menu" sequence="20" parent="is_preventif_moule_main_menu" action="is_preventif_moule_action" name="Historique des préventifs"/>

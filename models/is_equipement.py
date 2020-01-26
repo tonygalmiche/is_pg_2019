@@ -255,6 +255,7 @@ class is_equipement_type(models.Model):
             'code'                  : tools.ustr(et.code),
             'champ_line_ids'        : self._get_champ_line_ids(et, DB, USERID, USERPASS, sock),
             'is_database_origine_id': et.id,
+            'active'                : et.active,
         }
         return is_equipement_type_vals
 
