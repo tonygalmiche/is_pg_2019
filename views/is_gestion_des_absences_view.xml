@@ -38,14 +38,55 @@
             <field name="arch" type="xml">
                 <form string="Demande de congés">
                     <header>
+                        <field name="vers_creation_btn_vsb"      invisible="1"/>
+                        <field name="vers_annuler_btn_vsb"       invisible="1"/>
+                        <field name="vers_validation_n1_btn_vsb" invisible="1"/>
+                        <field name="vers_validation_n2_btn_vsb" invisible="1"/>
+                        <field name="vers_validation_rh_btn_vsb" invisible="1"/>
+                        <field name="vers_solde_btn_vsb"         invisible="1"/>
+
+                        <button 
+                            string="Vers Validation Niveau 1"
+                            name="vers_validation_n1_action"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('vers_validation_n1_btn_vsb','=',False)]}" />
+                        <button 
+                            string="Vers Validation Niveau 2"
+                            name="vers_validation_n2_action"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('vers_validation_n2_btn_vsb','=',False)]}" />
+                        <button 
+                            string="Vers Validation RH"
+                            name="vers_validation_rh_action"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('vers_validation_rh_btn_vsb','=',False)]}" />
+                        <button 
+                            string="Vers Soldé"
+                            name="vers_solde_action"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('vers_solde_btn_vsb','=',False)]}" />
+
+                        <button 
+                            string="Vers Création"
+                            name="%(action_is_gestion_des_absences_wiz)d"
+                            type="action"
+                            attrs="{'invisible': [('vers_creation_btn_vsb','=',False)]}" />
+                        <button
+                            string="Vers Refusé"
+                            name="%(action_is_gestion_vers_annuler_wiz)d"
+                            type="action"
+                            attrs="{'invisible': [('vers_annuler_btn_vsb','=',False)]}" />
+
+
+                        <!--
                         <button name="niveau1_send_mail_action" string="Vers Validation Niveau 1"
                             type="object" class="oe_highlight"
                             attrs="{'invisible': ['|',('state','!=','creation'),('valideur_n1', '=', False)]}" />
                         <button name="%(action_is_gestion_des_absences_wiz)d" type="action"
-                            string="Vers Création" class="oe_highlight"
+                            string="Vers Création"
                             attrs="{'invisible': [('vers_creation_annuler_btn_vsb','=',False)]}" />
                         <button name="%(action_is_gestion_vers_annuler_wiz)d" type="action"
-                            string="Vers Annuler" class="oe_highlight"
+                            string="Vers Annuler"
                             attrs="{'invisible': [('vers_creation_annuler_btn_vsb','=',False)]}" />
                         <button name="niveau2_send_mail_action" string="Vers Validation Niveau 2"
                             type="object" class="oe_highlight"
@@ -61,8 +102,8 @@
                             attrs="{'invisible': ['|',('valid_btn_vsb','=',False),('state','not in',['validation_n2'])]}" />
                         <button name="vers_solde_action" string="Vers Soldé" type="object"
                             attrs="{'invisible': ['|',('valid_btn_vsb','=',False),('state','!=','validation_rh')]}" />
-                        <!-- <button name="vers_annule_action" string="Vers Annulé"
-                            type="object" states="solde" /> -->
+                        -->
+
                         <field name="state" widget="statusbar"
                             statusbar_visible="creation,validation_n1,validation_n2,validation_rh,solde" />
                     </header>
@@ -96,8 +137,7 @@
                                 <field name="date_validation_rh" readonly="1" />
                                 <field name="raison_annulation" readonly="True" attrs="{'invisible': [('raison_annulation','=',False)]}"/>
                                 <field name="raison_du_retour" readonly="True" attrs="{'invisible': [('raison_du_retour','=',False)]}"/>
-                                <field name="vers_creation_annuler_btn_vsb" invisible="1" />
-                                <field name="valid_btn_vsb" invisible="1" />
+                                <!--<field name="valid_btn_vsb" invisible="1" />-->
                                 <field name="fld_vsb" invisible="1" />
                             </group>
                         </group>

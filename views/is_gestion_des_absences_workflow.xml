@@ -78,11 +78,13 @@
             <field name="act_to" ref="act_is_demande_conges_solde" />
             <field name="signal">solde</field>
         </record>
+        <!--
         <record id="is_solde_annule" model="workflow.transition">
             <field name="act_from" ref="act_is_demande_conges_solde" />
             <field name="act_to" ref="act_is_demande_conges_annule" />
             <field name="signal">annule</field>
         </record>
+        -->
         <record id="is_validation_n1_annule" model="workflow.transition">
             <field name="act_from" ref="act_is_demande_conges_validation_n1" />
             <field name="act_to" ref="act_is_demande_conges_annule" />
@@ -90,6 +92,11 @@
         </record>
         <record id="is_validation_n2_annule" model="workflow.transition">
             <field name="act_from" ref="act_is_demande_conges_validation_n2" />
+            <field name="act_to" ref="act_is_demande_conges_annule" />
+            <field name="signal">annule</field>
+        </record>
+        <record id="is_validation_rh_annule" model="workflow.transition">
+            <field name="act_from" ref="act_is_demande_conges_validation_rh" />
             <field name="act_to" ref="act_is_demande_conges_annule" />
             <field name="signal">annule</field>
         </record>

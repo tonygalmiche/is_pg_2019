@@ -33,7 +33,7 @@
             <field name="name">view.is.gestion.vers.annuler.wiz</field>
             <field name="model">is.gestion.vers.annuler.wiz</field>
             <field name="arch" type="xml">
-                <form string="Raison annulation">
+                <form string="Raison du refus">
                     <group>
                         <field name="conges_reason" />
                     </group>
@@ -48,7 +48,7 @@
         </record>
 
         <record id="action_is_gestion_vers_annuler_wiz" model="ir.actions.act_window">
-            <field name="name">Raison annulation</field>
+            <field name="name">Raison du refus</field>
             <field name="res_model">is.gestion.vers.annuler.wiz</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
