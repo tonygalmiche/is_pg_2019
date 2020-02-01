@@ -290,62 +290,78 @@
                                         </t>
                                     </td>
                                 </tr>
-
-
-
                             </table>
+                            <br/>
+
                             <t t-if="o.operation_standard_ids">
-                            <table class="tablecls" width="100%">
-                                <th width="80%">
-                                    <div>Liste des opérations standard</div>
-                                </th>
-                                <th width="20%">
-                                    <div>Temps (s/pièce)</div>
-                                </th>
-                                <t t-foreach="o.operation_standard_ids" t-as="rec">
-                                    <t t-if="rec.active">
-                                    <tr>
-                                        <td width="80%"  style="text-align: left">
-                                            <span t-esc="rec.operation_standard_id.name" />
-                                        </td>
-                                        <td width="20%" style="text-align: right">
-                                            <span t-esc="rec.temps_etape" />
-                                        </td>
-                                    </tr>
+                                <table class="tablecls" width="100%">
+                                    <th width="80%">
+                                        <div>Liste des opérations standards</div>
+                                    </th>
+                                    <th width="20%">
+                                        <div>Temps (s/pièce)</div>
+                                    </th>
+                                    <t t-foreach="o.operation_standard_ids" t-as="rec">
+                                        <t t-if="rec.active">
+                                        <tr>
+                                            <td width="80%"  style="text-align: left">
+                                                <span t-esc="rec.operation_standard_id.name" />
+                                            </td>
+                                            <td width="20%" style="text-align: right">
+                                                <span t-esc="rec.temps_etape" />
+                                            </td>
+                                        </tr>
+                                        </t>
                                     </t>
-                                </t>
-                            </table>
+                                </table>
                             </t>
                             <br/>
                             <t t-if="o.operation_specifique_ids">
-                            <table class="tablecls" width="100%">
-                                <th width="45%">
-                                    <div>Liste des opérations spécifiques </div>
-                                </th>
-                                <th width="35%">
-                                    <div>Photo</div>
-                                </th>
-                                <th width="20%">
-                                    <div>Temps(s/pièce)</div>
-                                </th>
-                                <t t-foreach="o.operation_specifique_ids" t-as="rec">
-                                    <tr>
-                                        <td width="45%">
-                                            <div align="left">
-                                                <t t-raw="rec.operation.replace('\n', '&lt;br&gt;')" />
-                                            </div>
-                                        </td>
-                                        <td width="35%">
-                                            <img t-if="rec.photo"
-                                                                t-att-src="'data:image/png;base64,%s' % rec.photo"
-                                                                class="imgclass0" />
-                                        </td>
-                                        <td width="20%">
-                                            <span t-esc="rec.temps_etape" />
-                                        </td>
-                                    </tr>
-                                </t>
-                            </table>
+                                <table class="tablecls" width="100%">
+                                    <th width="45%">
+                                        <div>Liste des opérations spécifiques</div>
+                                    </th>
+                                    <th width="35%">
+                                        <div>Photo</div>
+                                    </th>
+                                    <th width="20%">
+                                        <div>Temps(s/pièce)</div>
+                                    </th>
+                                    <t t-foreach="o.operation_specifique_ids" t-as="rec">
+                                        <tr>
+                                            <td width="45%">
+                                                <div align="left">
+                                                    <t t-raw="rec.operation.replace('\n', '&lt;br&gt;')" />
+                                                </div>
+                                            </td>
+                                            <td width="35%">
+                                                <img t-if="rec.photo"
+                                                                    t-att-src="'data:image/png;base64,%s' % rec.photo"
+                                                                    class="imgclass0" />
+                                            </td>
+                                            <td width="20%">
+                                                <span t-esc="rec.temps_etape" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </t>
+                            <br/>
+                            <t t-if="o.risque_lie_ids">
+                                <table class="tablecls" width="100%">
+                                    <thead>
+                                        <th width="40%">Risque lié à cette opération</th>
+                                        <th width="60%">Description du verrou mis en place pour répondre à ce risque</th>
+                                    </thead>
+                                    <tboby>
+                                        <t t-foreach="o.risque_lie_ids" t-as="rec">
+                                            <tr>
+                                                <td style="text-align: left"><span t-field="rec.name"/></td>
+                                                <td style="text-align: left"><span t-field="rec.description"/></td>
+                                            </tr>
+                                        </t>
+                                    </tboby>
+                                </table>
                             </t>
                         </div>
                     </div>

@@ -110,6 +110,12 @@
                             </group>
                         </form>
                     </field>
+                    <field name="risque_lie_ids" attrs="{'invisible': [('type_gamme', '!=', 'reprise')]}">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="description"/>
+                        </tree>
+                    </field>
                     <group>
                         <group>
                             <field name="cout_ctrl_qualite"/>

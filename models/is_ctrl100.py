@@ -56,6 +56,16 @@ class is_ctrl100_operation_specifique(models.Model):
     gamme_qualite_id = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité")
 
 
+class is_ctrl100_risque_lie(models.Model):
+    _name        = 'is.ctrl100.risque.lie'
+    _description = u"Risques liés"
+    _order       = 'name'
+
+    name             = fields.Char(u"Risque lié à cette opération", required=True)
+    description      = fields.Char(u"Description du verrou mis en place pour répondre à ce risque", required=True)
+    gamme_qualite_id = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité", required=True)
+
+
 class is_ctrl100_typologie_produit(models.Model):
     _name        = 'is.ctrl100.typologie.produit'
     _description = u"Typologie de produit"
@@ -121,6 +131,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                     recdict = {
                         'tracabilite_nm': tracabilite_nm,
                         'date_saisie': rec.date_saisie,
+                        'controleur': '',
                         'tps_passe': rec.tps_passe,
                         'nb_pieces_controlees': rec.nb_pieces_controlees,
                         'nb_rebuts': '',
@@ -239,8 +250,9 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     date_creation            = fields.Date(u"Date de création", copy=False, default=fields.Date.context_today)
     typologie_produit_id     = fields.Many2one("is.ctrl100.typologie.produit", "Typologie de produit")
     date_fin_validite        = fields.Date(u"Date du rappel", required=True)
-    operation_standard_ids   = fields.One2many('is.ctrl100.gamme.standard', 'gamme_qualite_id', u"Opérations standard")
-    operation_specifique_ids = fields.One2many('is.ctrl100.operation.specifique', 'gamme_qualite_id',  u"Opérations spécifiques")
+    operation_standard_ids   = fields.One2many('is.ctrl100.gamme.standard'      , 'gamme_qualite_id', u"Opérations standard")
+    operation_specifique_ids = fields.One2many('is.ctrl100.operation.specifique', 'gamme_qualite_id', u"Opérations spécifiques")
+    risque_lie_ids           = fields.One2many('is.ctrl100.risque.lie'          , 'gamme_qualite_id', u"Risques liés à cette opération")
     cout_ctrl_qualite        = fields.Float(u"Coût horaire vendu contrôle qualité", digits=(12, 2), default=_get_cout_ctrl_qualite)
     cout_previsionnel        = fields.Float(u"Coût prévisionnel par pièce", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
     cadence_previsionnelle   = fields.Float(u"Cadence de contrôle prévisionnelle (pcs/h)", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
