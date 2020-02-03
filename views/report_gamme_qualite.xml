@@ -66,9 +66,9 @@
             }
             .imgclass0 {
                 text-align:center;
-                height: 80mm;
+                max-height: 80mm;
                 text-align: center;
-                width: 80mm;
+                max-width: 80mm;
                 vertical-align: middle;
                 padding-left:8px;
                 padding-top:5px;
