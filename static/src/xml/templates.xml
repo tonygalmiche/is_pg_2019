@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="Calendrier_des_absences">
+        <div class="cbn" style="overflow: auto;width:100%">
+            <h2 style="font-size:1.5em;padding:0;margin:0" id="titre"></h2>
+            <form style="padding-top:0.5em;padding-bottom:0.5em">
+                <table border="0">
+                    <tr>
+                        <td style="width:110px;">Etablissement<br/>
+                            <select style="width: 4em;" id='etablissement' />
+                        </td>
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">Service / Equipe<br/>
+                            <select style="width: 4em;" id='service' />
+                        </td>
+                        <td style="width:110px;">Section<br /><input style='width:4em' type='text' id='section' /></td>
+                        <td style="width:110px;">Nom (Partiel)<br /><input style='width:4em' type='text' id='nom' /></td>
+                        <td style="width:110px;">Date Debut<br /><input style='width:4em' type='text' id='date_debut' /></td>
+                        <td style="width:110px;">Nb Jours<br /><select style="width: 4em;" id='nb_jours'>
+                            <option value="7">7</option>
+                            <option value="14">14</option>
+                            <option value="21">21</option>
+                            <option value="28">28</option>
+                            <option value="35">35</option>
+                            <option value="42">42</option>
+                            <option value="49">49</option>
+                            <option value="56">56</option>
+                        </select> </td>
+                        <td style="width:110px;display: none;">Start Date<br /><input style='width:4em' type='text' id='start_date' /></td>
+                        <td style="width:110px;display: none;">End Date<br /><input style='width:4em' type='text' id='end_date' /></td>
+                        <td style="width:110px;display: none;">Back Forward Days<br /><input style='width:4em' type='text' id='back_forward_days' /></td>
+                        <td><br /><button type="submit">OK</button><input id="validation" type="hidden" value="ko" /></td>
+                    </tr>
+                </table>
+            </form>
+            <div id="Calendrier_analysecbn" />
+        </div>
+    </t>
+</templates>

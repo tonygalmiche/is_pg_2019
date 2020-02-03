@@ -273,5 +273,17 @@
         <menuitem id="menu_is_demande_absence_type" parent="menu_hr_gestion_des_absences"
             name="Type d’absence" sequence="20" action="is_demande_absence_type_action" />
 
+        <record id="is_Calendrier_des_absences_action" model="ir.actions.client">
+            <field name="name">Calendrier des absences</field>
+            <field name="tag">is_pg_2019.is_Calendrier_des_absences_tag</field>
+        </record>
+
+        <record id="is_Calendrier_des_absences_menu" model="ir.ui.menu" >
+            <field name="name">Calendrier des absences</field>
+            <field name="sequence">40</field>
+            <field name="parent_id" eval="ref('menu_hr_gestion_des_absences')"/>
+            <field name="action"    ref="is_Calendrier_des_absences_action"/>
+        </record>
+
     </data>
 </openerp>

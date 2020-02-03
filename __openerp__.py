@@ -55,8 +55,10 @@ InfoSaône - Module Odoo pour Plastigray en 2019
         "wizard/server_action_view.xml",
         "views/menu.xml",
         "security/ir.model.access.csv",
+        "views/assets.xml",
     ], 
     "qweb": [
+        "static/src/xml/*.xml"
     ],
     "installable": True,
     "active": False,
