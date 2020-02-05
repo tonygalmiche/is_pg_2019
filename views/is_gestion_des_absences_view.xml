@@ -199,16 +199,13 @@
                                 <field name="name" readonly="True" />
                                 <field name="createur_id" readonly="True" />
                                 <field name="type_absence" />
-                                <!-- <field name="employe_ids" widget="many2many_tags" /> -->
+                                <field name="employe_ids" widget="many2many_tags" />
                             </group>
                             <group>
                                 <field name="date_creation" readonly="True" />
                                 <field name="date_debut" />
                                 <field name="date_fin" />
                             </group>
-                        </group>
-                        <group>
-                            <field name="employe_ids" />
                         </group>
                     </sheet>
                 </form>
