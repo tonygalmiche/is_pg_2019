@@ -3,6 +3,8 @@
 from openerp import models, fields, api
 import datetime
 from collections import defaultdict
+from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.tools.translate import _
 
 
 class is_demande_conges(models.Model):
@@ -21,6 +23,10 @@ class is_demande_conges(models.Model):
         start_date = ''
         end_date = ''
         back_forward_days = 0
+        data_pool = self.env['ir.model.data']
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        dummy, act_id = data_pool.get_object_reference('is_pg_2019', "is_demande_absence_action")
+        dummy, act_id_demande = data_pool.get_object_reference('is_pg_2019', "is_demande_conges_action")
         if filter:
             nom = filter['nom']
             nb_jours = filter['nb_jours']
@@ -33,12 +39,23 @@ class is_demande_conges(models.Model):
         if nom:
             where_condition += " and emp_name ilike '%" + nom + "%'"
         week_per_year = defaultdict(dict)
-        first_date_year = datetime.date.today()
-        last_date_year = datetime.date.today(
-        ) + datetime.timedelta(days=+int(nb_jours) - 1)
+        today_date = datetime.date.today()
+        first_date_year = today_date + datetime.timedelta(days=-today_date.weekday())
+        last_date_year = first_date_year + datetime.timedelta(days=+int(nb_jours) - 1)
         if date_debut:
-            select_date = datetime.datetime.strptime(
-                date_debut, "%d.%m.%Y").date()
+            try:
+                date_custom_format = '%d.%m.%Y'
+                if len(date_debut.split('.')) == 3 and len(date_debut.split('.')[2]) == 2:
+                    date_custom_format = '%d.%m.%y'
+                if '/' in date_debut:
+                    date_custom_format = '%d/%m/%Y'
+                    if len(date_debut.split('/')) == 3 and len(date_debut.split('/')[2]) == 2:
+                        date_custom_format = '%d/%m/%y'
+                date_debut
+                select_date = datetime.datetime.strptime(date_debut, date_custom_format).date()
+            except Exception as e:
+                raise except_orm(_('Date Format!'),
+                                 _(" %s ") % (str(e).decode('utf-8'),))
             last_date_year = select_date + \
                 datetime.timedelta(days=-select_date.weekday() - 1, weeks=1)
             first_date_year = last_date_year - datetime.timedelta(days=6)
@@ -80,11 +97,13 @@ class is_demande_conges(models.Model):
                     last_week_date = last_date_year
         html = "<div id='table_head'>"
         html += "<div><a value='back'><< Semaine Précédente</a> <a style='padding-left:25px;' value='forward'>Semaine Suivante >></a></div>"
-        html += "<style>table, th, td {border: 1px solid black;}</style>"
-        html += "<table style='background-color:white;table-layout:fixed;'>"
+        html += "<style>"
+        html += "#table2 table {border-collapse: collapse;border: 1px solid black;} "
+        html += "#table2 th {border-collapse: collapse;border: 1px solid black;} "
+        html += "#table2 td {border-collapse: collapse;border: 1px solid black;}"
+        html += "</style>"
+        html += "<table style='background-color:white;table-layout:fixed;' id='table2'>"
         html += "<thead><tr class=\"TitreTabC\">\n"
-        html += "<td></td>\n"
-        html += "<td></td>\n"
         html += "<td></td>\n"
         for col in sorted(week_per_year.keys()):
             align = 'center'
@@ -100,8 +119,6 @@ class is_demande_conges(models.Model):
         html += "</tr>"
         # data Display
         html += "<tr>"
-        html += "<td style='width:220px;color:black;text-align:center;'>Service</td>\n"
-        html += "<td style='width:220px;color:black;text-align:center;'>Section</td>\n"
         html += "<td style='width:220px;color:black;text-align:center;'>Nom</td>\n"
         for col in sorted(week_per_year.keys()):
             align = 'center'
@@ -131,18 +148,17 @@ class is_demande_conges(models.Model):
             ) a where 1=1 """ + where_condition + """
         """
         cr.execute(SQL)
-        employee_ids = []
-        result = cr.fetchall()
-        for row in result:
-            employee_ids.append(row[0])
-        emp_domain.append(('id', 'in', employee_ids))
+        if where_condition != '':
+            employee_ids = []
+            result = cr.fetchall()
+            for row in result:
+                employee_ids.append(row[0])
+            emp_domain.append(('id', 'in', employee_ids))
         emp_ids = self.env['hr.employee'].search(emp_domain)
         is_demande_absence_obj = self.env['is.demande.absence']
         is_demande_conges_obj = self.env['is.demande.conges']
         for emp in emp_ids:
             html += "<tr>"
-            html += "<td style='width:220px;font-weight:normal;text-align:left;'></td>\n"
-            html += "<td style='width:220px;font-weight:normal;text-align:left;'></td>\n"
             html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + \
                 emp.name + "</td>\n"
             for col in sorted(week_per_year.keys()):
@@ -152,17 +168,27 @@ class is_demande_conges(models.Model):
                 display_date = week_per_year[col]['first_week_date']
                 for day_index in range(0, week_days):
                     M_C = ''
-                    conges_count = absence_count = 0
+                    conges_count = absence_count = False
                     if emp.user_id:
-                        conges_count = is_demande_conges_obj.search_count(
+                        conges_count = is_demande_conges_obj.search(
                             [('demandeur_id', '=', emp.user_id.id), ('date_debut', '=', display_date)])
-                        if conges_count > 0:
-                            M_C = 'C'
-                    absence_count = is_demande_absence_obj.search_count(
-                        [('employe_ids', 'in', [emp.id]), ('date_debut', '=', display_date)])
-                    if absence_count > 0:
-                        M_C = 'M'
-                    if absence_count > 0 and conges_count > 0:
+                        if conges_count:
+                            is_demande_link = "%s/web?db=%s#id=%s&action=%s&view_type=form" % (base_url, self._cr.dbname, conges_count[0].id, act_id_demande)
+                            M_C = '<a href='+is_demande_link+'>C</a>'
+                    absence_count = is_demande_absence_obj.search(
+                        [('employe_ids', 'in', [emp.id]),
+                         ('date_debut', '<=', display_date),
+                         ('date_fin', '>=', display_date),
+                        ])
+                    if not absence_count:
+                        absence_count = is_demande_absence_obj.search(
+                        [('employe_ids', 'in', [emp.id]),
+                         ('date_debut', '=', display_date),
+                        ])
+                    if absence_count:
+                        is_demande_absence_link = "%s/web?db=%s#id=%s&action=%s&view_type=form" % (base_url, self._cr.dbname, absence_count[0].id, act_id)
+                        M_C = '<a href='+is_demande_absence_link+'>M</a>'
+                    if absence_count and conges_count:
                         M_C = 'C,M'
                     td_color = ''
                     if display_date.weekday() in (5, 6):
