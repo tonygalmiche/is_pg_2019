@@ -39,6 +39,7 @@ InfoSaône - Module Odoo pour Plastigray en 2019
         "wizard/is_gestion_des_absences_wiz_view.xml",
         "views/is_gestion_des_absences_workflow.xml",
         "views/is_gestion_des_absences_view.xml",
+        "views/is_instruction_particuliere_view.xml",
         "views/report_gamme_defautheque.xml",
         "views/report_gamme_qualite.xml",
         "views/report_is_ctrl100_rapport_controle.xml",
