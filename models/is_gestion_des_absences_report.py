@@ -169,9 +169,15 @@ class is_demande_conges(models.Model):
                 for day_index in range(0, week_days):
                     M_C = ''
                     conges_count = absence_count = False
+                    is_demande_link = is_demande_absence_link = ''
                     if emp.user_id:
                         conges_count = is_demande_conges_obj.search(
-                            [('demandeur_id', '=', emp.user_id.id), ('date_debut', '=', display_date)])
+                            [('demandeur_id', '=', emp.user_id.id),
+                             ('date_debut', '<=', display_date),
+                             ('date_fin', '>=', display_date),])
+                        if not conges_count:
+                            conges_count = is_demande_conges_obj.search(
+                                [('demandeur_id', '=', emp.user_id.id), ('date_debut', '=', display_date)])
                         if conges_count:
                             is_demande_link = "%s/web?db=%s#id=%s&action=%s&view_type=form" % (base_url, self._cr.dbname, conges_count[0].id, act_id_demande)
                             M_C = '<a href='+is_demande_link+'>C</a>'
@@ -189,7 +195,7 @@ class is_demande_conges(models.Model):
                         is_demande_absence_link = "%s/web?db=%s#id=%s&action=%s&view_type=form" % (base_url, self._cr.dbname, absence_count[0].id, act_id)
                         M_C = '<a href='+is_demande_absence_link+'>M</a>'
                     if absence_count and conges_count:
-                        M_C = 'C,M'
+                        M_C = '<a href='+is_demande_link+'>C</a>, ' + '<a href='+is_demande_absence_link+'>M</a>'
                     td_color = ''
                     if display_date.weekday() in (5, 6):
                         td_color = 'black;background-color:red;'
