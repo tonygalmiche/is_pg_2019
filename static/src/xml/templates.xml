@@ -2,10 +2,10 @@
 
 <templates xml:space="preserve">
     <t t-name="Calendrier_des_absences">
-        <div class="cbn" style="overflow: auto;width:100%">
+        <div class="cbn">
             <h2 style="font-size:1.5em;padding:0;margin:0" id="titre"></h2>
             <form style="padding-top:0.5em;padding-bottom:0.5em">
-                <table border="0">
+                <table>
                     <tr>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;display: none;">Etablissement<br/>
                             <select style="width: 4em;" id='etablissement' />

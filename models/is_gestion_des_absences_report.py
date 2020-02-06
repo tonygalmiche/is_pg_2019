@@ -34,6 +34,7 @@ class is_demande_conges(models.Model):
             start_date = filter['start_date']
             end_date = filter['end_date']
             back_forward_days = int(filter['back_forward_days'] or 0)
+        width=220+40+int(nb_jours)*(48+2)+22
         NomCol = []
         where_condition = ''
         if nom:
@@ -59,22 +60,20 @@ class is_demande_conges(models.Model):
             last_date_year = select_date + \
                 datetime.timedelta(days=-select_date.weekday() - 1, weeks=1)
             first_date_year = last_date_year - datetime.timedelta(days=6)
+            last_date_year = first_date_year + datetime.timedelta(days=int(nb_jours)-1)
             where_condition += " and date_debut = '" + \
                 str(select_date.strftime('%Y-%m-%d')) + "'"
         if back_forward_days:
             if start_date and back_forward_days < 0:
-                select_date = datetime.datetime.strptime(
-                    start_date, "%d.%m.%Y").date()
-                last_date_year = select_date + \
-                    datetime.timedelta(
-                        days=-select_date.weekday() - 8, weeks=1)
-                first_date_year = last_date_year - datetime.timedelta(days=6)
+                select_date = datetime.datetime.strptime(end_date, "%d.%m.%Y").date()
+                last_date_year = select_date - datetime.timedelta(days=7)
+                select_date = datetime.datetime.strptime(start_date, "%d.%m.%Y").date()
+                first_date_year = select_date - datetime.timedelta(days=7)
             elif end_date and back_forward_days > 0:
-                select_date = datetime.datetime.strptime(
-                    end_date, "%d.%m.%Y").date()
-                first_date_year = select_date + \
-                    datetime.timedelta(days=-select_date.weekday(), weeks=1)
-                last_date_year = first_date_year + datetime.timedelta(days=6)
+                select_date = datetime.datetime.strptime(end_date, "%d.%m.%Y").date()
+                last_date_year = select_date + datetime.timedelta(days=7)
+                select_date = datetime.datetime.strptime(start_date, "%d.%m.%Y").date()
+                first_date_year = select_date + datetime.timedelta(days=7)
         first_week_date = first_date_year
         last_week_date = first_week_date + \
             datetime.timedelta(days=-first_week_date.weekday() - 1, weeks=1)
@@ -95,16 +94,17 @@ class is_demande_conges(models.Model):
                         days=-first_week_date.weekday() - 1, weeks=1)
                 if last_date_year < last_week_date:
                     last_week_date = last_date_year
-        html = "<div id='table_head'>"
+#         html = "<div id='table_head'>"
+        html ="<div style=\"width:"+str(width+20)+"px;\" id=\"table_head\">\n"
         html += "<div><a value='back'><< Semaine Précédente</a> <a style='padding-left:25px;' value='forward'>Semaine Suivante >></a></div>"
         html += "<style>"
         html += "#table2 table {border-collapse: collapse;border: 1px solid black;} "
         html += "#table2 th {border-collapse: collapse;border: 1px solid black;} "
         html += "#table2 td {border-collapse: collapse;border: 1px solid black;}"
         html += "</style>"
-        html += "<table style='background-color:white;table-layout:fixed;' id='table2'>"
+        html+="<table id='table21' style=\"border-width:0px;border-spacing:0px;padding:0px;width:"+str(width)+"px;\">\n";
         html += "<thead><tr class=\"TitreTabC\">\n"
-        html += "<td></td>\n"
+        html += "<td style=\"width:220px;\"></td>\n"
         for col in sorted(week_per_year.keys()):
             align = 'center'
             main_heading = 'Sem ' + \
@@ -126,7 +126,7 @@ class is_demande_conges(models.Model):
                          'last_week_date'] - week_per_year[col]['first_week_date']).days + 1
             display_date = week_per_year[col]['first_week_date']
             for day_index in range(0, week_days):
-                html += "<td style='width:50px;color:black;text-align:center;'>" + \
+                html += "<td style='width:30px;color:black;text-align:center;'>" + \
                     str(display_date.day) + "</td>\n"
                 display_date = display_date + datetime.timedelta(days=+1)
         html += "</tr>"
@@ -157,6 +157,10 @@ class is_demande_conges(models.Model):
         emp_ids = self.env['hr.employee'].search(emp_domain)
         is_demande_absence_obj = self.env['is.demande.absence']
         is_demande_conges_obj = self.env['is.demande.conges']
+        html+="</table>\n"
+        html+="</div>\n"
+        html+="<div style=\"width:"+str(width+20)+"px;\" id=\"table_body\">\n";
+        html+="<table id='table2' style=\"border-width:0px;border-spacing:0px;padding:0px;width:"+str(width)+"px;\">\n";
         for emp in emp_ids:
             html += "<tr>"
             html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + \
