@@ -34,7 +34,7 @@ class is_demande_conges(models.Model):
             start_date = filter['start_date']
             end_date = filter['end_date']
             back_forward_days = int(filter['back_forward_days'] or 0)
-        width=220+40+int(nb_jours)*(48+2)+22
+        width=220+40+int(nb_jours)*(24+2)+22
         NomCol = []
         where_condition = ''
         if nom:

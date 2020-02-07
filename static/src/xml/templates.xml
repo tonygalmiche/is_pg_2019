@@ -29,7 +29,7 @@
                         <td style="width:110px;display: none;border-top:none;border-left:none;border-right:none;border-bottom:none;">Start Date<br /><input style='width:4em' type='text' id='start_date' /></td>
                         <td style="width:110px;display: none;border-top:none;border-left:none;border-right:none;border-bottom:none;">End Date<br /><input style='width:4em' type='text' id='end_date' /></td>
                         <td style="width:110px;display: none;border-top:none;border-left:none;border-right:none;border-bottom:none;">Back Forward Days<br /><input style='width:4em' type='text' id='back_forward_days' /></td>
-                        <td style="border-top:none;border-left:none;border-right:none;border-bottom:none;"><br /><button type="submit">OK</button><input id="validation" type="hidden" value="ko" /></td>
+                        <td style="border-top:none;border-left:none;border-right:none;border-bottom:none;"><br /><button>OK</button><input id="validation" type="hidden" value="ko" /></td>
                     </tr>
                 </table>
             </form>
