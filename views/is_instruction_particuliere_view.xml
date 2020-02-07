@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="is_instruction_particuliere_form_view" model="ir.ui.view">
+            <field name="name">is_instruction_particuliere_form_view</field>
+            <field name="model">is.instruction.particuliere</field>
+            <field name="inherit_id" ref="is_plastigray.is_instruction_particuliere_form_view" />
+            <field name="arch" type="xml">
+                <field name="product_ids" position="after">
+                    <field name="afficher_imprimer"/>
+                    <field name="groupe_ids" widget="many2many_tags"/>
+                </field>
+            </field>
+        </record>
+        <record id="is_instruction_particuliere_tree_view" model="ir.ui.view">
+            <field name="name">is_instruction_particuliere_tree_view</field>
+            <field name="model">is.instruction.particuliere</field>
+            <field name="inherit_id" ref="is_plastigray.is_instruction_particuliere_tree_view" />
+            <field name="arch" type="xml">
+                <field name="product_ids" position="after">
+                    <field name="afficher_imprimer"/>
+                    <field name="groupe_ids" widget="many2many_tags"/>
+                </field>
+            </field>
+        </record>
+        <record id="is_instruction_particuliere_search_view" model="ir.ui.view">
+            <field name="name">is_instruction_particuliere_search_view</field>
+            <field name="model">is.instruction.particuliere</field>
+            <field name="inherit_id" ref="is_plastigray.is_instruction_particuliere_search_view" />
+            <field name="arch" type="xml">
+                <field name="product_ids" position="after">
+                    <field name="afficher_imprimer"/>
+                    <field name="groupe_ids" widget="many2many_tags"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
