@@ -31,14 +31,42 @@ openerp.is_pg_2019 = function(instance, local) {
         },
         click_a: function(e) {
             d.obj=e.currentTarget;
-            b_value=$(d.obj).attr("value");
-            if(b_value=='back'){
-                $("#back_forward_days").val('-7');
+            type=$(d.obj).attr("type");
+            if(type=='main'){
+                b_value=$(d.obj).attr("value");
+                if(b_value=='back'){
+                    $("#back_forward_days").val('-7');
+                }
+                if(b_value=='forward'){
+                    $("#back_forward_days").val('7');
+                }
+                des_absence_load_data(instance)
             }
-            if(b_value=='forward'){
-                $("#back_forward_days").val('7');
+            if(type=='CF' || type=='MF'){
+                model='is.demande.conges';
+                if(type=='MF'){
+                    model='is.demande.absence';
+                }
+                docid=$(d.obj).attr("docid");
+                docid=docid/1;
+                if (docid)
+                {
+                    this.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: model,
+                        res_id: docid,
+                        views: [[false, 'form']],
+                        flags: {
+                            form: {
+                                action_buttons: true,
+                                options: {
+                                    mode: 'edit'
+                                }
+                            }
+                        },
+                    });
+                }
             }
-            des_absence_load_data(instance)
         },
         click_button: function(e) {
             $("#validation").val('ok');

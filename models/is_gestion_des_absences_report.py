@@ -96,7 +96,7 @@ class is_demande_conges(models.Model):
                     last_week_date = last_date_year
 #         html = "<div id='table_head'>"
         html ="<div style=\"width:"+str(width+20)+"px;\" id=\"table_head\">\n"
-        html += "<div><a value='back'><< Semaine Précédente</a> <a style='padding-left:25px;' value='forward'>Semaine Suivante >></a></div>"
+        html += "<div><a value='back' type='main'><< Semaine Précédente</a> <a style='padding-left:25px;' value='forward' type='main'>Semaine Suivante >></a></div>"
         html += "<style>"
         html += "#table2 table {border-collapse: collapse;border: 1px solid black;} "
         html += "#table2 th {border-collapse: collapse;border: 1px solid black;} "
@@ -173,7 +173,6 @@ class is_demande_conges(models.Model):
                 for day_index in range(0, week_days):
                     M_C = ''
                     conges_count = absence_count = False
-                    is_demande_link = is_demande_absence_link = ''
                     if emp.user_id:
                         conges_count = is_demande_conges_obj.search(
                             [('demandeur_id', '=', emp.user_id.id),
@@ -183,8 +182,7 @@ class is_demande_conges(models.Model):
                             conges_count = is_demande_conges_obj.search(
                                 [('demandeur_id', '=', emp.user_id.id), ('date_debut', '=', display_date)])
                         if conges_count:
-                            is_demande_link = "%s/web?db=%s#id=%s&action=%s&view_type=form" % (base_url, self._cr.dbname, conges_count[0].id, act_id_demande)
-                            M_C = '<a href='+is_demande_link+'>C</a>'
+                            M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>'
                     absence_count = is_demande_absence_obj.search(
                         [('employe_ids', 'in', [emp.id]),
                          ('date_debut', '<=', display_date),
@@ -196,10 +194,9 @@ class is_demande_conges(models.Model):
                          ('date_debut', '=', display_date),
                         ])
                     if absence_count:
-                        is_demande_absence_link = "%s/web?db=%s#id=%s&action=%s&view_type=form" % (base_url, self._cr.dbname, absence_count[0].id, act_id)
-                        M_C = '<a href='+is_demande_absence_link+'>M</a>'
+                        M_C = '<a type=\'MF\' docid='+str(absence_count[0].id)+'>M</a>'
                     if absence_count and conges_count:
-                        M_C = '<a href='+is_demande_link+'>C</a>, ' + '<a href='+is_demande_absence_link+'>M</a>'
+                        M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>  ' + '<a type=\'MF\' docid='+str(absence_count[0].id)+'>M</a>'
                     td_color = ''
                     if display_date.weekday() in (5, 6):
                         td_color = 'black;background-color:red;'
