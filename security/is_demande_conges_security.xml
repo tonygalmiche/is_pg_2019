@@ -3,7 +3,7 @@
     <data>
 
         <record id="is_demande_conges_creation_rule" model="ir.rule">
-            <field name="name">Demande de congés: Access to user in 'Création' state</field>
+            <field name="name">Demande de congés: Access to user in 'Brouillon' state</field>
             <field name="model_id" ref="model_is_demande_conges" />
             <field name="domain_force">['&amp;', ('state','=','creation'), '|', '|', '|', '|',
                 ('createur_id', '=', user.id),

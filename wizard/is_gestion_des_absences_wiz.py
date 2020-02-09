@@ -13,7 +13,7 @@ class is_gestion_des_absences_wiz(models.TransientModel):
         conges_obj = self.env['is.demande.conges']
         if self._context and self._context.get('active_id'):
             conges = conges_obj.browse(self._context.get(('active_id')))
-            subject = u'[' + conges.name + u'] Demande de congés - retour Création'
+            subject = u'[' + conges.name + u'] Demande de congés - retour Brouillon ('+self.conges_reason+u')'
             email_to = conges.createur_id.email
             user = self.env['res.users'].browse(self._uid)
             email_from = user.email
@@ -23,7 +23,8 @@ class is_gestion_des_absences_wiz(models.TransientModel):
             url = base_url + u'/web#id=' + str(conges.id) + u'&view_type=form&model=is.demande.conges'
             body_html = u""" 
                 <p>Bonjour,</p> 
-                <p>""" + nom + """ vient de repasser la Demande de congés <a href='""" + url + """'>""" + conges.name + """</a> à l'état 'Création'.</p> 
+                <p>""" + nom + """ vient de repasser la Demande de congés <a href='""" + url + """'>""" + conges.name + """</a> à l'état 'Brouillon'.</p> 
+                <p>Motif du retour : """+self.conges_reason+u"""</p>
                 <p>Merci d'en prendre connaissance.</p> 
             """ 
             conges.sudo().raison_du_retour = self.conges_reason
@@ -44,7 +45,7 @@ class is_gestion_vers_annuler_wiz(models.TransientModel):
         conges_obj = self.env['is.demande.conges']
         if self._context and self._context.get('active_id'):
             conges = conges_obj.browse(self._context.get(('active_id')))
-            subject = u'[' + conges.name + u'] Demande de congés - Refus'
+            subject = u'[' + conges.name + u'] Demande de congés - Refus ('+self.conges_reason+u')'
             email_to = conges.createur_id.email
             user = self.env['res.users'].browse(self._uid)
             email_from = user.email
@@ -55,6 +56,7 @@ class is_gestion_vers_annuler_wiz(models.TransientModel):
             body_html = u""" 
                 <p>Bonjour,</p> 
                 <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + conges.name + """</a> à l'état 'Refusé'.</p> 
+                <p>Motif du refus : """+self.conges_reason+u"""</p>
                 <p>Merci d'en prendre connaissance.</p> 
             """ 
             conges.sudo().raison_annulation = self.conges_reason
