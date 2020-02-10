@@ -23,6 +23,7 @@ class is_demande_conges(models.Model):
         start_date = ''
         end_date = ''
         back_forward_days = 0
+        emp_domain = []
         data_pool = self.env['ir.model.data']
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         dummy, act_id = data_pool.get_object_reference('is_pg_2019', "is_demande_absence_action")
@@ -38,7 +39,8 @@ class is_demande_conges(models.Model):
         NomCol = []
         where_condition = ''
         if nom:
-            where_condition += " and emp_name ilike '%" + nom + "%'"
+#             where_condition += " and emp_name ilike '%" + nom + "%'"
+            emp_domain.append(('name','ilike', nom))
         week_per_year = defaultdict(dict)
         today_date = datetime.date.today()
         first_date_year = today_date + datetime.timedelta(days=-today_date.weekday())
@@ -130,30 +132,29 @@ class is_demande_conges(models.Model):
                     str(display_date.day) + "</td>\n"
                 display_date = display_date + datetime.timedelta(days=+1)
         html += "</tr>"
-        emp_domain = []
 
-        SQL = """
-            select distinct emp_id,emp_name,date_debut from
-            (
-            select emp.id as emp_id,resource_resource.name as emp_name,is_demande_conges.date_debut as date_debut 
-                from hr_employee emp
-                inner join resource_resource on resource_resource.id=emp.resource_id
-                inner join is_demande_conges on is_demande_conges.demandeur_id=resource_resource.user_id
-            union all
-            select emp.id as emp_id,resource_resource.name as emp_name,is_demande_absence.date_debut as date_debut 
-                from hr_employee emp
-                inner join resource_resource on resource_resource.id=emp.resource_id
-                inner join hr_employee_is_demande_absence_rel absence_rel on absence_rel.hr_employee_id=emp.id 
-                inner join is_demande_absence on is_demande_absence.id=absence_rel.is_demande_absence_id
-            ) a where 1=1 """ + where_condition + """
-        """
-        cr.execute(SQL)
-        if where_condition != '':
-            employee_ids = []
-            result = cr.fetchall()
-            for row in result:
-                employee_ids.append(row[0])
-            emp_domain.append(('id', 'in', employee_ids))
+#         SQL = """
+#             select distinct emp_id,emp_name,date_debut from
+#             (
+#             select emp.id as emp_id,resource_resource.name as emp_name,is_demande_conges.date_debut as date_debut
+#                 from hr_employee emp
+#                 inner join resource_resource on resource_resource.id=emp.resource_id
+#                 inner join is_demande_conges on is_demande_conges.demandeur_id=resource_resource.user_id
+#             union all
+#             select emp.id as emp_id,resource_resource.name as emp_name,is_demande_absence.date_debut as date_debut
+#                 from hr_employee emp
+#                 inner join resource_resource on resource_resource.id=emp.resource_id
+#                 inner join hr_employee_is_demande_absence_rel absence_rel on absence_rel.hr_employee_id=emp.id
+#                 inner join is_demande_absence on is_demande_absence.id=absence_rel.is_demande_absence_id
+#             ) a where 1=1 """ + where_condition + """
+#         """
+#         cr.execute(SQL)
+#         if where_condition != '':
+#             employee_ids = []
+#             result = cr.fetchall()
+#             for row in result:
+#                 employee_ids.append(row[0])
+#             emp_domain.append(('id', 'in', employee_ids))
         emp_ids = self.env['hr.employee'].search(emp_domain)
         is_demande_absence_obj = self.env['is.demande.absence']
         is_demande_conges_obj = self.env['is.demande.conges']
