@@ -61,8 +61,8 @@ class is_demande_conges(models.Model):
                 datetime.timedelta(days=-select_date.weekday() - 1, weeks=1)
             first_date_year = last_date_year - datetime.timedelta(days=6)
             last_date_year = first_date_year + datetime.timedelta(days=int(nb_jours)-1)
-            where_condition += " and date_debut = '" + \
-                str(select_date.strftime('%Y-%m-%d')) + "'"
+            #where_condition += " and date_debut = '" + \
+            #    str(select_date.strftime('%Y-%m-%d')) + "'"
         if back_forward_days:
             if start_date and back_forward_days < 0:
                 select_date = datetime.datetime.strptime(end_date, "%d.%m.%Y").date()
