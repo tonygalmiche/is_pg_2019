@@ -141,13 +141,35 @@ class is_demande_conges(models.Model):
 
             if obj.state == 'validation_rh' and  obj.responsable_rh_id.id == uid:
                 fld_vsb = True
+
             if obj.state == 'creation':
-                if obj.createur_id.id == uid or obj.demandeur_id.id == uid or obj.valideur_n1.id == uid or obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
-                    vers_validation_n1 = True
+                if obj.valideur_n1:
+                    if obj.createur_id.id == uid or obj.demandeur_id.id == uid or obj.valideur_n1.id == uid or obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
+                        vers_validation_n1 = True
+                else:
+                    if obj.valideur_n2:
+                        if obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
+                            vers_validation_rh = True
+                            vers_annuler       = True
+                    else:
+                        if obj.responsable_rh_id.id == uid:
+                            vers_validation_rh = True
+                            vers_annuler       = True
+
             if obj.state == 'validation_n1':
-                if obj.valideur_n1.id == uid or obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
-                    vers_validation_n2 = True
-                    vers_annuler       = True
+                if obj.valideur_n2:
+                    if obj.valideur_n1.id == uid or obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
+                        vers_validation_n2 = True
+                        vers_annuler       = True
+                else:
+                    if obj.responsable_rh_id.id == uid:
+                        vers_validation_rh = True
+                        vers_annuler       = True
+
+
+
+
+
             if obj.state == 'validation_n2':
                 if obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
                     vers_validation_rh = True
@@ -156,6 +178,8 @@ class is_demande_conges(models.Model):
                 if obj.responsable_rh_id.id == uid:
                     vers_solde   = True
                     vers_annuler = True
+
+
 
 
             obj.vers_creation_btn_vsb      = vers_creation
@@ -197,7 +221,7 @@ class is_demande_conges(models.Model):
     raison_du_retour              = fields.Text(string='Motif du retour', copy=False)
     raison_annulation             = fields.Text(string='Motif du refus' , copy=False)
     state                         = fields.Selection([
-                                        ('creation', u'Création'),
+                                        ('creation', u'Brouillon'),
                                         ('validation_n1', 'Validation niveau 1'),
                                         ('validation_n2', 'Validation niveau 2'),
                                         ('validation_rh', 'Validation RH'),

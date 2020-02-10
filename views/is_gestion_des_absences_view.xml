@@ -67,7 +67,7 @@
                             attrs="{'invisible': [('vers_solde_btn_vsb','=',False)]}" />
 
                         <button 
-                            string="Vers Création"
+                            string="Vers Brouillon"
                             name="%(action_is_gestion_des_absences_wiz)d"
                             type="action"
                             attrs="{'invisible': [('vers_creation_btn_vsb','=',False)]}" />
@@ -76,34 +76,6 @@
                             name="%(action_is_gestion_vers_annuler_wiz)d"
                             type="action"
                             attrs="{'invisible': [('vers_annuler_btn_vsb','=',False)]}" />
-
-
-                        <!--
-                        <button name="niveau1_send_mail_action" string="Vers Validation Niveau 1"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|',('state','!=','creation'),('valideur_n1', '=', False)]}" />
-                        <button name="%(action_is_gestion_des_absences_wiz)d" type="action"
-                            string="Vers Création"
-                            attrs="{'invisible': [('vers_creation_annuler_btn_vsb','=',False)]}" />
-                        <button name="%(action_is_gestion_vers_annuler_wiz)d" type="action"
-                            string="Vers Annuler"
-                            attrs="{'invisible': [('vers_creation_annuler_btn_vsb','=',False)]}" />
-                        <button name="niveau2_send_mail_action" string="Vers Validation Niveau 2"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|','|',('valid_btn_vsb','=',False),('state','!=','validation_n1'),('valideur_n2', '=', False)]}" />
-                        <button name="rh_send_mail_action" string="Vers Validation RH"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|','|',('valid_btn_vsb','=',False),('state','not in',['creation']),('valideur_n1', '!=', False)]}" />
-                        <button name="rh_send_mail_action" string="Vers Validation RH"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|','|',('valid_btn_vsb','=',False),('state','not in',['validation_n1']),('valideur_n2', '!=', False)]}" />
-                        <button name="rh_send_mail_action" string="Vers Validation RH"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|',('valid_btn_vsb','=',False),('state','not in',['validation_n2'])]}" />
-                        <button name="vers_solde_action" string="Vers Soldé" type="object"
-                            attrs="{'invisible': ['|',('valid_btn_vsb','=',False),('state','!=','validation_rh')]}" />
-                        -->
-
                         <field name="state" widget="statusbar"
                             statusbar_visible="creation,validation_n1,validation_n2,validation_rh,solde" />
                     </header>
