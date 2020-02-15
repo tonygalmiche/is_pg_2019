@@ -1029,5 +1029,69 @@
         sequence="10"
     />
 
+
+    <!-- is.theia.lecture.ip -->
+    <record model="ir.ui.view" id="is_theia_lecture_ip_tree_view">
+        <field name="name">is.theia.lecture.ip.tree</field>
+        <field name="model">is.theia.lecture.ip</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="date_heure"/>
+                <field name="presse_id"/>
+                <field name="moule"/>
+                <field name="of_ids" widget="many2many_tags" />
+                <field name="operateur_id"/>
+                <field name="ip_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_lecture_ip_form_view">
+        <field name="name">is.theia.lecture.ip.form</field>
+        <field name="model">is.theia.lecture.ip</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="date_heure"/>
+                    <field name="presse_id"/>
+                    <field name="moule"/>
+                    <field name="of_ids" widget="many2many_tags" />
+                    <field name="operateur_id"/>
+                    <field name="ip_id"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_lecture_ip_search_view" >
+        <field name="name">is.theia.lecture.ip.search</field>
+        <field name="model">is.theia.lecture.ip</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="date_heure"/>
+                <field name="presse_id"/>
+                <field name="moule"/>
+                <field name="of_ids"/>
+                <field name="operateur_id"/>
+                <field name="ip_id"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_theia_lecture_ip_action">
+        <field name="name">Lecture Instructions Particulières</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.theia.lecture.ip</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem 
+        id="is_theia_lecture_ip_menu" 
+        name="Lecture IP"
+        action="is_theia_lecture_ip_action" 
+        parent="is_theia_habilitation_operateur_main_menu" 
+        sequence="20"
+    />
+
+
+
 </data>
 </openerp>

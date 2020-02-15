@@ -544,9 +544,24 @@ class is_theia_habilitation_operateur(models.Model):
     state        = fields.Selection(states, 'État'            , required=True , select=True)
 
 
-#TODO : 
-# - Pour déqualifier tous les opérateurs d'un moule => Ajouter une action sur la fiche du moule (attention : pas de lien direct entre cette table et la fiche des moules)
-# - Le champ 'presse_id', permettra de gérer les opérateurs au poste (heure_fin est vide)
+class is_theia_lecture_ip(models.Model):
+    _name = 'is.theia.lecture.ip'
+    _description = u"Lecture des Instructions particulières des opérateurs sur les Moules dans THEIA"
+    _rec_name = "date_heure"
+    _order='date_heure desc'
+
+    date_heure   = fields.Datetime(u'Heure de lecture'                                                    , required=True , select=True)
+    presse_id    = fields.Many2one('is.equipement', u"Presse"                                             , required=True , select=True)
+    moule        = fields.Char(u'Moule'                                                                   , required=True , select=True)
+    of_ids       = fields.Many2many('is.of', 'is_theia_lecture_ip_of_rel', 'lecture_ip_id', 'of_id', 'OFs', required=False)
+    operateur_id = fields.Many2one("hr.employee", u"Opérateur"                                            , required=True , select=True)
+    ip_id        = fields.Many2one("is.instruction.particuliere", u"Instruction Particulière"             , required=True , select=True)
+
+
+
+
+
+
 
 
 

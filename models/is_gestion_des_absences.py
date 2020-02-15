@@ -162,12 +162,9 @@ class is_demande_conges(models.Model):
                         vers_validation_n2 = True
                         vers_annuler       = True
                 else:
-                    if obj.responsable_rh_id.id == uid:
+                    if obj.valideur_n1.id == uid or obj.responsable_rh_id.id == uid:
                         vers_validation_rh = True
                         vers_annuler       = True
-
-
-
 
 
             if obj.state == 'validation_n2':
@@ -178,8 +175,6 @@ class is_demande_conges(models.Model):
                 if obj.responsable_rh_id.id == uid:
                     vers_solde   = True
                     vers_annuler = True
-
-
 
 
             obj.vers_creation_btn_vsb      = vers_creation
