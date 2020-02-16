@@ -8,8 +8,9 @@ from dateutil.relativedelta import relativedelta
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
-    is_valideur_n1 = fields.Many2one('res.users', string=u'Valideur Niveau 1')
-    is_valideur_n2 = fields.Many2one('res.users', string=u'Valideur Niveau 2')
+    is_valideur_n1      = fields.Many2one('res.users', string=u'Valideur Niveau 1')
+    is_valideur_n2      = fields.Many2one('res.users', string=u'Valideur Niveau 2')
+    is_droit_conges_ids = fields.One2many('is.droit.conges', 'employe_id', u"Droit aux congés")
 
 
 class is_demande_conges(models.Model):
@@ -259,5 +260,16 @@ class is_demande_absence(models.Model):
     date_debut    = fields.Date(string='Date de début')
     date_fin      = fields.Date(string='Date de fin')
     employe_ids   = fields.Many2many('hr.employee', string=u'Employés')
+
+
+class is_droit_conges(models.Model):
+    _name        = 'is.droit.conges'
+    _description = u'Droit aux congés'
+    _order       = 'employe_id,name'
+
+    name          = fields.Char(u"Type", required=True)
+    description   = fields.Char(u"Description", required=True)
+    nombre        = fields.Float(u"Nombre", digits=(14,1))
+    employe_id    = fields.Many2one('hr.employee', 'Employé', required=True, ondelete='cascade', readonly=True)
 
 

@@ -127,4 +127,12 @@ access_is_demande_absence_type_gestionnaire_des_absences,is_demande_absence_type
 access_is_theia_lecture_ip,access_is_theia_lecture_ip,model_is_theia_lecture_ip,base.group_user,1,0,0,0
 
 
+access_is_droit_conges,access_is_droit_conges,model_is_droit_conges,base.group_user,1,0,0,0
+access_is_droit_conges_gestionnaire,access_is_droit_conges_gestionnaire,model_is_droit_conges,is_pg_2019.is_gestionnaire_des_absences_group,1,1,1,1
+
+
+
+
+
+
 

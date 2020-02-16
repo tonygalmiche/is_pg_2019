@@ -2,6 +2,15 @@
 <openerp>
     <data>
 
+        <menuitem name="Absences"
+            id="menu_absences_root"
+            groups="base.group_user"
+            sequence="89"/>
+        <menuitem id="menu_hr_gestion_des_absences" parent="menu_absences_root"
+            name="Gestion des absences" sequence="1" />
+
+
+
         <!-- Company Inherits -->
         <record id="view_res_company_form_inherit_is_pg_2019" model="ir.ui.view">
             <field name="name">view.res.company.form.inherit.is.pg.2019</field>
@@ -28,8 +37,35 @@
                         <field name="is_valideur_n2" />
                     </group>
                 </xpath>
+                <group string="Absences" position="after">
+                    <group string="Droit aux congés">
+                        <field name="is_droit_conges_ids" nolabel="1" >
+                            <tree editable="bottom">
+                                <field name="name"/>
+                                <field name="description"/>
+                                <field name="nombre"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
             </field>
         </record>
+
+
+        <record model="ir.actions.act_window" id="is_employe_absence_action">
+            <field name="name">Employés</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+
+        <menuitem id="is_employe_absence_menu" parent="menu_hr_gestion_des_absences"
+            name="Employés" sequence="80" action="is_employe_absence_action" />
+
+
+
 
         <!-- Demande de congés -->
         <record model="ir.ui.view" id="view_is_demande_conges_form">
@@ -150,12 +186,6 @@
             <field name="res_model">is.demande.conges</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="Absences"
-            id="menu_absences_root"
-            groups="base.group_user"
-            sequence="89"/>
-        <menuitem id="menu_hr_gestion_des_absences" parent="menu_absences_root"
-            name="Gestion des absences" sequence="1" />
         <menuitem id="menu_is_of_en_cours" parent="menu_hr_gestion_des_absences"
             name="Demande de congés" sequence="10" action="is_demande_conges_action" />
 
@@ -253,6 +283,86 @@
             <field name="parent_id" eval="ref('menu_hr_gestion_des_absences')"/>
             <field name="action"    ref="is_Calendrier_des_absences_action"/>
         </record>
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- is.droit.conges -->
+        <record model="ir.ui.view" id="view_is_droit_conges_form">
+            <field name="name">view.is.droit.conges.form</field>
+            <field name="model">is.droit.conges</field>
+            <field name="arch" type="xml">
+                <form string="Type d’absence">
+                    <sheet>
+                        <group>
+                            <field name="employe_id"/>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="nombre"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_droit_conges_tree">
+            <field name="name">view.is.demande.absence.tree</field>
+            <field name="model">is.droit.conges</field>
+            <field name="arch" type="xml">
+                <tree string="Type d’absence">
+                    <field name="employe_id"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="nombre"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_droit_conges_search">
+            <field name="name">is_droit_conges_search</field>
+            <field name="model">is.droit.conges</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="employe_id"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_droit_conges_action">
+            <field name="name">Droit aux congés</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.droit.conges</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="is_droit_conges_menu" parent="menu_hr_gestion_des_absences"
+            name="Droit aux congés" sequence="90" action="is_droit_conges_action" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     </data>
 </openerp>
