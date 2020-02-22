@@ -102,10 +102,12 @@
             <field eval="1" name="perm_create" />
         </record>
 
+
+
         <record id="is_demande_conges_solde_annuel_rule" model="ir.rule">
-            <field name="name">Demande de congés: Access to user in 'solde - annule' state</field>
+            <field name="name">Demande de congés: Access to user in 'solde - annule - refuse' state</field>
             <field name="model_id" ref="model_is_demande_conges" />
-            <field name="domain_force">['&amp;', ('state','in',['solde','annule']), '|', '|', '|', '|',
+            <field name="domain_force">['&amp;', ('state','in',['solde','annule','refuse']), '|', '|', '|', '|',
                 ('createur_id', '=', user.id),
                 ('demandeur_id', '=', user.id),
                 ('valideur_n1','=',user.id),

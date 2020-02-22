@@ -29,18 +29,22 @@ class is_demande_conges(models.Model):
         dummy, act_id = data_pool.get_object_reference('is_pg_2019', "is_demande_absence_action")
         dummy, act_id_demande = data_pool.get_object_reference('is_pg_2019', "is_demande_conges_action")
         if filter:
-            nom = filter['nom']
-            nb_jours = filter['nb_jours']
+            service    = filter['service']
+            nom        = filter['nom']
+            nb_jours   = filter['nb_jours']
             date_debut = filter['date_debut']
             start_date = filter['start_date']
-            end_date = filter['end_date']
+            end_date   = filter['end_date']
             back_forward_days = int(filter['back_forward_days'] or 0)
         width=220+40+int(nb_jours)*(24+2)+22
         NomCol = []
         where_condition = ''
+
+        if service:
+            emp_domain.append(('department_id','ilike', service))
         if nom:
-#             where_condition += " and emp_name ilike '%" + nom + "%'"
             emp_domain.append(('name','ilike', nom))
+
         week_per_year = defaultdict(dict)
         today_date = datetime.date.today()
         first_date_year = today_date + datetime.timedelta(days=-today_date.weekday())

@@ -7,6 +7,7 @@
             <form style="padding-top:0.5em;padding-bottom:0.5em">
                 <table>
                     <tr>
+                        <!--
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;display: none;">Etablissement<br/>
                             <select style="width: 4em;" id='etablissement' />
                         </td>
@@ -14,8 +15,17 @@
                             <select style="width: 4em;" id='service' />
                         </td>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;display: none;">Section<br /><input style='width:4em' type='text' id='section' /></td>
-                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">Nom (Partiel)<br /><input style='width:8em' type='text' id='nom' /></td>
-                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">Date Debut<br /><input style='width:8em' type='text' id='date_debut' /></td>
+                        -->
+
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
+                            Service (Partiel)<br /><input style='width:10em' type='text' id='service' />
+                        </td>
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
+                            Nom (Partiel)<br /><input style='width:8em' type='text' id='nom' />
+                        </td>
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
+                            Date Debut<br /><input style='width:8em' type='text' id='date_debut' />
+                        </td>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">Nb Jours<br /><select style="width: 4em;" id='nb_jours'>
                             <option value="7">7</option>
                             <option value="14">14</option>

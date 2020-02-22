@@ -30,11 +30,33 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="is_plastigray.is_view_employee_form" />
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Pointage']/group[1]/group[2]"
-                    position="after">
+                <xpath expr="//sheet/div[@class='oe_title']" position="replace">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                </xpath>
+                <field name="mobile_phone"  position="replace"/>
+                <field name="work_location" position="replace"/>
+                <field name="parent_id"     position="replace"/>
+                <field name="coach_id"      position="replace"/>
+                <xpath expr="//page[@string='Pointage']/group[1]/group[2]" position="after">
                     <group string="Validation">
-                        <field name="is_valideur_n1" />
-                        <field name="is_valideur_n2" />
+                        <field name="is_valideur_n1"/>
+                        <field name="is_valideur_n2"/>
+                    </group>
+                    <group string="Communication">
+                        <field name="is_mode_communication"/>
+                        <field 
+                            name="is_courriel" 
+                            attrs="{'invisible': [('is_mode_communication', 'not in', ['courriel','courriel+sms'])], 'required': [('is_mode_communication', 'in', ['courriel','courriel+sms'])] }"
+                        />
+                        <field 
+                            name="is_mobile"
+                            attrs="{'invisible': [('is_mode_communication', 'not in', ['sms','courriel+sms'])], 'required': [('is_mode_communication', 'in', ['sms','courriel+sms'])] }"
+                        />
                     </group>
                 </xpath>
                 <group string="Absences" position="after">
@@ -50,8 +72,23 @@
                 </group>
             </field>
         </record>
-
-
+        <record id="is_view_employee_tree" model="ir.ui.view">
+            <field name="name">is.hr.employee.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="is_plastigray.is_view_employee_tree"/>
+            <field name="arch" type="xml">
+                <field name="is_interimaire" position="after">
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="is_valideur_n1"/>
+                    <field name="is_valideur_n2"/>
+                    <field name="user_id"/>
+                    <field name="is_mode_communication"/>
+                    <field name="is_courriel"/>
+                    <field name="is_mobile"/>
+                </field>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="is_employe_absence_action">
             <field name="name">Employés</field>
             <field name="type">ir.actions.act_window</field>
@@ -76,6 +113,7 @@
                     <header>
                         <field name="vers_creation_btn_vsb"      invisible="1"/>
                         <field name="vers_annuler_btn_vsb"       invisible="1"/>
+                        <field name="vers_refuse_btn_vsb"        invisible="1"/>
                         <field name="vers_validation_n1_btn_vsb" invisible="1"/>
                         <field name="vers_validation_n2_btn_vsb" invisible="1"/>
                         <field name="vers_validation_rh_btn_vsb" invisible="1"/>
@@ -109,6 +147,11 @@
                             attrs="{'invisible': [('vers_creation_btn_vsb','=',False)]}" />
                         <button
                             string="Vers Refusé"
+                            name="%(action_is_gestion_vers_refuse_wiz)d"
+                            type="action"
+                            attrs="{'invisible': [('vers_refuse_btn_vsb','=',False)]}" />
+                        <button
+                            string="Vers Annulé"
                             name="%(action_is_gestion_vers_annuler_wiz)d"
                             type="action"
                             attrs="{'invisible': [('vers_annuler_btn_vsb','=',False)]}" />
@@ -140,12 +183,23 @@
                             <group>
                                 <field name="createur_id" readonly="1" />
                                 <field name="demandeur_id" />
+                                <field 
+                                    name="mode_communication"
+                                    attrs="{'invisible': [('mode_communication','=',False)]}"
+                                />
+                                <field 
+                                    name="courriel" 
+                                    attrs="{'invisible': [('courriel','=',False)]}"
+                                />
+                                <field 
+                                    name="mobile"
+                                    attrs="{'invisible': [('mobile','=',False)]}"
+                                />
                                 <field name="date_validation_n1" readonly="1" />
                                 <field name="date_validation_n2" readonly="1" />
                                 <field name="date_validation_rh" readonly="1" />
-                                <field name="raison_annulation" readonly="True" attrs="{'invisible': [('raison_annulation','=',False)]}"/>
-                                <field name="raison_du_retour" readonly="True" attrs="{'invisible': [('raison_du_retour','=',False)]}"/>
-                                <!--<field name="valid_btn_vsb" invisible="1" />-->
+                                <field name="raison_annulation"  readonly="True" attrs="{'invisible': [('raison_annulation','=',False)]}"/>
+                                <field name="raison_du_retour"   readonly="True" attrs="{'invisible': [('raison_du_retour','=',False)]}"/>
                                 <field name="fld_vsb" invisible="1" />
                             </group>
                         </group>
@@ -159,6 +213,10 @@
                             </group>
                         </group>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -167,19 +225,38 @@
             <field name="model">is.demande.conges</field>
             <field name="arch" type="xml">
                 <tree string="Demande de congés">
-                    <field name="name" />
-                    <field name="date_creation" />
-                    <field name="valideur_n1" />
-                    <field name="valideur_n2" />
-                    <field name="responsable_rh_id" />
-                    <field name="createur_id" />
-                    <field name="demandeur_id" />
-                    <field name="date_validation_n1" />
-                    <field name="date_validation_n2" />
-                    <field name="date_validation_rh" />
+                    <field name="name"/>
+                    <field name="date_creation"/>
+                    <field name="valideur_n1"/>
+                    <field name="valideur_n2"/>
+                    <field name="responsable_rh_id"/>
+                    <field name="createur_id"/>
+                    <field name="demandeur_id"/>
+                    <field name="date_validation_n1"/>
+                    <field name="date_validation_n2"/>
+                    <field name="date_validation_rh"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="is_demande_conges_search">
+            <field name="name">is_demande_conges_search</field>
+            <field name="model">is.demande.conges</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="valideur_n1"/>
+                    <field name="valideur_n2"/>
+                    <field name="responsable_rh_id"/>
+                    <field name="createur_id"/>
+                    <field name="demandeur_id"/>
+                    <field name="state"/>
+                </search>
+            </field>
+        </record>
+
+
+
         <record model="ir.actions.act_window" id="is_demande_conges_action">
             <field name="name">Demande de congés</field>
             <field name="type">ir.actions.act_window</field>

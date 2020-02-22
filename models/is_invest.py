@@ -152,6 +152,7 @@ class IsInvestDetail(models.Model):
                             'base'     : dbname,
                         }
                         doc = self.env['is.invest.cde'].create(vals)
+        return []
 
 
 class IsInvestCde(models.Model):

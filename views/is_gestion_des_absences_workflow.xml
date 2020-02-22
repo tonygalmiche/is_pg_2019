@@ -45,9 +45,20 @@
             <field name="kind">function</field>
             <field name="action">write({'state':'annule'})</field>
         </record>
+        <record id="act_is_demande_conges_refuse" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_is_demande_conges" />
+            <field name="name">refuse</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'refuse'})</field>
+        </record>
+
+
+
+
+
 
         <!-- Transistion -->
-
         <record id="is_creation_validation_n1" model="workflow.transition">
             <field name="act_from" ref="act_is_demande_conges_creation" />
             <field name="act_to" ref="act_is_demande_conges_validation_n1" />
@@ -78,13 +89,8 @@
             <field name="act_to" ref="act_is_demande_conges_solde" />
             <field name="signal">solde</field>
         </record>
-        <!--
-        <record id="is_solde_annule" model="workflow.transition">
-            <field name="act_from" ref="act_is_demande_conges_solde" />
-            <field name="act_to" ref="act_is_demande_conges_annule" />
-            <field name="signal">annule</field>
-        </record>
-        -->
+
+
         <record id="is_validation_n1_annule" model="workflow.transition">
             <field name="act_from" ref="act_is_demande_conges_validation_n1" />
             <field name="act_to" ref="act_is_demande_conges_annule" />
@@ -101,6 +107,22 @@
             <field name="signal">annule</field>
         </record>
 
+
+        <record id="is_validation_n1_refuse" model="workflow.transition">
+            <field name="act_from" ref="act_is_demande_conges_validation_n1" />
+            <field name="act_to" ref="act_is_demande_conges_refuse" />
+            <field name="signal">refuse</field>
+        </record>
+        <record id="is_validation_n2_refuse" model="workflow.transition">
+            <field name="act_from" ref="act_is_demande_conges_validation_n2" />
+            <field name="act_to" ref="act_is_demande_conges_refuse" />
+            <field name="signal">refuse</field>
+        </record>
+        <record id="is_validation_rh_refuse" model="workflow.transition">
+            <field name="act_from" ref="act_is_demande_conges_validation_rh" />
+            <field name="act_to" ref="act_is_demande_conges_refuse" />
+            <field name="signal">refuse</field>
+        </record>
 
     </data>
 </openerp>
