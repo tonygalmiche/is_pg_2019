@@ -60,10 +60,7 @@ class is_demande_conges(models.Model):
             user = self.env['res.users'].browse(uid)
             company = user.company_id
             message = unicodedata.normalize('NFD', message).encode('ascii', 'ignore')
-            if company.is_sms_mobile:
-                to,err2 = self._format_mobile(company.is_sms_mobile)
-            else:
-                to = mobile
+            to = mobile
             param = \
                 'account='+(company.is_sms_account or '')+\
                 '&login='+(company.is_sms_login or '')+\
