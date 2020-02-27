@@ -43,8 +43,16 @@
                         <field name="intitule"/>
                         <field name="imputation"/>
                         <field name="section"/>
+                        <field name="montant_odoo"  sum="Total"/>
+                        <field name="montant_cegid" sum="Total"/>
                     </tree>
                 </field>
+                <group>
+                    <field name="montant_odoo" />
+                    <field name="montant_cegid"/>
+                    <field name="reste_odoo"/>
+                    <field name="reste_cegid"/>
+                </group>
             </sheet>
         </form>
         </field>
@@ -59,7 +67,11 @@
                 <field name="annee"/>
                 <field name="site_id"/>
                 <field name="intitule"/>
-                <field name="montant"/>
+                <field name="montant"       sum="Total"/>
+                <field name="montant_odoo"  sum="Total"/>
+                <field name="montant_cegid" sum="Total"/>
+                <field name="reste_odoo"    sum="Total"/>
+                <field name="reste_cegid"   sum="Total"/>
             </tree>
         </field>
     </record>
@@ -143,6 +155,10 @@
                         </tree>
                     </field>
                 </group>
+                <group>
+                    <field name="montant_odoo"/>
+                    <field name="montant_cegid"/>
+                </group>
             </sheet>
         </form>
         </field>
@@ -160,6 +176,8 @@
                 <field name="intitule"/>
                 <field name="imputation"/>
                 <field name="section"/>
+                <field name="montant_odoo"  sum="Total"/>
+                <field name="montant_cegid" sum="Total"/>
             </tree>
         </field>
     </record>
@@ -261,7 +279,6 @@
                     <field name="intitule"/>
                     <field name="affaire"/>
                     <field name="compte"/>
-                    <field name="section"/>
                     <field name="montant"/>
                 </group>
             </sheet>
@@ -279,7 +296,6 @@
                 <field name="intitule"/>
                 <field name="affaire"/>
                 <field name="compte"/>
-                <field name="section"/>
                 <field name="montant" sum="Total"/>
             </tree>
         </field>
@@ -294,7 +310,6 @@
                 <field name="intitule"/>
                 <field name="affaire"/>
                 <field name="compte"/>
-                <field name="section"/>
             </search>
         </field>
     </record>

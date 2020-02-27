@@ -14,6 +14,22 @@ class IsInvestGlobal(models.Model):
     _description = u"Investissement global"
     _order='name'
 
+    @api.depends('name')
+    def _compute_montant(self):
+        for obj in self:
+            montant_odoo  = 0.0
+            montant_cegid = 0.0
+            reste_odoo    = 0.0
+            reste_cegid   = 0.0
+            for line in obj.detail_ids:
+                montant_odoo  += line.montant_odoo
+                montant_cegid += line.montant_cegid
+            obj.montant_odoo  = montant_odoo
+            obj.montant_cegid = montant_cegid
+            obj.reste_odoo    = obj.montant - montant_odoo
+            obj.reste_cegid   = obj.montant - montant_cegid
+
+
     name          = fields.Char(u'N°Invest Global', select=True, readonly=True)
     date_creation = fields.Date(u"Date de création", copy=False, default=fields.Date.context_today, readonly=True)
     annee         = fields.Char(u'Année', select=True, required=True, default=lambda *a:time.strftime('%Y'))
@@ -21,6 +37,10 @@ class IsInvestGlobal(models.Model):
     intitule      = fields.Char(u'Intitulé', required=True)
     montant       = fields.Integer('Montant Budget (€)')
     detail_ids    = fields.One2many('is.invest.detail', 'global_id', u"Investissements Détail", readonly=True)
+    montant_odoo  = fields.Float(u"Montant Odoo" , digits=(12, 0), compute="_compute_montant", store=False, readonly=True)
+    montant_cegid = fields.Float(u"Montant Cegid", digits=(12, 0), compute="_compute_montant", store=False, readonly=True)
+    reste_odoo    = fields.Float(u"Reste Odoo"   , digits=(12, 0), compute="_compute_montant", store=False, readonly=True)
+    reste_cegid   = fields.Float(u"Reste Cegid"  , digits=(12, 0), compute="_compute_montant", store=False, readonly=True)
 
 
     @api.model
@@ -63,6 +83,24 @@ class IsInvestDetail(models.Model):
     _description = u"Investissement détail"
     _order='name'
 
+    @api.depends('global_id')
+    def _compute_montant_odoo(self):
+        for obj in self:
+            montant = 0.0
+            for line in obj.cde_ids:
+                montant += line.montant
+            obj.montant_odoo = montant
+
+
+    @api.depends('global_id')
+    def _compute_montant_cegid(self):
+        for obj in self:
+            montant = 0.0
+            for line in obj.compta_ids:
+                montant += line.montant
+            obj.montant_cegid = montant
+
+
     global_id     = fields.Many2one("is.invest.global", "Invest Global", readonly=True, select=True)
     ordre         = fields.Integer(u'Ordre', select=True, readonly=True)
     name          = fields.Char(u'N°Invest Détail', select=True, readonly=True)
@@ -74,6 +112,8 @@ class IsInvestDetail(models.Model):
     section       = fields.Char(u'Section', required=True, select=True)
     cde_ids       = fields.One2many('is.invest.cde', 'detail_id', u"Commandes", readonly=True)
     compta_ids    = fields.One2many('is.invest.compta', 'detail_id', u"Compta", readonly=True)
+    montant_odoo  = fields.Float(u"Montant Odoo",  digits=(12, 0), compute="_compute_montant_odoo" , store=False, readonly=True)
+    montant_cegid = fields.Float(u"Montant Cegid", digits=(12, 0), compute="_compute_montant_cegid", store=False, readonly=True)
 
 
     @api.model
