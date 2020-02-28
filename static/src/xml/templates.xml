@@ -7,18 +7,11 @@
             <form style="padding-top:0.5em;padding-bottom:0.5em">
                 <table>
                     <tr>
-                        <!--
-                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;display: none;">Etablissement<br/>
-                            <select style="width: 4em;" id='etablissement' />
-                        </td>
-                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;display: none;">Service / Equipe<br/>
-                            <select style="width: 4em;" id='service' />
-                        </td>
-                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;display: none;">Section<br /><input style='width:4em' type='text' id='section' /></td>
-                        -->
-
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
                             Service (Partiel)<br /><input style='width:10em' type='text' id='service' />
+                        </td>
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
+                            Poste (Partiel)<br /><input style='width:10em' type='text' id='poste' />
                         </td>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
                             Nom (Partiel)<br /><input style='width:8em' type='text' id='nom' />

@@ -14,9 +14,10 @@ class is_demande_conges(models.Model):
     def analyse_des_absences(self, filter=False):
         cr, uid, context = self.env.args
         titre = "Calendrier des absences"
-        etablissement = ''
+        #etablissement = ''
         service = ''
-        section = ''
+        poste = ''
+        #section = ''
         nom = ''
         date_debut = ''
         nb_jours = 7
@@ -30,20 +31,26 @@ class is_demande_conges(models.Model):
         dummy, act_id_demande = data_pool.get_object_reference('is_pg_2019', "is_demande_conges_action")
         if filter:
             service    = filter['service']
+            poste      = filter['poste']
             nom        = filter['nom']
             nb_jours   = filter['nb_jours']
             date_debut = filter['date_debut']
             start_date = filter['start_date']
             end_date   = filter['end_date']
             back_forward_days = int(filter['back_forward_days'] or 0)
-        width=220+40+int(nb_jours)*(24+2)+22
+        width=220+220+220+40+int(nb_jours)*(24+2)+22
         NomCol = []
         where_condition = ''
 
         if service:
             emp_domain.append(('department_id','ilike', service))
+        if poste:
+            emp_domain.append(('job_id','ilike', poste))
         if nom:
             emp_domain.append(('name','ilike', nom))
+
+        emp_domain.append(('department_id','!=', 'INTERIMAIRE'))
+
 
         week_per_year = defaultdict(dict)
         today_date = datetime.date.today()
@@ -111,6 +118,8 @@ class is_demande_conges(models.Model):
         html+="<table id='table21' style=\"border-width:0px;border-spacing:0px;padding:0px;width:"+str(width)+"px;\">\n";
         html += "<thead><tr class=\"TitreTabC\">\n"
         html += "<td style=\"width:220px;\"></td>\n"
+        html += "<td style=\"width:220px;\"></td>\n"
+        html += "<td style=\"width:220px;\"></td>\n"
         for col in sorted(week_per_year.keys()):
             align = 'center'
             main_heading = 'Sem ' + \
@@ -126,6 +135,10 @@ class is_demande_conges(models.Model):
         # data Display
         html += "<tr>"
         html += "<td style='width:220px;color:black;text-align:center;'>Nom</td>\n"
+
+        html += "<td style='width:220px;color:black;text-align:center;'>Service</td>\n"
+        html += "<td style='width:220px;color:black;text-align:center;'>Poste</td>\n"
+
         for col in sorted(week_per_year.keys()):
             align = 'center'
             week_days = (week_per_year[col][
@@ -168,8 +181,11 @@ class is_demande_conges(models.Model):
         html+="<table id='table2' style=\"border-width:0px;border-spacing:0px;padding:0px;width:"+str(width)+"px;\">\n";
         for emp in emp_ids:
             html += "<tr>"
-            html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + \
-                emp.name + "</td>\n"
+            html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + emp.name + "</td>\n"
+
+            html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + (emp.department_id.name or '') + "</td>\n"
+            html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + (emp.job_id.name or '') + "</td>\n"
+
             for col in sorted(week_per_year.keys()):
                 align = 'center'
                 week_days = (week_per_year[col][
@@ -179,15 +195,24 @@ class is_demande_conges(models.Model):
                     M_C = ''
                     conges_count = absence_count = False
                     if emp.user_id:
-                        conges_count = is_demande_conges_obj.search(
-                            [('demandeur_id', '=', emp.user_id.id),
+                        conges_count = is_demande_conges_obj.search([
+                             ('demandeur_id', '=', emp.user_id.id),
                              ('date_debut', '<=', display_date),
-                             ('date_fin', '>=', display_date),])
+                             ('date_fin', '>=', display_date),
+                        ])
                         if not conges_count:
-                            conges_count = is_demande_conges_obj.search(
-                                [('demandeur_id', '=', emp.user_id.id), ('date_debut', '=', display_date)])
+                            conges_count = is_demande_conges_obj.search([
+                                ('demandeur_id', '=', emp.user_id.id),
+                                ('le', '=', display_date),
+                            ])
+                        #if not conges_count:
+                        #    conges_count = is_demande_conges_obj.search([
+                        #        ('demandeur_id', '=', emp.user_id.id),
+                        #        ('date_debut', '=', display_date),
+                        #    ])
                         if conges_count:
                             M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>'
+
                     absence_count = is_demande_absence_obj.search(
                         [('employe_ids', 'in', [emp.id]),
                          ('date_debut', '<=', display_date),
@@ -215,9 +240,10 @@ class is_demande_conges(models.Model):
         html += "</div>\n"
 
         vals = {
-            'etablissement': etablissement,
+            #'etablissement': etablissement,
             'service': service,
-            'section': section,
+            'poste': poste,
+            #'section': section,
             'nom': nom,
             'date_debut': date_debut,
             'nb_jours': nb_jours,

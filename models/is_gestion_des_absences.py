@@ -7,6 +7,11 @@ import os
 import unicodedata
 
 
+#TODO : Le demandeur devrait être un employé. Un simle employé ne doit pas pouvoir selectionner un autre employé. La gestion des droits sur les employés doit s'appiquer
+#TODO : Mettre en place la gestion des droits sur les employés 
+#TODO : Revoir la gestion des droits sur les différents menus
+
+
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
@@ -21,6 +26,17 @@ class hr_employee(models.Model):
                                         ], string='Mode de communication')
     is_mobile   = fields.Char(u"Mobile"  , help="Téléphone utilisé pour l'envoi des SMS pour les demandes de congés")
     is_courriel = fields.Char(u"Courriel", help="Courriel utilisé pour l'envoi des informations pour les demandes de congés")
+
+
+
+#class is_demande_conges_droit(models.Model):
+#    _name        = 'is.demande.conges.droit'
+#    _description = u'Droit sur demannde de congés'
+#    _order       = 'conge_id,name'
+
+#    name       = fields.Char(u"Type", required=True)
+#    nombre     = fields.Float(u"Nombre", digits=(14,2))
+#    conge_id   = fields.Many2one('is.demande.conges', 'Demande de congés', required=True, ondelete='cascade', readonly=True)
 
 
 class is_demande_conges(models.Model):
@@ -95,6 +111,7 @@ class is_demande_conges(models.Model):
     @api.multi
     def creer_notification(self, subject,body_html):
         for obj in self:
+            user = self.env['res.users'].browse(self._uid)
             vals={
                 'subject'       : subject,
                 'body'          : body_html, 
@@ -102,9 +119,10 @@ class is_demande_conges(models.Model):
                 'model'         : self._name,
                 'res_id'        : obj.id,
                 'notification'  : True,
+                'author_id'     : user.partner_id.id
                 #'message_type'  : 'comment',
             }
-            email=self.env['mail.mail'].create(vals)
+            email=self.env['mail.mail'].sudo().create(vals)
 
 
     @api.multi
@@ -247,7 +265,33 @@ class is_demande_conges(models.Model):
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].get('is.demande.conges') or ''
+#        droits = self.cherche_droits(vals['demandeur_id'])
+#        #droit_conges_ids = res['value']['droit_conges_ids']
+#        ids=[]
+#        for line in droits:
+#            ids.append((0,0,line))
+#        vals['droit_conges_ids'] =  ids
         return super(is_demande_conges, self).create(vals)
+
+
+
+#    @api.multi
+#    def write(self,vals):
+#        res = super(is_demande_conges, self).write(vals)
+#        if 'demandeur_id' in vals:
+#            employes = self.env['hr.employee'].search([('user_id', '=', vals['demandeur_id'])], limit=1)
+#            for employe in employes:
+#                droits = self.env['is.droit.conges'].search([('employe_id', '=', employe.id)])
+#                for droit in droits:
+#                    v={
+#                        'name'    : droit.name,
+#                        'nombre'  : droit.nombre,
+#                        'conge_id': self.id,
+#                    }
+#                    print 'v=',v
+#                    self.env['is.demande.conges.droit'].create(v)
+#        print 'vals write=',vals
+#        return res
 
 
     @api.depends('state','demandeur_id','createur_id','responsable_rh_id','valideur_n1','valideur_n1')
@@ -335,13 +379,61 @@ class is_demande_conges(models.Model):
             mode_communication = False
             mobile             = False
             courriel           = False
+            droit_cp  = 0
+            droit_rtt = 0
+            droit_rc  = 0
+
+
             for employe in employes:
                 mode_communication = employe.is_mode_communication
                 mobile             = employe.is_mobile
                 courriel           = employe.is_courriel
+
+                droits = self.env['is.droit.conges'].search([('employe_id', '=', employe.id)])
+                for droit in droits:
+                    if droit.name=='CP':
+                        droit_cp = droit.nombre
+                    if droit.name=='RTT':
+                        droit_rtt = droit.nombre
+                    if droit.name=='RC':
+                        droit_rc = droit.nombre
+
+            print courriel, droit_cp
+
+
             obj.mode_communication = mode_communication
             obj.mobile             = mobile
             obj.courriel           = courriel
+            obj.droit_cp  = droit_cp
+            obj.droit_rtt = droit_rtt
+            obj.droit_rc  = droit_rc
+        return True
+
+
+#    @api.multi
+#    def cherche_droits(self, demandeur_id):
+#        print demandeur_id
+#        employes = self.env['hr.employee'].search([('user_id', '=', demandeur_id)], limit=1)
+#        #value = {}
+#        lines = []
+#        for employe in employes:
+#            droits = self.env['is.droit.conges'].search([('employe_id', '=', employe.id)])
+#            for droit in droits:
+#                print droit, droit.name,droit.nombre,employe.id
+#                
+#                vals={
+#                    'name'    : droit.name,
+#                    'nombre'  : droit.nombre,
+#                }
+#                print vals
+#                lines.append(vals)
+#        return lines
+#        #value.update({'droit_conges_ids': lines})
+#        #return  {'value': value}
+
+
+
+
 
 
     name                          = fields.Char(u"N° demande")
@@ -367,10 +459,16 @@ class is_demande_conges(models.Model):
                                         ('cp_rtt_journee', u'CP ou RTT par journée entière'),
                                         ('cp_rtt_demi_journee', u'CP ou RTT par ½ journée'),
                                         ('rc_heures', 'RC en heures'),
-                                        ], string='Type de demande')
-    cp                            = fields.Float(string='CP (jours)' , copy=False)
-    rtt                           = fields.Float(string='RTT (jours)', copy=False)
-    rc                            = fields.Float(string='RC (heures)', copy=False)
+                                        ], string='Type de demande', required=True)
+    #droit_conges_ids              = fields.One2many('is.demande.conges.droit', 'conge_id', u"Droit aux congés")
+    cp                            = fields.Float(string='CP (jours)' , digits=(14,2), copy=False)
+    rtt                           = fields.Float(string='RTT (jours)', digits=(14,2), copy=False)
+    rc                            = fields.Float(string='RC (heures)', digits=(14,2), copy=False)
+
+    droit_cp                      = fields.Float(string='Droit CP (jours)' , digits=(14,2), compute='_compute_mode_communication', readonly=True, store=True)
+    droit_rtt                     = fields.Float(string='Droit RTT (jours)', digits=(14,2), compute='_compute_mode_communication', readonly=True, store=True)
+    droit_rc                      = fields.Float(string='Droit RC (heures)', digits=(14,2), compute='_compute_mode_communication', readonly=True, store=True)
+
     date_debut                    = fields.Date(string=u'Date début')
     date_fin                      = fields.Date(string='Date fin')
     le                            = fields.Date(string='Le')
@@ -404,7 +502,7 @@ class is_demande_conges(models.Model):
 class is_demande_absence_type(models.Model):
     _name        = 'is.demande.absence.type'
 
-    name = fields.Char(string='Name')
+    name = fields.Char(string='Type', required=True)
 
 
 class is_demande_absence(models.Model):
@@ -419,10 +517,10 @@ class is_demande_absence(models.Model):
     name          = fields.Char(u"N° demande")
     createur_id   = fields.Many2one('res.users', u'Créateur', default=lambda self: self.env.user)
     date_creation = fields.Datetime(string=u'Date de création', default=lambda *a: fields.datetime.now())
-    type_absence  = fields.Many2one('is.demande.absence.type', string=u'Type d’absence')
-    date_debut    = fields.Date(string='Date de début')
-    date_fin      = fields.Date(string='Date de fin')
-    employe_ids   = fields.Many2many('hr.employee', string=u'Employés')
+    type_absence  = fields.Many2one('is.demande.absence.type', string=u'Type d’absence', required=True)
+    date_debut    = fields.Date(string='Date de début', required=True)
+    date_fin      = fields.Date(string='Date de fin', required=True)
+    employe_ids   = fields.Many2many('hr.employee', string=u'Employés', required=True)
 
 
 class is_droit_conges(models.Model):
@@ -430,9 +528,8 @@ class is_droit_conges(models.Model):
     _description = u'Droit aux congés'
     _order       = 'employe_id,name'
 
-    name          = fields.Char(u"Type", required=True)
-    description   = fields.Char(u"Description", required=True)
-    nombre        = fields.Float(u"Nombre", digits=(14,1))
-    employe_id    = fields.Many2one('hr.employee', 'Employé', required=True, ondelete='cascade', readonly=True)
+    name       = fields.Char(u"Type", required=True)
+    nombre     = fields.Float(u"Nombre", digits=(14,2))
+    employe_id = fields.Many2one('hr.employee', 'Employé', required=True, ondelete='cascade', readonly=False)
 
 

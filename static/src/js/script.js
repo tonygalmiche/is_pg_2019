@@ -60,7 +60,7 @@ openerp.is_pg_2019 = function(instance, local) {
                             form: {
                                 action_buttons: true,
                                 options: {
-                                    mode: 'edit'
+                                    mode: 'view'
                                 }
                             }
                         },
@@ -88,9 +88,10 @@ function des_absence_load_data(instance){
     width=window.innerWidth-250;   // Recupere l'espace disponilbe dans le navigateur
 
     var filter = {
-        etablissement     : $("#etablissement").val(),
+        //etablissement     : $("#etablissement").val(),
         service           : $("#service").val(),
-        section           : $("#section").val(),
+        poste             : $("#poste").val(),
+        //section           : $("#section").val(),
         nom               : $("#nom").val(),
         date_debut        : $("#date_debut").val(),
         nb_jours          : $("#nb_jours").val(),
@@ -105,9 +106,10 @@ function des_absence_load_data(instance){
 
     is_demande_conges.call('analyse_des_absences',[filter],{}).then(function (data) {
         $("#titre").html(data['titre']);
-        $('#etablissement').val(data['etablissement']);
+        //$('#etablissement').val(data['etablissement']);
         $('#service').val(data['service']);
-        $('#section').val(data['section']);
+        $('#poste').val(data['poste']);
+        //$('#section').val(data['section']);
         $('#nom').val(data['nom']);
         $('#date_debut').val(data['date_debut']);
         $('#nb_jours').val(data['nb_jours']);

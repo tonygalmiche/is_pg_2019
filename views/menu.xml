@@ -188,5 +188,70 @@
             sequence="10"
         />
 
+
+
+
+        <!-- Absences -->
+        <menuitem
+            name="Absences"
+            id="menu_absences_root"
+            sequence="89"
+        />
+        <menuitem
+            name="Gestion des absences"
+            id="menu_hr_gestion_des_absences"
+            parent="menu_absences_root"
+            sequence="10"
+        />
+        <menuitem
+            name="Demande de congés"
+            id="menu_is_of_en_cours"
+            parent="menu_hr_gestion_des_absences"
+            sequence="10"
+            action="is_demande_conges_action"
+        />
+        <menuitem
+            id="menu_is_demande_absence"
+            parent="menu_hr_gestion_des_absences"
+            name="Absence"
+            groups="is_pg_2019.is_gestionnaire_des_absences_group"
+            sequence="20"
+            action="is_demande_absence_action"
+        />
+        <menuitem
+            id="menu_is_demande_absence_type"
+            parent="menu_hr_gestion_des_absences"
+            name="Type d’absence"
+            groups="is_pg_2019.is_gestionnaire_des_absences_group"
+            sequence="30"
+            action="is_demande_absence_type_action"
+        />
+        <menuitem
+            id="is_employe_absence_menu" 
+            parent="menu_hr_gestion_des_absences"
+            name="Employés"
+            sequence="40"
+            action="is_employe_absence_action"
+        />
+        <menuitem
+            id="is_droit_conges_menu"
+            parent="menu_hr_gestion_des_absences"
+            name="Droit aux congés"
+            groups="is_pg_2019.is_gestionnaire_des_absences_group"
+            sequence="50"
+            action="is_droit_conges_action"
+        />
+
+
+        <!-- Ressources Humaines -->
+        <menuitem
+            id="is_hr_job_menu"
+            parent="hr.menu_hr_configuration"
+            name="Postes"
+            sequence="90"
+            action="is_hr_job_action"
+        />
+
+
     </data>
 </openerp>

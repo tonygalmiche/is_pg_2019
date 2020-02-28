@@ -2,6 +2,40 @@
 <openerp>
     <data>
 
+
+        <!-- hr.emplyee -->
+        <record id="is_hr_employe_user_rule" model="ir.rule">
+            <field name="name">Accès à la fiche employé à l'utilisateur en consultation, au valideur N1 et au valideur N2</field>
+            <field name="model_id" ref="model_hr_employee" />
+            <field name="domain_force">['|','|',
+                ('user_id', '=', user.id),
+                ('is_valideur_n1','=',user.id),
+                ('is_valideur_n2','=',user.id),
+            ]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_unlink" />
+            <field eval="0" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="0" name="perm_create" />
+        </record>
+
+        <record id="is_hr_employe_gestionnaire_des_absences_rule" model="ir.rule">
+            <field name="name">Accès à tous les emplyés en lecture au groupe Gestionnaire des absences</field>
+            <field name="model_id" ref="model_hr_employee" />
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('is_pg_2019.is_gestionnaire_des_absences_group'))]"/>
+            <field eval="0" name="perm_unlink" />
+            <field eval="0" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="0" name="perm_create" />
+        </record>
+
+
+
+
+
+        <!-- is.demande.conges -->
         <record id="is_demande_conges_creation_rule" model="ir.rule">
             <field name="name">Demande de congés: Access to user in 'Brouillon' state</field>
             <field name="model_id" ref="model_is_demande_conges" />
