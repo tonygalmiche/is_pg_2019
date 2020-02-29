@@ -4,7 +4,7 @@
 
         <template id="report_defautheque_transfert_style">
             .tablecls td {
-                font-size:8pt;
+                font-size:11pt;
                 vertical-align:middle;
                 text-align:center;
                 border: 1px solid #046dce;
@@ -16,7 +16,7 @@
                 padding-bottom:4px;
             }
             .tablecls th {
-                font-size:10pt;
+                font-size:11pt;
                 vertical-align:middle;
                 font-weight: bold;
                 text-align:center;
@@ -40,8 +40,8 @@
             .imgclass0 {
                 text-align:center;
                 text-align: center;
-                max-height: 80mm;
-                max-width: 80mm;
+                max-height: 90mm;
+                max-width: 90mm;
                 vertical-align: middle;
                 padding-left:8px;
                 padding-top:5px;
@@ -99,11 +99,11 @@
                             <td width="15%" rowspan="3" class="classborder">
                                 <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo" style="max-height: 60px;"/>
                             </td>
-                            <td width="65%" rowspan="1">
-                                <div style="font-size:16px" t-field="company.street"/>
+                            <td width="65%" rowspan="1" style="font-size:16px">
+                                Processus Management de la qualité - <span t-field="company.street"/>
                             </td>
                             <td width="20%" rowspan="1">
-                                <div>FO-0-PROD-</div>
+                                <div>FO-0-MQ-59</div>
                             </td>
                         </tr>
                         <tr>
@@ -136,15 +136,22 @@
                         <div class="row">
                             <table width="100%">
                                 <tr>
-                                    <td width="5%">
-                                    </td>
-                                    <td width="95%">
-                                        <div>
-                                            Défauthèque rattachée à la gamme n° <span t-field="o.name" />
-                                        </div>
-                                    </td>
+                                    <td width="5%"></td>
+                                    <td width="45%" style="text-align:right;padding-right:0.5em">Défauthèque rattachée à la gamme : </td>
+                                    <td width="50%"><b t-field="o.name"/></td>
+                                </tr>
+                                <tr t-if="o.moule_dossierf">
+                                    <td width="5%"></td>
+                                    <td width="45%" style="text-align:right;padding-right:0.5em">Moule / Dossier F : </td>
+                                    <td width="50%"><b t-field="o.moule_dossierf"/></td>
+                                </tr>
+                                <tr t-if="o.product_id">
+                                    <td width="5%"></td>
+                                    <td width="45%" style="text-align:right;padding-right:0.5em">Article : </td>
+                                    <td width="50%"><b t-field="o.product_id"/></td>
                                 </tr>
                             </table>
+                            <!--
                             <br/>
                             <t t-set="default_values" t-value="o.get_default_data()" />
                             <t t-if="default_values">
@@ -207,37 +214,38 @@
                                 </t>
                             </table>
                             </t>
+                            -->
                             <br/>
                             <t t-set="defautheque_values" t-value="o.get_defautheque_data()" />
                             <t t-if="defautheque_values">
                             <table class="tablecls" width="100%">
                                 <thead>
                                     <tr>
-                                        <th width="20%">N° du défaut</th>
-                                        <th width="30%">Description</th>
-                                        <th width="30%">Photo</th>
-                                        <th width="20%">Nb rebuts</th>
+                                        <th width="10%">N° du défaut</th>
+                                        <th width="40%">Description</th>
+                                        <th width="50%">Photo</th>
+                                        <!--<th width="20%">Nb rebuts</th>-->
                                     </tr>
                                 </thead>
                                 <tboby>
                                     <t t-foreach="defautheque_values" t-as="rec">
                                         <tr>
-                                            <td width="15%">
-                                                <span t-esc="rec['name']" />
-                                            </td>
-                                            <td width="21%">
-                                                <t t-raw="rec['defaut'].replace('\n', '&lt;br&gt;')" />
-                                            </td>
-                                            <td width="12%">
+                                            <td><span t-esc="rec['name']"/></td>
+                                            <td><t t-raw="rec['defaut'].replace('\n', '&lt;br&gt;')"/></td>
+                                            <td>
                                                 <div>
-                                                    <img t-if="rec['photo']"
-                                                                 t-att-src="'data:image/png;base64,%s' % rec['photo']"
-                                                                 class="imgclass0" />
+                                                    <img 
+                                                        t-if="rec['photo']"
+                                                        t-att-src="'data:image/png;base64,%s' % rec['photo']"
+                                                        class="imgclass0"
+                                                    />
                                                 </div>
                                             </td>
+                                            <!--
                                             <td width="10%">
                                                 <span t-esc="rec['nb_rebuts']" />
                                             </td>
+                                            -->
                                         </tr>
                                     </t>
                                 </tboby>
@@ -262,12 +270,12 @@
             <field name="page_height">0</field>
             <field name="page_width">0</field>
             <field name="orientation">Portrait</field>
-            <field name="margin_top">25</field>
+            <field name="margin_top">27</field>
             <field name="margin_bottom">15</field>
             <field name="margin_left">7</field>
             <field name="margin_right">7</field>
             <field name="header_line" eval="False" />
-            <field name="header_spacing">20</field>
+            <field name="header_spacing">22</field>
             <field name="dpi">90</field>
         </record>
 

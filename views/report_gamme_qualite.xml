@@ -4,7 +4,7 @@
 
         <template id="report_qualite_transfert_style">
             .tablecls1 {
-                font-size:10pt;
+                font-size:11pt;
                 border: 1px solid #046dce;
                 vertical-align:middle;
                 text-align:left;
@@ -14,7 +14,7 @@
                 padding-bottom:4px;
             }
             .tablecls1 td {
-                font-size:10pt;
+                font-size:11pt;
                 border: 0px solid #046dce;
                 vertical-align:middle;
                 text-align:left;
@@ -24,7 +24,7 @@
                 padding-bottom:4px;
             }
             .tablecls td {
-                font-size:8pt;
+                font-size:11pt;
                 vertical-align:middle;
                 text-align:center;
                 border: 1px solid #046dce;
@@ -36,7 +36,7 @@
                 padding-bottom:4px;
             }
             .tablecls th {
-                font-size:10pt;
+                font-size:11pt;
                 vertical-align:middle;
                 font-weight: bold;
                 text-align:center;
@@ -66,9 +66,9 @@
             }
             .imgclass0 {
                 text-align:center;
-                max-height: 80mm;
+                max-height: 90mm;
                 text-align: center;
-                max-width: 80mm;
+                max-width: 90mm;
                 vertical-align: middle;
                 padding-left:8px;
                 padding-top:5px;
@@ -126,11 +126,11 @@
                             <td width="15%" rowspan="3" class="classborder">
                                 <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo" style="max-height: 60px;"/>
                             </td>
-                            <td width="65%" rowspan="1">
-                                <div style="font-size:16px" t-field="company.street"/>
+                            <td width="65%" rowspan="1" style="font-size:16px">
+                                Processus Management de la qualité - <span t-field="company.street"/>
                             </td>
                             <td width="20%" rowspan="1">
-                                <div>FO-0-PROD-32-7</div>
+                                <div>IT-0-MQ-09</div>
                             </td>
                         </tr>
                         <tr>
@@ -237,7 +237,7 @@
                                                     <span t-field="o.cadence_previsionnelle" /> pièces/h
                                                 </td>
                                                 <td width="25%">
-                                                    Soit un coût de contrôle de
+                                                    soit un coût de contrôle/pièce de
                                                 </td>
                                                 <td width="20%">
                                                     <div>
@@ -295,21 +295,19 @@
 
                             <t t-if="o.operation_standard_ids">
                                 <table class="tablecls" width="100%">
-                                    <th width="80%">
-                                        <div>Liste des opérations standards</div>
-                                    </th>
-                                    <th width="20%">
-                                        <div>Temps (s/pièce)</div>
-                                    </th>
+                                    <th width="100%">Liste des opérations standards</th>
+                                    <!--<th width="20%">Temps (s/pièce)</th>-->
                                     <t t-foreach="o.operation_standard_ids" t-as="rec">
                                         <t t-if="rec.active">
                                         <tr>
-                                            <td width="80%"  style="text-align: left">
+                                            <td style="text-align: left">
                                                 <span t-esc="rec.operation_standard_id.name" />
                                             </td>
+                                            <!--
                                             <td width="20%" style="text-align: right">
                                                 <span t-esc="rec.temps_etape" />
                                             </td>
+                                            -->
                                         </tr>
                                         </t>
                                     </t>
@@ -318,28 +316,22 @@
                             <br/>
                             <t t-if="o.operation_specifique_ids">
                                 <table class="tablecls" width="100%">
-                                    <th width="45%">
-                                        <div>Liste des opérations spécifiques</div>
-                                    </th>
-                                    <th width="35%">
-                                        <div>Photo</div>
-                                    </th>
-                                    <th width="20%">
-                                        <div>Temps(s/pièce)</div>
-                                    </th>
+                                    <th width="45%">Liste des opérations spécifiques</th>
+                                    <th width="45%">Photo</th>
+                                    <th width="10%">Temps (s/pièce)</th>
                                     <t t-foreach="o.operation_specifique_ids" t-as="rec">
                                         <tr>
-                                            <td width="45%">
+                                            <td>
                                                 <div align="left">
                                                     <t t-raw="rec.operation.replace('\n', '&lt;br&gt;')" />
                                                 </div>
                                             </td>
-                                            <td width="35%">
+                                            <td>
                                                 <img t-if="rec.photo"
                                                                     t-att-src="'data:image/png;base64,%s' % rec.photo"
                                                                     class="imgclass0" />
                                             </td>
-                                            <td width="20%">
+                                            <td>
                                                 <span t-esc="rec.temps_etape" />
                                             </td>
                                         </tr>

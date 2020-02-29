@@ -238,6 +238,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                                     ("securisation", u"Sécurisation"),
                                     ("reprise", "Reprise"),
                                 ], "Type de gamme", required=True)
+    commentaire              = fields.Char(u"Commentaire", help=u"Pour pouvoir attribuer un nom à la gamme. Il peut y avoir plusieurs gammes sur un même moule (plusieurs incidents différents par exemple). Ce champ commentaire permet de savoir à quoi correspond chaque gamme")
     gamme_sur                = fields.Selection([
                                     ("moule", "Moule"),
                                     ("dossier_f", "Dossier F"),
@@ -344,7 +345,6 @@ class is_ctrl100_defaut(models.Model):
     @api.returns('self')
     def _get_employee(self):
         id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)],limit=1) or False
-        #print self,id
         return id
 
 
@@ -397,6 +397,24 @@ class is_ctrl100_rapport_controle(models.Model):
     _order       = 'gamme_id desc'
     _rec_name    = 'gamme_id'
 
+
+    @api.multi
+    def get_tps_passe(self, gamme_id, date_debut, date_fin):
+        tps_passe = 0
+        self._cr.execute("\
+            select sum(tps_passe) \
+            from is_ctrl100_defaut \
+            where \
+                gamme_id=%s and \
+                date_saisie > %s and \
+                date_saisie <= %s \
+            ", (gamme_id.id,date_debut,date_fin))
+        res_ids = self._cr.fetchall()
+        for res in res_ids:
+            tps_passe += (res[0] or 0)
+        return tps_passe
+
+
     @api.multi
     def get_default_data(self, gamme_id, date_debut, date_fin):
         quantite_controlee_data = self.get_quantite_controlee(gamme_id, date_debut, date_fin)
@@ -404,9 +422,14 @@ class is_ctrl100_rapport_controle(models.Model):
         if quantite_controlee_data:
             sum_nb_rebuts = quantite_controlee_data['nb_rebuts']
         defautheque_obj = self.env['is.ctrl100.defautheque']
-        self._cr.execute("select is_ctrl100_defaut_line.defaut_id, sum(nb_rebuts) from is_ctrl100_defaut_line inner join is_ctrl100_defaut on is_ctrl100_defaut.id=is_ctrl100_defaut_line.defautid \
-        where is_ctrl100_defaut.gamme_id=%s and is_ctrl100_defaut.date_saisie > %s and \
-        is_ctrl100_defaut.date_saisie <= %s group by is_ctrl100_defaut_line.defaut_id", (gamme_id.id,date_debut,date_fin))
+        self._cr.execute("\
+            select is_ctrl100_defaut_line.defaut_id, sum(nb_rebuts) \
+            from is_ctrl100_defaut_line inner join is_ctrl100_defaut on is_ctrl100_defaut.id=is_ctrl100_defaut_line.defautid \
+            where \
+                is_ctrl100_defaut.gamme_id=%s and \
+                is_ctrl100_defaut.date_saisie > %s and \
+                is_ctrl100_defaut.date_saisie <= %s \
+            group by is_ctrl100_defaut_line.defaut_id", (gamme_id.id,date_debut,date_fin))
         listdisct = []
         x = []
         res_ids = self._cr.fetchall()
@@ -414,13 +437,14 @@ class is_ctrl100_rapport_controle(models.Model):
         popularity = []
         for res in res_ids:
             defautheque_data = defautheque_obj.browse(res[0])
-            popularity.append(res[1])
+            popularity.append(res[1] or 0)
             perc = 0.0
             if sum_nb_rebuts:
-                perc = float(res[1])*100/sum_nb_rebuts
+                perc = float(res[1] or 0)*100/sum_nb_rebuts
 #                 perc = round(perc, 2)
             recdict = {
                 'desc': defautheque_data.name + ' - ' + defautheque_data.defaut or '',
+                'name': defautheque_data.name,
                 'photo': defautheque_data.photo or '',
                 'qty': res[1],
                 'perc': perc,
@@ -430,18 +454,22 @@ class is_ctrl100_rapport_controle(models.Model):
         
         listdisct = sorted(listdisct, key = lambda i: i['qty'], reverse=True)
         for l in listdisct:
-            x.append(l['desc'])
+            x.append(l['name'])
         popularity.sort(reverse=True)
         plt.rcParams.update({'font.size': 22})
 #         my_dpi=96
 #         plt.figure(figsize=(900/my_dpi, 600/my_dpi), dpi=my_dpi)
         x_pos = [i for i, _ in enumerate(x)]
         fig, ax = plt.subplots()
+
+
+
+
         rects1 = ax.bar(x_pos, popularity, align="center", color='#5dade2')
         plt.xticks(x_pos, x)
         plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
 
-        print x,x_pos,popularity
+
 
 
         for rect in rects1:
@@ -497,10 +525,11 @@ class is_ctrl100_rapport_controle(models.Model):
         return quantite
 
 
-    gamme_id    = fields.Many2one("is.ctrl100.gamme.mur.qualite", string=u"N°gamme", required=True)
-    createur_id = fields.Many2one("res.users", "Createur", default=lambda self: self.env.user, required=True, writeable=True)
-    date_debut  = fields.Date(u"Date de début", required=True)
-    date_fin    = fields.Date("Date de fin", required=True)
+    gamme_id      = fields.Many2one("is.ctrl100.gamme.mur.qualite", string=u"N°gamme", required=True)
+    createur_id   = fields.Many2one("res.users", "Createur", default=lambda self: self.env.user, required=True, writeable=True)
+    date_debut    = fields.Date(u"Date de début", required=True)
+    date_fin      = fields.Date("Date de fin", required=True)
+    afficher_cout = fields.Boolean(u"Afficher le coût horaire et le coût total", default=False)
 
 
 class is_ctrl100_pareto(models.Model):

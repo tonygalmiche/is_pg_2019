@@ -48,8 +48,8 @@
             }
             .imgclass0 {
                 text-align:center;
-                max-width: 80mm;
-                max-height: 80mm;
+                max-width: 90mm;
+                max-height: 90mm;
                 text-align: center;
                 vertical-align: middle;
                 padding-left:8px;
@@ -160,7 +160,7 @@
                         </tr>
                         <tr>
                             <td class="tdcolor" rowspan="2">
-                                <div class="tdcolor">Rapport de contrôle</div>
+                                <div class="tdcolor">Rapport de mission</div>
                             </td>
                             <td rowspan="1">
                                 <div>Le <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_debut,'%Y-%m-%d'))"/></div>
@@ -229,11 +229,15 @@
                                             </tr>
                                             <tr>
                                                 <td width="15%">
-                                                    Produit :
+                                                    <div t-if="o.gamme_id.moule_dossierf">Moule / Dossier F : </div>
+                                                    <div t-if="o.gamme_id.product_id">Article : </div>
                                                 </td>
                                                 <td width="35%">
-                                                    <div>
-                                                        <span t-field="o.gamme_id.product_id.name" />
+                                                    <div t-if="o.gamme_id.moule_dossierf">
+                                                        <b t-field="o.gamme_id.moule_dossierf"/>
+                                                    </div>
+                                                    <div t-if="o.gamme_id.product_id">
+                                                        <b t-field="o.gamme_id.product_id"/>
                                                     </div>
                                                 </td>
                                                 <td width="18%">
@@ -279,13 +283,21 @@
                                                         <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_debut,'%Y-%m-%d'))"/> au <span t-esc="time.strftime('%d/%m/%Y',time.strptime(o.date_fin,'%Y-%m-%d'))"/>
                                                     </div>
                                                 </td>
-                                                <td width="18%">
-                                                    Coût du contrôle : 
+                                                <td width="25%">
+                                                    <div>Durée du contrôle : </div>
+                                                    <t t-if="o.afficher_cout">
+                                                        <div>Coût horaire du contrôle : </div>
+                                                        <div>Coût total du contrôle : </div>
+                                                    </t>
                                                 </td>
-                                                <td width="32%">
-                                                    <div>
-                                                         <span t-field="o.gamme_id.cout_ctrl_qualite"/> €/H
-                                                    </div>
+                                                <td width="25%">
+                                                    <t t-set="tps_passe"  t-value="o.get_tps_passe(o.gamme_id, o.date_debut, o.date_fin)"/>
+                                                    <t t-set="cout_total" t-value="tps_passe*o.gamme_id.cout_ctrl_qualite"/>
+                                                    <div><span t-esc='"{:,.2f}".format(tps_passe).replace(","," ").replace(".",",")'/> H</div>
+                                                    <t t-if="o.afficher_cout">
+                                                        <div><span t-field="o.gamme_id.cout_ctrl_qualite"/> €/H</div>
+                                                        <div><span t-esc='"{:,.2f}".format(cout_total).replace(","," ").replace(".",",")'/> €</div>
+                                                    </t>
                                                 </td>
                                             </tr>
                                         </table>
@@ -355,24 +367,24 @@
                                     <th width="5%">
                                         <div>Rang</div>
                                     </th>
-                                    <th width="31%">
+                                    <th width="28%">
                                         <div>Description</div>
                                     </th>
-                                    <th width="44%">
+                                    <th width="50%">
                                         <div>Photo</div>
                                     </th>
                                     <th width="10%">
                                         <div>Quantité</div>
                                     </th>
-                                    <th width="10%">
-                                        <div>Pourcentage</div>
+                                    <th width="7%">
+                                        <div>%</div>
                                     </th>
                                     <t t-foreach="default_values" t-as="rec">
                                         <tr>
-                                            <td width="15%">
+                                            <td>
                                                 <span t-esc="i" />
                                             </td>
-                                            <td width="21%">
+                                            <td>
                                                 <t t-raw="rec['desc'].replace('\n', '&lt;br&gt;')" />
                                             </td>
                                             <td width="12%">
@@ -380,11 +392,11 @@
                                                             t-att-src="'data:image/png;base64,%s' % rec['photo']"
                                                             class="imgclass0" />
                                             </td>
-                                            <td width="10%">
+                                            <td>
                                                 <span t-esc="rec['qty']" />
                                             </td>
-                                            <td width="10%">
-                                                <t t-esc="round(rec['perc'],2)"/> %
+                                            <td>
+                                                <t t-esc="int(rec['perc'])"/>%
                                             </td>
                                         </tr>
                                         <t t-set="i" t-value="i+1"/>
@@ -411,120 +423,6 @@
                                     </td>
                                 </tr>
                             </table>
-                            
-                            <!-- 
-                            <table class="tablecls" width="100%">
-                                <tr>
-                                    <td width="100%">
-                                        <h1>SVG Vertical Bar Chart</h1>
-
-                                        <svg class="chart" width="960" height="500">
-                                            <g transform="translate(40,20)">
-                                                <g class="x axis" transform="translate(0,450)">
-                                                    <g class="tick" transform="translate(25.5,0)" style="opacity: 1;"><line y2="4" x2="0"></line>
-                                                        <text dy=".71em" y="9" x="0" style="text-anchor: middle;">A</text>
-                                                        <rect x="4.5" width="15" y="14" height="350"></rect>
-                                                    </g>
-                                                    <g class="tick" transform="translate(25.5,0)" style="opacity: 1;">
-                                                        <rect width="20" height="140"></rect>
-                                                        <text x="17" y="9.5" dy=".35em">14</text>
-                                                    </g>
-                                                    <g class="tick" transform="translate(59.5,0)" style="opacity: 1;"><line y2="4" x2="0"></line>
-                                                        <text dy=".71em" y="9" x="0" style="text-anchor: middle;">B</text>
-                                                        <rect x="58.5"  width="20" height="140"></rect>
-                                                    </g>
-                                                    <g class="tick" transform="translate(59.5,0)" style="opacity: 1;">
-                                                        <rect width="20" height="440"></rect>
-                                                        <text x="17" y="9.5" dy=".35em">14</text>
-                                                    </g>
-                                                    <path class="domain" d="M0,6V0H900V6"></path>
-                                                </g>
-                                            </g>
-                                        </svg> -->
-
-                                        <!-- <svg class="chart" width="120" height="420">
-                                          <g transform="translate(0,0)">
-                                            <rect width="20" height="140"></rect>
-                                            <text x="17" y="9.5" dy=".35em">14</text>
-                                          </g>
-                                          <g transform="translate(25,0)">
-                                            <rect width="20" height="40"></rect>
-                                            <text x="17" y="9.5" dy=".35em">4</text>
-                                          </g>
-                                        </svg> -->
-
-<!-- 
-<svg width="960" height="500">
-    <g transform="translate(40,20)">
-    <g class="x axis" transform="translate(0,450)">
-            <g class="tick" transform="translate(25.5,0)" style="opacity: 1;"><line y2="6" x2="0"></line>
-            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">A</text>
-        </g>
-            <g class="tick" transform="translate(59.5,0)" style="opacity: 1;"><line y2="6" x2="0"></line>
-            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">B</text>
-        </g>
-            <g class="tick" transform="translate(93.5,0)" style="opacity: 1;"><line y2="6" x2="0"></line>
-            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">C</text>
-        </g>
-            <g class="tick" transform="translate(127.5,0)" style="opacity: 1;"><line y2="6" x2="0"></line>
-            <text dy=".71em" y="9" x="0" style="text-anchor: middle;">D</text>
-        </g>
-            
-        <path class="domain" d="M0,6V0H900V6"></path>
-    </g>
-        <g class="y axis">
-            <g class="tick" transform="translate(0,450)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">0%</text>
-        </g>
-            <g class="tick" transform="translate(0,414.57250826641473)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">1%</text>
-        </g>
-            <g class="tick" transform="translate(0,379.14501653282946)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">2%</text>
-        </g>
-            <g class="tick" transform="translate(0,343.71752479924425)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">3%</text>
-        </g>
-            <g class="tick" transform="translate(0,308.290033065659)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">4%</text>
-        </g>
-            <g class="tick" transform="translate(0,272.86254133207365)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">5%</text>
-        </g>
-            <g class="tick" transform="translate(0,237.43504959848843)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">6%</text>
-        </g>
-            <g class="tick" transform="translate(0,202.0075578649031)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">7%</text>
-        </g>
-            <g class="tick" transform="translate(0,166.5800661313179)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">8%</text>
-        </g>
-            <g class="tick" transform="translate(0,131.15257439773262)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">9%</text>
-        </g>
-            <g class="tick" transform="translate(0,95.72508266414734)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">10%</text>
-        </g>
-            <g class="tick" transform="translate(0,60.297590930562116)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">11%</text>
-        </g>
-            <g class="tick" transform="translate(0,24.87009919697684)" style="opacity: 1;"><line x2="-6" y2="0"></line>
-            <text dy=".32em" x="-9" y="0" style="text-anchor: end;">12%</text>
-        </g>
-        <path class="domain" d="M-6,0H0V450H-6"></path>
-        <text transform="rotate(-90)" y="6" dy=".71em" style="text-anchor: end;">Frequency</text>
-    </g>
-        <rect class="bar" x="10" width="31" y="160.66367501180912" height="289.3363249881909"></rect>
-        <rect class="bar" x="44" width="31" y="397.1421823334908" height="52.85781766650922"></rect>
-        <rect class="bar" x="78" width="31" y="351.4407179971658" height="98.55928200283421"></rect>
-    </g>
-</svg>
- 
-                                    </td>
-                                </tr>
-                            </table>
- -->
                         </div>
                     </div>
                     </t>

@@ -58,8 +58,11 @@
                 <tree string="Gamme mur qualité">
                     <field name="name"/>
                     <field name="type_gamme"/>
+                    <field name="commentaire"/>
                     <field name="gamme_sur"/>
                     <field name="moule_dossierf"/>
+                    <field name="product_id"/>
+                    <field name="typologie_produit_id"/>
                     <field name="date_creation"/>
                     <field name="date_fin_validite"/>
                 </tree>
@@ -75,6 +78,7 @@
                         <group>
                             <field name="name"/>
                             <field name="type_gamme"/>
+                            <field name="commentaire" attrs="{'invisible': [('type_gamme', '!=', 'securisation'),('type_gamme', '!=', 'reprise')]}"/>
                             <field name="gamme_sur"/>
                             <field name="mold_id"     attrs="{'invisible': [('gamme_sur', '!=', 'moule')], 'required': [('gamme_sur', '=', 'moule')]}"/>
                             <field name="dossierf_id" attrs="{'invisible': [('gamme_sur', '!=', 'dossier_f')], 'required': [('gamme_sur', '=', 'dossier_f')]}"/>
@@ -137,8 +141,11 @@
                 <search string="Gamme mur qualité">
                     <field name="name"/>
                     <field name="type_gamme"/>
+                    <field name="commentaire"/>
                     <field name="gamme_sur"/>
                     <field name="moule_dossierf"/>
+                    <field name="product_id"/>
+                    <field name="typologie_produit_id"/>
                 </search>
             </field>
         </record>
@@ -351,7 +358,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_ctrl100_defaut_action">
-            <field name="name">Défauts</field>
+            <field name="name">Saisie mur qualité</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ctrl100.defaut</field>
             <field name="view_mode">tree,form</field>
@@ -380,6 +387,7 @@
                         <group>
                             <field name="gamme_id"/>
                             <field name="createur_id"/>
+                            <field name="afficher_cout"/>
                         </group>
                         <group>
                             <field name="date_debut"/>
@@ -391,7 +399,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_ctrl100_rapport_controle_action">
-            <field name="name">Rapport de contrôle</field>
+            <field name="name">Rapport de mission</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ctrl100.rapport.controle</field>
             <field name="view_mode">tree,form</field>
