@@ -8,13 +8,13 @@
                 <table>
                     <tr>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
+                            Nom (Partiel)<br /><input style='width:8em' type='text' id='nom' />
+                        </td>
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
                             Service (Partiel)<br /><input style='width:10em' type='text' id='service' />
                         </td>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
                             Poste (Partiel)<br /><input style='width:10em' type='text' id='poste' />
-                        </td>
-                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
-                            Nom (Partiel)<br /><input style='width:8em' type='text' id='nom' />
                         </td>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
                             Date Debut<br /><input style='width:8em' type='text' id='date_debut' />

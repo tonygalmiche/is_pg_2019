@@ -49,8 +49,8 @@ class is_demande_conges(models.Model):
         if nom:
             emp_domain.append(('name','ilike', nom))
 
-        emp_domain.append(('department_id','!=', 'INTERIMAIRE'))
-
+        #emp_domain.append(('department_id','!=', 'INTERIMAIRE'))
+        emp_domain.append(('job_id','!=', 'INTERIMAIRE'))
 
         week_per_year = defaultdict(dict)
         today_date = datetime.date.today()

@@ -136,6 +136,8 @@ access_is_droit_conges_gestionnaire,access_is_droit_conges_gestionnaire,model_is
 
 access_is_hr_job,access_is_hr_job,hr.model_hr_job,base.group_user,1,0,0,0
 
+access_is_demande_conges_autre,access_is_demande_conges_autre,model_is_demande_conges_autre,base.group_user,1,0,0,0
+access_is_demande_conges_autre_gestionnaire,access_is_demande_conges_autre_gestionnaire,model_is_demande_conges_autre,is_pg_2019.is_gestionnaire_des_absences_group,1,1,1,1
 
 
 

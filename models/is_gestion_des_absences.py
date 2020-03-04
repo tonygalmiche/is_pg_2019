@@ -439,7 +439,7 @@ class is_demande_conges(models.Model):
     name                          = fields.Char(u"N° demande")
     createur_id                   = fields.Many2one('res.users', u'Créateur', default=lambda self: self.env.user        , copy=False)
     date_creation                 = fields.Datetime(string=u'Date de création', default=lambda *a: fields.datetime.now(), copy=False)
-    demandeur_id                  = fields.Many2one('res.users', 'Demandeur', default=lambda self: self.env.user)
+    demandeur_id                  = fields.Many2one('res.users', 'Demandeur', default=lambda self: self.env.user, required=True)
 
     mode_communication = fields.Selection([
                                         ('courriel'    , u'Courriel'),
@@ -456,11 +456,14 @@ class is_demande_conges(models.Model):
     responsable_rh_id             = fields.Many2one('res.users', 'Responsable RH', default=lambda self: self.env.user.company_id.is_responsable_rh_id)
     date_validation_rh            = fields.Datetime(string='Date Responsable RH', copy=False)
     type_demande                  = fields.Selection([
-                                        ('cp_rtt_journee', u'CP ou RTT par journée entière'),
+                                        ('cp_rtt_journee'     , u'CP ou RTT par journée entière'),
                                         ('cp_rtt_demi_journee', u'CP ou RTT par ½ journée'),
-                                        ('rc_heures', 'RC en heures'),
+                                        ('rc_heures'          , u'RC en heures'),
+                                        ('sans_solde'         , u'Congés sans solde'),
+                                        ('autre'              , u'Autre'),
                                         ], string='Type de demande', required=True)
-    #droit_conges_ids              = fields.One2many('is.demande.conges.droit', 'conge_id', u"Droit aux congés")
+    autre_id                      = fields.Many2one('is.demande.conges.autre', 'Type autre')
+    justificatif_ids              = fields.Many2many('ir.attachment', 'is_demande_conges_attachment_rel', 'demande_conges_id', 'file_id', u"Justificatif")
     cp                            = fields.Float(string='CP (jours)' , digits=(14,2), copy=False)
     rtt                           = fields.Float(string='RTT (jours)', digits=(14,2), copy=False)
     rc                            = fields.Float(string='RC (heures)', digits=(14,2), copy=False)
@@ -476,8 +479,10 @@ class is_demande_conges(models.Model):
                                         ('matin', 'Matin'),
                                         ('apres_midi', u'Après-midi')
                                         ], string=u'Matin ou après-midi')
-    heure_debut                   = fields.Integer(string=u'Heure début')
-    heure_fin                     = fields.Integer(string=u'Heure fin')
+    #heure_debut                  = fields.Integer(string=u'Heure début')
+    #heure_fin                    = fields.Integer(string=u'Heure fin')
+    heure_debut                   = fields.Float(u"Heure début", digits=(14, 2))
+    heure_fin                     = fields.Float(u"Heure fin"  , digits=(14, 2))
     raison_du_retour              = fields.Text(string='Motif du retour'       , copy=False)
     raison_annulation             = fields.Text(string='Motif refus/annulation', copy=False)
     state                         = fields.Selection([
@@ -497,6 +502,14 @@ class is_demande_conges(models.Model):
     vers_validation_rh_btn_vsb = fields.Boolean(string='vers_validation_rh_btn_vsb', compute='_get_btn_vsb', default=False, readonly=True)
     vers_solde_btn_vsb         = fields.Boolean(string='vers_solde_btn_vsb'        , compute='_get_btn_vsb', default=False, readonly=True)
     fld_vsb                    = fields.Boolean(string='Field Vsb'                 , compute='_get_btn_vsb', default=False, readonly=True)
+
+
+
+class is_demande_conges_autre(models.Model):
+    _name        = 'is.demande.conges.autre'
+
+    name = fields.Char(string='Type autre', required=True)
+
 
 
 class is_demande_absence_type(models.Model):

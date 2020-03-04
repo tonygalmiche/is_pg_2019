@@ -169,18 +169,65 @@
                                 <field name="valideur_n2" readonly="1" />
                                 <field name="responsable_rh_id" readonly="1" />
                                 <field name="type_demande" />
-                                <field name="date_debut"
-                                    attrs="{'invisible': [('type_demande', '!=', 'cp_rtt_journee')]}" />
-                                <field name="date_fin"
-                                    attrs="{'invisible': [('type_demande', '!=', 'cp_rtt_journee')]}" />
-                                <field name="le"
-                                    attrs="{'invisible': [('type_demande', 'not in', ['cp_rtt_demi_journee', 'rc_heures'])]}" />
-                                <field name="matin_ou_apres_midi"
-                                    attrs="{'invisible': [('type_demande', '!=', 'cp_rtt_demi_journee')]}" />
-                                <field name="heure_debut"
-                                    attrs="{'invisible': [('type_demande', '!=', 'rc_heures')]}" />
-                                <field name="heure_fin"
-                                    attrs="{'invisible': [('type_demande', '!=', 'rc_heures')]}" />
+                                <field 
+                                    name="autre_id"
+                                    attrs="{
+                                        'invisible': [('type_demande', 'not in', ['autre'])],
+                                        'required': [('type_demande', 'in', ['autre'])]
+                                    }" 
+                                />
+                                <field
+                                    name="justificatif_ids"
+                                    attrs="{
+                                        'invisible': [('type_demande', 'not in', ['autre'])],
+                                        'required': [('type_demande', 'in', ['autre'])]
+                                    }" 
+                                    widget="many2many_binary"
+                                />
+                                <field 
+                                    name="date_debut"
+                                    attrs="{
+                                        'invisible': [('type_demande', 'not in', ['cp_rtt_journee','sans_solde','autre'])],
+                                        'required': [('type_demande', 'in', ['cp_rtt_journee','sans_solde','autre'])]
+                                    }" 
+                                />
+                                <field 
+                                    name="date_fin"
+                                    attrs="{
+                                        'invisible': [('type_demande', 'not in', ['cp_rtt_journee','sans_solde','autre'])],
+                                        'required': [('type_demande', 'in', ['cp_rtt_journee','sans_solde','autre'])]
+                                    }" 
+                                />
+                                <field 
+                                    name="le"
+                                    attrs="{
+                                        'invisible': [('type_demande', 'not in', ['cp_rtt_demi_journee', 'rc_heures'])],
+                                        'required': ['|',('type_demande', '==', 'rc_heures'),('type_demande', '==', 'cp_rtt_demi_journee')]
+                                    }" 
+                                />
+                                <field 
+                                    name="matin_ou_apres_midi"
+                                    attrs="{
+                                        'invisible': [('type_demande', '!=', 'cp_rtt_demi_journee')],
+                                        'required': [('type_demande', '==', 'cp_rtt_demi_journee')]
+                                    }"
+                                />
+                                <field 
+                                    name="heure_debut"
+                                    attrs="{
+                                        'invisible': [('type_demande', '!=', 'rc_heures')],
+                                        'required': [('type_demande', '==', 'rc_heures')]
+                                    }" 
+                                    widget="float_time"
+                                />
+                                <field 
+                                    name="heure_fin"
+                                    attrs="{
+                                        'invisible': [('type_demande', '!=', 'rc_heures')],
+                                        'required': [('type_demande', '==', 'rc_heures')]
+                                    }" 
+                                    widget="float_time"
+                                />
                             </group>
                             <group>
                                 <field name="createur_id" readonly="1" />
@@ -241,6 +288,7 @@
                     <field name="name"/>
                     <field name="date_creation"/>
                     <field name="type_demande"/>
+                    <field name="autre_id"/>
                     <field name="date_debut"/>
                     <field name="date_fin"/>
                     <field name="le"/>
@@ -263,6 +311,7 @@
                 <search>
                     <field name="name"/>
                     <field name="type_demande"/>
+                    <field name="autre_id"/>
                     <field name="valideur_n1"/>
                     <field name="valideur_n2"/>
                     <field name="responsable_rh_id"/>
@@ -419,6 +468,47 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+
+
+
+        <!-- is.demande.conges.autre -->
+        <record model="ir.ui.view" id="view_is_demande_conges_autre_form">
+            <field name="name">view.is.demande.conges.autre.form</field>
+            <field name="model">is.demande.conges.autre</field>
+            <field name="arch" type="xml">
+                <form string="Type d’absence">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_demande_conges_autre_tree">
+            <field name="name">view.is.demande.absence.tree</field>
+            <field name="model">is.demande.conges.autre</field>
+            <field name="arch" type="xml">
+                <tree string="Type d’absence">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_demande_conges_autre_search">
+            <field name="name">is_demande_conges_autre_search</field>
+            <field name="model">is.demande.conges.autre</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_demande_conges_autre_action">
+            <field name="name">Type autre</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.demande.conges.autre</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
     </data>
 </openerp>
