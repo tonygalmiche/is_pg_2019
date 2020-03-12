@@ -504,11 +504,70 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_demande_conges_autre_action">
-            <field name="name">Type autre</field>
+            <field name="name">Autres congés</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.demande.conges.autre</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+
+
+
+
+        <!-- is.demande.conges.export.cegid -->
+        <record model="ir.ui.view" id="view_is_demande_conges_export_cegid_form">
+            <field name="name">view.is.demande.conges.export.cegid.form</field>
+            <field name="model">is.demande.conges.export.cegid</field>
+            <field name="arch" type="xml">
+                <form string="Type d’absence">
+                    <header>
+                        <button
+                            name="export_cegid_action"
+                            type="object"
+                            string="Export Cegid"
+                        />
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="date_debut"/>
+                            <field name="date_fin"/>
+                            <field name="user_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_is_demande_conges_export_cegid_tree">
+            <field name="name">view.is.demande.absence.tree</field>
+            <field name="model">is.demande.conges.export.cegid</field>
+            <field name="arch" type="xml">
+                <tree string="Type d’absence">
+                    <field name="name"/>
+                    <field name="date_debut"/>
+                    <field name="date_fin"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_demande_conges_export_cegid_search">
+            <field name="name">is_demande_conges_export_cegid_search</field>
+            <field name="model">is.demande.conges.export.cegid</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_demande_conges_export_cegid_action">
+            <field name="name">Export CEGID</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.demande.conges.export.cegid</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
 
     </data>
 </openerp>

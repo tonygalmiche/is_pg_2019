@@ -226,12 +226,32 @@
             sequence="50"
             action="is_droit_conges_action"
         />
+
+
+        <!-- Export CEGID -->
+        <menuitem
+            name="Export CEGID"
+            id="is_demande_conges_export_cegid_main_menu"
+            groups="base.group_hr_manager"
+            parent="menu_absences_root"
+            sequence="20"
+        />
+        <menuitem
+            id="is_demande_conges_export_cegid_menu"
+            parent="is_demande_conges_export_cegid_main_menu"
+            name="Export CEGID"
+            sequence="10"
+            action="is_demande_conges_export_cegid_action"
+        />
+
+
+        <!-- Tables -->
         <menuitem
             name="Tables"
             id="menu_hr_gestion_des_absences_table"
             groups="is_pg_2019.is_gestionnaire_des_absences_group"
             parent="menu_absences_root"
-            sequence="20"
+            sequence="30"
         />
         <menuitem
             id="menu_is_demande_absence_type"
@@ -243,7 +263,7 @@
         <menuitem
             id="is_demande_conges_autre_menu"
             parent="menu_hr_gestion_des_absences_table"
-            name="Type autre"
+            name="Autres congés"
             sequence="20"
             action="is_demande_conges_autre_action"
         />

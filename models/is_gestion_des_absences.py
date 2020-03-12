@@ -5,11 +5,9 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import os
 import unicodedata
-
-
-#TODO : Le demandeur devrait être un employé. Un simle employé ne doit pas pouvoir selectionner un autre employé. La gestion des droits sur les employés doit s'appiquer
-#TODO : Mettre en place la gestion des droits sur les employés 
-#TODO : Revoir la gestion des droits sur les différents menus
+import codecs
+import base64
+import csv, cStringIO
 
 
 class hr_employee(models.Model):
@@ -508,7 +506,7 @@ class is_demande_conges(models.Model):
 class is_demande_conges_autre(models.Model):
     _name        = 'is.demande.conges.autre'
 
-    name = fields.Char(string='Type autre', required=True)
+    name = fields.Char(string='Autre congé', required=True)
 
 
 
@@ -544,5 +542,117 @@ class is_droit_conges(models.Model):
     name       = fields.Char(u"Type", required=True)
     nombre     = fields.Float(u"Nombre", digits=(14,2))
     employe_id = fields.Many2one('hr.employee', 'Employé', required=True, ondelete='cascade', readonly=False)
+
+
+
+class is_demande_conges_export_cegid(models.Model):
+    _name        = 'is.demande.conges.export.cegid'
+
+    name       = fields.Char(u"N°export")
+    date_debut = fields.Date(string='Date de début', required=True, default=lambda self: self._date_debut())
+    date_fin   = fields.Date(string='Date de fin'  , required=True, default=lambda self: self._date_fin())
+    user_id    = fields.Many2one('res.users', 'Employé')
+
+
+    def _date_debut(self):
+        now  = datetime.date.today()              # Ce jour
+        j    = now.day                            # Numéro du jour dans le mois
+        d    = now - datetime.timedelta(days=j)   # Dernier jour du mois précédent
+        j    = d.day                              # Numéro jour mois précédent
+        d    = d - datetime.timedelta(days=(j-1)) # Premier jour du mois précédent
+        return d.strftime('%Y-%m-%d')
+
+
+    def _date_fin(self):
+        now  = datetime.date.today()            # Ce jour
+        j    = now.day                          # Numéro du jour dans le mois
+        d    = now - datetime.timedelta(days=j) # Dernier jour du mois précédent
+        return d.strftime('%Y-%m-%d')
+
+
+    @api.model
+    def create(self, vals):
+        vals['name'] = self.env['ir.sequence'].get('is.demande.conges.export.cegid') or ''
+        return super(is_demande_conges_export_cegid, self).create(vals)
+
+
+
+
+    @api.multi
+    def get_employe(self,user):
+        employes = self.env['hr.employee'].search([('user_id','=',user.id)])
+        if employes:
+            return employes[0]
+        return False
+
+    @api.multi
+    def fdate(self,date):
+        d=datetime.datetime.strptime(date, '%Y-%m-%d')
+        return d.strftime('%d/%m/%Y')
+
+
+    @api.multi
+    def export_cegid_action(self):
+        for obj in self:
+            print obj
+            name='export-cegid-'+obj.name+'.txt'
+            model='is.demande.conges.export.cegid'
+            attachments = self.env['ir.attachment'].search([('res_model','=',model),('res_id','=',obj.id),('name','=',name)])
+            attachments.unlink()
+            dest     = '/tmp/'+name
+            f = codecs.open(dest,'wb',encoding='utf-8')
+            annee = str(obj.date_debut)[:4]
+            f.write('***DEBUT***\r\n')
+            f.write('000	000000	01/01/'+annee+'	31/12/'+annee+'\r\n')
+
+            conges1 = self.env['is.demande.conges'].search([
+                ('date_debut', '>=', obj.date_debut),
+                ('date_debut', '<=', obj.date_fin),
+                ('state','=', 'solde'),
+            ])
+            conges2 = self.env['is.demande.conges'].search([
+                ('le', '>=', obj.date_debut),
+                ('le', '<=', obj.date_fin),
+                ('state','=', 'solde'),
+            ])
+            for c in (conges1+conges2):
+                employe = self.get_employe(c.demandeur_id)
+                if employe:
+                    matricule = employe.is_matricule or ''
+                    matricule = ('0000000000'+matricule)[-10:]
+                    f.write('MAB\t')
+                    f.write(matricule+'\t')
+                    f.write(self.fdate(c.date_debut)+'\t')
+                    f.write(self.fdate(c.date_fin)+'\t')
+                    f.write(str(c.rtt)+'\t')
+                    f.write(str(c.rtt*7)+'\t')
+                    f.write('RTT\t')
+                    f.write('RTT\t')
+                    f.write('\t\t')
+                    f.write('MAT\tPAM')
+                    f.write('\r\n')
+            f.write('***FIN***\r\n')
+
+            #***DEBUT***
+            #000	000000	01/12/2004	30/11/2005
+            #MHE	0000000789	31/10/2005	27/11/2005	000001	0015	H Spé 01                           	BAS	00000000037.00000			
+            #MHE	0000000789	31/10/2005	27/11/2005	000001	3111	RTT(Heures)                        	BAS	00000000028.00000			
+            #MAB	0000000789	31/10/2005	31/10/2005	0001.00	0007.00	RTT	RTT                                			MAT	PAM
+            #MAB	0000000789	02/11/2005	02/11/2005	0001.00	0007.00	RTT	RTT                                			MAT	PAM
+            #MAB	0000000789	04/11/2005	04/11/2005	0001.00	0007.00	RTT	RTT                                			MAT	PAM
+            #MAB	0000000789	18/11/2005	18/11/2005	0001.00	0007.00	RTT	RTT                                			MAT	PAM
+            #***FIN***
+
+            f.close()
+            r = open(dest,'rb').read().encode('base64')
+            vals = {
+                'name':        name,
+                'datas_fname': name,
+                'type':        'binary',
+                'res_model':   model,
+                'res_id':      obj.id,
+                'datas':       r,
+            }
+            id = self.env['ir.attachment'].create(vals)
 
 

@@ -52,6 +52,7 @@ class is_demande_conges(models.Model):
         #emp_domain.append(('department_id','!=', 'INTERIMAIRE'))
         emp_domain.append(('job_id','!=', 'INTERIMAIRE'))
 
+
         week_per_year = defaultdict(dict)
         today_date = datetime.date.today()
         first_date_year = today_date + datetime.timedelta(days=-today_date.weekday())
@@ -199,11 +200,13 @@ class is_demande_conges(models.Model):
                              ('demandeur_id', '=', emp.user_id.id),
                              ('date_debut', '<=', display_date),
                              ('date_fin', '>=', display_date),
+                            ('state','not in', ['refuse','annule']),
                         ])
                         if not conges_count:
                             conges_count = is_demande_conges_obj.search([
                                 ('demandeur_id', '=', emp.user_id.id),
                                 ('le', '=', display_date),
+                                ('state','not in', ['refuse','annule']),
                             ])
                         #if not conges_count:
                         #    conges_count = is_demande_conges_obj.search([
@@ -213,15 +216,15 @@ class is_demande_conges(models.Model):
                         if conges_count:
                             M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>'
 
-                    absence_count = is_demande_absence_obj.search(
-                        [('employe_ids', 'in', [emp.id]),
-                         ('date_debut', '<=', display_date),
-                         ('date_fin', '>=', display_date),
-                        ])
+                    absence_count = is_demande_absence_obj.search([
+                        ('employe_ids', 'in', [emp.id]),
+                        ('date_debut', '<=', display_date),
+                        ('date_fin', '>=', display_date),
+                    ])
                     if not absence_count:
-                        absence_count = is_demande_absence_obj.search(
-                        [('employe_ids', 'in', [emp.id]),
-                         ('date_debut', '=', display_date),
+                        absence_count = is_demande_absence_obj.search([
+                            ('employe_ids', 'in', [emp.id]),
+                            ('date_debut', '=', display_date),
                         ])
                     if absence_count:
                         M_C = '<a type=\'MF\' docid='+str(absence_count[0].id)+'>M</a>'

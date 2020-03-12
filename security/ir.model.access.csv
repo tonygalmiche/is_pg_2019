@@ -139,8 +139,7 @@ access_is_hr_job,access_is_hr_job,hr.model_hr_job,base.group_user,1,0,0,0
 access_is_demande_conges_autre,access_is_demande_conges_autre,model_is_demande_conges_autre,base.group_user,1,0,0,0
 access_is_demande_conges_autre_gestionnaire,access_is_demande_conges_autre_gestionnaire,model_is_demande_conges_autre,is_pg_2019.is_gestionnaire_des_absences_group,1,1,1,1
 
-
-
+access_is_demande_conges_export_cegid,access_is_demande_conges_export_cegid,model_is_demande_conges_export_cegid,base.group_hr_manager,1,1,1,1
 
 
 
