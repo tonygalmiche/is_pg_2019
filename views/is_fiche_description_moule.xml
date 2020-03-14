@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <!-- is.mold -->
+        <record id="is_fiche_description_moule_form" model="ir.ui.view">
+            <field name="name">is_fiche_description_moule_form</field>
+            <field name="model">is.mold</field>
+            <field name="inherit_id" ref="is_pg_2019.view_is_mold_form_inherited_preventif"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@string='Préventif Moule']" position="after">
+                    <page string="Fiche description moule" attrs="{'invisible': [('is_base_check','!=',True)]}">
+                        <group>
+                            <group string="Dimensions du moule">
+                                <field name="largeur"/>
+                                <field name="hauteur"/>
+                                <field name="epaisseur"/>
+                                <field name="largeur_hors_tout"/>
+                                <field name="hauteur_hors_tout"/>
+                                <field name="epaisseur_hors_tout"/>
+                                <field name="poids"/>
+                            </group>
+                            <group>
+                                <img src="is_pg_2019/static/img/dimensions-moule.png" style="max-height:350px;max-width:350px"/>
+                            </group>
+                        </group>
+                        <group string="Autres informations">
+                            <field name="recu_de_buse"/>
+                            <field name="recu_de_buse_specifique" attrs="{'invisible': [('recu_de_buse', '!=', 'specifique')]}"/>
+                            <field name="diametre_entree_cheminee"/>
+                            <field name="bridage"/>
+                            <field name="ejection"/>
+                            <field name="ejection_specifique" attrs="{'invisible': [('ejection', '!=', 'specifique')]}"/>
+                        </group>
+                        <group string="Rondelle de centrage">
+                            <field name="rondelle_centrage_fixe"/>
+                            <field name="rondelle_centrage_fixe_specifique"   attrs="{'invisible': [('rondelle_centrage_fixe', '!=', 'specifique')]}"/>
+                            <field name="rondelle_centrage_mobile"/>
+                            <field name="rondelle_centrage_mobile_specifique" attrs="{'invisible': [('rondelle_centrage_mobile', '!=', 'specifique')]}"/>
+                        </group>
+                        <group string="Presses">
+                            <field name="presse_ids" widget="many2many_tags"/>
+                        </group>
+                        <group string="Nombre de noyaux">
+                            <field name="nb_noyaux_fixe"/>
+                            <field name="nb_noyaux_mobile"/>
+                        </group>
+                        <group string="Cinématique">
+                            <field name="cinematique"/>
+                            <field name="cinematique_standard"        attrs="{'invisible': [('cinematique', '!=', 'standard')]}"/>
+                            <field name="cinematique_avant_ejection"  attrs="{'invisible': [('cinematique', '!=', 'avant_ejection')]}"/>
+                            <field name="cinematique_avant_ouverture" attrs="{'invisible': [('cinematique', '!=', 'avant_ouverture')]}"/>
+                            <field name="cinematique_specifique"      attrs="{'invisible': [('cinematique', '!=', 'specifique')]}"/>
+                        </group>
+                        <group string="Commentaire">
+                            <field name="fiche_description_commentaire"/>
+                        </group>
+                        <group string="Suivi évolution">
+                            <field name="fiche_description_indice"/>
+                            <field name="fiche_description_createur_id"/>
+                            <field name="fiche_description_date_creation"/>
+                            <field name="fiche_description_date_modif"/>
+                        </group>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='emplacement']" position='after'>
+                    <field name="garantie_outillage" required="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
+
