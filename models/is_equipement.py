@@ -569,6 +569,21 @@ class is_equipement(models.Model):
         }
 
 
+    @api.multi
+    def acceder_equipement_action(self):
+        for obj in self:
+            return {
+                'name': "Equipement",
+                'view_mode': 'form',
+                'view_type': 'form',
+                'res_model': 'is.equipement',
+                'type': 'ir.actions.act_window',
+                'res_id': obj.id,
+                'domain': '[]',
+            }
+
+
+
     @api.depends('numero_equipement')
     def _couleur(self):
         colors=[
@@ -961,4 +976,7 @@ class is_equipement(models.Model):
     prioritaire_obl             = fields.Boolean("prioritaire_obl", compute='_compute')
     prioritaire                 = fields.Boolean('Presse prioritaire')
 
+    zone_id_vsb                 = fields.Boolean("zone_id_vsb", compute='_compute')
+    zone_id_obl                 = fields.Boolean("zone_id_obl", compute='_compute')
+    zone_id                     = fields.Many2one("is.preventif.equipement.zone", "Zone préventif")
 

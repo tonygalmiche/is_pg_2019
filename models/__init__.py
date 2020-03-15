@@ -9,6 +9,7 @@ import is_ot
 import res_company
 import is_ctrl100
 import is_preventif
+import is_preventif_equipement
 import is_ctrl_budget_tdb
 import is_ctrl_budget_ana
 import is_donnee_machine

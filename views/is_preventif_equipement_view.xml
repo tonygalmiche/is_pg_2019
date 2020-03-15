@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <!-- is.preventif.equipement.zone -->
+        <record model="ir.ui.view" id="view_is_preventif_equipement_zone_form">
+            <field name="name">view_is_preventif_equipement_zone_form</field>
+            <field name="model">is.preventif.equipement.zone</field>
+            <field name="arch" type="xml">
+            <form string="Zone préventif équipement">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                    <group string="Equipements">
+                        <field name="equipement_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <button string="Equipement"   name="acceder_equipement_action"  type="object" icon="gtk-zoom-in" />
+                                <field name="numero_equipement"/>
+                                <field name="designation"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Préventifs">
+                        <field name="preventif_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="equipement_id" domain="[('zone_id','=',parent.id)]"/>
+                                <field name="type_preventif"/>
+                                <field name="frequence"/>
+                                <field name="date_dernier_preventif"/>
+                                <field name="date_prochain_preventif"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="frequence"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_equipement_zone_tree">
+            <field name="name">is_preventif_equipement_zone_tree</field>
+            <field name="model">is.preventif.equipement.zone</field>
+            <field name="arch" type="xml">
+                <tree string="Zone préventif équipement">
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="frequence"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_equipement_zone_search" >
+            <field name="name">is_preventif_equipement_zone_search</field>
+            <field name="model">is.preventif.equipement.zone</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="description"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_preventif_equipement_zone_action">
+            <field name="name">Zone préventif équipement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.preventif.equipement.zone</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</openerp>
+

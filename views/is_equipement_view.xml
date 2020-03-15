@@ -78,6 +78,7 @@
                     <field name="numero_equipement"/>
                     <field name="designation"/>
                     <field name="database_id"/>
+                    <field name="zone_id"/>
                     <field name="constructeur"/>
                     <field name="constructeur_serie"/>
                     <field name="emplacement_affectation_pe"/>
@@ -117,7 +118,10 @@
                             <group>
                                 <field name="designation" />
                                 <field name="database_id" />
-                                
+                                <field name="zone_id_vsb" invisible="1" />
+                                <field name="zone_id_obl" invisible="1" />
+                                <field name="zone_id"
+                                    attrs="{'invisible': [('zone_id_vsb', '!=', True)], 'required':  [('zone_id_obl', '=', True)]}"/>
                                 <field name="date_fabrication_vsb" invisible="1" />
                                 <field name="date_fabrication_obl" invisible="1" />
                                 <field name="date_fabrication"
@@ -128,9 +132,6 @@
                                 <field name="date_de_fin" 
                                     attrs="{'invisible': [('date_de_fin_vsb', '!=', True)], 'required':  [('date_de_fin_obl', '=', True)]}"/>
                             </group>
-
-
-
                             <group>
                                 <field name="ordre_vsb" invisible="1" />
                                 <field name="ordre_obl" invisible="1" />
@@ -534,6 +535,9 @@
                                 <field name="emplacement_affectation_pe_obl" invisible="1" />
                                 <field name="emplacement_affectation_pe" 
                                     attrs="{'invisible': [('emplacement_affectation_pe_vsb', '!=', True)], 'required':  [('emplacement_affectation_pe_obl', '=', True)]}"/>
+
+
+
                                 <field name="active" />
                             </group>
                         </group>

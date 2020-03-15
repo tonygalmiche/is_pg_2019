@@ -116,6 +116,16 @@
         <menuitem id="is_mold_cycle_menu"      sequence="30" parent="is_preventif_moule_main_menu" action="is_mold_cycle_action"      name="Cycles des moules"/>
 
 
+        <!-- Production / Préventif équipement -->
+        <record id="is_preventif_equipement_main_menu" model="ir.ui.menu" >
+            <field name="name">Préventif équipement</field>
+            <field name="sequence">29</field>
+            <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
+        </record>
+        <menuitem id="is_preventif_equipement_zone_menu"  sequence="10" parent="is_preventif_equipement_main_menu" action="is_preventif_equipement_zone_action"  name="Zones"/>
+
+
         <!-- Production / Etiquettes GALIA -->
         <record id="is_galia_base_main_menu" model="ir.ui.menu" >
             <field name="name">Étiquettes GALIA</field>
