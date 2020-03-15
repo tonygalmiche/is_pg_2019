@@ -208,13 +208,12 @@ class is_demande_conges(models.Model):
                                 ('le', '=', display_date),
                                 ('state','not in', ['refuse','annule']),
                             ])
-                        #if not conges_count:
-                        #    conges_count = is_demande_conges_obj.search([
-                        #        ('demandeur_id', '=', emp.user_id.id),
-                        #        ('date_debut', '=', display_date),
-                        #    ])
                         if conges_count:
-                            M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>'
+                            x='C'
+                            if conges_count[0].type_demande=='rc_heures':
+                                NbHeures = int(conges_count[0].heure_fin - conges_count[0].heure_debut)
+                                x='RC'+str(NbHeures)
+                            M_C = '<a title="" type=\'CF\' docid='+str(conges_count[0].id)+'>'+x+'</a>'
 
                     absence_count = is_demande_absence_obj.search([
                         ('employe_ids', 'in', [emp.id]),
@@ -229,7 +228,7 @@ class is_demande_conges(models.Model):
                     if absence_count:
                         M_C = '<a type=\'MF\' docid='+str(absence_count[0].id)+'>M</a>'
                     if absence_count and conges_count:
-                        M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>  ' + '<a type=\'MF\' docid='+str(absence_count[0].id)+'>M</a>'
+                        M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>  ' + '<a type=\'MF\' title="" docid='+str(absence_count[0].id)+'>M</a>'
                     td_color = ''
                     if display_date.weekday() in (5, 6):
                         td_color = 'black;background-color:red;'
