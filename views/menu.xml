@@ -136,6 +136,37 @@
         <menuitem id="is_galia_base_menu" sequence="10" parent="is_pg_2019.is_galia_base_main_menu" name="Étiquettes GALIA" action="is_plastigray.is_galia_base_action"/>
 
 
+        <!-- Production / Traçabilité -->
+        <record id="is_tracabilite_main_menu" model="ir.ui.menu" >
+            <field name="name">Traçabilité</field>
+            <field name="sequence">120</field>
+            <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_secondaire_grp')])]"/>
+        </record>
+        <record id="is_galia_base_uc_menu" model="ir.ui.menu" >
+            <field name="name">UCs</field>
+            <field name="sequence">10</field>
+            <field name="action"    ref="is_plastigray.is_galia_base_uc_action"/>
+            <field name="parent_id" eval="ref('is_pg_2019.is_tracabilite_main_menu')"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_rsp_production_group'),
+                ref('is_plastigray.is_magasiniers_group'),
+                ref('is_plastigray.is_administration_vente_group'),
+            ])]"/>
+        </record>
+        <record id="is_galia_base_um_menu" model="ir.ui.menu" >
+            <field name="name">UMs</field>
+            <field name="sequence">20</field>
+            <field name="action"    ref="is_plastigray.is_galia_base_um_action"/>
+            <field name="parent_id" eval="ref('is_pg_2019.is_tracabilite_main_menu')"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_rsp_production_group'),
+                ref('is_plastigray.is_magasiniers_group'),
+                ref('is_plastigray.is_administration_vente_group'),
+            ])]"/>
+        </record>
+
+
         <!-- Tables Moules -->
         <record id="menu_tables_moules" model="ir.ui.menu" >
             <field name="name">Tables Moules</field>
