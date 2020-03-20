@@ -384,11 +384,8 @@
                 <form string="Type d’absence">
                     <sheet>
                         <group>
-                            <group>
-                                <field name="name" />
-                            </group>
-                            <group>
-                            </group>
+                            <field name="name"/>
+                            <field name="code"/>
                         </group>
                     </sheet>
                 </form>
@@ -399,7 +396,8 @@
             <field name="model">is.demande.absence.type</field>
             <field name="arch" type="xml">
                 <tree string="Type d’absence">
-                    <field name="name" />
+                    <field name="name"/>
+                    <field name="code"/>
                 </tree>
             </field>
         </record>

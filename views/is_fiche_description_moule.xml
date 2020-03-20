@@ -47,10 +47,8 @@
                         </group>
                         <group string="Cinématique">
                             <field name="cinematique"/>
-                            <field name="cinematique_standard"        attrs="{'invisible': [('cinematique', '!=', 'standard')]}"/>
-                            <field name="cinematique_avant_ejection"  attrs="{'invisible': [('cinematique', '!=', 'avant_ejection')]}"/>
-                            <field name="cinematique_avant_ouverture" attrs="{'invisible': [('cinematique', '!=', 'avant_ouverture')]}"/>
-                            <field name="cinematique_specifique"      attrs="{'invisible': [('cinematique', '!=', 'specifique')]}"/>
+                            <field name="cinematique_description" attrs="{'invisible': [('cinematique', '==', 'specifique')]}"/>
+                            <field name="cinematique_specifique"  attrs="{'invisible': [('cinematique', '!=', 'specifique')]}"/>
                         </group>
                         <group string="Commentaire">
                             <field name="fiche_description_commentaire"/>

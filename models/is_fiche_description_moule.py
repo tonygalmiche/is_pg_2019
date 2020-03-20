@@ -6,8 +6,46 @@ import time
 import datetime
 
 
+_CINEMATIQUES={
+    'standard':
+"""- moule ouvert avec ejection contrôle rentré
+- fermeture puis verrouillage
+- cycle injection
+- ouverture
+- sortie ejection
+- rentrée éjection
+""",
+    'avant_ejection':
+"""- moule ouvert avec éjection contrôle rentrée et noyau sorti
+- fermeture puis verrouillage
+- cycle injection
+- sortie noyau avec contrôle sortie
+- ouverture
+- sortie ejection
+- rentrée éjection
+""",
+    'avant_ouverture':
+"""- moule ouvert avec éjection contrôle rentré et noyau 1 rentré
+- fermeture puis verrouillage
+- cycle injection
+- ouverture
+- sortie noyau 1 avec contrôle sortie
+- sortie éjection puis rentrée éjection avec contrôle rentré
+- rentré noyau 1 avec contrôle rentré
+""",
+}
+
+
 class is_mold(models.Model):
     _inherit = 'is.mold'
+
+    @api.depends('cinematique')
+    def _compute(self):
+        for obj in self:
+            description = ''
+            if obj.cinematique in _CINEMATIQUES:
+                description = _CINEMATIQUES[obj.cinematique]
+            obj.cinematique_description = description
 
     largeur   = fields.Integer(u"Largeur (mm)")
     hauteur   = fields.Integer(u"Hauteur (mm)")
@@ -86,33 +124,36 @@ class is_mold(models.Model):
             ("avant_ouverture", u"Moule avec noyau, avec sortie avant ouverture"),
             ("specifique"     , u"Spécifique"),
         ], "Cinématique")
-    cinematique_standard = fields.Selection([
-            ("moule_ouvert", "Moule ouvert avec ejection contrôle rentré"),
-            ("fermeture"   , "Fermeture puis verrouillage"),
-            ("cycle"       , "Cycle injection"),
-            ("ouverture"   , "Ouverture"),
-            ("sortie"      , "Sortie ejection"),
-            ("rentree"     , "Rentrée éjection"),
-        ], "Cinématique - Standard")
-    cinematique_avant_ejection = fields.Selection([
-            ("ouvert"   , "moule ouvert avec éjection contrôle rentrée et noyau sorti"),
-            ("fermeture", "fermeture puis verrouillage"),
-            ("cycle"    , "cycle injection"),
-            ("sortie"   , "sortie noyau avec contrôle sortie"),
-            ("ouverture", "ouverture"),
-            ("sortie"   , "sortie ejection"),
-            ("rentree"  , "rentrée éjection"),
-        ], "Cinématique - Moule avec noyau, avec sortie avant éjection")
-    cinematique_avant_ouverture = fields.Selection([
-            ("ouvert"         , "moule ouvert avec éjection contrôle rentré et noyau 1 rentré"),
-            ("fermeture"      , "fermeture puis verrouillage"),
-            ("cycle"          , "cycle injection"),
-            ("ouverture"      , "ouverture"),
-            ("sortie_noyau"   , "sortie noyau 1 avec contrôle sortie"),
-            ("sortie_ejection", "sortie éjection puis rentrée éjection avec contrôle rentré"),
-            ("rentre_noyau"   , "rentré noyau 1 avec contrôle rentré"),
-        ], "Cinématique - Moule avec noyau, avec sortie avant ouverture")
-    cinematique_specifique = fields.Char(u"Cinématique - Spécifique")
+    cinematique_description = fields.Text(u"Cinématique - Description", compute='_compute', readonly=True, store=True)
+    cinematique_specifique  = fields.Text(u"Cinématique - Spécifique")
+
+#    cinematique_standard = fields.Selection([
+#            ("moule_ouvert", "Moule ouvert avec ejection contrôle rentré"),
+#            ("fermeture"   , "Fermeture puis verrouillage"),
+#            ("cycle"       , "Cycle injection"),
+#            ("ouverture"   , "Ouverture"),
+#            ("sortie"      , "Sortie ejection"),
+#            ("rentree"     , "Rentrée éjection"),
+#        ], "Cinématique - Standard")
+#    cinematique_avant_ejection = fields.Selection([
+#            ("ouvert"   , "moule ouvert avec éjection contrôle rentrée et noyau sorti"),
+#            ("fermeture", "fermeture puis verrouillage"),
+#            ("cycle"    , "cycle injection"),
+#            ("sortie"   , "sortie noyau avec contrôle sortie"),
+#            ("ouverture", "ouverture"),
+#            ("sortie"   , "sortie ejection"),
+#            ("rentree"  , "rentrée éjection"),
+#        ], "Cinématique - Moule avec noyau, avec sortie avant éjection")
+#    cinematique_avant_ouverture = fields.Selection([
+#            ("ouvert"         , "moule ouvert avec éjection contrôle rentré et noyau 1 rentré"),
+#            ("fermeture"      , "fermeture puis verrouillage"),
+#            ("cycle"          , "cycle injection"),
+#            ("ouverture"      , "ouverture"),
+#            ("sortie_noyau"   , "sortie noyau 1 avec contrôle sortie"),
+#            ("sortie_ejection", "sortie éjection puis rentrée éjection avec contrôle rentré"),
+#            ("rentre_noyau"   , "rentré noyau 1 avec contrôle rentré"),
+#        ], "Cinématique - Moule avec noyau, avec sortie avant ouverture")
+
 
     fiche_description_commentaire = fields.Text(u"Commentaire")
 
@@ -120,25 +161,6 @@ class is_mold(models.Model):
     fiche_description_createur_id   = fields.Many2one("res.users", "Créateur")
     fiche_description_date_creation = fields.Date(u"Date de création")
     fiche_description_date_modif    = fields.Date(u"Date de modification")
-
-
-#    • Champs non repris dans la fiche description moule :
-#    • Bloc chaud : à reprendre dans fiche implantation des énergies
-#    • Diamètre seuil : à reprendre dans la fiche de maintenance
-#    • Classe : champ abandonné au profit des presses
-#    • Nombre de circuits d'eau : à reprendre dans fiche implantation des énergies
-#    • N° de plaquette interne : à reprendre dans la fiche de maintenance
-
-
-#    • La fiche description moule doit être imprimable en pdf.
-#    • On doit pouvoir suivre l'évolution de la fiche comme actuellement :
-#        ◦ Indice A à la création
-#        ◦ Nom du créateur
-#        ◦ Date de la création
-#        ◦ Date de la modification
-#        ◦ Document référencé : FO-0-PROD-13 : indice 4 actuellement : à revoir à 5 quand ce sera dans Odoo.
-
-
 
 
 

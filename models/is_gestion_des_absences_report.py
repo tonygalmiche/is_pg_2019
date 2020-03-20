@@ -226,9 +226,13 @@ class is_demande_conges(models.Model):
                             ('date_debut', '=', display_date),
                         ])
                     if absence_count:
-                        M_C = '<a type=\'MF\' docid='+str(absence_count[0].id)+'>M</a>'
+                        code = 'Abs'
+                        title = absence_count[0].type_absence.name
+                        if absence_count[0].type_absence.code:
+                            code = absence_count[0].type_absence.code
+                        M_C = '<a type=\'MF\' docid='+str(absence_count[0].id)+' title="'+title+'">'+code+'</a>'
                     if absence_count and conges_count:
-                        M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>  ' + '<a type=\'MF\' title="" docid='+str(absence_count[0].id)+'>M</a>'
+                        M_C = '<a type=\'CF\' docid='+str(conges_count[0].id)+'>C</a>  ' + '<a type=\'MF\' title="" docid='+str(absence_count[0].id)+'>'+code+'</a>'
                     td_color = ''
                     if display_date.weekday() in (5, 6):
                         td_color = 'black;background-color:red;'

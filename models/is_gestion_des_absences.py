@@ -514,7 +514,7 @@ class is_demande_absence_type(models.Model):
     _name        = 'is.demande.absence.type'
 
     name = fields.Char(string='Type', required=True)
-
+    code = fields.Char(string='Code', help=u"Code sur 1 ou 2 caractères utilisé dans le calendrier des absences")
 
 class is_demande_absence(models.Model):
     _name        = 'is.demande.absence'
