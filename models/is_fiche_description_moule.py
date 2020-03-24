@@ -47,6 +47,8 @@ class is_mold(models.Model):
                 description = _CINEMATIQUES[obj.cinematique]
             obj.cinematique_description = description
 
+    numero_plaquette_interne = fields.Char(u"N° Plaquette interne client")
+
     largeur   = fields.Integer(u"Largeur (mm)")
     hauteur   = fields.Integer(u"Hauteur (mm)")
     epaisseur = fields.Integer(u"Epaisseur (mm)")
@@ -117,6 +119,20 @@ class is_mold(models.Model):
             ("3", "3"),
         ], "Nombre de noyaux - Partie mobile")
 
+    nb_circuit_eau_fixe = fields.Selection([
+            ("0", "0"),
+            ("1", "1"),
+            ("2", "2"),
+            ("3", "3"),
+        ], "Nombre de circuits d'eau - Partie fixe")
+    nb_circuit_eau_fixe_commentaire = fields.Char(u"Nombre de circuits d'eau - Partie fixe - Commentaire")
+    nb_circuit_eau_mobile = fields.Selection([
+            ("0", "0"),
+            ("1", "1"),
+            ("2", "2"),
+            ("3", "3"),
+        ], "Nombre de circuits d'eau - Partie mobile")
+    nb_circuit_eau_mobile_commentaire = fields.Char(u"Nombre de circuits d'eau - Partie mobile - Commentaire")
 
     cinematique = fields.Selection([
             ("standard"       , u"Standard"),
@@ -127,32 +143,6 @@ class is_mold(models.Model):
     cinematique_description = fields.Text(u"Cinématique - Description", compute='_compute', readonly=True, store=True)
     cinematique_specifique  = fields.Text(u"Cinématique - Spécifique")
 
-#    cinematique_standard = fields.Selection([
-#            ("moule_ouvert", "Moule ouvert avec ejection contrôle rentré"),
-#            ("fermeture"   , "Fermeture puis verrouillage"),
-#            ("cycle"       , "Cycle injection"),
-#            ("ouverture"   , "Ouverture"),
-#            ("sortie"      , "Sortie ejection"),
-#            ("rentree"     , "Rentrée éjection"),
-#        ], "Cinématique - Standard")
-#    cinematique_avant_ejection = fields.Selection([
-#            ("ouvert"   , "moule ouvert avec éjection contrôle rentrée et noyau sorti"),
-#            ("fermeture", "fermeture puis verrouillage"),
-#            ("cycle"    , "cycle injection"),
-#            ("sortie"   , "sortie noyau avec contrôle sortie"),
-#            ("ouverture", "ouverture"),
-#            ("sortie"   , "sortie ejection"),
-#            ("rentree"  , "rentrée éjection"),
-#        ], "Cinématique - Moule avec noyau, avec sortie avant éjection")
-#    cinematique_avant_ouverture = fields.Selection([
-#            ("ouvert"         , "moule ouvert avec éjection contrôle rentré et noyau 1 rentré"),
-#            ("fermeture"      , "fermeture puis verrouillage"),
-#            ("cycle"          , "cycle injection"),
-#            ("ouverture"      , "ouverture"),
-#            ("sortie_noyau"   , "sortie noyau 1 avec contrôle sortie"),
-#            ("sortie_ejection", "sortie éjection puis rentrée éjection avec contrôle rentré"),
-#            ("rentre_noyau"   , "rentré noyau 1 avec contrôle rentré"),
-#        ], "Cinématique - Moule avec noyau, avec sortie avant ouverture")
 
 
     fiche_description_commentaire = fields.Text(u"Commentaire")

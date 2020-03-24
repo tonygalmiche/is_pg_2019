@@ -172,6 +172,17 @@
                                                 </td>
                                             </tr>
                                             <tr><td><br /></td></tr>
+                                            <tr><td colspan="2" style="text-align:center"><b class="titre">Nombre de circuits d'eau <i>Number of cooling</i></b></td></tr>
+                                            <tr><td style="height:2mm"></td></tr>
+                                            <tr>
+                                                <td style="text-align:right;padding-right:2mm">Partie fixe / <i>Fixed side</i> :  </td>
+                                                <td><b><span t-field="o.nb_circuit_eau_fixe" /></b> <span t-field="o.nb_circuit_eau_fixe_commentaire" /></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:right;padding-right:2mm">Partie mobile / <i>Move side</i> : </td>
+                                                <td><b><span t-field="o.nb_circuit_eau_mobile" /></b> <span t-field="o.nb_circuit_eau_mobile_commentaire" /></td>
+                                            </tr>
+                                            <tr><td><br /></td></tr>
                                             <tr><td colspan="2" style="text-align:center"><b class="titre">Nombre de noyaux / <i>Number of hydraulic move</i></b></td></tr>
                                             <tr><td style="height:2mm"></td></tr>
                                             <tr><td style="text-align:right;padding-right:2mm">Partie fixe / <i>Fixed side</i> :  </td><td><b><span t-field="o.nb_noyaux_fixe" /></b></td></tr>

@@ -8,6 +8,9 @@
             <field name="model">is.mold</field>
             <field name="inherit_id" ref="is_pg_2019.view_is_mold_form_inherited_preventif"/>
             <field name="arch" type="xml">
+                <field name="garantie_outillage" position="after">
+                    <field name="numero_plaquette_interne"/>
+                </field>
                 <xpath expr="/form/sheet/notebook/page[@string='Préventif Moule']" position="after">
                     <page string="Fiche description moule" attrs="{'invisible': [('is_base_check','!=',True)]}">
                         <group>
@@ -40,6 +43,20 @@
                         </group>
                         <group string="Presses">
                             <field name="presse_ids" widget="many2many_tags"/>
+                        </group>
+                        <group string="Nombre de circuits d'eau">
+                            <group>
+                                <field name="nb_circuit_eau_fixe"/>
+                            </group>
+                            <group>
+                                <field name="nb_circuit_eau_fixe_commentaire" attrs="{'invisible': [('nb_circuit_eau_fixe', '==', False)]}"  nolabel="1"/>
+                            </group>
+                            <group>
+                                <field name="nb_circuit_eau_mobile"/>
+                            </group>
+                            <group>
+                                <field name="nb_circuit_eau_mobile_commentaire" attrs="{'invisible': [('nb_circuit_eau_mobile', '==', False)]}"  nolabel="1"/>
+                            </group>
                         </group>
                         <group string="Nombre de noyaux">
                             <field name="nb_noyaux_fixe"/>
