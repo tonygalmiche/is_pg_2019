@@ -42,7 +42,7 @@ class is_ctrl100_gamme_standard(models.Model):
     gamme_qualite_id       = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité")
     operation_standard_id  = fields.Many2one('is.ctrl100.operation.standard', u"Opérations standard")
     active                 = fields.Boolean("Active", default=True)
-    temps_etape            = fields.Float(u"Temps de l'étape  (Seconde / Pièce) ", digits=(14, 2))
+    #temps_etape            = fields.Float(u"Temps de l'étape  (Seconde / Pièce) ", digits=(14, 2))
 
 
 class is_ctrl100_operation_specifique(models.Model):
@@ -72,6 +72,18 @@ class is_ctrl100_typologie_produit(models.Model):
     _order       = 'name desc'
 
     name   = fields.Char(u"Typologie de produit")
+
+
+class is_ctrl100_gamme_mur_qualite_formation(models.Model):
+    _name        = 'is.ctrl100.gamme.mur.qualite.formation'
+    _description = u"Gamme mur qualité - Formation"
+    _order       = 'gamme_id desc'
+    _rec_name    = 'gamme_id'
+
+    gamme_id              = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"Gamme mur qualité", readonly=True)
+    createur_id           = fields.Many2one("res.users", u"Créateur", readonly=True)
+    operateur_referent_id = fields.Many2one("res.users", u"Opérateur référent", help=u"Cet opérateur pourra gérer les droits sur les saisies", readonly=True)
+    operateur_ids         = fields.Many2many("res.users", "is_ctrl100_gamme_mur_qualite_formation_operateur_rel", "formation_id", "operateur_id", u"Operateurs autorisés en saisie et à faire le contrôle")
 
 
 class is_ctrl100_gamme_mur_qualite(models.Model):
@@ -160,7 +172,18 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].get('is.ctrl100.gamme.mur.qualite') or ''
-        return super(is_ctrl100_gamme_mur_qualite, self).create(vals)
+        res =  super(is_ctrl100_gamme_mur_qualite, self).create(vals)
+        #res.creer_modifier_formation()
+        return res
+
+
+#    @api.multi
+#    def write(self, vals):
+#        res = super(is_ctrl100_gamme_mur_qualite, self).write(vals)
+#        for obj in self:
+#            obj.creer_modifier_formation()
+#        return res
+
 
     @api.model
     def default_get(self, default_fields):
@@ -191,9 +214,9 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     def _compute_cout(self):
         for obj in self:
             tps = 0
-            for line in obj.operation_standard_ids:
-                if line.temps_etape:
-                    tps+=line.temps_etape
+            #for line in obj.operation_standard_ids:
+            #    if line.temps_etape:
+            #        tps+=line.temps_etape
             for line in obj.operation_specifique_ids:
                 if line.temps_etape:
                     tps+=line.temps_etape
@@ -210,13 +233,25 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     def _compute_moule_dossierf(self):
         for obj in self:
             name=''
-            if obj.mold_id:
+            if obj.gamme_sur=='moule' and obj.mold_id:
                 name = obj.mold_id.name
-            if obj.dossierf_id:
+            if obj.gamme_sur=='dossier_f' and obj.dossierf_id:
                 name = obj.dossierf_id.name
-            if obj.product_id:
+            if obj.gamme_sur=='article' and obj.product_id:
                 name = obj.product_id.is_mold_dossierf
             obj.moule_dossierf = name
+
+
+    @api.depends('operateur_referent_id')
+    def _compute_formation_id(self):
+        for obj in self:
+            formation_id = obj.creer_modifier_formation()
+            #formation_id = False
+            #formation_obj = self.env['is.ctrl100.gamme.mur.qualite.formation']
+            #formations = formation_obj.search([('gamme_id', '=', obj.id)])
+            #for formation in formations:
+            #    formation_id = formation.id
+            obj.formation_id = formation_id
 
 
     @api.multi
@@ -230,6 +265,42 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
             if obj.type_gamme=='securisation':
                 couleur='tdviolet'
             return couleur
+
+
+    @api.multi
+    def creer_modifier_formation(self):
+        for obj in self:
+            formation_id = False
+            if obj.id:
+                formation_obj = self.env['is.ctrl100.gamme.mur.qualite.formation']
+                formations = formation_obj.search([('gamme_id', '=', obj.id)])
+                vals={
+                    'gamme_id'             : obj.id,
+                    'createur_id'          : obj.create_uid.id,
+                    'operateur_referent_id': obj.operateur_referent_id.id,
+                }
+                print vals,formations
+                if len(formations)>0:
+                    formation = formations[0]
+                    formation.write(vals)
+                else:
+                    formation = formation_obj.create(vals)
+                formation_id = formation.id
+            return formation_id
+
+
+    @api.onchange('dossierf_id','mold_id')
+    def _onchange_moule_dossierf(self):
+        lst = []
+        defautheque_obj = self.env['is.ctrl100.defautheque']
+        self._compute_moule_dossierf()
+        self.defautheque_ids = False
+        defautheque_ids = defautheque_obj.search([('active', '=', True),'|',('moule_dossierf','=',self.moule_dossierf),('moule_dossierf','=','')])
+        for defau in defautheque_ids:
+            lst.append((0, 0, {
+                'defaut_id': defau.id,
+            }))
+        self.defautheque_ids = lst
 
 
     name                     = fields.Char(u"N°de gamme", readonly=True)
@@ -254,11 +325,25 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     operation_standard_ids   = fields.One2many('is.ctrl100.gamme.standard'      , 'gamme_qualite_id', u"Opérations standard")
     operation_specifique_ids = fields.One2many('is.ctrl100.operation.specifique', 'gamme_qualite_id', u"Opérations spécifiques")
     risque_lie_ids           = fields.One2many('is.ctrl100.risque.lie'          , 'gamme_qualite_id', u"Risques liés à cette opération")
+    defautheque_ids          = fields.One2many("is.ctrl100.gamme.defautheque.line", "gamme_id", u"Défauthèque")
     cout_ctrl_qualite        = fields.Float(u"Coût horaire vendu contrôle qualité", digits=(12, 2), default=_get_cout_ctrl_qualite)
     cout_previsionnel        = fields.Float(u"Coût prévisionnel par pièce", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
     cadence_previsionnelle   = fields.Float(u"Cadence de contrôle prévisionnelle (pcs/h)", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
-    operateur_ids            = fields.Many2many("res.users", "is_ctrl100_gamme_mur_qualite_operateur_rel", "gamme_id", "operateur_id", u"Operateurs autorisés en saisie et à faire le contrôle")
+    operateur_referent_id    = fields.Many2one("res.users", u"Opérateur référent", help=u"Cet opérateur pourra gérer les droits sur les saisies")
+    formation_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite.formation", u"Formation", compute="_compute_formation_id", store=True, readonly=True)
     active                   = fields.Boolean(u"Gamme active", default=True)
+
+
+
+class is_ctrl100_gamme_defautheque_line(models.Model):
+    _name        = 'is.ctrl100.gamme.defautheque.line'
+    _description = u"Lignes de la défauthèque de la gamme"
+    _order       = 'defaut_id desc'
+
+    gamme_id     = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"Gamme")
+    defaut_id    = fields.Many2one("is.ctrl100.defautheque", u"N°défauthèque")
+    defaut_text  = fields.Text("Défaut" , related="defaut_id.defaut")
+    defaut_photo = fields.Binary("Photo", related="defaut_id.photo")
 
 
 class is_ctrl100_defautheque(models.Model):
@@ -269,19 +354,32 @@ class is_ctrl100_defautheque(models.Model):
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].get('is.ctrl100.defautheque') or ''
-        return super(is_ctrl100_defautheque, self).create(vals)
+        res = super(is_ctrl100_defautheque, self).create(vals)
+        return res
 
-    @api.depends('gamme_id','gamme_id.moule_dossierf')
+
+    @api.depends('dossierf_id','mold_id')
     def _compute_moule_dossierf(self):
         for obj in self:
             name=''
-            if obj.gamme_id:
-                name = obj.gamme_id.moule_dossierf
-            obj.moule_dossierf=name
+            if obj.mold_id:
+                name = obj.mold_id.name
+            if obj.dossierf_id:
+                name = obj.dossierf_id.name
+            obj.moule_dossierf = name
 
-    name           = fields.Char(u"N° du défaut")
-    gamme_id       = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
+
+
+
+    name            = fields.Char(u"N° du défaut", readonly=True)
+    defautheque_sur = fields.Selection([
+        ("moule"    , "Moule"),
+        ("dossier_f", "Dossier F"),
+    ], "Défauthèque sur")
+    mold_id        = fields.Many2one("is.mold", "Moule")
+    dossierf_id    = fields.Many2one("is.dossierf", "Dossier F")
     moule_dossierf = fields.Char(u"Moule / Dossier F", compute="_compute_moule_dossierf", store=True, readonly=True)
+    #gamme_id       = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
     defaut         = fields.Text(u"Défaut")
     photo          = fields.Binary("Photo")
     active         = fields.Boolean("Active", default=True)

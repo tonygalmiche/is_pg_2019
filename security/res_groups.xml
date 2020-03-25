@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data noupdate="0">
-
     <record model="res.groups" id="is_base_principale_grp" >
         <field name="name">Menu: Principale Group</field>
         <field name="comment"></field>
@@ -10,6 +9,10 @@
         <field name="name">Menu: Secondaire Group</field>
         <field name="comment"></field>
     </record>
-
+    <record model="res.groups" id="is_ctrl100_grp" >
+        <field name="name">Contrôle 100%</field>
+        <field name="comment">Ce groupe permet de créer les gammes et gérer les droits sur les saisies</field>
+        <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
+    </record>
 </data>
 </openerp>

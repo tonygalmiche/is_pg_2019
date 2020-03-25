@@ -124,6 +124,7 @@ class is_mold(models.Model):
             ("1", "1"),
             ("2", "2"),
             ("3", "3"),
+            ("4", "4"),
         ], "Nombre de circuits d'eau - Partie fixe")
     nb_circuit_eau_fixe_commentaire = fields.Char(u"Nombre de circuits d'eau - Partie fixe - Commentaire")
     nb_circuit_eau_mobile = fields.Selection([
@@ -131,6 +132,7 @@ class is_mold(models.Model):
             ("1", "1"),
             ("2", "2"),
             ("3", "3"),
+            ("4", "4"),
         ], "Nombre de circuits d'eau - Partie mobile")
     nb_circuit_eau_mobile_commentaire = fields.Char(u"Nombre de circuits d'eau - Partie mobile - Commentaire")
 

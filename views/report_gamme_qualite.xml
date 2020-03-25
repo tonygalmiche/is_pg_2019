@@ -127,7 +127,7 @@
                                 <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo" style="max-height: 60px;"/>
                             </td>
                             <td width="65%" rowspan="1" style="font-size:16px">
-                                Processus Management de la qualité - <span t-field="company.street"/>
+                                Processus Management de la qualité
                             </td>
                             <td width="20%" rowspan="1">
                                 <div>IT-0-MQ-09</div>
@@ -278,16 +278,6 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                    </td>
-                                </tr>
-
-
-                                <tr>
-                                    <td>
-                                        Operateurs autorisés en saisie et à faire le contrôle : 
-                                        <t t-foreach="o.operateur_ids" t-as="rec">
-                                            <span t-esc="rec.name"/>, 
-                                        </t>
                                     </td>
                                 </tr>
                             </table>

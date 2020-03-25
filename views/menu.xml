@@ -81,24 +81,31 @@
             <field name="sequence">43</field>
             <field name="parent_id" eval="ref('is_plastigray.menu_is_production')"/>
         </record>
-        <menuitem id="menu_is_ctrl100_gamme_mur_qualite"  sequence="2" name="Gamme mur qualité"    parent="menu_is_controle_100" action="is_ctrl100_gamme_mur_qualite_action" />
-        <menuitem id="menu_is_ctrl100_defautheque"        sequence="4" name="Défauthèque"          parent="menu_is_controle_100" action="is_ctrl100_defautheque_action" />
-        <menuitem id="menu_is_ctrl100_defaut"             sequence="5" name="Saisie mur qualité"   parent="menu_is_controle_100" action="is_ctrl100_defaut_action" />
-        <menuitem id="menu_is_ctrl100_rapport_controle"   sequence="6" name="Rapport de mission"   parent="menu_is_controle_100" action="is_ctrl100_rapport_controle_action" />
-        <menuitem id="is_ctrl100_pareto_menu"             sequence="7" name="Pareto"               parent="menu_is_controle_100" action="is_ctrl100_pareto_action" />
+        <menuitem id="menu_is_ctrl100_gamme_mur_qualite"            sequence="10" name="Gamme mur qualité"    parent="menu_is_controle_100" action="is_ctrl100_gamme_mur_qualite_action" />
+        <menuitem id="is_ctrl100_gamme_mur_qualite_formation_menu"  sequence="20" name="Formation"            parent="menu_is_controle_100" action="is_ctrl100_gamme_mur_qualite_formation_action" />
+        <menuitem id="menu_is_ctrl100_defautheque"                  sequence="30" name="Défauthèque"          parent="menu_is_controle_100" action="is_ctrl100_defautheque_action" />
+        <menuitem id="menu_is_ctrl100_defaut"                       sequence="40" name="Saisie mur qualité"   parent="menu_is_controle_100" action="is_ctrl100_defaut_action" />
+        <menuitem id="menu_is_ctrl100_rapport_controle"             sequence="50" name="Rapport de mission"   parent="menu_is_controle_100" action="is_ctrl100_rapport_controle_action" />
+        <record id="is_ctrl100_pareto_menu" model="ir.ui.menu" >
+            <field name="name">Pareto</field>
+            <field name="sequence">60</field>
+            <field name="action"    ref="is_ctrl100_pareto_action"/>
+            <field name="parent_id" eval="ref('is_pg_2019.menu_is_controle_100')"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_ctrl100_grp')])]"/>
+        </record>
         <record id="is_ctrl100_typologie_produit_menu" model="ir.ui.menu" >
             <field name="name">Typologie de produit</field>
-            <field name="sequence">90</field>
+            <field name="sequence">70</field>
             <field name="action"    ref="is_ctrl100_typologie_produit_action"/>
             <field name="parent_id" eval="ref('is_pg_2019.menu_is_controle_100')"/>
-            <field name="groups_id" eval="[(6,0,[ref('is_plastigray.is_qualite_group')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_ctrl100_grp')])]"/>
         </record>
         <record id="is_ctrl100_operation_standard_menu" model="ir.ui.menu" >
             <field name="name">Opérations standard</field>
-            <field name="sequence">92</field>
+            <field name="sequence">80</field>
             <field name="action"    ref="is_ctrl100_operation_standard_action"/>
             <field name="parent_id" eval="ref('is_pg_2019.menu_is_controle_100')"/>
-            <field name="groups_id" eval="[(6,0,[ref('is_plastigray.is_qualite_group')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_ctrl100_grp')])]"/>
         </record>
 
 

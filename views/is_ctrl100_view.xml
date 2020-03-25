@@ -21,13 +21,9 @@
             <form string="Opérations standard">
                 <sheet>
                     <group>
-                        <group>
-                            <field name="name" required="True"/>
-                            <field name="active"/>
-                        </group>
-                        <group>
-                            <field name="order"/>
-                        </group>
+                        <field name="name" required="True"/>
+                        <field name="order"/>
+                        <field name="active"/>
                     </group>
                 </sheet>
             </form>
@@ -63,6 +59,7 @@
                     <field name="moule_dossierf"/>
                     <field name="product_id"/>
                     <field name="typologie_produit_id"/>
+                    <field name="formation_id"/>
                     <field name="date_creation"/>
                     <field name="date_fin_validite"/>
                 </tree>
@@ -88,22 +85,19 @@
                             <field name="date_creation"/>
                             <field name="typologie_produit_id"/>
                             <field name="date_fin_validite"/>
+                            <field name="operateur_referent_id"/>
+                            <field name="formation_id"/>
                         </group>
-                    </group>
-                    <group>
-                        <field name="operateur_ids" widget="many2many_tags"/>
                     </group>
                     <field name="operation_standard_ids" colspan="4" context="{'active_test':True}">
                         <tree editable="bottom">
                             <field name="operation_standard_id" required="True" />
                             <field name="active"/>
-                            <field name="temps_etape"/>
                         </tree>
                     </field>
                     <field name="operation_specifique_ids" colspan="4">
                         <tree>
                             <field name="operation"/>
-                            <field name="photo" widget='image' class="oe_left oe_avatar" />
                             <field name="temps_etape"/>
                         </tree>
                         <form>
@@ -120,6 +114,22 @@
                             <field name="description"/>
                         </tree>
                     </field>
+
+                    <field name="defautheque_ids">
+                        <tree create="0">
+                            <field name="defaut_id"/>
+                            <field name="defaut_text" readonly="1"/>
+                        </tree>
+                        <form create="0">
+                            <group>
+                                <field name="defaut_id"   readonly="1"/>
+                                <field name="defaut_text" readonly="1"/>
+                                <field name="defaut_photo" widget='image' class="oe_left oe_avatar" readonly="1"/>
+                            </group>
+                        </form>
+                    </field>
+
+
                     <group>
                         <group>
                             <field name="cout_ctrl_qualite"/>
@@ -207,13 +217,10 @@
             <form string="Défauthèque">
                 <sheet>
                     <group>
-                        <group>
-                            <field name="name" />
-                        </group>
-                        <group>
-                            <field name="gamme_id" required="True" />
-                            <field name="moule_dossierf"/>
-                        </group>
+                        <field name="name"/>
+                        <field name="defautheque_sur"/>
+                        <field name="mold_id"     attrs="{'invisible': [('defautheque_sur', '!=', 'moule')]}"/>
+                        <field name="dossierf_id" attrs="{'invisible': [('defautheque_sur', '!=', 'dossier_f')]}"/>
                     </group>
                     <group>
                         <field name="defaut" required="True"/>
@@ -239,7 +246,7 @@
             <field name="arch" type="xml">
                 <tree string="Défauthèque">
                     <field name="name"/>
-                    <field name="gamme_id"/>
+                    <field name="defautheque_sur"/>
                     <field name="moule_dossierf"/>
                     <field name="defaut"/>
                 </tree>
@@ -251,7 +258,7 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
-                    <field name="gamme_id"/>
+                    <field name="defautheque_sur"/>
                     <field name="moule_dossierf"/>
                     <field name="defaut"/>
                 </search>
@@ -470,5 +477,56 @@
             <field name="res_model">is.ctrl100.pareto</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+
+        <!-- is.ctrl100.gamme.mur.qualite.formation -->
+        <record model="ir.ui.view" id="is_ctrl100_gamme_mur_qualite_formation_form">
+            <field name="name">is_ctrl100_gamme_mur_qualite_formation_form</field>
+            <field name="model">is.ctrl100.gamme.mur.qualite.formation</field>
+            <field name="arch" type="xml">
+            <form string="Formation" create="0">
+                <sheet>
+                    <group>
+                        <field name="gamme_id"/>
+                        <field name="createur_id"/>
+                        <field name="operateur_referent_id"/>
+                        <field name="operateur_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_gamme_mur_qualite_formation_tree">
+            <field name="name">is_ctrl100_gamme_mur_qualite_formation_tree</field>
+            <field name="model">is.ctrl100.gamme.mur.qualite.formation</field>
+            <field name="arch" type="xml">
+                <tree string="Formation" create="0">
+                    <field name="gamme_id"/>
+                    <field name="createur_id"/>
+                    <field name="operateur_referent_id"/>
+                    <field name="operateur_ids"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_ctrl100_gamme_mur_qualite_formation_search" >
+            <field name="name">is_ctrl100_gamme_mur_qualite_formation_search</field>
+            <field name="model">is.ctrl100.gamme.mur.qualite.formation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="gamme_id"/>
+                    <field name="createur_id"/>
+                    <field name="operateur_referent_id"/>
+                    <field name="operateur_ids"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_ctrl100_gamme_mur_qualite_formation_action">
+            <field name="name">Formation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.ctrl100.gamme.mur.qualite.formation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
     </data>
 </openerp>

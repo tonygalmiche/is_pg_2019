@@ -151,11 +151,11 @@
                             <td width="15%" rowspan="3" class="classborder">
                                 <img t-if="company.is_logo" t-att-src="'data:image/png;base64,%s' % company.is_logo" style="max-height: 60px;"/>
                             </td>
-                            <td width="65%" rowspan="1">
-                                <div style="font-size:16px" t-field="company.street"/>
+                            <td width="65%" rowspan="1" style="font-size:16px">
+                                Processus Management de la qualité
                             </td>
                             <td width="20%" rowspan="1">
-                                <div>FO-0-PROD-</div>
+                                <div>FO-0-MQ-59</div>
                             </td>
                         </tr>
                         <tr>
@@ -432,11 +432,11 @@
         </template>
 
         <report id="report_is_ctrl100_rapport_controle" model="is.ctrl100.rapport.controle"
-            string="Rapport de contrôle" report_type="qweb-pdf"
+            string="Rapport de mission" report_type="qweb-pdf"
             name="is_pg_2019.is_ctrl100_rapport_controle" file="is_pg_2019.is_ctrl100_rapport_controle" />
 
         <record id="is_ctrl100_rapport_controle_paperformat" model="report.paperformat">
-            <field name="name">A4 - Rapport de contrôle</field>
+            <field name="name">A4 - Rapport de mission</field>
             <field name="default" eval="True" />
             <field name="format">A4</field>
             <field name="page_height">0</field>
