@@ -283,11 +283,19 @@
                         <group>
                             <field name="name" readonly="True" />
                             <field name="gamme_id" required="True" />
-                            <field name="tracabilite" required="True" />
-                            <field name="product_id"    attrs="{'invisible': [('tracabilite', '!=', 'article')], 'required': [('tracabilite', '=', 'article')]}"/>
-                            <field name="production_id" attrs="{'invisible': [('tracabilite', '!=', 'of')], 'required': [('tracabilite', '=', 'of')]}"/>
-                            <field name="picking_id"    attrs="{'invisible': [('tracabilite', '!=', 'reception')], 'required': [('tracabilite', '=', 'reception')]}"/>
                             <field name="moule_dossierf"/>
+                            <field name="tracabilite" required="True" />
+                            <field 
+                                name="product_id"
+                                domain="[('is_mold_dossierf','=',moule_dossierf)]"
+                                attrs="{'invisible': [('tracabilite', '!=', 'article')], 'required': [('tracabilite', '=', 'article')]}"
+                            />
+                            <field 
+                                name="production_id" 
+                                domain="[('is_mold_dossierf','=',moule_dossierf)]"
+                                attrs="{'invisible': [('tracabilite', '!=', 'of')], 'required': [('tracabilite', '=', 'of')]}"
+                            />
+                            <field name="picking_id"    attrs="{'invisible': [('tracabilite', '!=', 'reception')], 'required': [('tracabilite', '=', 'reception')]}"/>
                         </group>
                         <group>
                             <field name="createur_id"                   required="True"/>
@@ -298,13 +306,13 @@
                         </group>
                     </group>
                     <field name="defautheque_ids" colspan="4">
-                        <tree>
+                        <tree create="0" delete="0">
                             <field name="defaut_id" widget="many2one_clickable"/>
                             <field name="defaut_text" />
                             <field name="nb_rebuts"/>
                             <field name="nb_repris"/>
                         </tree>
-                        <form>
+                        <form create="0">
                             <group>
                                 <field name="defaut_id" required="True"  domain="[('gamme_id','=',parent.gamme_id)]" />
                                 <field name="defaut_text" readonly="True" />
@@ -312,6 +320,7 @@
                             <group>
                                 <field name="nb_rebuts"/>
                                 <field name="nb_repris"/>
+                                <field name="ou_et_quand"/>
                             </group>
                             <group>
                                 <div style="text-align:center"> 

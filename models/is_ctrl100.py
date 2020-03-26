@@ -99,26 +99,31 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
         rec_dict = defaultdict(list)
         defautheque_obj = self.env['is.ctrl100.defautheque']
         for obj in self:
-            defautheque_ids = defautheque_obj.search([('gamme_id','=',obj.id)])
-            for rec in defautheque_ids:
-                SQL = """
-                    select sum(l.nb_rebuts) 
-                    from is_ctrl100_defaut_line l inner join is_ctrl100_defaut d on d.id=l.defautid 
-                    where 
-                        d.gamme_id="""+str(obj.id)+""" and
-                        l.defaut_id="""+str(rec.id)+"""
-                """
-                cr.execute(SQL)
-                res_ids = cr.fetchall()
-                nb_rebuts = 0
-                for res in res_ids:
-                    nb_rebuts = res[0]
+            SQL = """
+                select defautheque.name, defautheque.defaut, defautheque.photo, sum(l.nb_rebuts) 
+                from is_ctrl100_defaut_line l inner join is_ctrl100_defaut d on d.id=l.defautid 
+                                              inner join is_ctrl100_defautheque defautheque on l.defaut_id=defautheque.id
+                where 
+                    d.moule_dossierf='"""+str(obj.moule_dossierf)+"""'
+                group by defautheque.name, defautheque.defaut, defautheque.photo
+                order by defautheque.name
+            """
+            cr.execute(SQL)
+            res_ids = cr.fetchall()
+            nb_rebuts = 0
+            for res in res_ids:
+                #print res[0]
+
+                #nb_rebuts = res[0]
                 recdict = {
-                    'name'     : rec.name,
-                    'defaut'   : rec.defaut,
-                    'photo'    : rec.photo,
-                    'nb_rebuts': nb_rebuts,
+                    'name'     : res[0],
+                    'defaut'   : res[1],
+                    'photo'    : res[2],
+                    'nb_rebuts': res[3],
                 }
+
+                print recdict
+
                 defautheque.append(recdict)
         return defautheque
 
@@ -348,7 +353,7 @@ class is_ctrl100_gamme_defautheque_line(models.Model):
 
 class is_ctrl100_defautheque(models.Model):
     _name        = 'is.ctrl100.defautheque'
-    _description = u"Défauthèque”"
+    _description = u"Défauthèque"
     _order       = 'name desc'
 
     @api.model
@@ -428,17 +433,25 @@ class is_ctrl100_defaut(models.Model):
     @api.onchange('gamme_id')
     def _onchange_gamme_id(self):
         lst = []
-        defautheque_obj = self.env['is.ctrl100.defautheque']
+        #defautheque_obj = self.env['is.ctrl100.defautheque']
         if not self.gamme_id:
             return {'value': {'defautheque_ids': False}}
-        res = {}
-        defautheque_ids = defautheque_obj.search([('active', '=', True), ('gamme_id','=',self.gamme_id.id)])
-        for defau in defautheque_ids:
+
+
+        for line in self.gamme_id.defautheque_ids:
+            print line
             lst.append((0, 0, {
-                'defaut_id': defau.id,
-                #'employe_id': self.get_employee(),
+                'defaut_id': line.defaut_id.id,
             }))
         self.defautheque_ids = lst
+
+
+#        defautheque_ids = defautheque_obj.search([('active', '=', True), ('gamme_id','=',self.gamme_id.id)])
+#        for defau in defautheque_ids:
+#            lst.append((0, 0, {
+#                'defaut_id': defau.id,
+#            }))
+#        self.defautheque_ids = lst
 
     @api.returns('self')
     def _get_employee(self):
@@ -446,15 +459,13 @@ class is_ctrl100_defaut(models.Model):
         return id
 
 
-    @api.depends('product_id','production_id','picking_id')
+    @api.depends('gamme_id')
     def _compute_moule_dossierf(self):
         for obj in self:
-            name=''
-            if obj.product_id:
-                name = obj.product_id.is_mold_dossierf
-            if obj.production_id:
-                name = obj.production_id.product_id.is_mold_dossierf
-            obj.moule_dossierf = name
+            moule_dossierf=''
+            if obj.gamme_id:
+                moule_dossierf = obj.gamme_id.moule_dossierf
+            obj.moule_dossierf = moule_dossierf
 
 
     name                 = fields.Char(u"N° du défaut")
@@ -482,10 +493,11 @@ class is_ctrl100_defaut_line(models.Model):
     _order       = 'defaut_id desc'
 
     defaut_id    = fields.Many2one("is.ctrl100.defautheque", u"N° du défaut")
-    defaut_text  = fields.Text("Défaut", related="defaut_id.defaut")
-    defaut_photo = fields.Binary("Photo", related="defaut_id.photo")
+    defaut_text  = fields.Text("Défaut" , related="defaut_id.defaut", readonly=True)
+    defaut_photo = fields.Binary("Photo", related="defaut_id.photo" , readonly=True)
     nb_rebuts    = fields.Integer("Nombre de rebuts")
     nb_repris    = fields.Integer("Nombre de repris")
+    ou_et_quand  = fields.Char("Où et quand le défaut a-t-il été détecté")
     defautid     = fields.Many2one("is.ctrl100.defaut", u"N° du défaut")
 
 

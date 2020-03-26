@@ -135,11 +135,13 @@
                         <div class="oe_structure" />
                         <div class="row">
                             <table width="100%">
+                                <!--
                                 <tr>
                                     <td width="5%"></td>
                                     <td width="45%" style="text-align:right;padding-right:0.5em">Défauthèque rattachée à la gamme : </td>
                                     <td width="50%"><b t-field="o.name"/></td>
                                 </tr>
+                                -->
                                 <tr t-if="o.moule_dossierf">
                                     <td width="5%"></td>
                                     <td width="45%" style="text-align:right;padding-right:0.5em">Moule / Dossier F : </td>
