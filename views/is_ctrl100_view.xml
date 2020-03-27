@@ -75,7 +75,8 @@
                         <group>
                             <field name="name"/>
                             <field name="type_gamme"/>
-                            <field name="commentaire" attrs="{'invisible': [('type_gamme', '!=', 'securisation'),('type_gamme', '!=', 'reprise')]}"/>
+                            <field name="description_defaut" attrs="{'invisible': [('type_gamme', 'not in', ['securisation','reprise'])]}"/>
+                            <field name="commentaire"        attrs="{'invisible': [('type_gamme', '!=', 'securisation'),('type_gamme', '!=', 'reprise')]}"/>
                             <field name="gamme_sur"/>
                             <field name="mold_id"     attrs="{'invisible': [('gamme_sur', '!=', 'moule')], 'required': [('gamme_sur', '=', 'moule')]}"/>
                             <field name="dossierf_id" attrs="{'invisible': [('gamme_sur', '!=', 'dossier_f')], 'required': [('gamme_sur', '=', 'dossier_f')]}"/>
@@ -89,6 +90,12 @@
                             <field name="formation_id"/>
                         </group>
                     </group>
+                    <field name="risque_lie_ids" attrs="{'invisible': [('type_gamme', '!=', 'reprise')]}">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="description"/>
+                        </tree>
+                    </field>
                     <field name="operation_standard_ids" colspan="4" context="{'active_test':True}">
                         <tree editable="bottom">
                             <field name="operation_standard_id" required="True" />
@@ -108,13 +115,6 @@
                             </group>
                         </form>
                     </field>
-                    <field name="risque_lie_ids" attrs="{'invisible': [('type_gamme', '!=', 'reprise')]}">
-                        <tree editable="bottom">
-                            <field name="name"/>
-                            <field name="description"/>
-                        </tree>
-                    </field>
-
                     <field name="defautheque_ids">
                         <tree create="0">
                             <field name="defaut_id"/>
@@ -128,17 +128,35 @@
                             </group>
                         </form>
                     </field>
+                    <group string="Coût">
+                        <field name="moule_dossierf" invisible="1"/>
+                        <field 
+                            name="product_cout_id"
+                            attrs="{
+                                'invisible': [('type_gamme', 'not in', ['securisation','reprise'])],
+                                'required' : [('type_gamme', 'in'    , ['securisation','reprise'])]
+                            }"
+                            domain="[('is_mold_dossierf','=',moule_dossierf),('is_gestionnaire_id.name','not in',['04','07','12','14','23'])]"
+                        />
+                        <field
+                            name="cout_actualise"
+                            attrs="{
+                                'invisible': [('type_gamme', 'not in', ['securisation','reprise'])]
+                            }"
+                        />
+                        <field name="cout_ctrl_qualite"/>
+                        <field name="cout_previsionnel"/>
+                        <field name="delta_cout" invisible="1"/>
+                        <field
+                            name="justification"
+                            attrs="{
+                                'invisible': [('delta_cout', '&gt;', 0.0)],
+                                'required' : [('delta_cout', '&lt;', 0.0)]
+                            }"
+                        />
+                        <field name="cadence_previsionnelle"/>
+                        <field name="active"/>
 
-
-                    <group>
-                        <group>
-                            <field name="cout_ctrl_qualite"/>
-                            <field name="cout_previsionnel"/>
-                            <field name="cadence_previsionnelle"/>
-                        </group>
-                        <group>
-                            <field name="active"/>
-                        </group>
                     </group>
                 </sheet>
             </form>

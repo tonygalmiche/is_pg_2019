@@ -40,7 +40,7 @@ class is_ctrl100_gamme_standard(models.Model):
 
 
     gamme_qualite_id       = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité")
-    operation_standard_id  = fields.Many2one('is.ctrl100.operation.standard', u"Opérations standard")
+    operation_standard_id  = fields.Many2one('is.ctrl100.operation.standard', u"Opération standard")
     active                 = fields.Boolean("Active", default=True)
     #temps_etape            = fields.Float(u"Temps de l'étape  (Seconde / Pièce) ", digits=(14, 2))
 
@@ -50,7 +50,7 @@ class is_ctrl100_operation_specifique(models.Model):
     _description = u"Opérations spécifiques"
     _order       = 'operation'
 
-    operation        = fields.Text(u"Opération")
+    operation        = fields.Text(u"Opération spécifique")
     photo            = fields.Binary('Photo')
     temps_etape      = fields.Float(u"Temps de l'étape  (Seconde / Pièce) ", digits=(14, 2))
     gamme_qualite_id = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité")
@@ -61,7 +61,7 @@ class is_ctrl100_risque_lie(models.Model):
     _description = u"Risques liés"
     _order       = 'name'
 
-    name             = fields.Char(u"Risque lié à cette opération", required=True)
+    name             = fields.Char(u"Risque pour le produit engendré par cette reprise", required=True)
     description      = fields.Char(u"Description du verrou mis en place pour répondre à ce risque", required=True)
     gamme_qualite_id = fields.Many2one('is.ctrl100.gamme.mur.qualite', u"Gamme mur qualité", required=True)
 
@@ -112,18 +112,12 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
             res_ids = cr.fetchall()
             nb_rebuts = 0
             for res in res_ids:
-                #print res[0]
-
-                #nb_rebuts = res[0]
                 recdict = {
                     'name'     : res[0],
                     'defaut'   : res[1],
                     'photo'    : res[2],
                     'nb_rebuts': res[3],
                 }
-
-                print recdict
-
                 defautheque.append(recdict)
         return defautheque
 
@@ -215,9 +209,16 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
         return cout
 
 
-    @api.depends('cout_ctrl_qualite','operation_standard_ids','operation_specifique_ids')
+    @api.depends('cout_ctrl_qualite','operation_standard_ids','operation_specifique_ids','product_cout_id')
     def _compute_cout(self):
         for obj in self:
+            cout_actualise = 0
+            if obj.product_cout_id:
+                couts = self.env['is.cout'].search([('name', '=', obj.product_cout_id.id)])
+                for cout in couts:
+                    cout_actualise = cout.cout_act_total
+            obj.cout_actualise = cout_actualise
+
             tps = 0
             #for line in obj.operation_standard_ids:
             #    if line.temps_etape:
@@ -232,6 +233,13 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
             cout = obj.cout_ctrl_qualite*tps/3600
             obj.cout_previsionnel      = cout
             obj.cadence_previsionnelle = cadence_previsionnelle
+
+            obj.delta_cout = cout_actualise - cout
+
+
+
+
+
 
 
     @api.depends('mold_id','dossierf_id','product_id')
@@ -284,7 +292,6 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                     'createur_id'          : obj.create_uid.id,
                     'operateur_referent_id': obj.operateur_referent_id.id,
                 }
-                print vals,formations
                 if len(formations)>0:
                     formation = formations[0]
                     formation.write(vals)
@@ -314,6 +321,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                                     ("securisation", u"Sécurisation"),
                                     ("reprise", "Reprise"),
                                 ], "Type de gamme", required=True)
+    description_defaut       = fields.Text(u"Description du défaut")
     commentaire              = fields.Char(u"Commentaire", help=u"Pour pouvoir attribuer un nom à la gamme. Il peut y avoir plusieurs gammes sur un même moule (plusieurs incidents différents par exemple). Ce champ commentaire permet de savoir à quoi correspond chaque gamme")
     gamme_sur                = fields.Selection([
                                     ("moule", "Moule"),
@@ -329,10 +337,14 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     date_fin_validite        = fields.Date(u"Date du rappel", required=True)
     operation_standard_ids   = fields.One2many('is.ctrl100.gamme.standard'      , 'gamme_qualite_id', u"Opérations standard")
     operation_specifique_ids = fields.One2many('is.ctrl100.operation.specifique', 'gamme_qualite_id', u"Opérations spécifiques")
-    risque_lie_ids           = fields.One2many('is.ctrl100.risque.lie'          , 'gamme_qualite_id', u"Risques liés à cette opération")
+    risque_lie_ids           = fields.One2many('is.ctrl100.risque.lie'          , 'gamme_qualite_id', u"Risque pour le produit engendré par cette reprise")
     defautheque_ids          = fields.One2many("is.ctrl100.gamme.defautheque.line", "gamme_id", u"Défauthèque")
+    product_cout_id          = fields.Many2one("product.product", "Article pour coût")
+    cout_actualise           = fields.Float(u"Coût actualisé", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
     cout_ctrl_qualite        = fields.Float(u"Coût horaire vendu contrôle qualité", digits=(12, 2), default=_get_cout_ctrl_qualite)
     cout_previsionnel        = fields.Float(u"Coût prévisionnel par pièce", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
+    delta_cout               = fields.Float(u"Delta coût", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
+    justification            = fields.Char(u"Justification")
     cadence_previsionnelle   = fields.Float(u"Cadence de contrôle prévisionnelle (pcs/h)", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
     operateur_referent_id    = fields.Many2one("res.users", u"Opérateur référent", help=u"Cet opérateur pourra gérer les droits sur les saisies")
     formation_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite.formation", u"Formation", compute="_compute_formation_id", store=True, readonly=True)
@@ -439,7 +451,6 @@ class is_ctrl100_defaut(models.Model):
 
 
         for line in self.gamme_id.defautheque_ids:
-            print line
             lst.append((0, 0, {
                 'defaut_id': line.defaut_id.id,
             }))

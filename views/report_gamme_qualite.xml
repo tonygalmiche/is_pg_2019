@@ -328,6 +328,7 @@
                                     </t>
                                 </table>
                             </t>
+                            <!--
                             <br/>
                             <t t-if="o.risque_lie_ids">
                                 <table class="tablecls" width="100%">
@@ -345,6 +346,7 @@
                                     </tboby>
                                 </table>
                             </t>
+                            -->
                         </div>
                     </div>
                     </t>
