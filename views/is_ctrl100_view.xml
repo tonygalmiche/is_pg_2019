@@ -150,8 +150,8 @@
                         <field
                             name="justification"
                             attrs="{
-                                'invisible': [('delta_cout', '&gt;', 0.0)],
-                                'required' : [('delta_cout', '&lt;', 0.0)]
+                                'invisible': ['|',('delta_cout', '&gt;', 0.0),('type_gamme', 'not in', ['securisation','reprise'])],
+                                'required' : [('delta_cout', '&lt;', 0.0),('type_gamme', 'in', ['securisation','reprise'])]
                             }"
                         />
                         <field name="cadence_previsionnelle"/>
