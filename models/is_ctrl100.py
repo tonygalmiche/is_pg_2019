@@ -91,6 +91,37 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     _description = u"Gamme mur qualité"
     _order       = 'name desc'
 
+#    @api.multi
+#    def get_defautheque_data(self):
+#        cr = self._cr
+#        res = False
+#        defautheque = []
+#        rec_dict = defaultdict(list)
+#        defautheque_obj = self.env['is.ctrl100.defautheque']
+#        for obj in self:
+#            SQL = """
+#                select defautheque.name, defautheque.defaut, defautheque.photo, sum(l.nb_rebuts) 
+#                from is_ctrl100_defaut_line l inner join is_ctrl100_defaut d on d.id=l.defautid 
+#                                              inner join is_ctrl100_defautheque defautheque on l.defaut_id=defautheque.id
+#                where 
+#                    d.moule_dossierf='"""+str(obj.moule_dossierf)+"""'
+#                group by defautheque.name, defautheque.defaut, defautheque.photo
+#                order by defautheque.name
+#            """
+#            cr.execute(SQL)
+#            res_ids = cr.fetchall()
+#            nb_rebuts = 0
+#            for res in res_ids:
+#                recdict = {
+#                    'name'     : res[0],
+#                    'defaut'   : res[1],
+#                    'photo'    : res[2],
+#                    'nb_rebuts': res[3],
+#                }
+#                defautheque.append(recdict)
+#        return defautheque
+
+
     @api.multi
     def get_defautheque_data(self):
         cr = self._cr
@@ -100,26 +131,27 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
         defautheque_obj = self.env['is.ctrl100.defautheque']
         for obj in self:
             SQL = """
-                select defautheque.name, defautheque.defaut, defautheque.photo, sum(l.nb_rebuts) 
-                from is_ctrl100_defaut_line l inner join is_ctrl100_defaut d on d.id=l.defautid 
-                                              inner join is_ctrl100_defautheque defautheque on l.defaut_id=defautheque.id
+                select name, defaut, ou_et_quand, photo
+                from is_ctrl100_defautheque
                 where 
-                    d.moule_dossierf='"""+str(obj.moule_dossierf)+"""'
-                group by defautheque.name, defautheque.defaut, defautheque.photo
-                order by defautheque.name
+                    moule_dossierf='"""+str(obj.moule_dossierf)+"""' and
+                    active='t'
+                order by name
             """
             cr.execute(SQL)
             res_ids = cr.fetchall()
-            nb_rebuts = 0
             for res in res_ids:
                 recdict = {
-                    'name'     : res[0],
-                    'defaut'   : res[1],
-                    'photo'    : res[2],
-                    'nb_rebuts': res[3],
+                    'name'       : res[0],
+                    'defaut'     : res[1] or '',
+                    'ou_et_quand': res[2] or '',
+                    'photo'      : res[3] or '',
                 }
                 defautheque.append(recdict)
         return defautheque
+
+
+
 
     @api.multi
     def get_default_data(self):
@@ -348,6 +380,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     cadence_previsionnelle   = fields.Float(u"Cadence de contrôle prévisionnelle (pcs/h)", digits=(12, 2), compute="_compute_cout", store=True, readonly=True)
     operateur_referent_id    = fields.Many2one("res.users", u"Opérateur référent", help=u"Cet opérateur pourra gérer les droits sur les saisies")
     formation_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite.formation", u"Formation", compute="_compute_formation_id", store=True, readonly=True)
+    afficher_cout            = fields.Boolean(u"Afficher le coût", default=False)
     active                   = fields.Boolean(u"Gamme active", default=True)
 
 
@@ -398,6 +431,7 @@ class is_ctrl100_defautheque(models.Model):
     moule_dossierf = fields.Char(u"Moule / Dossier F", compute="_compute_moule_dossierf", store=True, readonly=True)
     #gamme_id       = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
     defaut         = fields.Text(u"Défaut")
+    ou_et_quand    = fields.Text("Où et quand le défaut a-t-il été détecté")
     photo          = fields.Binary("Photo")
     active         = fields.Boolean("Active", default=True)
 
@@ -508,7 +542,6 @@ class is_ctrl100_defaut_line(models.Model):
     defaut_photo = fields.Binary("Photo", related="defaut_id.photo" , readonly=True)
     nb_rebuts    = fields.Integer("Nombre de rebuts")
     nb_repris    = fields.Integer("Nombre de repris")
-    ou_et_quand  = fields.Char("Où et quand le défaut a-t-il été détecté")
     defautid     = fields.Many2one("is.ctrl100.defaut", u"N° du défaut")
 
 

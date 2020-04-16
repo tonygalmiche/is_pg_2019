@@ -237,15 +237,17 @@
                                                     <span t-field="o.cadence_previsionnelle" /> pièces/h
                                                 </td>
                                                 <td width="25%">
-                                                    soit un coût de contrôle/pièce de
+                                                    <t t-if="o.afficher_cout">
+                                                        soit un coût de contrôle/pièce de
+                                                    </t>
                                                 </td>
                                                 <td width="20%">
-                                                    <div>
+                                                    <t t-if="o.afficher_cout">
                                                          <span t-field="o.cout_previsionnel"/> €
-                                                    </div>
+                                                    </t>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr t-if="o.afficher_cout">
                                                 <td width="27%">
                                                     Coût horaire du contrôle
                                                 </td>
@@ -328,6 +330,37 @@
                                     </t>
                                 </table>
                             </t>
+
+                            <br/>
+                            <table class="tablecls" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th width="10%">N° du défaut</th>
+                                        <th width="40%">Description</th>
+                                        <th width="50%">Photo</th>
+                                    </tr>
+                                </thead>
+                                <tboby>
+                                    <t t-foreach="o.defautheque_ids" t-as="d">
+                                        <tr>
+                                            <td><span t-field="d.defaut_id.name"/></td>
+                                            <td><span t-field="d.defaut_text"/></td>
+                                            <td>
+                                                <div>
+                                                    <img 
+                                                        t-if="d.defaut_photo"
+                                                        t-att-src="'data:image/png;base64,%s' % d.defaut_photo"
+                                                        class="imgclass0"
+                                                    />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tboby>
+                            </table>
+
+
+
                             <!--
                             <br/>
                             <t t-if="o.risque_lie_ids">

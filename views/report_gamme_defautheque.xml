@@ -224,7 +224,8 @@
                                 <thead>
                                     <tr>
                                         <th width="10%">N° du défaut</th>
-                                        <th width="40%">Description</th>
+                                        <th width="20%">Description</th>
+                                        <th width="20%">Où et quand le défaut a-t-il été détecté</th>
                                         <th width="50%">Photo</th>
                                         <!--<th width="20%">Nb rebuts</th>-->
                                     </tr>
@@ -234,6 +235,7 @@
                                         <tr>
                                             <td><span t-esc="rec['name']"/></td>
                                             <td><t t-raw="rec['defaut'].replace('\n', '&lt;br&gt;')"/></td>
+                                            <td><t t-raw="rec['ou_et_quand'].replace('\n', '&lt;br&gt;')"/></td>
                                             <td>
                                                 <div>
                                                     <img 
