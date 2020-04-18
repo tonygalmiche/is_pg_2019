@@ -8,6 +8,7 @@ import unicodedata
 import codecs
 import base64
 import csv, cStringIO
+from openerp.exceptions import Warning
 
 
 class hr_employee(models.Model):
@@ -24,17 +25,6 @@ class hr_employee(models.Model):
                                         ], string='Mode de communication')
     is_mobile   = fields.Char(u"Mobile"  , help="Téléphone utilisé pour l'envoi des SMS pour les demandes de congés")
     is_courriel = fields.Char(u"Courriel", help="Courriel utilisé pour l'envoi des informations pour les demandes de congés")
-
-
-
-#class is_demande_conges_droit(models.Model):
-#    _name        = 'is.demande.conges.droit'
-#    _description = u'Droit sur demannde de congés'
-#    _order       = 'conge_id,name'
-
-#    name       = fields.Char(u"Type", required=True)
-#    nombre     = fields.Float(u"Nombre", digits=(14,2))
-#    conge_id   = fields.Many2one('is.demande.conges', 'Demande de congés', required=True, ondelete='cascade', readonly=True)
 
 
 class is_demande_conges(models.Model):
@@ -60,13 +50,11 @@ class is_demande_conges(models.Model):
         return mobile,err
 
 
-
     @api.multi
     def envoi_sms(self, mobile, message):
         """Envoi de SMS avec OVH"""
         cr , uid, context = self.env.args
         mobile,err = self._format_mobile(mobile)
-        print mobile,err
         res=''
         quota=0
         if err=='':
@@ -126,38 +114,60 @@ class is_demande_conges(models.Model):
     @api.multi
     def vers_validation_n1_action(self):
         for obj in self:
+            if obj.demande_collective=='oui':
+                for employe in obj.demandeur_ids:
+                    vals={
+                        #'name'               : obj.name,
+                        #'createur_id'        : obj.createur_id,
+                        #'date_creation'      : obj.date_creation,
+                        'demandeur_id'         : employe.user_id.id,
+                        #'valideur_n1'        : obj.valideur_n1,
+                        #'valideur_n2'        : obj.valideur_n2,
+                        #'responsable_rh_id'  : obj.responsable_rh_id,
+                        'type_demande'         : obj.type_demande,
+                        'autre_id'             : obj.autre_id.id,
+                        'date_debut'           : obj.date_debut,
+                        'date_fin'             : obj.date_fin,
+                        'le'                   : obj.le,
+                        'matin_ou_apres_midi'  : obj.matin_ou_apres_midi,
+                        'heure_debut'          : obj.heure_debut,
+                        'heure_fin'            : obj.heure_fin,
+                        'demande_collective'   : 'non',
+                        'demande_collective_id': obj.id,
+                    }
+                    demande = self.env['is.demande.conges'].create(vals)
+                    demande.vers_validation_n1_action()
+
             obj.date_validation_n1 = datetime.datetime.today()
-            subject = u'[' + obj.name + u'] Demande de congés - Validation Niveau 1 '
-            email_to = obj.valideur_n1.email
-            user = self.env['res.users'].browse(self._uid)
-            email_from = user.email
 
-            email_cc = ''
-            if obj.mode_communication in ['courriel','courriel+sms'] and obj.courriel:
-                email_cc = obj.courriel
-
-            nom = user.name
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.demande.conges'
-            body_html = u""" 
-                <p>Bonjour,</p> 
-                <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Validation Niveau 1'.</p> 
-                <p>Merci d'en prendre connaissance.</p> 
-            """ 
-            self.envoi_mail(email_from, email_to, email_cc, subject, body_html)
-
-            subject   = u"vers Validation niveau 1"
-            body_html = u"<p>Mail envoyé de "+str(email_from)+u" à "+str(email_to)+u" (cc="+str(email_cc)+u")</p>"+body_html
-            self.creer_notification(subject,body_html)
-
-            if obj.mode_communication in ['sms','courriel+sms'] and obj.mobile:
-                message = """Bonjour, """ + nom + """ vient de passer la Demande de congés """ + obj.name + """ à l'état 'Validation Niveau 1'."""
-                res,err = self.envoi_sms(obj.mobile, message)
-                if err=='':
-                    subject = u'SMS envoyé sur le '+obj.mobile+u' (il reste '+res+u' SMS sur le compte)'
-                    self.creer_notification(subject,message)
-                else:
-                    self.creer_notification(u'ATTENTION : SMS non envoyé', err)
+            if not obj.demande_collective_id:
+                subject = u'[' + obj.name + u'] Demande de congés - Validation Niveau 1 '
+                email_to = obj.valideur_n1.email
+                user = self.env['res.users'].browse(self._uid)
+                email_from = user.email
+                email_cc = ''
+                if obj.mode_communication in ['courriel','courriel+sms'] and obj.courriel:
+                    email_cc = obj.courriel
+                nom = user.name
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.demande.conges'
+                body_html = u""" 
+                    <p>Bonjour,</p> 
+                    <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Validation Niveau 1'.</p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                """ 
+                self.envoi_mail(email_from, email_to, email_cc, subject, body_html)
+                subject   = u"vers Validation niveau 1"
+                body_html = u"<p>Mail envoyé de "+str(email_from)+u" à "+str(email_to)+u" (cc="+str(email_cc)+u")</p>"+body_html
+                self.creer_notification(subject,body_html)
+                if obj.mode_communication in ['sms','courriel+sms'] and obj.mobile:
+                    message = """Bonjour, """ + nom + """ vient de passer la Demande de congés """ + obj.name + """ à l'état 'Validation Niveau 1'."""
+                    res,err = self.envoi_sms(obj.mobile, message)
+                    if err=='':
+                        subject = u'SMS envoyé sur le '+obj.mobile+u' (il reste '+res+u' SMS sur le compte)'
+                        self.creer_notification(subject,message)
+                    else:
+                        self.creer_notification(u'ATTENTION : SMS non envoyé', err)
 
             obj.signal_workflow('validation_n1')
         return True
@@ -165,38 +175,44 @@ class is_demande_conges(models.Model):
     @api.multi
     def vers_validation_n2_action(self):
         for obj in self:
+            if obj.demande_collective=='oui':
+                for demande in obj.demande_conges_ids:
+                    demande.vers_validation_n2_action()
+
             obj.date_validation_n2 = datetime.datetime.today()
-            subject = u'[' + obj.name + u'] Demande de congés - Validation Niveau 2'
-            email_to = obj.valideur_n2.email
-            user = self.env['res.users'].browse(self._uid)
-            email_from = user.email
 
-            email_cc = ''
-            if obj.mode_communication in ['courriel','courriel+sms'] and obj.courriel:
-                email_cc = obj.courriel
+            if not obj.demande_collective_id:
+                subject = u'[' + obj.name + u'] Demande de congés - Validation Niveau 2'
+                email_to = obj.valideur_n2.email
+                user = self.env['res.users'].browse(self._uid)
+                email_from = user.email
 
-            nom = user.name
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.demande.conges'
-            body_html = u""" 
-                <p>Bonjour,</p> 
-                <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Validation Niveau 2'.</p> 
-                <p>Merci d'en prendre connaissance.</p> 
-            """ 
-            self.envoi_mail(email_from, email_to, email_cc, subject, body_html)
+                email_cc = ''
+                if obj.mode_communication in ['courriel','courriel+sms'] and obj.courriel:
+                    email_cc = obj.courriel
 
-            subject   = u"vers Validation niveau 2"
-            body_html = u"<p>Mail envoyé de "+str(email_from)+u" à "+str(email_to)+u" (cc="+str(email_cc)+u")</p>"+body_html
-            self.creer_notification(subject,body_html)
+                nom = user.name
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.demande.conges'
+                body_html = u""" 
+                    <p>Bonjour,</p> 
+                    <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Validation Niveau 2'.</p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                """ 
+                self.envoi_mail(email_from, email_to, email_cc, subject, body_html)
 
-            if obj.mode_communication in ['sms','courriel+sms'] and obj.mobile:
-                message = """Bonjour, """ + nom + """ vient de passer la Demande de congés """ + obj.name + """ à l'état 'Validation Niveau 2'."""
-                res,err = self.envoi_sms(obj.mobile, message)
-                if err=='':
-                    subject = u'SMS envoyé sur le '+obj.mobile+u' (il reste '+res+u' SMS sur le compte)'
-                    self.creer_notification(subject,message)
-                else:
-                    self.creer_notification(u'ATTENTION : SMS non envoyé', err)
+                subject   = u"vers Validation niveau 2"
+                body_html = u"<p>Mail envoyé de "+str(email_from)+u" à "+str(email_to)+u" (cc="+str(email_cc)+u")</p>"+body_html
+                self.creer_notification(subject,body_html)
+
+                if obj.mode_communication in ['sms','courriel+sms'] and obj.mobile:
+                    message = """Bonjour, """ + nom + """ vient de passer la Demande de congés """ + obj.name + """ à l'état 'Validation Niveau 2'."""
+                    res,err = self.envoi_sms(obj.mobile, message)
+                    if err=='':
+                        subject = u'SMS envoyé sur le '+obj.mobile+u' (il reste '+res+u' SMS sur le compte)'
+                        self.creer_notification(subject,message)
+                    else:
+                        self.creer_notification(u'ATTENTION : SMS non envoyé', err)
 
             obj.signal_workflow('validation_n2')
         return True
@@ -204,46 +220,51 @@ class is_demande_conges(models.Model):
     @api.multi
     def vers_validation_rh_action(self):
         for obj in self:
+            if obj.demande_collective=='oui':
+                for demande in obj.demande_conges_ids:
+                    demande.vers_validation_rh_action()
             obj.date_validation_rh = datetime.datetime.today()
-            subject = u'[' + obj.name + u'] Demande de congés - Validation RH'
-            email_to = obj.responsable_rh_id.email
-            user = self.env['res.users'].browse(self._uid)
-            email_from = user.email
-
-            email_cc = ''
-            if obj.mode_communication in ['courriel','courriel+sms'] and obj.courriel:
-                email_cc = obj.courriel
-
-            nom = user.name
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.demande.conges'
-            body_html = u""" 
-                <p>Bonjour,</p> 
-                <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Validation RH'.</p> 
-                <p>Merci d'en prendre connaissance.</p> 
-            """ 
-            self.envoi_mail(email_from, email_to, email_cc, subject, body_html)
-
-            subject   = u"vers Validation RH"
-            body_html = u"<p>Mail envoyé de "+str(email_from)+u" à "+str(email_to)+u" (cc="+str(email_cc)+u")</p>"+body_html
-            self.creer_notification(subject,body_html)
-
-            if obj.mode_communication in ['sms','courriel+sms'] and obj.mobile:
-                message = """Bonjour, """ + nom + """ vient de passer la Demande de congés """ + obj.name + """ à l'état 'Validation RH'."""
-                res,err = self.envoi_sms(obj.mobile, message)
-                if err=='':
-                    subject = u'SMS envoyé sur le '+obj.mobile+u' (il reste '+res+u' SMS sur le compte)'
-                    self.creer_notification(subject,message)
-                else:
-                    self.creer_notification(u'ATTENTION : SMS non envoyé', err)
-
+            if not obj.demande_collective_id:
+                subject = u'[' + obj.name + u'] Demande de congés - Validation RH'
+                email_to = obj.responsable_rh_id.email
+                user = self.env['res.users'].browse(self._uid)
+                email_from = user.email
+                email_cc = ''
+                if obj.mode_communication in ['courriel','courriel+sms'] and obj.courriel:
+                    email_cc = obj.courriel
+                nom = user.name
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.demande.conges'
+                body_html = u""" 
+                    <p>Bonjour,</p> 
+                    <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Validation RH'.</p> 
+                    <p>Merci d'en prendre connaissance.</p> 
+                """ 
+                self.envoi_mail(email_from, email_to, email_cc, subject, body_html)
+                subject   = u"vers Validation RH"
+                body_html = u"<p>Mail envoyé de "+str(email_from)+u" à "+str(email_to)+u" (cc="+str(email_cc)+u")</p>"+body_html
+                self.creer_notification(subject,body_html)
+                if obj.mode_communication in ['sms','courriel+sms'] and obj.mobile:
+                    message = """Bonjour, """ + nom + """ vient de passer la Demande de congés """ + obj.name + """ à l'état 'Validation RH'."""
+                    res,err = self.envoi_sms(obj.mobile, message)
+                    if err=='':
+                        subject = u'SMS envoyé sur le '+obj.mobile+u' (il reste '+res+u' SMS sur le compte)'
+                        self.creer_notification(subject,message)
+                    else:
+                        self.creer_notification(u'ATTENTION : SMS non envoyé', err)
             obj.signal_workflow('validation_rh')
         return True
 
     @api.multi
     def vers_solde_action(self):
         for obj in self:
-
+            if obj.demande_collective=='oui':
+                alerte=False
+                for demande in obj.demande_conges_ids:
+                    if demande.state not in ['solde','refuse','annule']:
+                        alerte=True
+                if alerte:
+                    raise Warning(u'Il est nécessaire de solder chaque demande individuellement pour pouvoir solder cette demande collective !')
             subject   = u"vers Soldé"
             self.creer_notification(subject,"")
 
@@ -263,33 +284,7 @@ class is_demande_conges(models.Model):
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].get('is.demande.conges') or ''
-#        droits = self.cherche_droits(vals['demandeur_id'])
-#        #droit_conges_ids = res['value']['droit_conges_ids']
-#        ids=[]
-#        for line in droits:
-#            ids.append((0,0,line))
-#        vals['droit_conges_ids'] =  ids
         return super(is_demande_conges, self).create(vals)
-
-
-
-#    @api.multi
-#    def write(self,vals):
-#        res = super(is_demande_conges, self).write(vals)
-#        if 'demandeur_id' in vals:
-#            employes = self.env['hr.employee'].search([('user_id', '=', vals['demandeur_id'])], limit=1)
-#            for employe in employes:
-#                droits = self.env['is.droit.conges'].search([('employe_id', '=', employe.id)])
-#                for droit in droits:
-#                    v={
-#                        'name'    : droit.name,
-#                        'nombre'  : droit.nombre,
-#                        'conge_id': self.id,
-#                    }
-#                    print 'v=',v
-#                    self.env['is.demande.conges.droit'].create(v)
-#        print 'vals write=',vals
-#        return res
 
 
     @api.depends('state','demandeur_id','createur_id','responsable_rh_id','valideur_n1','valideur_n1')
@@ -347,7 +342,6 @@ class is_demande_conges(models.Model):
                         vers_annuler       = True
                         vers_refuse        = True
 
-
             if obj.state == 'validation_n2':
                 if obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
                     vers_validation_rh = True
@@ -358,7 +352,6 @@ class is_demande_conges(models.Model):
                     vers_solde   = True
                     vers_annuler = True
                     vers_annuler = True
-
 
             obj.vers_creation_btn_vsb      = vers_creation
             obj.vers_annuler_btn_vsb       = vers_annuler
@@ -380,13 +373,10 @@ class is_demande_conges(models.Model):
             droit_cp  = 0
             droit_rtt = 0
             droit_rc  = 0
-
-
             for employe in employes:
                 mode_communication = employe.is_mode_communication
                 mobile             = employe.is_mobile
                 courriel           = employe.is_courriel
-
                 droits = self.env['is.droit.conges'].search([('employe_id', '=', employe.id)])
                 for droit in droits:
                     if droit.name=='CP':
@@ -395,10 +385,6 @@ class is_demande_conges(models.Model):
                         droit_rtt = droit.nombre
                     if droit.name=='RC':
                         droit_rc = droit.nombre
-
-            print courriel, droit_cp
-
-
             obj.mode_communication = mode_communication
             obj.mobile             = mobile
             obj.courriel           = courriel
@@ -408,37 +394,10 @@ class is_demande_conges(models.Model):
         return True
 
 
-#    @api.multi
-#    def cherche_droits(self, demandeur_id):
-#        print demandeur_id
-#        employes = self.env['hr.employee'].search([('user_id', '=', demandeur_id)], limit=1)
-#        #value = {}
-#        lines = []
-#        for employe in employes:
-#            droits = self.env['is.droit.conges'].search([('employe_id', '=', employe.id)])
-#            for droit in droits:
-#                print droit, droit.name,droit.nombre,employe.id
-#                
-#                vals={
-#                    'name'    : droit.name,
-#                    'nombre'  : droit.nombre,
-#                }
-#                print vals
-#                lines.append(vals)
-#        return lines
-#        #value.update({'droit_conges_ids': lines})
-#        #return  {'value': value}
-
-
-
-
-
-
     name                          = fields.Char(u"N° demande")
     createur_id                   = fields.Many2one('res.users', u'Créateur', default=lambda self: self.env.user        , copy=False)
     date_creation                 = fields.Datetime(string=u'Date de création', default=lambda *a: fields.datetime.now(), copy=False)
-    demandeur_id                  = fields.Many2one('res.users', 'Demandeur', default=lambda self: self.env.user, required=True)
-
+    demandeur_id                  = fields.Many2one('res.users', 'Demandeur', default=lambda self: self.env.user)
     mode_communication = fields.Selection([
                                         ('courriel'    , u'Courriel'),
                                         ('sms'         , u'SMS'),
@@ -483,6 +442,14 @@ class is_demande_conges(models.Model):
     heure_fin                     = fields.Float(u"Heure fin"  , digits=(14, 2))
     raison_du_retour              = fields.Text(string='Motif du retour'       , copy=False)
     raison_annulation             = fields.Text(string='Motif refus/annulation', copy=False)
+    demande_collective            = fields.Selection([
+                                        ('oui', u'Oui'),
+                                        ('non', u'Non'),
+                                        ], string=u'Demande collective', required=True, default='non')
+    demandeur_ids                 = fields.Many2many('hr.employee', string=u'Demandeurs')
+    demande_conges_ids            = fields.One2many('is.demande.conges', 'demande_collective_id', u"Demandes de congés")
+    demande_collective_id         = fields.Many2one('is.demande.conges', u"Demandes collective d'origine")
+
     state                         = fields.Selection([
                                         ('creation', u'Brouillon'),
                                         ('validation_n1', 'Validation niveau 1'),
@@ -490,7 +457,7 @@ class is_demande_conges(models.Model):
                                         ('validation_rh', 'Validation RH'),
                                         ('solde' , u'Soldé'),
                                         ('refuse', u'Refusé'),
-                                        ('annule', u'Annulé')], string='State', readonly=True, default='creation')
+                                        ('annule', u'Annulé')], string=u'État', readonly=True, default='creation')
 
     vers_creation_btn_vsb      = fields.Boolean(string='vers_creation_btn_vsb'     , compute='_get_btn_vsb', default=False, readonly=True)
     vers_annuler_btn_vsb       = fields.Boolean(string='vers_annuler_btn_vsb'      , compute='_get_btn_vsb', default=False, readonly=True)
@@ -594,7 +561,6 @@ class is_demande_conges_export_cegid(models.Model):
     @api.multi
     def export_cegid_action(self):
         for obj in self:
-            print obj
             name='export-cegid-'+obj.name+'.txt'
             model='is.demande.conges.export.cegid'
             attachments = self.env['ir.attachment'].search([('res_model','=',model),('res_id','=',obj.id),('name','=',name)])

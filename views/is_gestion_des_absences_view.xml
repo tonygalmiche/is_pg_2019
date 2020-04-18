@@ -101,9 +101,19 @@
             <field name="res_model">hr.employee</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-
-
+        <record id="is_view_employee_tree2" model="ir.ui.view">
+            <field name="name">is.hr.employee.tree2</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="is_categorie"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="is_interimaire"/>
+                </tree>
+            </field>
+        </record>
 
 
         <!-- Demande de congés -->
@@ -168,7 +178,7 @@
                                 <field name="valideur_n1" readonly="1" />
                                 <field name="valideur_n2" readonly="1" />
                                 <field name="responsable_rh_id" readonly="1" />
-                                <field name="type_demande" />
+                                <field name="type_demande"/>
                                 <field 
                                     name="autre_id"
                                     attrs="{
@@ -231,7 +241,13 @@
                             </group>
                             <group>
                                 <field name="createur_id" readonly="1" />
-                                <field name="demandeur_id"/>
+                                <field 
+                                    name="demandeur_id"
+                                    attrs="{
+                                        'invisible': [('demande_collective','!=','non')],
+                                        'required' : [('demande_collective','=' ,'non')]
+                                    }"
+                                />
                                 <field 
                                     name="mode_communication"
                                     attrs="{'invisible': [('mode_communication','=',False)]}"
@@ -253,18 +269,35 @@
                             </group>
                         </group>
                         <group>
+                            <field name="demande_collective"    readonly="1"/>
+                            <field name="demande_collective_id" readonly="1" attrs="{'invisible': [('demande_collective_id','=',False)]}"/>
+                        </group>
+                        <group attrs="{'invisible': [('demande_collective','!=','oui')]}">
+                            <field nolabel="1"
+                                name="demandeur_ids"
+                                context="{
+                                    'form_view_ref' : 'is_pg_2019.view_hr_employee_form_inherit_is_pg_2019',
+                                    'tree_view_ref' : 'is_pg_2019.is_view_employee_tree2'
+                                }"
+                                attrs="{
+                                    'invisible': [('demande_collective','!=','oui')],
+                                    'required' : [('demande_collective','=' ,'oui')]
+                                }"
+                            />
+                        </group>
+                        <group attrs="{'invisible': [('demande_collective','!=','oui')]}">
+                            <field name="demande_conges_ids" readonly="1" nolabel="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group  attrs="{'invisible': [('demande_collective','!=','non')]}">
                             <group string="Droit aux congés">
                                 <field name="droit_cp"/>
                                 <field name="droit_rtt"/>
                                 <field name="droit_rc"/>
-                                <!--
-                                <field name="droit_conges_ids" nolabel="1" readonly="1">
-                                    <tree>
-                                        <field name="name"/>
-                                        <field name="nombre"/>
-                                    </tree>
-                                </field>
-                                -->
                             </group>
                             <group string="Responsable RH">
                                 <field name="cp"  attrs="{'readonly': [('fld_vsb','=',False)]}" />
@@ -321,15 +354,26 @@
                 </search>
             </field>
         </record>
-
-
-
         <record model="ir.actions.act_window" id="is_demande_conges_action">
             <field name="name">Demande de congés</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.demande.conges</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('demande_collective','=','non')]</field>
+            <field name="context">{'default_demande_collective': 'non'}</field>
         </record>
+        <record model="ir.actions.act_window" id="is_demande_collective_action">
+            <field name="name">Demande collective</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.demande.conges</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('demande_collective','=','oui')]</field>
+            <field name="context">{'default_demande_collective': 'oui'}</field>
+        </record>
+
+
+
+
 
         <!-- Demande d’absence -->
         <record model="ir.ui.view" id="view_is_demande_absence_form">
