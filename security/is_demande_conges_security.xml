@@ -3,6 +3,15 @@
     <data>
 
 
+        <!-- Gestionnaire des absences group -->
+        <record model="res.groups" id="is_gestionnaire_des_absences_group" >
+            <field name="name">Gestionnaire des absences</field>
+            <field name="comment"></field>
+            <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
+        </record>
+
+
+
         <!-- hr.emplyee -->
         <record id="is_hr_employe_user_rule" model="ir.rule">
             <field name="name">Accès à la fiche employé à l'utilisateur en consultation, au valideur N1 et au valideur N2</field>
@@ -155,12 +164,6 @@
             <field eval="0" name="perm_create" />
         </record>
 
-        <!-- Gestionnaire des absences group -->
-        <record model="res.groups" id="is_gestionnaire_des_absences_group" >
-            <field name="name">Gestionnaire des absences</field>
-            <field name="comment"></field>
-            <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
-        </record>
 
     </data>
 </openerp>
