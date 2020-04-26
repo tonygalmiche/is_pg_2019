@@ -342,6 +342,24 @@
         />
 
 
+        <!-- is.proforma.chine -->
+        <menuitem
+            id="is_proforma_main_menu"
+            parent="is_plastigray.menu_is_ventes"
+            name="Factures Proforma"
+            sequence="42"
+        />
+        <menuitem
+            id="is_proforma_chine_menu"
+            parent="is_proforma_main_menu"
+            name="Proforma Chine"
+            sequence="10"
+            action="is_proforma_chine_action"
+        />
+
+
+","Ventes
+42
 
 
 

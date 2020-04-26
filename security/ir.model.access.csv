@@ -152,6 +152,12 @@ access_is_demande_conges_autre_gestionnaire,access_is_demande_conges_autre_gesti
 
 access_is_demande_conges_export_cegid,access_is_demande_conges_export_cegid,model_is_demande_conges_export_cegid,base.group_hr_manager,1,1,1,1
 
+access_is_proforma_chine,access_is_proforma_chine,model_is_proforma_chine,is_plastigray.is_employes_hors_production_group,1,0,0,0
+access_is_proforma_chine_gest,access_is_proforma_chine_gest,model_is_proforma_chine,is_plastigray.is_administration_vente_group,1,1,1,0
+access_is_proforma_chine_line,access_is_proforma_chine_line,model_is_proforma_chine_line,is_plastigray.is_employes_hors_production_group,1,1,1,1
+
+
+
 
 
 

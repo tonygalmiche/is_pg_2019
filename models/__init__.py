@@ -18,3 +18,4 @@ import is_gestion_des_absences
 import is_gestion_des_absences_report
 import is_instruction_particuliere
 import is_fiche_description_moule
+import is_proforma_chine
