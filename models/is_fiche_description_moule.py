@@ -40,7 +40,7 @@ class is_mold(models.Model):
     _inherit = 'is.mold'
 
     @api.depends('cinematique')
-    def _compute(self):
+    def _compute_cinematique(self):
         for obj in self:
             description = ''
             if obj.cinematique in _CINEMATIQUES:
@@ -142,7 +142,7 @@ class is_mold(models.Model):
             ("avant_ouverture", u"Moule avec noyau, avec sortie avant ouverture"),
             ("specifique"     , u"Spécifique"),
         ], "Cinématique")
-    cinematique_description = fields.Text(u"Cinématique - Description", compute='_compute', readonly=True, store=True)
+    cinematique_description = fields.Text(u"Cinématique - Description", compute='_compute_cinematique', readonly=True, store=True)
     cinematique_specifique  = fields.Text(u"Cinématique - Spécifique")
 
 
