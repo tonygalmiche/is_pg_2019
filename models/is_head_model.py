@@ -5,6 +5,7 @@ from openerp.osv.orm import BaseModel
 from lxml import etree
 import itertools
 import re
+from openerp.exceptions import except_orm
 
 
 def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

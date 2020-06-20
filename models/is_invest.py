@@ -173,10 +173,13 @@ class IsInvestDetail(models.Model):
                                                inner join product_product      pp on pol.product_id=pp.id
                                                inner join product_template     pt on pp.product_tmpl_id=pt.id
                         where 
-                            (pol.is_num_chantier like 'M____/"""+obj.name+"""' or pol.is_num_chantier like 'M____/"""+obj.intitule+"""') and 
+                            pol.is_num_chantier like 'M____/"""+obj.name+"""'  and 
                             pol.date_planned>='"""+obj.annee+"""-01-01' and
                             pol.date_planned<='"""+obj.annee+"""-12-31'
                     """
+
+                    #or pol.is_num_chantier like 'M____/"""+obj.intitule+"""')
+
                     cur.execute(SQL)
                     rows = cur.fetchall()
                     for row in rows:
