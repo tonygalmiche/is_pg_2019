@@ -147,9 +147,9 @@
                             <td class="text-left">  <span t-field="line.designation"/></td>
                             <td class="text-center"><span t-field="line.custom_code"/></td>
                             <td class="text-center"><span t-field="line.country_origin"/></td>
-                            <td class="text-right"> <span t-field="line.quantity"/></td>
-                            <td class="text-right"> <span t-field="line.price_unit"/> €</td>
-                            <td class="text-right"> <span t-field="line.total_price"/> €</td>
+                            <td class="text-right" style="white-space: nowrap;"><span t-field="line.quantity"/></td>
+                            <td class="text-right" style="white-space: nowrap;"><span t-field="line.price_unit"/> €</td>
+                            <td class="text-right" style="white-space: nowrap;"><span t-field="line.total_price"/> €</td>
                         </tr>
                       </tbody>
                     </table>
@@ -161,6 +161,7 @@
                             Value for customs propose only : <span t-field="o.total_amount"/> €<br />
                             Transport costs : <span t-field="o.transport_costs"/> €<br />
                             Incoterm 2010 : <span t-field="o.incoterm_id"/><br />
+                            Place : <span t-field="o.place"/><br />
                             VAT exoneration : Article 262I du CGI<br />
                         </div>
                         <div class="col-xs-1"/>
