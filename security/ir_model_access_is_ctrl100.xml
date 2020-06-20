@@ -44,7 +44,7 @@
             <field name="groups" eval="[(4, ref('is_pg_2019.is_ctrl100_grp'))]"/>
             <field eval="0" name="perm_unlink"/>
             <field eval="1" name="perm_write"/>
-            <field eval="0" name="perm_read"/>
+            <field eval="1" name="perm_read"/>
             <field eval="1" name="perm_create"/>
         </record>
 
