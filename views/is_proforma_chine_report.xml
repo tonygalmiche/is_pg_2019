@@ -334,9 +334,9 @@
 
 
                             <td class="text-center"><span t-field="line.packaging"/></td>
-                            <td class="text-right"><span t-field="line.qty_per_pack"/> Kg</td>
-                            <td class="text-right"> <span t-field="line.qty_of_pack"/></td>
-                            <td class="text-right"> <span t-field="line.net_weight"/> Kg</td>
+                            <td class="text-right" style="white-space: nowrap;"><span t-field="line.qty_per_pack"/> Kg</td>
+                            <td class="text-right" style="white-space: nowrap;"><span t-field="line.qty_of_pack"/></td>
+                            <td class="text-right" style="white-space: nowrap;"><span t-field="line.net_weight"/> Kg</td>
                         </tr>
                       </tbody>
                     </table>
