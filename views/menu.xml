@@ -180,13 +180,14 @@
             <field name="sequence">130</field>
             <field name="parent_id" eval="ref('is_plastigray.menu_is_donnees_techniques')"/>
         </record>
-        <menuitem id="menu_is_mold_operation_systematique" sequence="1" parent="menu_tables_moules" action="is_mold_operation_systematique_action" name="Opérations systématiques" />
-        <menuitem id="menu_is_mold_operation_specifique" sequence="2" parent="menu_tables_moules" action="is_mold_operation_specifique_action" name="Opérations spécifiques" />
+        <menuitem id="menu_is_mold_operation_systematique"     sequence="1" parent="menu_tables_moules" action="is_mold_operation_systematique_action" name="Opérations systématiques" />
+        <menuitem id="menu_is_mold_operation_specifique"       sequence="2" parent="menu_tables_moules" action="is_mold_operation_specifique_action" name="Opérations spécifiques" />
         <menuitem id="menu_is_mold_specification_particuliere" sequence="3" parent="menu_tables_moules" action="is_mold_specification_particuliere_action" name="Spécifications particulières" />
-        <menuitem id="menu_is_mold_frequence_preventif" sequence="4" parent="menu_tables_moules" action="is_mold_frequence_preventif_action" name="Fréquence préventif moule" />
-        <menuitem id="menu_is_mold_piece_specifique" sequence="5" parent="menu_tables_moules" action="is_mold_piece_specifique_action" name="Pièces spécifiques" />
-        <menuitem id="menu_is_mold_surface_aspect" sequence="6" parent="menu_tables_moules" action="is_mold_surface_aspect_action" name="Surface d'aspect" />
-        
+        <menuitem id="menu_is_mold_frequence_preventif"        sequence="4" parent="menu_tables_moules" action="is_mold_frequence_preventif_action" name="Fréquence préventif moule" />
+        <menuitem id="menu_is_mold_piece_specifique"           sequence="5" parent="menu_tables_moules" action="is_mold_piece_specifique_action" name="Pièces spécifiques" />
+        <menuitem id="menu_is_mold_surface_aspect"             sequence="6" parent="menu_tables_moules" action="is_mold_surface_aspect_action" name="Surface d'aspect" />
+        <menuitem id="is_mold_bridage_menu"                    sequence="7" parent="menu_tables_moules" action="is_mold_bridage_action" name="Bridage Moule"/>
+
 
         <!-- Contrôle budgétaire Tdb -->
         <record id="is_ctrl_budget_tdb_main_menu" model="ir.ui.menu" >

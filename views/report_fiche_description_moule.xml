@@ -140,8 +140,9 @@
                                             <tr><td colspan="2" style="text-align:center"><b class="titre">Autres informations / <i>Other informations</i></b></td></tr>
                                             <tr><td style="height:2mm"></td></tr>
                                             <tr><td style="text-align:right;padding-right:2mm">Nbr emp / <i>Cav nbr</i> :             </td><td><b><span t-field="o.nb_empreintes" /></b></td></tr>
+                                            <tr t-if="o.nb_zones_utiles"><td style="text-align:right;padding-right:2mm">Nombre de zones utiles sur le bloc chaud :</td><td><b><span t-field="o.nb_zones_utiles" /></b></td></tr>
                                             <tr><td style="text-align:right;padding-right:2mm">Reçu de buse :                         </td><td><b><span t-field="o.recu_de_buse" /></b> <span t-field="o.recu_de_buse_specifique" /></td></tr>
-                                            <tr><td style="text-align:right;padding-right:2mm">d= entrée cheminée :                   </td><td><b><span t-field="o.diametre_entree_cheminee" /></b></td></tr>
+                                            <tr><td style="text-align:right;padding-right:2mm">d= entrée cheminée :                   </td><td><b><span t-field="o.diametre_entree_cheminee" /></b> <span t-field="o.diametre_entree_cheminee_specifique" /></td></tr>
                                         </table>
                                     </td>
                                     <td>
@@ -152,7 +153,18 @@
                                     <td style="width:100%;vertical-align:top" colspan="2">
                                         <table style="border-collapse: collapse;width:100%">
                                             <tr><td><br /></td></tr>
-                                            <tr><td style="text-align:right;padding-right:2mm;width:65mm">Bridage / <i>Clamping of mold</i> : </td><td><b><span t-field="o.bridage" /></b></td></tr>
+                                            <!--<tr><td style="text-align:right;padding-right:2mm;width:65mm">Bridage / <i>Clamping of mold</i> : </td><td><b><span t-field="o.bridage" /></b></td></tr>-->
+                                            <tr><td colspan="2" style="text-align:center"><b class="titre">Bridage / <i>Clamping of mold</i> : </b></td></tr>
+                                            <tr><td style="height:2mm"></td></tr>
+                                            <tr>
+                                                <td style="text-align:right;padding-right:2mm"></td>
+                                                <td>
+                                                    <t t-foreach="o.bridage_ids" t-as="p">
+                                                        <div t-field="p.name" style="padding-right:2mm;font-weight:bold"/>
+                                                    </t>
+                                                    <div t-if="o.bridage_specifique" t-field="o.bridage_specifique"/>
+                                                </td>
+                                            </tr>
                                             <tr><td><br /></td></tr>
                                             <tr><td style="text-align:right;padding-right:2mm">Ejection / <i>Ejection</i> :                   </td><td><b><span t-field="o.ejection"/></b></td></tr>
                                             <tr><td><br /></td></tr>
@@ -185,8 +197,8 @@
                                             <tr><td><br /></td></tr>
                                             <tr><td colspan="2" style="text-align:center"><b class="titre">Nombre de noyaux / <i>Number of hydraulic move</i></b></td></tr>
                                             <tr><td style="height:2mm"></td></tr>
-                                            <tr><td style="text-align:right;padding-right:2mm">Partie fixe / <i>Fixed side</i> :  </td><td><b><span t-field="o.nb_noyaux_fixe" /></b></td></tr>
-                                            <tr><td style="text-align:right;padding-right:2mm">Partie mobile / <i>Move side</i> : </td><td><b><span t-field="o.nb_noyaux_mobile" /></b></td></tr>
+                                            <tr><td style="text-align:right;padding-right:2mm">Partie fixe / <i>Fixed side</i> :  </td><td><b><span t-field="o.nb_noyaux_fixe" /></b>   <span t-field="o.nb_noyaux_fixe_commentaire" /></td></tr>
+                                            <tr><td style="text-align:right;padding-right:2mm">Partie mobile / <i>Move side</i> : </td><td><b><span t-field="o.nb_noyaux_mobile" /></b> <span t-field="o.nb_noyaux_mobile_commentaire" /></td></tr>
                                             <tr><td><br /></td></tr>
                                             <tr><td colspan="2" style="text-align:center"><b class="titre">Cinématique/ <i>Kinematic</i></b></td></tr>
                                             <tr><td style="height:2mm"></td></tr>

@@ -2,6 +2,47 @@
 
 <openerp>
     <data>
+
+        <!-- is.mold.bridage -->
+        <record id="is_mold_bridage_tree_view" model="ir.ui.view">
+            <field name="name">is_mold_bridage_tree_view</field>
+            <field name="model">is.mold.bridage</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+        <record id="is_mold_bridage_form_view" model="ir.ui.view">
+            <field name="name">is_mold_bridage_form_view</field>
+            <field name="model">is.mold.bridage</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record id="is_mold_bridage_search_view" model="ir.ui.view">
+            <field name="name">is_mold_bridage_search_view</field>
+            <field name="model">is.mold.bridage</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record id="is_mold_bridage_action" model="ir.actions.act_window" >
+            <field name="name">Bridage Moule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.mold.bridage</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
         <!-- is.mold -->
         <record id="is_fiche_description_moule_form" model="ir.ui.view">
             <field name="name">is_fiche_description_moule_form</field>
@@ -28,10 +69,17 @@
                             </group>
                         </group>
                         <group string="Autres informations">
+                            <field name="nb_zones_utiles"/>
                             <field name="recu_de_buse"/>
                             <field name="recu_de_buse_specifique" attrs="{'invisible': [('recu_de_buse', '!=', 'specifique')]}"/>
+
                             <field name="diametre_entree_cheminee"/>
-                            <field name="bridage"/>
+                            <field name="diametre_entree_cheminee_specifique" attrs="{'invisible': [('diametre_entree_cheminee', '!=', 'specifique')]}"/>
+
+                            <field name="bridage_ids" widget="many2many_tags"/>
+                            <field name="bridage_specifique_vsb" invisible="1"/>
+                            <field name="bridage_specifique" attrs="{'invisible': [('bridage_specifique_vsb', '=', False)]}"/>
+
                             <field name="ejection"/>
                             <field name="ejection_specifique" attrs="{'invisible': [('ejection', '!=', 'specifique')]}"/>
                         </group>
@@ -58,10 +106,25 @@
                                 <field name="nb_circuit_eau_mobile_commentaire" attrs="{'invisible': [('nb_circuit_eau_mobile', '==', False)]}"  nolabel="1"/>
                             </group>
                         </group>
+
                         <group string="Nombre de noyaux">
-                            <field name="nb_noyaux_fixe"/>
-                            <field name="nb_noyaux_mobile"/>
+                            <group>
+                                <field name="nb_noyaux_fixe"/>
+                            </group>
+                            <group>
+                                <field name="nb_noyaux_fixe_commentaire" attrs="{'invisible': [('nb_noyaux_fixe', 'in', [False,'0'])]}"  nolabel="1"/>
+                            </group>
+                            <group>
+                                <field name="nb_noyaux_mobile"/>
+                            </group>
+                            <group>
+                                <field name="nb_noyaux_mobile_commentaire" attrs="{'invisible': [('nb_noyaux_mobile', 'in', [False,'0'])]}"  nolabel="1"/>
+                            </group>
                         </group>
+
+
+
+
                         <group string="Cinématique">
                             <field name="cinematique"/>
                             <field name="cinematique_description" attrs="{'invisible': [('cinematique', '==', 'specifique')]}"/>
