@@ -2,7 +2,41 @@
 <openerp>
     <data>
 
+        <!-- is.ctrl100.gamme.mur.qualite.formation -->
+        <record id="is_ctrl100_gamme_mur_qualite_formation_operateur_rule" model="ir.rule">
+            <field name="name">Accès en modification pour l'opérateur référent</field>
+            <field name="model_id" ref="model_is_ctrl100_gamme_mur_qualite_formation"/>
+            <field name="domain_force">[('operateur_referent_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+        <!--
+        <record id="is_ctrl100_gamme_mur_qualite_formation_rule" model="ir.rule">
+            <field name="name">Accès en lecture à tout le monde</field>
+            <field name="model_id" ref="model_is_ctrl100_gamme_mur_qualite_formation"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+        -->
+
         <!-- is.ctrl100.gamme.mur.qualite -->
+        <record id="is_ctrl100_gamme_mur_qualite_referent_rule" model="ir.rule">
+            <field name="name">Accès en lecture au referent uniquement aux gammes autorisées</field>
+            <field name="model_id" ref="model_is_ctrl100_gamme_mur_qualite"/>
+            <field name="domain_force">[('formation_id.operateur_referent_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
         <record id="is_ctrl100_gamme_mur_qualite_operateur_rule" model="ir.rule">
             <field name="name">Accès en lecture aux opérateurs uniquement aux gammes autorisées</field>
             <field name="model_id" ref="model_is_ctrl100_gamme_mur_qualite"/>
@@ -28,9 +62,9 @@
 
         <!-- is.ctrl100.defaut -->
         <record id="is_ctrl100_defaut_operateur_rule" model="ir.rule">
-            <field name="name">Accès en lecture aux opérateurs uniquement aux gammes autorisées</field>
+            <field name="name">Accès en création aux opérateurs autorisés et au référent</field>
             <field name="model_id" ref="model_is_ctrl100_defaut"/>
-            <field name="domain_force">[('gamme_id.formation_id.operateur_ids','in',user.id)]</field>
+            <field name="domain_force">['|',('gamme_id.formation_id.operateur_ids','in',user.id),('gamme_id.formation_id.operateur_referent_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field eval="0" name="perm_unlink"/>
             <field eval="1" name="perm_write"/>
