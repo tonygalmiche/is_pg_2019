@@ -281,10 +281,30 @@ class is_demande_conges(models.Model):
             res['valideur_n2'] = emp_id.is_valideur_n2.id
         return res
 
+
+    @api.multi
+    def test_dates(self):
+        if self.date_debut and self.date_fin:
+            if str(self.date_debut)[:8]!=str(self.date_fin)[:8]:
+                raise Warning(u"La date de fin doit être dans le même mois que la date de début ")
+            if self.date_debut>self.date_fin:
+                raise Warning(u"La date de fin doit être supérieure à la date de début ")
+        return True
+
+
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].get('is.demande.conges') or ''
-        return super(is_demande_conges, self).create(vals)
+        res=super(is_demande_conges, self).create(vals)
+        res.test_dates()
+        return res
+
+
+    @api.multi
+    def write(self,vals):
+        res=super(is_demande_conges, self).write(vals)
+        self.test_dates()
+        return res
 
 
     @api.depends('state','demandeur_id','createur_id','responsable_rh_id','valideur_n1','valideur_n1')
@@ -393,11 +413,16 @@ class is_demande_conges(models.Model):
             obj.droit_rc  = droit_rc
         return True
 
-
+    @api.depends('demandeur_id')
+    def _compute_matricule(self):
+        for obj in self:
+            obj.matricule = obj.demandeur_id.login
+ 
     name                          = fields.Char(u"N° demande")
     createur_id                   = fields.Many2one('res.users', u'Créateur', default=lambda self: self.env.user        , copy=False)
     date_creation                 = fields.Datetime(string=u'Date de création', default=lambda *a: fields.datetime.now(), copy=False)
     demandeur_id                  = fields.Many2one('res.users', 'Demandeur', default=lambda self: self.env.user)
+    matricule                     = fields.Char(u"Matricule", compute='_compute_matricule', readonly=True, store=True)
     mode_communication = fields.Selection([
                                         ('courriel'    , u'Courriel'),
                                         ('sms'         , u'SMS'),

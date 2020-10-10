@@ -249,6 +249,13 @@
                                     }"
                                 />
                                 <field 
+                                    name="matricule"
+                                    attrs="{
+                                        'invisible': [('demande_collective','!=','non')],
+                                        'required' : [('demande_collective','=' ,'non')]
+                                    }"
+                                />
+                                <field 
                                     name="mode_communication"
                                     attrs="{'invisible': [('mode_communication','=',False)]}"
                                 />
@@ -330,6 +337,7 @@
                     <field name="responsable_rh_id"/>
                     <field name="createur_id"/>
                     <field name="demandeur_id"/>
+                    <field name="matricule"/>
                     <field name="date_validation_n1"/>
                     <field name="date_validation_n2"/>
                     <field name="date_validation_rh"/>
@@ -350,7 +358,15 @@
                     <field name="responsable_rh_id"/>
                     <field name="createur_id"/>
                     <field name="demandeur_id"/>
+                    <field name="matricule"/>
                     <field name="state"/>
+
+                    <!-- Group by -->
+                    <group string="Regrouper par">
+                        <filter string="Demandeur"        context="{'group_by': 'demandeur_id'}"/>
+                        <filter string="Mois Date début"  context="{'group_by':'date_debut:month'}"/>
+                        <filter string="Mois Le"          context="{'group_by':'le:month'}"/>
+                    </group>
                 </search>
             </field>
         </record>
