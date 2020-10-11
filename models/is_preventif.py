@@ -98,6 +98,15 @@ class is_mold(models.Model):
     date_modification_fiche       = fields.Date(string='Date Modfication Fiche')
 
 
+    @api.multi
+    def write(self, vals):
+        if 'periodicite_maintenance_moule' in vals:
+            nb = self.nb_cycles_dernier_preventif+vals['periodicite_maintenance_moule']-self.nb_cycles_actuel
+            vals['nb_cycles_avant_preventif'] = nb
+        res = super(is_mold, self).write(vals)
+        return res
+
+
 class is_mold_cycle(models.Model):
     _name = 'is.mold.cycle'
     _rec_name = 'moule_id'
