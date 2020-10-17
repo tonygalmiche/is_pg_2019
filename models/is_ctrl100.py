@@ -122,6 +122,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
 #        return defautheque
 
 
+
     @api.multi
     def get_defautheque_data(self):
         cr = self._cr
@@ -269,11 +270,6 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
             obj.delta_cout = cout_actualise - cout
 
 
-
-
-
-
-
     @api.depends('mold_id','dossierf_id','product_id')
     def _compute_moule_dossierf(self):
         for obj in self:
@@ -333,7 +329,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
             return formation_id
 
 
-    @api.onchange('dossierf_id','mold_id')
+    @api.onchange('dossierf_id','mold_id','product_id')
     def _onchange_moule_dossierf(self):
         lst = []
         defautheque_obj = self.env['is.ctrl100.defautheque']
@@ -345,6 +341,13 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
                 'defaut_id': defau.id,
             }))
         self.defautheque_ids = lst
+
+
+    @api.multi
+    def recharger_defautheque_action(self):
+        for obj in self:
+            obj._onchange_moule_dossierf()
+
 
 
     name                     = fields.Char(u"N°de gamme", readonly=True)

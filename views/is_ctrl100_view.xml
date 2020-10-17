@@ -58,6 +58,7 @@
                     <field name="gamme_sur"/>
                     <field name="moule_dossierf"/>
                     <field name="product_id"/>
+                    <field name="product_cout_id"/>
                     <field name="typologie_produit_id"/>
                     <field name="formation_id"/>
                     <field name="date_creation"/>
@@ -81,6 +82,7 @@
                             <field name="mold_id"     attrs="{'invisible': [('gamme_sur', '!=', 'moule')], 'required': [('gamme_sur', '=', 'moule')]}"/>
                             <field name="dossierf_id" attrs="{'invisible': [('gamme_sur', '!=', 'dossier_f')], 'required': [('gamme_sur', '=', 'dossier_f')]}"/>
                             <field name="product_id"  attrs="{'invisible': [('gamme_sur', '!=', 'article')], 'required': [('gamme_sur', '=', 'article')]}"/>
+                            <field name="moule_dossierf"/>
                         </group>
                         <group>
                             <field name="date_creation"/>
@@ -116,6 +118,7 @@
                             </group>
                         </form>
                     </field>
+                    <button string="Recharger défauthèque" name="recharger_defautheque_action" type="object" confirm="Cela va recharger la défauthèque ci-dessous"/>
                     <field name="defautheque_ids">
                         <tree create="0">
                             <field name="defaut_id"/>
@@ -130,7 +133,6 @@
                         </form>
                     </field>
                     <group string="Coût">
-                        <field name="moule_dossierf" invisible="1"/>
                         <field 
                             name="product_cout_id"
                             attrs="{
