@@ -51,8 +51,8 @@
                 <field name="coach_id"      position="replace"/>
                 <xpath expr="//page[@string='Pointage']/group[1]/group[2]" position="after">
                     <group string="Validation">
-                        <field name="is_valideur_n1"/>
-                        <field name="is_valideur_n2"/>
+                        <field name="is_valideur_n1" readonly="1"/>
+                        <field name="is_valideur_n2" readonly="1"/>
                     </group>
                     <group string="Communication">
                         <field name="is_mode_communication"/>
@@ -78,6 +78,18 @@
                 </group>
             </field>
         </record>
+
+        <record id="is_view_employee_form_manager_absence" model="ir.ui.view">
+            <field name="name">is_view_employee_form_manager_absence</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="is_pg_2019.view_hr_employee_form_inherit_is_pg_2019" />
+            <field name="groups_id" eval="[(4, ref('base.group_hr_manager'))]"/>
+            <field name="arch" type="xml">
+                <field name="is_valideur_n1" position="attributes"><attribute name="readonly" position="replace"/></field>
+                <field name="is_valideur_n2" position="attributes"><attribute name="readonly" position="replace"/></field>
+            </field>
+        </record>
+
         <record id="is_view_employee_tree" model="ir.ui.view">
             <field name="name">is.hr.employee.tree</field>
             <field name="model">hr.employee</field>

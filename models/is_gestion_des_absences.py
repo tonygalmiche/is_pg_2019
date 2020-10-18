@@ -11,6 +11,15 @@ import csv, cStringIO
 from openerp.exceptions import Warning
 
 
+
+
+class is_pointage_commentaire(models.Model):
+    _inherit = 'is.pointage.commentaire'
+
+    demande_conges_id = fields.Many2one('is.demande.conges', 'Demande de congé')
+
+
+
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
@@ -252,6 +261,30 @@ class is_demande_conges(models.Model):
                         self.creer_notification(subject,message)
                     else:
                         self.creer_notification(u'ATTENTION : SMS non envoyé', err)
+
+                #** Creation du commentaire de pointage ************************
+                if obj.type_demande in ['sans_solde','autre']:
+                    employes = self.env['hr.employee'].search([('user_id', '=', obj.demandeur_id.id),('is_pointage','=',True)], limit=1)
+                    for employe in employes:
+                        d0 = datetime.datetime.strptime(obj.date_debut, '%Y-%m-%d')
+                        d1 = datetime.datetime.strptime(obj.date_fin  , '%Y-%m-%d')
+                        nb_jours = (d1 - d0).days
+                        self.env['is.pointage.commentaire'].sudo().search([('demande_conges_id', '=', obj.id)]).unlink()
+                        for x in range(nb_jours+1):
+                            name = d0 + datetime.timedelta(days=x)
+                            if obj.type_demande=='sans_solde':
+                                commentaire = u'[' + obj.name +u'] Congés sans solde'
+                            else:
+                                commentaire = u'[' + obj.name +u'] '+obj.autre_id.name
+                            vals={
+                                'name'             : name,
+                                'employee'         : employe.id,
+                                'commentaire'      : commentaire,
+                                'demande_conges_id': obj.id,
+                            }
+                            res=self.env['is.pointage.commentaire'].sudo().create(vals)
+                #***************************************************************
+
             obj.signal_workflow('validation_rh')
         return True
 
@@ -285,10 +318,14 @@ class is_demande_conges(models.Model):
     @api.multi
     def test_dates(self):
         if self.date_debut and self.date_fin:
+            mois_demande = str(self.date_debut)[:8]
+            ce_mois      = str(datetime.date.today())[:8]
+            if mois_demande<ce_mois:
+                raise Warning(u"Le mois de la demande ne peux pas être inférieur au mois en cours")
             if str(self.date_debut)[:8]!=str(self.date_fin)[:8]:
-                raise Warning(u"La date de fin doit être dans le même mois que la date de début ")
+                raise Warning(u"La date de fin doit être dans le même mois que la date de début")
             if self.date_debut>self.date_fin:
-                raise Warning(u"La date de fin doit être supérieure à la date de début ")
+                raise Warning(u"La date de fin doit être supérieure à la date de début")
         return True
 
 

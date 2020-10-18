@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-
         <!-- Gestionnaire des absences group -->
         <record model="res.groups" id="is_gestionnaire_des_absences_group" >
             <field name="name">Gestionnaire des absences</field>
@@ -10,9 +9,21 @@
             <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
         </record>
 
+        <!-- hr_employee -->
+        <record id="is_hr_employe_user_write_rule" model="ir.rule">
+            <field name="name">Accès en modification à l'employé pour sa propre fiche</field>
+            <field name="model_id" ref="model_hr_employee" />
+            <field name="domain_force">[
+                ('user_id', '=', user.id),
+            ]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field eval="0" name="perm_unlink" />
+            <field eval="1" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="0" name="perm_create" />
+        </record>
 
-
-        <!-- hr.emplyee -->
         <record id="is_hr_employe_user_rule" model="ir.rule">
             <field name="name">Accès à la fiche employé à l'utilisateur en consultation, au valideur N1 et au valideur N2</field>
             <field name="model_id" ref="model_hr_employee" />
@@ -41,6 +52,16 @@
         </record>
 
 
+        <record id="is_hr_employe_manager_rule" model="ir.rule">
+            <field name="name">Accès complet à tous les employés au groupe Manager RH</field>
+            <field name="model_id" ref="model_hr_employee" />
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('base.group_hr_manager'))]"/>
+            <field eval="1" name="perm_unlink" />
+            <field eval="1" name="perm_write" />
+            <field eval="1" name="perm_read" />
+            <field eval="1" name="perm_create" />
+        </record>
 
 
 
