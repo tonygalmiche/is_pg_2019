@@ -580,7 +580,6 @@ class is_demande_conges_export_cegid(models.Model):
     name       = fields.Char(u"N°export")
     date_debut = fields.Date(string='Date de début', required=True, default=lambda self: self._date_debut())
     date_fin   = fields.Date(string='Date de fin'  , required=True, default=lambda self: self._date_fin())
-    user_id    = fields.Many2one('res.users', 'Employé')
 
 
     def _date_debut(self):
@@ -605,8 +604,6 @@ class is_demande_conges_export_cegid(models.Model):
         return super(is_demande_conges_export_cegid, self).create(vals)
 
 
-
-
     @api.multi
     def get_employe(self,user):
         employes = self.env['hr.employee'].search([('user_id','=',user.id)])
@@ -622,60 +619,95 @@ class is_demande_conges_export_cegid(models.Model):
 
     @api.multi
     def export_cegid_action(self):
+        cr=self._cr
         for obj in self:
-            name='export-cegid-'+obj.name+'.txt'
-            model='is.demande.conges.export.cegid'
-            attachments = self.env['ir.attachment'].search([('res_model','=',model),('res_id','=',obj.id),('name','=',name)])
-            attachments.unlink()
-            dest     = '/tmp/'+name
+            filename='export-conges-dans-cegid-'+obj.name+'.txt'
+            dest='/tmp/'+filename
+            t1={
+                'matin'     : u'Matin',
+                'apres_midi': u'Apres-midi',
+            }
+            SQL= """
+                SELECT
+                    ru.login,
+                    idc.name,
+                    idc.date_debut,
+                    idc.date_fin,
+                    idc.le,
+                    idc.type_demande,
+                    idc.state,
+                    idc.cp,
+                    idc.rtt,
+                    idc.rc,
+                    idc.matin_ou_apres_midi
+                FROM is_demande_conges idc inner join res_users ru on idc.demandeur_id=ru.id
+                WHERE 
+                    ((idc.date_debut>='"""+obj.date_debut+"""' and idc.date_debut<='"""+obj.date_fin+"""') or
+                    (idc.le>='"""+obj.date_debut+"""' and idc.le<='"""+obj.date_fin+"""')) and
+                    idc.type_demande not in ('autre','sans_solde') and
+                    idc.state in ('solde','validation_rh') and
+                    (idc.cp>0 or idc.rtt>0 or idc.rc>0)
+                ORDER BY ru.login,idc.name
+            """
+            cr.execute(SQL)
+            rows = cr.dictfetchall()
             f = codecs.open(dest,'wb',encoding='utf-8')
             annee = str(obj.date_debut)[:4]
             f.write('***DEBUT***\r\n')
             f.write('000	000000	01/01/'+annee+'	31/12/'+annee+'\r\n')
+            for row in rows:
+                login = (u'0000000000'+row['login'])[-10:]
+                if row['type_demande'] in ['le','rc_heures','cp_rtt_demi_journee']:
+                    date_debut = row['le']
+                    date_fin   = row['le']
+                else:
+                    date_debut = row['date_debut']
+                    date_fin   = row['date_fin']
+                code      = u''
+                nb_heures = nb_jours = 0
+                comment   = u''
+                if row['rc']>0:
+                    nb_heures = row['rc']
+                    nb_jours  = 0
+                    code      = u'HRC'
+                    comment   = u'Heures RC Pris '+self.fdate(date_debut)+u' au '+self.fdate(date_fin)
 
-            conges1 = self.env['is.demande.conges'].search([
-                ('date_debut', '>=', obj.date_debut),
-                ('date_debut', '<=', obj.date_fin),
-                ('state','=', 'solde'),
-            ])
-            conges2 = self.env['is.demande.conges'].search([
-                ('le', '>=', obj.date_debut),
-                ('le', '<=', obj.date_fin),
-                ('state','=', 'solde'),
-            ])
-            for c in (conges1+conges2):
-                employe = self.get_employe(c.demandeur_id)
-                if employe:
-                    matricule = employe.is_matricule or ''
-                    matricule = ('0000000000'+matricule)[-10:]
-                    f.write('MAB\t')
-                    f.write(matricule+'\t')
-                    f.write(self.fdate(c.date_debut)+'\t')
-                    f.write(self.fdate(c.date_fin)+'\t')
-                    f.write(str(c.rtt)+'\t')
-                    f.write(str(c.rtt*7)+'\t')
-                    f.write('RTT\t')
-                    f.write('RTT\t')
-                    f.write('\t\t')
-                    f.write('MAT\tPAM')
-                    f.write('\r\n')
-            f.write('***FIN***\r\n')
+                if row['cp']>0:
+                    nb_heures = row['cp']*7
+                    nb_jours  = row['cp']
+                    code      = u'PRI'
+                    if row['type_demande']=='cp_rtt_demi_journee':
+                        comment   = u'Conges payes '+self.fdate(date_debut)+u' '+t1[row['matin_ou_apres_midi']]
+                    else:
+                        comment   = u'Conges payes '+self.fdate(date_debut)+u' au '+self.fdate(date_fin)
 
-            #***DEBUT***
-            #000	000000	01/12/2004	30/11/2005
-            #MHE	0000000789	31/10/2005	27/11/2005	000001	0015	H Spé 01                           	BAS	00000000037.00000			
-            #MHE	0000000789	31/10/2005	27/11/2005	000001	3111	RTT(Heures)                        	BAS	00000000028.00000			
-            #MAB	0000000789	31/10/2005	31/10/2005	0001.00	0007.00	RTT	RTT                                			MAT	PAM
-            #MAB	0000000789	02/11/2005	02/11/2005	0001.00	0007.00	RTT	RTT                                			MAT	PAM
-            #MAB	0000000789	04/11/2005	04/11/2005	0001.00	0007.00	RTT	RTT                                			MAT	PAM
-            #MAB	0000000789	18/11/2005	18/11/2005	0001.00	0007.00	RTT	RTT                                			MAT	PAM
-            #***FIN***
-
+                if row['rtt']>0:
+                    nb_heures = row['rtt']*7
+                    nb_jours  = row['rtt']
+                    code      = u'RTT'
+                    if row['type_demande']=='cp_rtt_demi_journee':
+                        comment   = u'Jours ARTT Pris '+self.fdate(date_debut)+u' '+t1[row['matin_ou_apres_midi']]
+                    else:
+                        comment   = u'Jours ARTT Pris '+self.fdate(date_debut)+u' au '+self.fdate(date_fin)
+                #print 'MAB',login,self.fdate(date_debut),self.fdate(date_fin),'{:07.2f}'.format(nb_jours),'{:07.2f}'.format(nb_heures),code,comment
+                f.write(u'MAB\t')
+                f.write(login+u'\t')
+                f.write(self.fdate(date_debut)+u'\t')
+                f.write(self.fdate(date_fin)+u'\t')
+                f.write('{:07.2f}'.format(nb_jours)+u'\t')
+                f.write('{:07.2f}'.format(nb_heures)+u'\t')
+                f.write(code+u'\t')
+                f.write(comment+u'\t\t\t\r\n')
+            f.write(u'***FIN***\r\n')
             f.close()
+
+            model='is.demande.conges.export.cegid'
+            attachments = self.env['ir.attachment'].search([('res_model','=',model),('res_id','=',obj.id),('name','=',filename)])
+            attachments.unlink()
             r = open(dest,'rb').read().encode('base64')
             vals = {
-                'name':        name,
-                'datas_fname': name,
+                'name':        filename,
+                'datas_fname': filename,
                 'type':        'binary',
                 'res_model':   model,
                 'res_id':      obj.id,

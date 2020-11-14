@@ -302,9 +302,9 @@
         />
 
 
-        <!-- Export CEGID -->
+        <!-- Export Congés CEGID -->
         <menuitem
-            name="Export CEGID"
+            name="Export Congés CEGID"
             id="is_demande_conges_export_cegid_main_menu"
             groups="base.group_hr_manager"
             parent="menu_absences_root"
@@ -313,7 +313,7 @@
         <menuitem
             id="is_demande_conges_export_cegid_menu"
             parent="is_demande_conges_export_cegid_main_menu"
-            name="Export CEGID"
+            name="Export Congés CEGID"
             sequence="10"
             action="is_demande_conges_export_cegid_action"
         />
