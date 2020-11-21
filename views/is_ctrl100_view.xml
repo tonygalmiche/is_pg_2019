@@ -374,8 +374,8 @@
                     <field name="createur_id"/>
                     <field name="employe_id"/>
                     <field name="date_saisie"/>
-                    <field name="nb_pieces_controlees"/>
-                    <field name="tps_passe" sum="Total"/>
+                    <field name="nb_pieces_controlees" sum="Total"/>
+                    <field name="tps_passe"            sum="Total"/>
                 </tree>
             </field>
         </record>

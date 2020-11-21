@@ -17,6 +17,7 @@ import os
 import base64
 
 
+
 class is_ctrl100_operation_standard(models.Model):
     _name        = 'is.ctrl100.operation.standard'
     _description = u"Opérations standard"
@@ -672,10 +673,10 @@ class is_ctrl100_rapport_controle(models.Model):
         return x
 
     @api.multi
-    def get_quantite(self, date_debut, date_fin):
+    def get_quantite(self, gamme_id, date_debut, date_fin):
         quantite = 0
         self._cr.execute("select sum(nb_pieces_controlees) from is_ctrl100_defaut \
-            where date_saisie > %s and date_saisie <= %s ", (date_debut,date_fin))
+            where gamme_id=%s and date_saisie > %s and date_saisie <= %s ", (gamme_id.id,date_debut,date_fin))
         res_ids = self._cr.fetchall()
         for res in res_ids:
             quantite = res[0]

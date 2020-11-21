@@ -312,7 +312,7 @@
                                         <table width="100%">
                                             <tr>
                                                 <td width="20%">
-                                                    Quantité contrôlée :  <span t-esc="o.get_quantite(o.date_debut, o.date_fin)" />
+                                                    Quantité contrôlée :  <span t-esc="o.get_quantite(o.gamme_id,o.date_debut, o.date_fin)" />
                                                 </td>
                                                 <td width="80%">
                                                     <div>
