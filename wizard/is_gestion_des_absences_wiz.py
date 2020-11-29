@@ -63,8 +63,9 @@ class is_gestion_vers_annuler_wiz(models.TransientModel):
         conges_obj = self.env['is.demande.conges']
         if self._context and self._context.get('active_id'):
             conges = conges_obj.browse(self._context.get(('active_id')))
+            motif = self.conges_reason.replace('\n',' ')
             if conges.mode_communication in ['courriel','courriel+sms'] and conges.courriel:
-                subject = u'[' + conges.name + u'] Demande de congés - Annulation ('+self.conges_reason+u')'
+                subject = u'[' + conges.name + u'] Demande de congés - Annulation ('+motif+u')'
                 email_to = conges.courriel
                 user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
@@ -90,7 +91,7 @@ class is_gestion_vers_annuler_wiz(models.TransientModel):
             conges.creer_notification(subject,body_html)
 
             if conges.mode_communication in ['sms','courriel+sms'] and conges.mobile:
-                message = u'Bonjour, ' + nom + u' vient de passer la Demande de congés ' + conges.name + u" à l'état 'Annulé'. Motif de l'annulation : "+self.conges_reason
+                message = u'Bonjour, ' + nom + u' vient de passer la Demande de congés ' + conges.name + u" à l'état 'Annulé'. Motif de l'annulation : "+motif
                 res,err = conges.envoi_sms(conges.mobile, message)
                 if err=='':
                     subject = u'SMS envoyé sur le '+conges.mobile+u' (il reste '+res+u' SMS sur le compte)'
@@ -110,8 +111,9 @@ class is_gestion_vers_refuse_wiz(models.TransientModel):
         conges_obj = self.env['is.demande.conges']
         if self._context and self._context.get('active_id'):
             conges = conges_obj.browse(self._context.get(('active_id')))
+            motif = self.conges_reason.replace('\n',' ')
             if conges.mode_communication in ['courriel','courriel+sms'] and conges.courriel:
-                subject = u'[' + conges.name + u'] Demande de congés - Refus ('+self.conges_reason+u')'
+                subject = u'[' + conges.name + u'] Demande de congés - Refus ('+motif+u')'
                 email_to = conges.courriel
                 user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
@@ -136,7 +138,7 @@ class is_gestion_vers_refuse_wiz(models.TransientModel):
             conges.creer_notification(subject,body_html)
 
             if conges.mode_communication in ['sms','courriel+sms'] and conges.mobile:
-                message = u'Bonjour, ' + nom + u' vient de passer la Demande de congés ' + conges.name + u" à l'état 'Refusé'. Motif du refus : "+self.conges_reason
+                message = u'Bonjour, ' + nom + u' vient de passer la Demande de congés ' + conges.name + u" à l'état 'Refusé'. Motif du refus : "+motif
                 res,err = conges.envoi_sms(conges.mobile, message)
                 if err=='':
                     subject = u'SMS envoyé sur le '+conges.mobile+u' (il reste '+res+u' SMS sur le compte)'

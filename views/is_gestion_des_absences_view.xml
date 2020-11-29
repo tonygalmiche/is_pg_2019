@@ -112,6 +112,11 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">['|','|',
+                ('user_id'       , '=', uid),
+                ('is_valideur_n1', '=', uid),
+                ('is_valideur_n2', '=', uid),
+            ]</field>
         </record>
         <record id="is_view_employee_tree2" model="ir.ui.view">
             <field name="name">is.hr.employee.tree2</field>

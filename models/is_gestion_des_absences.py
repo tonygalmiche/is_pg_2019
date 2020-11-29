@@ -150,7 +150,7 @@ class is_demande_conges(models.Model):
             obj.date_validation_n1 = datetime.datetime.today()
 
             if not obj.demande_collective_id:
-                subject = u'[' + obj.name + u'] Demande de congés - Validation Niveau 1 '
+                subject = u'[' + obj.name + u'] Demande de congés - Envoyé au N+1 pour validation'
                 email_to = obj.valideur_n1.email
                 user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
@@ -191,7 +191,7 @@ class is_demande_conges(models.Model):
             obj.date_validation_n2 = datetime.datetime.today()
 
             if not obj.demande_collective_id:
-                subject = u'[' + obj.name + u'] Demande de congés - Validation Niveau 2'
+                subject = u'[' + obj.name + u'] Demande de congés - Envoyé au N+2 pour validation'
                 email_to = obj.valideur_n2.email
                 user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
@@ -234,7 +234,7 @@ class is_demande_conges(models.Model):
                     demande.vers_validation_rh_action()
             obj.date_validation_rh = datetime.datetime.today()
             if not obj.demande_collective_id:
-                subject = u'[' + obj.name + u'] Demande de congés - Validation RH'
+                subject = u'[' + obj.name + u'] Demande de congés - Accepté et transmis au RH'
                 email_to = obj.responsable_rh_id.email
                 user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
@@ -320,7 +320,7 @@ class is_demande_conges(models.Model):
         if self.date_debut and self.date_fin:
             mois_demande = str(self.date_debut)[:8]
             ce_mois      = str(datetime.date.today())[:8]
-            if mois_demande<ce_mois:
+            if mois_demande<ce_mois and self.responsable_rh_id.id!=self._uid:
                 raise Warning(u"Le mois de la demande ne peux pas être inférieur au mois en cours")
             if str(self.date_debut)[:8]!=str(self.date_fin)[:8]:
                 raise Warning(u"La date de fin doit être dans le même mois que la date de début")
