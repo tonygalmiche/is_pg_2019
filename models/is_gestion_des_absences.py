@@ -317,10 +317,11 @@ class is_demande_conges(models.Model):
 
     @api.multi
     def test_dates(self):
+        uid=self._uid
         if self.date_debut and self.date_fin:
             mois_demande = str(self.date_debut)[:8]
             ce_mois      = str(datetime.date.today())[:8]
-            if mois_demande<ce_mois and self.responsable_rh_id.id!=self._uid:
+            if mois_demande<ce_mois and self.responsable_rh_id.id!=uid and uid!=1:
                 raise Warning(u"Le mois de la demande ne peux pas être inférieur au mois en cours")
             if str(self.date_debut)[:8]!=str(self.date_fin)[:8]:
                 raise Warning(u"La date de fin doit être dans le même mois que la date de début")
