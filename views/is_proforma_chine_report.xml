@@ -441,7 +441,8 @@
                                     <tr><th>Consignee         </th><td><img t-if="res_company.is_logo" t-att-src="'data:image/png;base64,%s' % res_company.is_logo" style="height: 40mm;"/></td></tr>
                                     <tr><th>Part number       </th><td><span t-field="line.product_id.is_code"/></td></tr>
                                     <tr><th>Designation       </th><td><span t-field="line.designation"/></td></tr>
-                                    <tr><th>Country of origin </th><td><span t-field="o.partner_id.country_id.name"/></td></tr>
+                                    <tr><th>Country of origin </th><td><span t-field="line.country_origin"/></td></tr>
+                                    <!-- <tr><th>Country of origin </th><td><span t-field="o.partner_id.country_id.name"/></td></tr> -->
                                     <tr>
                                         <th>Mold</th>
                                         <td>
@@ -450,7 +451,7 @@
                                             </t>
                                         </td>
                                     </tr>
-                                    <tr><th>Net Weight        </th><td><span t-field="line.net_weight"/> Kg</td></tr>
+                                    <tr><th>Net Weight        </th><td><span t-field="line.qty_per_pack"/> Kg</td></tr>
                                     <t t-if="space==1"> 
                                         <tr style="height:60mm"><th> </th><td> </td></tr>
                                     </t>
