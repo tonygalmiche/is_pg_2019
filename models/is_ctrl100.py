@@ -617,19 +617,20 @@ class is_ctrl100_rapport_controle(models.Model):
         plt.rcParams.update({'font.size': 22})
 #         my_dpi=96
 #         plt.figure(figsize=(900/my_dpi, 600/my_dpi), dpi=my_dpi)
-        x_pos = [i for i, _ in enumerate(x)]
+        labels=[]
+        values=[]
+        x_pos=[]
+        ct=0
+        for i in popularity:
+            if i>0:
+                x_pos.append(ct)
+                values.append(i)
+                labels.append(x[ct])
+            ct+=1
         fig, ax = plt.subplots()
-
-
-
-
-        rects1 = ax.bar(x_pos, popularity, align="center", color='#5dade2')
-        plt.xticks(x_pos, x)
+        rects1 = ax.bar(x_pos, values, align="center", color='#5dade2')
+        plt.xticks(x_pos, labels)
         plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
-
-
-
-
         for rect in rects1:
             height = rect.get_height()
             ax.text(rect.get_x() + rect.get_width()/2., 0.40*height,
