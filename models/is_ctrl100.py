@@ -698,13 +698,16 @@ class is_ctrl100_pareto(models.Model):
 
     date_creation = fields.Date(u"Date de création", default=lambda *a: fields.datetime.now(), readonly=True)
     createur_id   = fields.Many2one("res.users", u"Créateur", default=lambda self: self.env.user, readonly=True)
+
     gamme_id      = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
     date_debut    = fields.Date(u"Date de début")
     date_fin      = fields.Date(u"Date de fin")
-    moule         = fields.Char(u"Moule / Dossier F")
-    code_pg       = fields.Char(u"Code PG (Partiel)")
-    of_debut_id   = fields.Many2one("mrp.production", u"OF début")
-    of_fin_id     = fields.Many2one("mrp.production", u"OF fin")
+    typologie_ids = fields.Many2many('is.ctrl100.typologie.produit' ,'is_ctrl100_pareto_typologie_rel','pareto_id','typologie_id', string="Typologies")
+
+    mold_ids      = fields.Many2many('is.mold'        ,'is_ctrl100_pareto_mold_rel'    ,'pareto_id','mold_id'    , string="Moules")
+    dossierf_ids  = fields.Many2many('is.dossierf'    ,'is_ctrl100_pareto_dossierf_rel','pareto_id','dossierf_id', string="Dossiers F")
+    product_ids   = fields.Many2many('product.product','is_ctrl100_pareto_product_rel' ,'pareto_id','product_id' , string="Articles")
+    of_ids        = fields.Many2many('mrp.production' ,'is_ctrl100_pareto_of_rel'      ,'pareto_id','of_id'      , string="OFs")
 
 
     @api.multi
@@ -717,6 +720,7 @@ class is_ctrl100_pareto(models.Model):
                 FROM is_ctrl100_defaut d left outer join product_product  pp on d.product_id=pp.id
                                          left outer join product_template pt on pp.product_tmpl_id=pt.id
                                          left outer join mrp_production   mp on d.production_id=mp.id
+                                         inner join is_ctrl100_gamme_mur_qualite g on d.gamme_id=g.id
                 WHERE d.id>0
             """
             if obj.date_debut:
@@ -725,17 +729,37 @@ class is_ctrl100_pareto(models.Model):
                 SQL+=" and d.date_saisie<='"+str(obj.date_fin)+"' "
             if obj.gamme_id:
                 SQL+=" and d.gamme_id="+str(obj.gamme_id.id)+" "
-            if obj.code_pg:
-                SQL+=" and pt.is_code ilike '%"+str(obj.code_pg)+"%' "
-            if obj.moule:
-                SQL+=" and d.moule_dossierf ilike '%"+str(obj.moule)+"%' "
-            if obj.of_debut_id:
-                SQL+=" and mp.name>='"+str(obj.of_debut_id.name)+"' "
-            if obj.of_fin_id:
-                SQL+=" and mp.name<='"+str(obj.of_fin_id.name)+"' "
+
+            typologie_ids=[]
+            for line in obj.typologie_ids:
+                typologie_ids.append(str(line.id))
+            if typologie_ids:
+                typologie_ids = ','.join(typologie_ids)
+                SQL+=" and  g.typologie_produit_id in ("+typologie_ids+") "
+            ids=[]
+            for line in obj.mold_ids:
+                ids.append("'"+line.name+"'")
+            for line in obj.dossierf_ids:
+                ids.append("'"+line.name+"'")
+            if ids:
+                ids = ','.join(ids)
+                SQL+=" and  d.moule_dossierf in ("+ids+") "
+            product_ids=[]
+            for line in obj.product_ids:
+                product_ids.append(str(line.id))
+            if product_ids:
+                product_ids = ','.join(product_ids)
+                SQL+=" and  d.product_id in ("+product_ids+") "
+            of_ids=[]
+            for line in obj.of_ids:
+                of_ids.append(str(line.id))
+            if of_ids:
+                of_ids = ','.join(of_ids)
+                SQL+=" and  d.production_id in ("+of_ids+") "
             SQL+="""
                 GROUP BY d.moule_dossierf
                 ORDER BY sum(d.tps_passe) desc
+                limit 10
             """
             cr.execute(SQL)
             result = cr.fetchall()
@@ -745,7 +769,7 @@ class is_ctrl100_pareto(models.Model):
             ct=0
             for row in result:
                 labels.append(row[0])
-                values.append(row[1])
+                values.append(int(row[1]))
                 x_pos.append(ct)
                 ct+=1
             fig, ax = plt.subplots()
@@ -755,7 +779,8 @@ class is_ctrl100_pareto(models.Model):
             for rect in rects1:
                 height = rect.get_height()
                 ax.text(
-                    rect.get_x() + rect.get_width()/2., 0.40*height,
+                    rect.get_x() + rect.get_width()/2.,
+                    0.40*height,
                     height, 
                     ha='center', 
                     va='bottom', 

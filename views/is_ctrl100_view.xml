@@ -396,11 +396,22 @@
                 </search>
             </field>
         </record>
+        <record id="is_ctrl100_defaut_graph_view" model="ir.ui.view">
+            <field name="name">is_ctrl100_defaut_graph_view</field>
+            <field name="model">is.ctrl100.defaut</field>
+            <field name="arch" type="xml">
+                <graph string="view" type="pivot">
+                <field name="moule_dossierf" type="row"/>
+                <field name="date_saisie" interval="month" type="col"/>
+                <field name="tps_passe" type="measure"/>
+                </graph>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="is_ctrl100_defaut_action">
             <field name="name">Saisie mur qualité</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.ctrl100.defaut</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
         </record>
 
         <!-- Rapport de contrôle -->
@@ -458,15 +469,19 @@
                             <field name="gamme_id"/>
                             <field name="date_debut"/>
                             <field name="date_fin"/>
-                            <field name="moule"/>
-                            <field name="code_pg"/>
-                            <field name="of_debut_id"/>
-                            <field name="of_fin_id"/>
+                            <field name="typologie_ids" widget="many2many_tags"/>
+
                         </group>
                         <group>
                             <field name="date_creation"/>
                             <field name="createur_id"/>
                         </group>
+                    </group>
+                    <group string="Sélectionnez des moules, des dossiers, des articles ou des OF">
+                        <field name="mold_ids"     widget="many2many_tags"/>
+                        <field name="dossierf_ids" widget="many2many_tags"/>
+                        <field name="product_ids"  widget="many2many_tags"/>
+                        <field name="of_ids"       widget="many2many_tags"/>
                     </group>
                 </sheet>
             </form>
@@ -482,10 +497,6 @@
                     <field name="gamme_id"/>
                     <field name="date_debut"/>
                     <field name="date_fin"/>
-                    <field name="moule"/>
-                    <field name="code_pg"/>
-                    <field name="of_debut_id"/>
-                    <field name="of_fin_id"/>
                 </tree>
             </field>
         </record>
@@ -496,10 +507,6 @@
                 <search>
                     <field name="createur_id"/>
                     <field name="gamme_id"/>
-                    <field name="moule"/>
-                    <field name="code_pg"/>
-                    <field name="of_debut_id"/>
-                    <field name="of_fin_id"/>
                 </search>
             </field>
         </record>

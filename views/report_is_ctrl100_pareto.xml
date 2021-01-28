@@ -88,6 +88,7 @@
                                     <th style="width:24%">Date de fin</th>
                                     <td style="width:76%"><span t-field="o.date_fin"/></td>
                                 </tr>
+                                <!--
                                 <tr t-if="o.moule">
                                     <th style="width:24%">Moule / Dossier F</th>
                                     <td style="width:76%"><span t-field="o.moule"/></td>
@@ -104,6 +105,7 @@
                                     <th style="width:24%">OF fin</th>
                                     <td style="width:76%"><span t-field="o.of_fin_id"/></td>
                                 </tr>
+                                -->
                             </tbody>
                         </table>
                         <img t-if="o.get_chart_img()" t-att-src="'data:image/png;base64,%s' % o.get_chart_img()"/>
