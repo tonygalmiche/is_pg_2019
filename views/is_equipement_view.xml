@@ -79,6 +79,7 @@
                     <field name="designation"/>
                     <field name="database_id"/>
                     <field name="zone_id"/>
+                    <field name="equipement_cle"/>
                     <field name="constructeur"/>
                     <field name="constructeur_serie"/>
                     <field name="emplacement_affectation_pe"/>
@@ -99,7 +100,12 @@
                             <group>
                                 <field name="type_id" />
                                 <field name="numero_equipement" />
-                                
+
+                                <field name="equipement_cle_vsb" invisible="1" />
+                                <field name="equipement_cle_obl" invisible="1" />
+                                <field name="equipement_cle" 
+                                    attrs="{'invisible': [('equipement_cle_vsb', '!=', True)], 'required':  [('equipement_cle_obl', '=', True)]}" />
+
                                 <field name="constructeur_vsb" invisible="1" />
                                 <field name="constructeur_obl" invisible="1" />
                                 <field name="constructeur" 
@@ -553,6 +559,7 @@
                     <field name="type_id"/>
                     <field name="numero_equipement"/>
                     <field name="designation"/>
+                    <field name="equipement_cle"/>
                     <field name="emplacement_affectation_pe"/>
                     <field name="database_id"/>
                     <field name="constructeur"/>

@@ -388,6 +388,7 @@ class is_equipement(models.Model):
             'database_id'                           : self._get_database_id(equp, DB, USERID, USERPASS, sock),
             'active'                                : equp.database_id and equp.database_id.database == DB and equp.active or False,
             'is_database_origine_id'                : equp.id,
+            'equipement_cle'                        : equp.equipement_cle,
             'type_id'                               : self._get_type_id(equp, DB, USERID, USERPASS, sock),
             'constructeur'                          : tools.ustr(equp.constructeur or ''),
             'constructeur_serie'                    : tools.ustr(equp.constructeur_serie or ''),
@@ -600,14 +601,20 @@ class is_equipement(models.Model):
                     couleur=color[1]
             obj.couleur=couleur
 
-
     is_database_origine_id                   = fields.Integer("Id d'origine", readonly=True, select=True)
     active                                   = fields.Boolean('Active', default=True)
     type_id                                  = fields.Many2one("is.equipement.type", u"Type équipement", required=True, select=True)
     numero_equipement                        = fields.Char(u"Numéro d'équipement", required=True, select=True)
     designation                              = fields.Char(u"Désignation", required=True)
     database_id                              = fields.Many2one("is.database", "Site", required=True)
-    
+
+    equipement_cle_vsb                       = fields.Boolean("Equipement clé", compute='_compute')
+    equipement_cle_obl                       = fields.Boolean("Equipement clé", compute='_compute')
+    equipement_cle                           = fields.Selection([
+            ("oui", "oui"),
+            ("non", "non"),
+        ], "Equipement clé")
+
     constructeur_vsb                         = fields.Boolean("Constructeur", compute='_compute')
     constructeur_obl                         = fields.Boolean("Constructeur", compute='_compute')
     constructeur                             = fields.Char("Constructeur")
