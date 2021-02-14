@@ -19,3 +19,5 @@ import is_gestion_des_absences_report
 import is_instruction_particuliere
 import is_fiche_description_moule
 import is_proforma_chine
+import auditlog
+import is_bon_achat_ville

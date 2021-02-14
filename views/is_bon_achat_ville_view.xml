@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <!-- res.partner-->
+        <record id="is_view_partner_form" model="ir.ui.view">
+            <field name="name">is_view_partner_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="is_plastigray.is_view_partner_form" />
+            <field name="arch" type="xml">
+                <field name="is_incoterm" position="after">
+                    <field name="is_achat_ville" groups="is_pg_2019.is_bon_achat_ville_grp"/>
+                </field>
+            </field>
+        </record>
+
+
+
+        <!-- Sequence is.bon.achat.ville --> 
+        <record id="is_bon_achat_ville_type_seq" model="ir.sequence.type">
+            <field name="name">Bon d'achat en ville</field>
+            <field name="code">is.bon.achat.ville</field>
+        </record>
+        <record id="is_bon_achat_ville_seq" model="ir.sequence">
+            <field name="name">Bon d'achat en ville</field>
+            <field name="code">is.bon.achat.ville</field>
+            <field name="prefix">BAV-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- is.bon.achat.ville --> 
+        <record model="ir.ui.view" id="is_bon_achat_ville_form_view">
+            <field name="name">is_bon_achat_ville_form_view</field>
+            <field name="model">is.bon.achat.ville</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form">
+                    <header>
+                        <field name="vers_brouillon_vsb" invisible="1"/>
+                        <button 
+                            name="vers_brouillon_action"
+                            string="Vers brouillon"
+                            attrs="{'invisible': [('vers_brouillon_vsb', '!=', True)]}"
+                            type="object"
+                            confirm="Voulez-vous vraiment revenir à l'état brouillon ?"
+                        />
+                        <field name="vers_en_cours_vsb" invisible="1"/>
+                        <button 
+                            name="vers_en_cours_action"
+                            string="Vers En cours de validation"
+                            attrs="{'invisible': [('vers_en_cours_vsb', '!=', True)]}"
+                            class="oe_highlight" type="object"
+                        />
+                        <field name="vers_valide_vsb" invisible="1"/>
+                        <button 
+                            name="vers_valide_action"
+                            string="Valider"
+                            attrs="{'invisible': [('vers_valide_vsb', '!=', True)]}"
+                            class="oe_highlight" type="object"
+                        />
+                        <field name="vers_annule_vsb" invisible="1"/>
+                        <button 
+                            name="vers_annule_action"
+                            string="Vers annulé"
+                            attrs="{'invisible': [('vers_annule_vsb', '!=', True)]}"
+                            type="object"
+                            confirm="Voulez-vous vraiment annuler ce bon ?"
+                        />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet class="oe_form_sheet_width_wider">
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="createur_id"  readonly="1"/>
+                                <field name="date_demande" readonly="1"/>
+                                <field name="responsable_id"/>
+                                <field name="fournisseur_id"/>
+                                <field name="objet"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="line_ids" nolabel="1" >
+                                <tree editable="bottom">
+                                    <field name="sequence" />
+                                    <field name="product_id" widget="many2one_clickable"/>
+                                    <field name="uom_id" invisible="1"/>
+                                    <field name="designation"/>
+                                    <field name="quantite"/>
+                                    <field name="prix"/>
+                                    <field name="montant" sum="Total"/>
+                                    <field name="chantier"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="montant_total"/>
+                            <field name="order_id"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_bon_achat_ville_tree_view">
+            <field name="name">is_bon_achat_ville_tree_view</field>
+            <field name="model">is.bon.achat.ville</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="gray:state=='valide';gray:state=='annule';red:state=='en_cours'">
+                    <field name="name"/>
+                    <field name="createur_id"/>
+                    <field name="date_demande"/>
+                    <field name="responsable_id"/>
+                    <field name="fournisseur_id"  widget="many2one_clickable"/>
+                    <field name="montant_total" sum="Total"/>
+                    <field name="objet"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_bon_achat_ville_search_view" >
+            <field name="name">is_bon_achat_ville_search_view</field>
+            <field name="model">is.bon.achat.ville</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="createur_id"/>
+                    <field name="responsable_id"/>
+                    <field name="fournisseur_id"/>
+                    <field name="objet"/>
+                    <field name="state"/>
+                    <group string="Regrouper par">
+                        <filter string="Fournisseur" context="{'group_by': 'fournisseur_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_bon_achat_ville_action">
+            <field name="name">Bon d'achat en ville</field>
+            <field name="res_model">is.bon.achat.ville</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}
+            </field>
+        </record>
+  </data>
+</openerp>

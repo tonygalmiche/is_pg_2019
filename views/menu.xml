@@ -24,6 +24,21 @@
 
 
 
+        <!-- Bon d'achat en ville -->
+        <menuitem id="is_bon_achat_ville_main_menu" sequence="26" name="Bon d'achat en ville"  parent="is_plastigray.menu_is_achats" />
+        <record id="is_bon_achat_ville_menu" model="ir.ui.menu">
+            <field name="name">Bon d'achat en ville</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_bon_achat_ville_main_menu')"/>
+            <field name="action"    ref="is_bon_achat_ville_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_bon_achat_ville_grp'),
+            ])]"/>
+        </record>
+
+
+
+
         <menuitem id="menu_is_dt_tables_is_fiche_tampographie_constituant" sequence="100" name="Constituant Tampographie"  parent="is_plastigray.menu_is_dt_tables" action="action_is_fiche_tampographie_constituant"/>
         <menuitem id="menu_is_fiche_tampographie_type_reglage"             sequence="101" name="Type réglage Tampographie" parent="is_plastigray.menu_is_dt_tables" action="action_is_fiche_tampographie_type_reglage"/>
 

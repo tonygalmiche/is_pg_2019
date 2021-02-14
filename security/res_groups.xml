@@ -14,5 +14,14 @@
         <field name="comment">Ce groupe permet de créer les gammes et gérer les droits sur les saisies</field>
         <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
     </record>
+
+    <record model="res.groups" id="is_bon_achat_ville_grp" >
+        <field name="name">Bon d'achat en ville</field>
+        <field name="comment">Ce groupe permet d'accèder au menu "Bon d'achat en ville"</field>
+        <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
+    </record>
+
+
+
 </data>
 </openerp>
