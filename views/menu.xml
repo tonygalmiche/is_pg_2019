@@ -374,12 +374,6 @@
         />
 
 
-","Ventes
-42
-
-
-
-
         <!-- Ressources Humaines -->
         <menuitem
             id="is_hr_job_menu"
@@ -388,6 +382,35 @@
             sequence="90"
             action="is_hr_job_action"
         />
+
+
+
+        <!-- Modes opératoires -->
+        <menuitem id="is_mode_operatoire_top_menu" sequence="100" name="Modes opératoires"  groups="is_pg_2019.is_base_principale_grp"/>
+        <menuitem id="is_mode_operatoire_main_menu" sequence="10" name="Modes opératoires"  parent="is_pg_2019.is_mode_operatoire_top_menu" />
+        <record id="is_mode_operatoire_menu" model="ir.ui.menu">
+            <field name="name">Modes opératoires</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_mode_operatoire_main_menu')"/>
+            <field name="action"    ref="is_mode_operatoire_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_gestionnaire_mode_operatoire_grp'),
+            ])]"/>
+        </record>
+
+        <menuitem id="is_mode_operatoire_menu_main_menu" sequence="20" name="Menus"  parent="is_pg_2019.is_mode_operatoire_top_menu" />
+        <record id="is_mode_operatoire_menu_menu" model="ir.ui.menu">
+            <field name="name">Menus</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_mode_operatoire_menu_main_menu')"/>
+            <field name="action"    ref="is_mode_operatoire_menu_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_gestionnaire_mode_operatoire_grp'),
+            ])]"/>
+        </record>
+
+
+
 
 
     </data>

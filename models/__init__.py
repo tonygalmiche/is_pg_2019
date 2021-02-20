@@ -21,3 +21,4 @@ import is_fiche_description_moule
 import is_proforma_chine
 import auditlog
 import is_bon_achat_ville
+import is_mode_operatoire

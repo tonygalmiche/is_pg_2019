@@ -22,6 +22,12 @@
     </record>
 
 
+    <record model="res.groups" id="is_gestionnaire_mode_operatoire_grp" >
+        <field name="name">Gestionnaire des modes opératoires</field>
+        <field name="comment">Ce groupe permet de créer les modes opératoires et les menus</field>
+        <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
+    </record>
+
 
 </data>
 </openerp>
