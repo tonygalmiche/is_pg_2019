@@ -36,7 +36,7 @@
             <field name="model">is.bon.achat.ville</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Form">
+                <form string="Form" create="1">
                     <header>
                         <field name="vers_brouillon_vsb" invisible="1"/>
                         <button 

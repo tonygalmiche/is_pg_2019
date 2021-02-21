@@ -30,11 +30,11 @@ class is_bon_achat_ville(models.Model):
             obj.montant_total = montant_total
 
             vsb=False
-            if obj.state!='brouillon' and (uid==obj.createur_id.id or uid==obj.responsable_id.id or uid==1):
+            if obj.state!='brouillon' and (uid==obj.responsable_id.id or uid==1):
                 vsb=True
             obj.vers_brouillon_vsb=vsb
             vsb=False
-            if obj.state=='brouillon':
+            if obj.state=='brouillon' and (uid==obj.createur_id.id or uid==obj.responsable_id.id or uid==1):
                 vsb=True
             obj.vers_en_cours_vsb=vsb
             vsb=False
@@ -42,13 +42,10 @@ class is_bon_achat_ville(models.Model):
                 vsb=True
             obj.vers_valide_vsb=vsb
             vsb=False
-            if obj.state=='en_cours':
+            if obj.state=='en_cours' and (uid==obj.responsable_id.id or uid==1):
                 vsb=True
             obj.vers_annule_vsb=vsb
-            vsb=False
-            if obj.state=='brouillon' or obj.state=='en_cours':
-                vsb=True
-            obj.vers_annule_vsb=vsb
+
 
     name                 = fields.Char("N° de bon d'achat en ville", readonly=True)
     createur_id          = fields.Many2one('res.users', 'Demandeur', required=True)
