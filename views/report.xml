@@ -63,5 +63,17 @@
         </record>
 
 
+        <report 
+            id="is_presse_reports"
+            model="is.equipement"
+            string="Presse"
+            report_type="qweb-html"
+            name="is_pg_2019.is_presse_report"
+            file="is_pg_2019.is_presse_report"
+        />
+        <record id="is_presse_reports" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="is_pg_2019.is_presse_paperformat"/>
+        </record>
+
     </data>
 </openerp>
