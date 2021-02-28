@@ -97,7 +97,6 @@
                         </group>
                         <group>
                             <field name="montant_total"/>
-                            <field name="order_id"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">

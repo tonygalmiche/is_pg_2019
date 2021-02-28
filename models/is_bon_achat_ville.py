@@ -62,7 +62,6 @@ class is_bon_achat_ville(models.Model):
     ], "Etat", default='brouillon')
     line_ids           = fields.One2many('is.bon.achat.ville.line', 'bon_id', u"Lignes", copy=True)
     montant_total      = fields.Float("Montant Total", compute='_compute', readonly=True, store=True)
-    order_id           = fields.Many2one('purchase.order', 'Commande générée', readonly=True, copy=False)
     nb_lignes          = fields.Integer("Nombre de lignes", compute='_compute', readonly=True, store=True)
     vers_brouillon_vsb = fields.Boolean('Champ technique', compute='_compute', readonly=True, store=False)
     vers_en_cours_vsb  = fields.Boolean('Champ technique', compute='_compute', readonly=True, store=False)
