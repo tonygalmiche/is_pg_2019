@@ -9,12 +9,27 @@
                 font-size:10pt;
             }
             .page {
-                font-size:11pt;
+                font-size:10pt;
             }
             .titre {
-                font-size:15pt;
+                font-size:12pt;
                 font-weight: bold;
             }
+            h2{
+                font-size:13pt;
+                font-weight: bold;
+                margin-top:8px;
+                margin-bottom:4px;
+            }
+
+            .table-condensed > thead > tr > th, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > tbody > tr > td, .table-condensed > tfoot > tr > td {
+                padding: 4px;
+                padding-left: 5px;
+            }
+            .table {
+                margin-bottom: 8px;
+            }
+
         </template>
 
 
@@ -95,11 +110,11 @@
                     <table class="table table-condensed">
                         <tbody>
                             <tr>
-                                <td style="width:48% border-top-width:0px">
+                                <td style="width:48%;border-top-width:0px">
                                     <table class="table table-condensed">
                                         <tbody>
                                             <tr>
-                                                <th class="text-left">
+                                                <th class="text-left" style="width:70%">
                                                     <span>Type équipement</span>
                                                 </th>
                                                 <td class="text-left">
@@ -141,12 +156,12 @@
                                         </tbody>
                                     </table>
                                 </td>
-                                <td style="width:4%"></td>
-                                <td style="width:48%">
+                                <td style="width:4%;border-top-width:0px"></td>
+                                <td style="width:48%;border-top-width:0px">
                                     <table class="table table-condensed">
                                         <tbody>
                                             <tr>
-                                                <th class="text-left">Désignation</th>
+                                                <th class="text-left" style="width:70%">Désignation</th>
                                                 <td class="text-left">
                                                     <span t-field="o.type_id"/>
                                                 </td>
@@ -179,11 +194,11 @@
                     <table class="table table-condensed" style="border:Opx">
                         <tbody>
                             <tr>
-                                <td style="width:48%">
+                                <td style="width:48%;border-top-width:0px">
                                     <table class="table table-condensed">
                                         <tbody>
                                             <tr>
-                                                <th class="text-left">
+                                                <th class="text-left" style="width:70%">
                                                     <span>Maintenance préventif niveau 2 (h)</span>
                                                 </th>
                                                 <td class="text-left">
@@ -193,12 +208,12 @@
                                         </tbody>
                                     </table>
                                 </td>
-                                <td style="width:4%"></td>
-                                <td style="width:48%">
+                                <td style="width:4%;border-top-width:0px"></td>
+                                <td style="width:48%;border-top-width:0px">
                                     <table class="table table-condensed">
                                         <tbody>
                                             <tr>
-                                                <th class="text-left">
+                                                <th class="text-left" style="width:70%">
                                                     <span>Maintenance préventif niveau 3 (h)</span>
                                                 </th>
                                                 <td class="text-left">
@@ -223,11 +238,11 @@
                     <table class="table table-condensed" style="border:Opx">
                         <tbody>
                             <tr>
-                                <td style="width:48%">
+                                <td style="width:48%;border-top-width:0px">
                                     <table class="table table-condensed">
                                         <tbody>
                                             <tr>
-                                                <th class="text-left"><span>Type de presse/type de commande/Generation</span></th>
+                                                <th class="text-left" style="width:70%"><span>Type de presse/type de commande/Generation</span></th>
                                                 <td class="text-left"><span t-field="o.type_presse_commande"/></td>
                                             </tr>
                                             <tr>
@@ -236,308 +251,206 @@
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Classe commerciale</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.classe_commerciale"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Force de Fermeture (kg)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.force_fermeture"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Energie</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.energie"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Dimension entre col H (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.dimension_entre_col_h"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Faux plateau (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.faux_plateau"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Dimension demi plateau H (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.dimension_demi_plateau_h"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Dimension hors tout Haut (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.dimension_hors_tout_haut"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Dimension entre col V (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.dimension_entre_col_v"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Épaisseur moule Mini presse (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.epaisseur_moule_mini_presse"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Épaisseur faux plateau (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.epaisseur_faux_plateau"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Épaisseur moule Maxi (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.epaisseur_moule_maxi"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Dimension demi plateau V (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.dimension_demi_plateau_v"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Dimension hors tout Bas (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.dimension_hors_tout_bas"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Coefficient de vis</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.coefficient_vis"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Type de clapet</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.type_de_clapet"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Pression matière 1 maximum (bar)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.pression_maximum"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Pression matière 2 maximum (bar)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.pression_maximum2"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Ø Vis 1 (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.vis_mn"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Ø Vis 2 (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.vis_mn2"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Volume injectable 1 (cm3)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.volume_injectable"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Volume injectable 2 (cm3)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.volume_injectable2"/></td>
+                                            </tr>
+
+
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td style="width:4%;border-top-width:0px"></td>
+                                <td style="width:48%;border-top-width:0px">
+                                    <table class="table table-condensed">
+                                        <tbody>
+                                            <tr>
+                                                <th class="text-left" style="width:70%"><span>Puissance électrique moteur (kw)</span></th>
+                                                <td class="text-left"><span t-field="o.puissance_electrique_moteur"/></td>
                                             </tr>
                                             <tr>
+                                                <th class="text-left"><span>Puissance de chauffe (kw)</span></th>
+                                                <td class="text-left"><span t-field="o.puissance_de_chauffe"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left"><span>Compensation cosinus</span></th>
+                                                <td class="text-left"><span t-field="o.compensation_cosinus"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left"><span>Ø Passage Buse (mm)</span></th>
+                                                <td class="text-left"><span t-field="o.passage_buse"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left"><span>Poids (kg)</span></th>
+                                                <td class="text-left"><span t-field="o.poids_kg"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left"><span>Affectation sur le site</span></th>
+                                                <td class="text-left"><span t-field="o.affectation_sur_le_site"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left"><span>Température maximum (°C)</span></th>
+                                                <td class="text-left"><span t-field="o.temperature_maximum"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-left"><span>Base Capacitaire</span></th>
+                                                <td class="text-left"><span t-field="o.base_capacitaire"/></td>
+                                            </tr>
+
+
+
+
+                                            <tr>
                                                 <th class="text-left"><span>Course éjection (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.course_ejection"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Course ouverture (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.course_ouverture"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Ø centrage moule 1 (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.centrage_moule"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Ø centrage moule 2 (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.centrage_moule2"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Ø centrage presse (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.centrage_presse"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Hauteur porte / sol (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.hauteur_porte_sol"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Bridage rapide entre axe (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.bridage_rapide_entre_axe"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Bridage rapide Pas (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.bridage_rapide_pas"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Bridage rapide Ø (mm)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.bridage_rapide"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Type huile hydraulique</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.type_huile_hydraulique"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Volume réservoir (L)</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.volume_reservoir"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Type huile graissage centralisé</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.type_huile_graissage_centralise"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Nbre Noyau Total</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.nbre_noyau_total"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Nbre Noyau PF</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.nbre_noyau_pf"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Nbre circuit Eau</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.nbre_circuit_eau"/></td>
                                             </tr>
                                             <tr>
                                                 <th class="text-left"><span>Nbre de zone de chauffe moule</span></th>
-                                                <td class="text-left"><span t-field="o.maintenance_preventif_niveau4"/></td>
+                                                <td class="text-left"><span t-field="o.nbre_zone_de_chauffe_moule"/></td>
                                             </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td style="width:4%"></td>
-                                <td style="width:48%">
-                                    <table class="table table-condensed">
-                                        <tbody>
-                                            <tr>
-                                                <th class="text-left">
-                                                    <span>Maintenance préventif niveau 4 (h)</span>
-                                                </th>
-                                                <td class="text-left">
-                                                    <span t-field="o.maintenance_preventif_niveau4"/>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!--table class="table table-condensed">
-                        <tbody>
-                            <tr>
-                                <th style="width:24%">N°OF</th>
-                                <td style="width:24%"><span t-field="o.name"/></td>
-                                <td style="width:4%"></td>
-                                <th style="width:24%">Qt à produire</th>
-                                <td style="width:24%"><span t-field="o.qt"/></td>
-                            </tr>
-                            <tr>
-                                <th>Moule</th>
-                                <td><span t-field="o.moule"/></td>
-                                <td></td>
-                                <th>Nb cycles</th>
-                                <td><span t-field="o.nb_cycles"/></td>
-                            </tr>
-                            <tr>
-                                <th>Nombre d'empreintes</th>
-                                <td><span t-field="o.nb_empreintes"/></td>
-                                <td></td>
-                                <th>Qt réalisée théorique</th>
-                                <td><span t-field="o.qt_theorique"/></td>
-                            </tr>
-                            <tr>
-                                <th>Coefficient Theia</th>
-                                <td><span t-field="o.coef_cpi"/></td>
-                                <td></td>
-                                <th>Qt déclarée</th>
-                                <td><span t-field="o.qt_declaree"/></td>
-                            </tr>
-                            <tr>
-                                <th>Code article</th>
-                                <td><span t-field="o.code_article"/></td>
-                                <td></td>
-                                <th>Qt restante</th>
-                                <td><span t-field="o.qt_restante"/></td>
-                            </tr>
-                            <tr>
-                                <th>Désignation</th>
-                                <td><span t-field="o.designation"/></td>
-                                <td></td>
-                                <th>Qt rebuts (Taux)</th>
-                                <td><span t-field="o.qt_rebut"/> (<span t-field="o.taux_rebut"/>%)</td>
-                            </tr>
-                            <tr>
-                                <th>Qt par UC</th>
-                                <td><span t-field="o.uc"/></td>
-                                <td></td>
-                                <th>Qt rebuts théorique (Taux)</th>
-                                <td><span t-field="o.qt_rebut_theo"/> (<span t-field="o.taux_rebut_theo"/>%)</td>
-                            </tr>
-                            <tr>
-                                <th>Coût article</th>
-                                <td><span t-field="o.cout"/></td>
-                                <td></td>
-                                <th>Cycle gamme</th>
-                                <td><span t-field="o.cycle_gamme"/></td>
-                            </tr>
-                            <tr>
-                                <th>Presse</th>
-                                <td><span t-field="o.presse_id"/></td>
-                                <td></td>
-                                <th>Cycle moyen</th>
-                                <td><span t-field="o.cycle_moyen_serie"/></td>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <td></td>
-                                <td></td>
-                                <th>Heure de début de production</th>
-                                <td><span t-field="o.heure_debut"/></td>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <td></td>
-                                <td></td>
-                                <th>Heure de fin de production</th>
-                                <td><span t-field="o.heure_fin"/></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <br />
-                    <br />
-                    <table class="table table-condensed">
-                        <tbody>
-                            <tr>
-                                <td style="width:48%">
-                                    <table class="table table-condensed">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-left">État Presse</th>
-                                                <th class="text-right">Durée dans cet état (H)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-set="tps_arret" t-value="0"/>
-                                            <tr t-foreach="o.tps_ids" t-as="l">
-                                                <t t-set="tps_arret" t-value="tps_arret + l.tps_arret"/>
-                                                <td class="text-left" t-attf-style="background-color:{{ l.couleur }}">
-                                                    <span t-field="l.etat_presse_id"/>
-                                                </td>
-                                                <td class="text-right" t-attf-style="background-color:{{ l.couleur }}">
-                                                    <t t-esc="'%02d:%02d' % (int(l.tps_arret), l.tps_arret % 1 * 60)" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Total : </th>
-                                                <th class="text-right">
-                                                    <t t-esc="'%02d:%02d' % (int(tps_arret), tps_arret % 1 * 60)" />
-                                                </th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                                <td style="width:4%"></td>
-                                <td style="width:48%">
-                                    <table class="table table-condensed">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-left">Type de défaut</th>
-                                                <th class="text-right">Qt rebut</th>
-                                            </tr>
-                                        </thead>
 
-                                        <tbody>
-                                            <tr t-foreach="o.rebut_ids" t-as="l">
-                                                <td class="text-left"><span t-field="l.defaut_id"/></td>
-                                                <td class="text-right"><span t-field="l.qt_rebut"/></td>
-                                            </tr>
+
                                         </tbody>
                                     </table>
                                 </td>
                             </tr>
                         </tbody>
-		    </table-->>
+                    </table>
                 </div>
             </t>
         </template>
