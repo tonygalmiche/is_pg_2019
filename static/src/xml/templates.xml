@@ -4,17 +4,23 @@
     <t t-name="Calendrier_des_absences">
         <div class="cbn">
             <h2 style="font-size:1.5em;padding:0;margin:0" id="titre"></h2>
-            <form style="padding-top:0.5em;padding-bottom:0.5em">
+            <form2 style="padding-top:0.5em;padding-bottom:0.5em">
                 <table>
                     <tr>
-                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
-                            Nom (Partiel)<br /><input style='width:8em' type='text' id='nom' />
-                        </td>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
                             Service (Partiel)<br /><input style='width:10em' type='text' id='service' />
                         </td>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
                             Poste (Partiel)<br /><input style='width:10em' type='text' id='poste' />
+                        </td>
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
+                            Nom (Partiel)<br /><input style='width:8em' type='text' id='nom' />
+                        </td>
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
+                            N+1 (Partiel)<br /><input style='width:8em' type='text' id='n1' />
+                        </td>
+                        <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
+                            N+2 (Partiel)<br /><input style='width:8em' type='text' id='n2' />
                         </td>
                         <td style="width:110px;border-top:none;border-left:none;border-right:none;border-bottom:none;">
                             Date Debut<br /><input style='width:8em' type='text' id='date_debut' />
@@ -35,7 +41,7 @@
                         <td style="border-top:none;border-left:none;border-right:none;border-bottom:none;"><br /><button>OK</button><input id="validation" type="hidden" value="ko" /></td>
                     </tr>
                 </table>
-            </form>
+            </form2>
             <div id="Calendrier_analysecbn" />
         </div>
     </t>

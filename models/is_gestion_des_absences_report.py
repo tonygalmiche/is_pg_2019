@@ -13,14 +13,49 @@ class is_demande_conges(models.Model):
     @api.model
     def analyse_des_absences(self, filter=False):
         cr, uid, context = self.env.args
+        validation = filter['validation']
+        if validation=='ko':
+            #** Lecture des critères enregistrés *******************************
+            nom        = self.env['is.mem.var'].get(uid,'nom')
+            service    = self.env['is.mem.var'].get(uid,'service')
+            poste      = self.env['is.mem.var'].get(uid,'poste')
+            nb_jours   = self.env['is.mem.var'].get(uid,'nb_jours')
+            n1         = self.env['is.mem.var'].get(uid,'n1')
+            n2         = self.env['is.mem.var'].get(uid,'n2')
+        else:
+            #** Lecture des filtres ********************************************
+            nom      = filter['nom']
+            service  = filter['service']
+            poste    = filter['poste']
+            nb_jours = filter['nb_jours']
+            n1       = filter['n1']
+            n2       = filter['n2']
+            #*******************************************************************
+
+            #** Enregistrement des critères enregistrés ************************
+            self.env['is.mem.var'].set(uid, 'nom'     , nom)
+            self.env['is.mem.var'].set(uid, 'service' , service)
+            self.env['is.mem.var'].set(uid, 'poste'   , poste)
+            self.env['is.mem.var'].set(uid, 'nb_jours', nb_jours)
+            self.env['is.mem.var'].set(uid, 'n1'      , n1)
+            self.env['is.mem.var'].set(uid, 'n2'      , n2)
+            #*******************************************************************
+
+        #** Valeur par défaut **************************************************
+        nom      = nom  or ''
+        service  = service  or ''
+        poste    = poste  or ''
+        nb_jours = nb_jours  or 7
+        n1       = n1  or ''
+        n2       = n2  or ''
+       #***********************************************************************
+
         titre = "Calendrier des absences"
-        #etablissement = ''
-        service = ''
-        poste = ''
-        #section = ''
-        nom = ''
+        #nom = ''
+        #service = ''
+        #poste = ''
+        #nb_jours = 7
         date_debut = ''
-        nb_jours = 7
         start_date = ''
         end_date = ''
         back_forward_days = 0
@@ -30,15 +65,15 @@ class is_demande_conges(models.Model):
         dummy, act_id = data_pool.get_object_reference('is_pg_2019', "is_demande_absence_action")
         dummy, act_id_demande = data_pool.get_object_reference('is_pg_2019', "is_demande_conges_action")
         if filter:
-            service    = filter['service']
-            poste      = filter['poste']
-            nom        = filter['nom']
-            nb_jours   = filter['nb_jours']
+            #nom        = filter['nom']
+            #service    = filter['service']
+            #poste      = filter['poste']
+            #nb_jours   = filter['nb_jours']
             date_debut = filter['date_debut']
             start_date = filter['start_date']
             end_date   = filter['end_date']
             back_forward_days = int(filter['back_forward_days'] or 0)
-        width=220+220+220+40+int(nb_jours)*(24+2)+22
+        width=240+180+180+180+180+40+int(nb_jours)*(24+2)+22
         NomCol = []
         where_condition = ''
 
@@ -48,8 +83,11 @@ class is_demande_conges(models.Model):
             emp_domain.append(('job_id','ilike', poste))
         if nom:
             emp_domain.append(('name','ilike', nom))
+        if n1:
+            emp_domain.append(('is_valideur_n1','ilike', n1))
+        if n2:
+            emp_domain.append(('is_valideur_n2','ilike', n2))
 
-        #emp_domain.append(('department_id','!=', 'INTERIMAIRE'))
         emp_domain.append(('job_id','!=', 'INTERIMAIRE'))
 
 
@@ -75,8 +113,6 @@ class is_demande_conges(models.Model):
                 datetime.timedelta(days=-select_date.weekday() - 1, weeks=1)
             first_date_year = last_date_year - datetime.timedelta(days=6)
             last_date_year = first_date_year + datetime.timedelta(days=int(nb_jours)-1)
-            #where_condition += " and date_debut = '" + \
-            #    str(select_date.strftime('%Y-%m-%d')) + "'"
         if back_forward_days:
             if start_date and back_forward_days < 0:
                 select_date = datetime.datetime.strptime(end_date, "%d.%m.%Y").date()
@@ -108,7 +144,6 @@ class is_demande_conges(models.Model):
                         days=-first_week_date.weekday() - 1, weeks=1)
                 if last_date_year < last_week_date:
                     last_week_date = last_date_year
-#         html = "<div id='table_head'>"
         html ="<div style=\"width:"+str(width+20)+"px;\" id=\"table_head\">\n"
         html += "<div><a value='back' type='main'><< Semaine Précédente</a> <a style='padding-left:25px;' value='forward' type='main'>Semaine Suivante >></a></div>"
         html += "<style>"
@@ -118,9 +153,11 @@ class is_demande_conges(models.Model):
         html += "</style>"
         html+="<table id='table21' style=\"border-width:0px;border-spacing:0px;padding:0px;width:"+str(width)+"px;\">\n";
         html += "<thead><tr class=\"TitreTabC\">\n"
-        html += "<td style=\"width:220px;\"></td>\n"
-        html += "<td style=\"width:220px;\"></td>\n"
-        html += "<td style=\"width:220px;\"></td>\n"
+        html += "<td style=\"width:240px;\"></td>\n"
+        html += "<td style=\"width:180px;\"></td>\n"
+        html += "<td style=\"width:180px;\"></td>\n"
+        html += "<td style=\"width:180px;\"></td>\n"
+        html += "<td style=\"width:180px;\"></td>\n"
         for col in sorted(week_per_year.keys()):
             align = 'center'
             main_heading = 'Sem ' + \
@@ -135,11 +172,11 @@ class is_demande_conges(models.Model):
         html += "</tr>"
         # data Display
         html += "<tr>"
-        html += "<td style='width:220px;color:black;text-align:center;'>Nom</td>\n"
-
-        html += "<td style='width:220px;color:black;text-align:center;'>Service</td>\n"
-        html += "<td style='width:220px;color:black;text-align:center;'>Poste</td>\n"
-
+        html += "<td style='width:240px;color:black;text-align:center;'>Service</td>\n"
+        html += "<td style='width:180px;color:black;text-align:center;'>Poste</td>\n"
+        html += "<td style='width:180px;color:black;text-align:center;'>Nom</td>\n"
+        html += "<td style='width:180px;color:black;text-align:center;'>N+1</td>\n"
+        html += "<td style='width:180px;color:black;text-align:center;'>N+2</td>\n"
         for col in sorted(week_per_year.keys()):
             align = 'center'
             week_days = (week_per_year[col][
@@ -151,29 +188,7 @@ class is_demande_conges(models.Model):
                 display_date = display_date + datetime.timedelta(days=+1)
         html += "</tr>"
 
-#         SQL = """
-#             select distinct emp_id,emp_name,date_debut from
-#             (
-#             select emp.id as emp_id,resource_resource.name as emp_name,is_demande_conges.date_debut as date_debut
-#                 from hr_employee emp
-#                 inner join resource_resource on resource_resource.id=emp.resource_id
-#                 inner join is_demande_conges on is_demande_conges.demandeur_id=resource_resource.user_id
-#             union all
-#             select emp.id as emp_id,resource_resource.name as emp_name,is_demande_absence.date_debut as date_debut
-#                 from hr_employee emp
-#                 inner join resource_resource on resource_resource.id=emp.resource_id
-#                 inner join hr_employee_is_demande_absence_rel absence_rel on absence_rel.hr_employee_id=emp.id
-#                 inner join is_demande_absence on is_demande_absence.id=absence_rel.is_demande_absence_id
-#             ) a where 1=1 """ + where_condition + """
-#         """
-#         cr.execute(SQL)
-#         if where_condition != '':
-#             employee_ids = []
-#             result = cr.fetchall()
-#             for row in result:
-#                 employee_ids.append(row[0])
-#             emp_domain.append(('id', 'in', employee_ids))
-        emp_ids = self.env['hr.employee'].search(emp_domain)
+        emp_ids = self.env['hr.employee'].search(emp_domain,order="department_id,job_id")
         is_demande_absence_obj = self.env['is.demande.absence']
         is_demande_conges_obj = self.env['is.demande.conges']
         html+="</table>\n"
@@ -182,11 +197,11 @@ class is_demande_conges(models.Model):
         html+="<table id='table2' style=\"border-width:0px;border-spacing:0px;padding:0px;width:"+str(width)+"px;\">\n";
         for emp in emp_ids:
             html += "<tr>"
-            html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + emp.name + "</td>\n"
-
-            html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + (emp.department_id.name or '') + "</td>\n"
-            html += "<td style='width:220px;font-weight:normal;text-align:left;'>" + (emp.job_id.name or '') + "</td>\n"
-
+            html += "<td style='width:240px;font-weight:normal;text-align:left;'>" + (emp.department_id.name or '') + "</td>\n"
+            html += "<td style='width:180px;font-weight:normal;text-align:left;'>" + (emp.job_id.name or '') + "</td>\n"
+            html += "<td style='width:180px;font-weight:normal;text-align:left;'>" + emp.name + "</td>\n"
+            html += "<td style='width:180px;font-weight:normal;text-align:left;'>" + (emp.is_valideur_n1.name or '') + "</td>\n"
+            html += "<td style='width:180px;font-weight:normal;text-align:left;'>" + (emp.is_valideur_n2.name or '') + "</td>\n"
             for col in sorted(week_per_year.keys()):
                 align = 'center'
                 week_days = (week_per_year[col][
@@ -211,7 +226,10 @@ class is_demande_conges(models.Model):
                         if conges_count:
                             x='C'
                             if conges_count[0].type_demande=='rc_heures':
-                                NbHeures = int(conges_count[0].heure_fin - conges_count[0].heure_debut)
+                                NbHeures = conges_count[0].heure_fin - conges_count[0].heure_debut
+                                if NbHeures<0:
+                                    NbHeures=24+NbHeures
+                                NbHeures=int(NbHeures)
                                 x='RC'+str(NbHeures)
                             M_C = '<a title="" type=\'CF\' docid='+str(conges_count[0].id)+'>'+x+'</a>'
 
@@ -246,11 +264,11 @@ class is_demande_conges(models.Model):
         html += "</div>\n"
 
         vals = {
-            #'etablissement': etablissement,
             'service': service,
             'poste': poste,
-            #'section': section,
             'nom': nom,
+            'n1': n1,
+            'n2': n2,
             'date_debut': date_debut,
             'nb_jours': nb_jours,
             'start_date': first_date_year.strftime("%d.%m.%Y"),

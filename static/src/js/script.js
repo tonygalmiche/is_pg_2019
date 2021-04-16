@@ -21,6 +21,8 @@ openerp.is_pg_2019 = function(instance, local) {
         events: {
             "click a"     : "click_a",
             "click button": "click_button",
+            "change input": "change_input",
+            "change select": "change_select",
         },
         init: function(parent) {
             this._super(parent);
@@ -71,7 +73,15 @@ openerp.is_pg_2019 = function(instance, local) {
         click_button: function(e) {
             $("#validation").val('ok');
             $("#back_forward_days").val('0');
-            des_absence_load_data(instance)
+            des_absence_load_data(instance);
+        },
+        change_input: function(e) {
+            $("#validation").val('ok');
+            des_absence_load_data(instance);
+        },
+        change_select: function(e) {
+            $("#validation").val('ok');
+            des_absence_load_data(instance);
         },
     });
     //Cette ligne permet de déclarer la fonction précédente  et de faire le lien avec l'action Odoo
@@ -88,11 +98,11 @@ function des_absence_load_data(instance){
     width=window.innerWidth-250;   // Recupere l'espace disponilbe dans le navigateur
 
     var filter = {
-        //etablissement     : $("#etablissement").val(),
         service           : $("#service").val(),
         poste             : $("#poste").val(),
-        //section           : $("#section").val(),
         nom               : $("#nom").val(),
+        n1                : $("#n1").val(),
+        n2                : $("#n2").val(),
         date_debut        : $("#date_debut").val(),
         nb_jours          : $("#nb_jours").val(),
         start_date        : $("#start_date").val(),
@@ -100,24 +110,24 @@ function des_absence_load_data(instance){
         back_forward_days : $("#back_forward_days").val(),
         height            : height,
         width             : width,
+        validation        : $("#validation").val(),
     }; 
 
     var is_demande_conges = new openerp.Model('is.demande.conges');
 
     is_demande_conges.call('analyse_des_absences',[filter],{}).then(function (data) {
         $("#titre").html(data['titre']);
-        //$('#etablissement').val(data['etablissement']);
         $('#service').val(data['service']);
         $('#poste').val(data['poste']);
-        //$('#section').val(data['section']);
         $('#nom').val(data['nom']);
+        $('#n1').val(data['n1']);
+        $('#n2').val(data['n2']);
         $('#date_debut').val(data['date_debut']);
         $('#nb_jours').val(data['nb_jours']);
         $('#start_date').val(data['start_date']);
         $('#end_date').val(data['end_date']);
         $('#back_forward_days').val(data['back_forward_days']);
         html=data['html'];
-        //$("#Calendrier_analysecbn").append("<table><tr><th>ABC</th><th>XYZ</th></tr></table>");
         $("#Calendrier_analysecbn").html(html);
         $("#table_body").height(height);
     });

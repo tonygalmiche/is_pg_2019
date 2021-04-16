@@ -259,11 +259,26 @@
                             <group>
                                 <field name="createur_id" readonly="1" />
                                 <field 
+                                    name="employe_id"
+                                    attrs="{
+                                        'invisible': ['|',
+                                            ('demande_collective','!=','non'),
+                                            ('state','!=','creation'),
+                                        ],
+                                    }"
+                                    domain="['|','|',
+                                        ('user_id'       , '=', uid),
+                                        ('is_valideur_n1', '=', uid),
+                                        ('is_valideur_n2', '=', uid),
+                                    ]"
+                                />
+                                <field 
                                     name="demandeur_id"
                                     attrs="{
                                         'invisible': [('demande_collective','!=','non')],
                                         'required' : [('demande_collective','=' ,'non')]
                                     }"
+                                   domain="[('id', '=', uid)]"
                                 />
                                 <field 
                                     name="matricule"
@@ -440,10 +455,24 @@
                     <field name="name" />
                     <field name="createur_id" />
                     <field name="type_absence" />
+                    <field name="employe_ids" widget="many2many_tags" />
                     <field name="date_creation" />
                     <field name="date_debut" />
                     <field name="date_fin" />
                 </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_demande_absence_search">
+            <field name="name">is_demande_absence_search</field>
+            <field name="model">is.demande.absence</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="createur_id"/>
+                    <field name="type_absence"/>
+                    <field name="employe_ids"/>
+                    <field name="date_debut"/>
+                </search>
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_demande_absence_action">

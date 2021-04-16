@@ -358,12 +358,14 @@ class is_demande_conges(models.Model):
             vers_solde          = False
             fld_vsb             = False
             test_date           = False
+            current_date = datetime.date.today()
+            current_date_plus_ten = current_date + relativedelta(days=10)
             if obj.date_debut:
-                current_date = datetime.date.today()
-                current_date_plus_ten = current_date + relativedelta(days=10)
                 if str(current_date_plus_ten) < obj.date_debut:
                     test_date = True
-
+            if obj.le:
+                if str(current_date_plus_ten) < obj.le:
+                    test_date = True
             if test_date:
                 if obj.state == 'validation_n1' or obj.state == 'validation_n2' or obj.state == 'validation_rh':
                     if obj.createur_id.id == uid or obj.demandeur_id.id == uid or obj.valideur_n1.id == uid or obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
@@ -455,10 +457,18 @@ class is_demande_conges(models.Model):
     def _compute_matricule(self):
         for obj in self:
             obj.matricule = obj.demandeur_id.login
+
+
+    @api.onchange('employe_id')
+    def _onchange_employe_id(self):
+        if self.employe_id and self.employe_id.user_id:
+            self.demandeur_id = self.employe_id.user_id.id
+
  
     name                          = fields.Char(u"N° demande")
     createur_id                   = fields.Many2one('res.users', u'Créateur', default=lambda self: self.env.user        , copy=False)
     date_creation                 = fields.Datetime(string=u'Date de création', default=lambda *a: fields.datetime.now(), copy=False)
+    employe_id                    = fields.Many2one('hr.employee', 'Autre demandeur')
     demandeur_id                  = fields.Many2one('res.users', 'Demandeur', default=lambda self: self.env.user)
     matricule                     = fields.Char(u"Matricule", compute='_compute_matricule', readonly=True, store=True)
     mode_communication = fields.Selection([
@@ -549,17 +559,19 @@ class is_demande_absence_type(models.Model):
 class is_demande_absence(models.Model):
     _name        = 'is.demande.absence'
     _description = u'Demande d’absence'
+    _order       = 'name desc'
+
 
     @api.model
     def create(self, vals):
         vals['name'] = self.env['ir.sequence'].get('is.demande.absence') or ''
         return super(is_demande_absence, self).create(vals)
 
-    name          = fields.Char(u"N° demande")
+    name          = fields.Char(u"N° demande", select=True)
     createur_id   = fields.Many2one('res.users', u'Créateur', default=lambda self: self.env.user)
     date_creation = fields.Datetime(string=u'Date de création', default=lambda *a: fields.datetime.now())
     type_absence  = fields.Many2one('is.demande.absence.type', string=u'Type d’absence', required=True)
-    date_debut    = fields.Date(string='Date de début', required=True)
+    date_debut    = fields.Date(string='Date de début', required=True, select=True)
     date_fin      = fields.Date(string='Date de fin', required=True)
     employe_ids   = fields.Many2many('hr.employee', string=u'Employés', required=True)
 
