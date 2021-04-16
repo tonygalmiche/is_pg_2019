@@ -64,15 +64,15 @@
 
 
         <report 
-            id="is_presse_reports"
-            model="is.equipement"
-            string="Presse"
+            id="is_bon_achat_vile_reports"
+            model="is.bon.achat.ville"
+            string="Bon d'achat en ville"
             report_type="qweb-pdf"
-            name="is_pg_2019.is_presse_report"
-            file="is_pg_2019.is_presse_report"
+            name="is_pg_2019.is_bon_achat_vile_report"
+            file="is_pg_2019.is_bon_achat_vile_report"
         />
-        <record id="is_presse_reports" model="ir.actions.report.xml">
-            <field name="paperformat_id" ref="is_pg_2019.is_presse_paperformat"/>
+        <record id="is_bon_achat_vile_reports" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="is_pg_2019.is_bon_achat_vile_paperformat"/>
         </record>
 
     </data>
