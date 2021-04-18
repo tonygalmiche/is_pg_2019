@@ -31,14 +31,14 @@
                             <group>
                                 <field name="product_id"  attrs="{'readonly': [('state', '=', 'valide')]}"/>
                                 <field name="client_id"   attrs="{'readonly': [('state', '=', 'valide')]}"/>
-                                <field name="ref_client"  attrs="{'readonly': [('state', '=', 'valide')]}"/>
-                                <field name="ind_plan"    attrs="{'readonly': [('state', '=', 'valide')]}"/>
+                                <field name="ref_client"/>
+                                <field name="ind_plan"/>
                                 <field name="rsp_qualite" attrs="{'readonly': [('state', '=', 'valide')]}"/>
                             </group>
                             <group>
                                 <field name="order_id"         attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="picking_id"       attrs="{'readonly': [('state', '=', 'creation')]}"/>
-                                <field name="date_bl"          attrs="{'readonly': [('state', '=', 'creation')]}"/>
+                                <field name="date_bl"/>
                                 <field name="qt_liv"           attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="num_lot"          attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="date_fabrication" attrs="{'readonly': [('state', '=', 'creation')]}"/>

@@ -62,7 +62,6 @@
             <field name="paperformat_id" ref="is_pg_2019.is_proforma_chine_etiquette_paperformat"/>
         </record>
 
-
         <report 
             id="is_bon_achat_vile_reports"
             model="is.bon.achat.ville"
@@ -73,6 +72,18 @@
         />
         <record id="is_bon_achat_vile_reports" model="ir.actions.report.xml">
             <field name="paperformat_id" ref="is_pg_2019.is_bon_achat_vile_paperformat"/>
+        </record>
+
+        <report 
+            id="is_certificat_conformite_reports"
+            model="is.certificat.conformite"
+            string="Certificat de conformité"
+            report_type="qweb-pdf"
+            name="is_pg_2019.is_certificat_conformite_report"
+            file="is_pg_2019.is_certificat_conformite_report"
+        />
+        <record id="is_certificat_conformite_reports" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="is_pg_2019.is_certificat_conformite_paperformat"/>
         </record>
 
     </data>
