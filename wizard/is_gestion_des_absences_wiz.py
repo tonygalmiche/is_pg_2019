@@ -13,13 +13,15 @@ class is_gestion_des_absences_wiz(models.TransientModel):
         conges_obj = self.env['is.demande.conges']
         if self._context and self._context.get('active_id'):
             conges = conges_obj.browse(self._context.get(('active_id')))
+
+            user = self.env['res.users'].browse(self._uid)
+            nom = user.name
+
             if conges.mode_communication in ['courriel','courriel+sms'] and conges.courriel:
                 subject = u'[' + conges.name + u'] Demande de congés - retour Brouillon ('+self.conges_reason+u')'
                 email_to = conges.courriel
-                user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
                 email_cc = email_from
-                nom = user.name
                 base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
                 url = base_url + u'/web#id=' + str(conges.id) + u'&view_type=form&model=is.demande.conges'
                 body_html = u""" 
@@ -64,13 +66,15 @@ class is_gestion_vers_annuler_wiz(models.TransientModel):
         if self._context and self._context.get('active_id'):
             conges = conges_obj.browse(self._context.get(('active_id')))
             motif = self.conges_reason.replace('\n',' ')
+
+            user = self.env['res.users'].browse(self._uid)    
+            nom = user.name
+
             if conges.mode_communication in ['courriel','courriel+sms'] and conges.courriel:
                 subject = u'[' + conges.name + u'] Demande de congés - Annulation ('+motif+u')'
                 email_to = conges.courriel
-                user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
                 email_cc = email_from
-                nom = user.name
                 base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
                 url = base_url + u'/web#id=' + str(conges.id) + u'&view_type=form&model=is.demande.conges'
                 body_html = u""" 
@@ -112,13 +116,15 @@ class is_gestion_vers_refuse_wiz(models.TransientModel):
         if self._context and self._context.get('active_id'):
             conges = conges_obj.browse(self._context.get(('active_id')))
             motif = self.conges_reason.replace('\n',' ')
+
+            user = self.env['res.users'].browse(self._uid)
+            nom = user.name
+
             if conges.mode_communication in ['courriel','courriel+sms'] and conges.courriel:
                 subject = u'[' + conges.name + u'] Demande de congés - Refus ('+motif+u')'
                 email_to = conges.courriel
-                user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
                 email_cc = email_from
-                nom = user.name
                 base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
                 url = base_url + u'/web#id=' + str(conges.id) + u'&view_type=form&model=is.demande.conges'
                 body_html = u""" 
