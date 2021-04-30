@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import pooler
-from openerp import models,fields,api
+from openerp import models,fields,api,tools
 from openerp.tools.translate import _
 import time
 import datetime
@@ -30,7 +30,7 @@ colors=[
 states=[
     ("attente-controleur", "Attente contrôleur"),
     ("attente-tuteur"    , "Attente tuteur"),
-    ("poste"             , "En poste"),
+    ("poste"             , "Opérateur habilité"),
     ("qualification"     , "Qualification"),
     ("dequalification"   , "Déqualification"),
 ]
@@ -544,6 +544,42 @@ class is_theia_habilitation_operateur(models.Model):
     state        = fields.Selection(states, 'État'            , required=True , select=True)
 
 
+class is_theia_habilitation_operateur_etat(models.Model):
+    _name = 'is.theia.habilitation.operateur.etat'
+    _order = 'presse_id,moule,operateur_id'
+    _auto = False
+
+    presse_id    = fields.Many2one('is.equipement', u"Presse" , required=True , select=True)
+    moule        = fields.Char(u'Moule'                       , required=True , select=True)
+    operateur_id = fields.Many2one("hr.employee", u"Opérateur", required=True , select=True)
+    state        = fields.Selection(states, 'État'            , required=True , select=True)
+    heure_debut  = fields.Datetime(u'Heure de début'          , required=True , select=True)
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'is_theia_habilitation_operateur_etat')
+        cr.execute("""
+            CREATE OR REPLACE view is_theia_habilitation_operateur_etat AS (
+                select 
+                    a.presse_id,
+                    a.moule,
+                    a.operateur_id, 
+                    max(a.id) id,
+                    (   select b.state       
+                        from is_theia_habilitation_operateur b 
+                        where a.presse_id=b.presse_id and a.moule=b.moule and a.operateur_id=b.operateur_id 
+                        order by b.id desc limit 1
+                    ) state,
+                    (   select c.heure_debut 
+                        from is_theia_habilitation_operateur c 
+                        where a.presse_id=c.presse_id and a.moule=c.moule and a.operateur_id=c.operateur_id 
+                        order by c.id desc limit 1
+                    ) heure_debut
+                from is_theia_habilitation_operateur a 
+                group by a.presse_id,a.moule,a.operateur_id
+            )
+        """)
+
+
 class is_theia_lecture_ip(models.Model):
     _name = 'is.theia.lecture.ip'
     _description = u"Lecture des Instructions particulières des opérateurs sur les Moules dans THEIA"
@@ -558,8 +594,35 @@ class is_theia_lecture_ip(models.Model):
     ip_id        = fields.Many2one("is.instruction.particuliere", u"Instruction Particulière"             , required=True , select=True)
 
 
+class is_mold(models.Model):
+    _inherit = 'is.mold'
 
-
+    @api.multi
+    def dequalification_moule_action(self):
+        cr = self._cr
+        for obj in self:
+            valideur_id = False
+            employes = self.env['hr.employee'].search([('user_id','=',self._uid)])
+            for employe in employes:
+                valideur_id = employe.id
+            SQL="""
+                select distinct presse_id,operateur_id
+                from is_theia_habilitation_operateur
+                where moule=%s order by presse_id,operateur_id
+            """
+            cr.execute(SQL,[obj.name])
+            result = cr.fetchall()
+            for row in result:
+                vals={
+                    "heure_debut" : fields.datetime.now(),
+                    "heure_fin"   : fields.datetime.now(),
+                    "presse_id"   : row[0],
+                    "moule"       : obj.name,
+                    "operateur_id": row[1],
+                    "valideur_id" : valideur_id,
+                    "state"       : "dequalification",
+                }
+                id=self.env['is.theia.habilitation.operateur'].create(vals)
 
 
 

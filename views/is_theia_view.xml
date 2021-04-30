@@ -1005,6 +1005,13 @@
                 <field name="operateur_id"/>
                 <field name="valideur_id"/>
                 <field name="state"/>
+                <group expand="0" string="Regrouper par...">
+                    <filter name="group_by_presse_id"    string="Presse" domain="[]" context="{'group_by':'presse_id'}"/>
+                    <filter name="group_by_moule"        string="Moule" domain="[]" context="{'group_by':'moule'}"/>
+                    <filter name="group_by_operateur_id" string="Opérateur" domain="[]" context="{'group_by':'operateur_id'}"/>
+                    <filter name="group_by_valideur_id"  string="Valideur" domain="[]" context="{'group_by':'valideur_id'}"/>
+                    <filter name="group_by_state"        string="Etat" domain="[]" context="{'group_by':'state'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -1028,6 +1035,159 @@
         parent="is_theia_habilitation_operateur_main_menu" 
         sequence="10"
     />
+
+
+    <!-- is.theia.habilitation.operateur.etat -->
+    <record id="is_theia_habilitation_operateur_etat_form_view" model="ir.ui.view">
+        <field name="name">is_theia_habilitation_operateur_etat_form_view</field>
+        <field name="model">is.theia.habilitation.operateur.etat</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="presse_id" />
+                            <field name="moule" />
+                            <field name="operateur_id" />
+                            <field name="state" />
+                            <field name="heure_debut" />
+                         </group>
+                     </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="is_theia_habilitation_operateur_etat_tree_view" model="ir.ui.view">
+        <field name="name">is_theia_habilitation_operateur_etat_tree_view</field>
+        <field name="model">is.theia.habilitation.operateur.etat</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="presse_id" />
+                <field name="moule" />
+                <field name="operateur_id" />
+                <field name="state" />
+                <field name="heure_debut" />
+           </tree>
+        </field>
+    </record>
+    <record id="is_theia_habilitation_operateur_etat_search_view" model="ir.ui.view">
+        <field name="name">is_theia_habilitation_operateur_etat_search_view</field>
+        <field name="model">is.theia.habilitation.operateur.etat</field>
+        <field name="arch" type="xml">
+            <search string="Recherche">
+                <field name="presse_id" />
+                <field name="moule" />
+                <field name="operateur_id" />
+                <field name="state" />
+               <group expand="0" string="Regrouper par...">
+                    <filter name="group_by_presse_id"    string="Presse"    domain="[]" context="{'group_by':'presse_id'}"/>
+                    <filter name="group_by_moule"        string="Moule"     domain="[]" context="{'group_by':'moule'}"/>
+                    <filter name="group_by_operateur_id" string="Opérateur" domain="[]" context="{'group_by':'operateur_id'}"/>
+                    <filter name="group_by_state"        string="Etat"      domain="[]" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="is_theia_habilitation_operateur_etat_graph_view" model="ir.ui.view">
+        <field name="name">is_theia_habilitation_operateur_etat_graph_view</field>
+        <field name="model">is.theia.habilitation.operateur.etat</field>
+        <field name="arch" type="xml">
+            <graph string="view" type="pivot">
+                <field name="operateur_id" type="row"/>
+                <field name="moule"        type="row"/>
+                <field name="state"        type="col"/>
+             </graph>
+         </field>
+    </record>
+    <record id="is_theia_habilitation_operateur_etat_action" model="ir.actions.act_window">
+        <field name="name">Dernière habilitation</field>
+        <field name="res_model">is.theia.habilitation.operateur.etat</field>
+        <field name="domain">[]</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+    </record>
+    <menuitem 
+        id="is_theia_habilitation_operateur_etat_menu" 
+        action="is_theia_habilitation_operateur_etat_action" 
+        parent="is_theia_habilitation_operateur_main_menu" 
+        sequence="11"
+    />
+
+
+    <!-- Déqualification moule --> 
+    <record model="ir.ui.view" id="is_theia_dequalification_moule_tree_view">
+        <field name="name">is_theia_dequalification_moule_tree_view</field>
+        <field name="model">is.mold</field>
+        <field name="priority" eval="90" />
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="designation"/>
+                <field name="project"/>
+                <field name="client_id"/> 
+                <field name="dossierf_id"/>
+                <field name="nb_empreintes"/>
+                <field name="emplacement"/>
+                <field name="is_database_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_dequalification_moule_form_view">
+        <field name="name">is_theia_dequalification_moule_form_view</field>
+        <field name="model">is.mold</field>
+        <field name="priority" eval="90" />
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="designation"/>
+                    <field name="project"/>
+                    <field name="client_id"/> 
+                    <field name="dossierf_id"/>
+                    <field name="nb_empreintes"/>
+                    <field name="emplacement"/>
+                    <field name="is_database_id"/>
+                    <button 
+                            string="Déqualification des opérateurs de ce moule"
+                            name="dequalification_moule_action"
+                            confirm="Voulez-vous vraiment déqualifier tous les opérateurs de ce moule ?"
+                            type="object" class="oe_highlight"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_theia_dequalification_moule_action">
+        <field name="name">Déqualification moule</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.mold</field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('is_pg_2019.is_theia_dequalification_moule_tree_view'), 'sequence': 1}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('is_pg_2019.is_theia_dequalification_moule_form_view'), 'sequence': 2})
+        ]"/>
+    </record>
+    <record id="is_theia_dequalification_moule_action_menu" model="ir.ui.menu" >
+        <field name="name">Déqualification moule</field>
+        <field name="sequence">20</field>
+        <field name="action"    ref="is_theia_dequalification_moule_action"/>
+        <field name="parent_id" eval="ref('is_theia_habilitation_operateur_main_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+            ref('is_plastigray.group_gestionnaire_cpi_raspberry'),
+        ])]"/>
+    </record>
+
+
+
+
+
+
+
+
 
 
     <!-- is.theia.lecture.ip -->
