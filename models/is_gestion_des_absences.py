@@ -370,6 +370,8 @@ class is_demande_conges(models.Model):
                 if obj.state == 'validation_n1' or obj.state == 'validation_n2' or obj.state == 'validation_rh':
                     if obj.createur_id.id == uid or obj.demandeur_id.id == uid or obj.valideur_n1.id == uid or obj.valideur_n2.id == uid or obj.responsable_rh_id.id == uid:
                         vers_creation = True
+                        vers_annuler  = True
+
 
             if obj.state == 'validation_rh' and  obj.responsable_rh_id.id == uid:
                 fld_vsb = True

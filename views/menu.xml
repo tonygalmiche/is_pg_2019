@@ -296,7 +296,6 @@
             <field name="parent_id" eval="ref('menu_hr_gestion_des_absences')"/>
             <field name="action"    ref="is_Calendrier_des_absences_action"/>
             <field name="groups_id" eval="[(6,0,[
-                ref('is_pg_2019.is_manager_des_absences_group'),
             ])]"/>
         </record>
 

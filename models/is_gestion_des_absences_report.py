@@ -188,7 +188,7 @@ class is_demande_conges(models.Model):
                 display_date = display_date + datetime.timedelta(days=+1)
         html += "</tr>"
 
-        emp_ids = self.env['hr.employee'].search(emp_domain,order="department_id,job_id")
+        emp_ids = self.env['hr.employee'].sudo().search(emp_domain,order="department_id,job_id")
         is_demande_absence_obj = self.env['is.demande.absence']
         is_demande_conges_obj = self.env['is.demande.conges']
         html+="</table>\n"
@@ -211,14 +211,14 @@ class is_demande_conges(models.Model):
                     M_C = ''
                     conges_count = absence_count = False
                     if emp.user_id:
-                        conges_count = is_demande_conges_obj.search([
+                        conges_count = is_demande_conges_obj.sudo().search([
                              ('demandeur_id', '=', emp.user_id.id),
                              ('date_debut', '<=', display_date),
                              ('date_fin', '>=', display_date),
                             ('state','not in', ['refuse','annule']),
                         ])
                         if not conges_count:
-                            conges_count = is_demande_conges_obj.search([
+                            conges_count = is_demande_conges_obj.sudo().search([
                                 ('demandeur_id', '=', emp.user_id.id),
                                 ('le', '=', display_date),
                                 ('state','not in', ['refuse','annule']),
@@ -233,13 +233,13 @@ class is_demande_conges(models.Model):
                                 x='RC'+str(NbHeures)
                             M_C = '<a title="" type=\'CF\' docid='+str(conges_count[0].id)+'>'+x+'</a>'
 
-                    absence_count = is_demande_absence_obj.search([
+                    absence_count = is_demande_absence_obj.sudo().search([
                         ('employe_ids', 'in', [emp.id]),
                         ('date_debut', '<=', display_date),
                         ('date_fin', '>=', display_date),
                     ])
                     if not absence_count:
-                        absence_count = is_demande_absence_obj.search([
+                        absence_count = is_demande_absence_obj.sudo().search([
                             ('employe_ids', 'in', [emp.id]),
                             ('date_debut', '=', display_date),
                         ])

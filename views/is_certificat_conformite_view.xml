@@ -32,6 +32,7 @@
                                 <field name="product_id"  attrs="{'readonly': [('state', '=', 'valide')]}"/>
                                 <field name="client_id"   attrs="{'readonly': [('state', '=', 'valide')]}"/>
                                 <field name="ref_client"/>
+                                <field name="ref_plan"/>
                                 <field name="ind_plan"/>
                                 <field name="rsp_qualite" attrs="{'readonly': [('state', '=', 'valide')]}"/>
                             </group>
@@ -53,6 +54,16 @@
                                 <field name="classe"/>
                             </tree>
                         </field>
+                        <group>
+                            <field name="pourcentage_maxi" attrs="{'readonly': [('state', '=', 'valide')]}"/>
+                        </group>
+                        <field name="autre_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'valide')]}">
+                            <tree editable="bottom">
+                                <field name="autre_conformite"/>
+                                <field name="epaisseur_mini"/>
+                                <field name="classe_inflammabilite"/>
+                            </tree>
+                        </field>
                         <field name="fabricant_ids" nolabel="1"  attrs="{'readonly': [('state', '=', 'valide')]}">
                             <tree editable="bottom">
                                 <field name="fabricant"/>
@@ -72,6 +83,7 @@
                     <field name="product_id"/>
                     <field name="client_id"/>
                     <field name="ref_client"/>
+                    <field name="ref_plan"/>
                     <field name="ind_plan"/>
                     <field name="rsp_qualite"/>
                     <field name="order_id"/>
