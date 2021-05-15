@@ -2,6 +2,93 @@
 
 <openerp>
     <data>
+
+        <!-- is.liste.servir -->
+        <record model="ir.ui.view" id="is_liste_servir_form_view_2019">
+            <field name="name">is_liste_servir_form_view_2019</field>
+            <field name="model">is.liste.servir</field>
+            <field name="inherit_id" ref="is_plastigray.is_liste_servir_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field 
+                        name="is_certificat_conformite_msg"
+                        style="background:orange"
+                        attrs="{'invisible': [('is_certificat_conformite_msg', '=', False)]}"
+                    />
+                </field>
+
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="before">
+                    <field name="is_certificat_conformite_vsb" invisible="1"/>
+                    <button 
+                        string="Certificat" 
+                        name="imprimer_certificat_action"  
+                        type="object" icon="gtk-print" 
+                        attrs="{'invisible':[('is_certificat_conformite_vsb','!=',1)]}"  
+                    />
+                    <button 
+                        string="Pas de certificat !" 
+                        name="pas_de_certifcat_action"  
+                        type="object" icon="gtk-dialog-warning" 
+                        attrs="{'invisible':[('is_certificat_conformite_vsb','!=',2)]}"  
+                    />
+                </xpath>
+            </field>
+        </record>
+
+
+        <!-- stock.picking -->
+        <record id="is_view_picking_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <button name="do_print_picking" position="after" >
+                    <button 
+                        name="imprimer_certificat_action" 
+                        string="Imprimer les certificats" 
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible': [('is_certificat_conformite_msg', '=', False)]}"
+                    />
+                </button>
+                <field name="partner_id" position="after">
+                    <field 
+                        name="is_certificat_conformite_msg"
+                        style="background:orange"
+                        attrs="{'invisible': [('is_certificat_conformite_msg', '=', False)]}"
+                    />
+                </field>
+            </field>
+        </record>
+
+        <!-- stock.move -->
+        <record id="is_view_move_picking_tree2" model="ir.ui.view">
+            <field name="name">is_view_move_picking_tree2</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="before">
+                    <field name="is_certificat_conformite_vsb" invisible="1"/>
+                    <button 
+                        string="Certificat" 
+                        name="imprimer_certificat_action"  
+                        type="object" icon="gtk-print" 
+                        attrs="{'invisible':[('is_certificat_conformite_vsb','!=',1)]}"  
+                    />
+                    <button 
+                        string="Pas de certificat !" 
+                        name="pas_de_certifcat_action"  
+                        type="object" icon="gtk-dialog-warning" 
+                        attrs="{'invisible':[('is_certificat_conformite_vsb','!=',2)]}"  
+                    />
+                </field>
+            </field>
+        </record>
+
+
+
+
+
         <!-- is.certificat.conformite --> 
         <record model="ir.ui.view" id="is_certificat_conformite_form_view">
             <field name="name">is_certificat_conformite_form_view</field>
@@ -37,6 +124,7 @@
                                 <field name="rsp_qualite" attrs="{'readonly': [('state', '=', 'valide')]}"/>
                             </group>
                             <group>
+                                <field name="client_order_ref" attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="order_id"         attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="picking_id"       attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="date_bl"/>
@@ -62,6 +150,11 @@
                                 <field name="autre_conformite"/>
                                 <field name="epaisseur_mini"/>
                                 <field name="classe_inflammabilite"/>
+                            </tree>
+                        </field>
+                        <field name="autre2_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'valide')]}">
+                            <tree editable="bottom">
+                                <field name="autre"/>
                             </tree>
                         </field>
                         <field name="fabricant_ids" nolabel="1"  attrs="{'readonly': [('state', '=', 'valide')]}">

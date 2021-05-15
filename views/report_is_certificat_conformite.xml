@@ -130,7 +130,7 @@
                                 </tr>
                                 <tr>
                                     <th style="width:25%"><b>N° de commande : </b><br /><i>Order number</i></th>
-                                    <td style="width:25%"><span t-field="o.order_id.name"/></td>
+                                    <td style="width:25%"><span t-field="o.client_order_ref"/></td>
                                     <td style="width:25%"><b>Plan : </b><br /><i>Plan</i></td>
                                     <td style="width:25%"><span t-field="o.product_id.is_ref_plan"/></td>
                                 </tr>
@@ -199,6 +199,21 @@
                                     </tboby>
                                 </table>
                             </t>
+                            <t t-if="o.autre2_ids">
+                                <br />
+                                <table style="width:100%" class="lignes">
+                                    <thead>
+                                        <tr>
+                                            <th><b>Autre</b> / <i>other</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tboby>
+                                        <tr t-foreach="o.autre2_ids" t-as="l" >
+                                            <td style="text-align:center"><span t-field="l.autre"/></td>
+                                        </tr>
+                                    </tboby>
+                                </table>
+                            </t>
                             <t t-if="o.fabricant_ids">
                                 <br />
                                 <table style="width:100%" class="lignes">
@@ -228,10 +243,23 @@
                                 </thead>
                                 <tboby>
                                     <tr style="height:40mm">
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
-                                        <td style="text-align:center"></td>
+                                        <td style="text-align:center">
+                                            <div t-field="o.date_bl"/>
+                                        </td>
+                                        <td style="text-align:center">
+                                            <img 
+                                                t-att-src="'data:image/png;base64,%s' % res_company.is_cachet_plastigray" 
+                                                style="max-height: 40mm;max-width: 50mm;"
+                                            />
+                                        </td>
+                                        <td style="text-align:center">
+                                            <div t-field="o.rsp_qualite.name"/>
+                                            <img 
+                                                t-att-src="'data:image/png;base64,%s' % o.rsp_qualite.is_signature" 
+                                                style="max-height: 40mm;max-width: 50mm;"
+                                            />
+                                        </td>
+                                        <td style="text-align:center">Responsable qualité</td>
                                      </tr>
                                 </tboby>
                             </table>
