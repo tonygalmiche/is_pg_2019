@@ -23,3 +23,4 @@ import auditlog
 import is_bon_achat_ville
 import is_certificat_conformite
 import is_mode_operatoire
+import is_facture_proforma

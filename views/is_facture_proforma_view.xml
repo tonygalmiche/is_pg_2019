@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+        <!-- Sequence is.facture.proforma --> 
+        <record id="is_facture_proforma_type_seq" model="ir.sequence.type">
+            <field name="name">Facture proforma</field>
+            <field name="code">is.facture.proforma</field>
+        </record>
+        <record id="is_facture_proforma_seq" model="ir.sequence">
+            <field name="name">Facture proforma</field>
+            <field name="code">is.facture.proforma</field>
+            <field name="prefix">FP-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- is.facture.proforma --> 
+        <record model="ir.ui.view" id="is_facture_proforma_form_view">
+            <field name="name">is_facture_proforma_form_view</field>
+            <field name="model">is.facture.proforma</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form" create="1">
+                    <sheet class="oe_form_sheet_width_wider">
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="line_ids" nolabel="1" >
+                                <tree editable="bottom">
+                                    <field name="sequence" />
+                                    <field name="product_id" widget="many2one_clickable"/>
+                                    <field name="designation"/>
+                                    <field name="quantite"/>
+                                    <field name="prix"/>
+                                    <field name="montant" sum="Total"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_facture_proforma_tree_view">
+            <field name="name">is_facture_proforma_tree_view</field>
+            <field name="model">is.facture.proforma</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_facture_proforma_search_view" >
+            <field name="name">is_facture_proforma_search_view</field>
+            <field name="model">is.facture.proforma</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_facture_proforma_action">
+            <field name="name">Facture proforma</field>
+            <field name="res_model">is.facture.proforma</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}
+            </field>
+        </record>
+  </data>
+</openerp>

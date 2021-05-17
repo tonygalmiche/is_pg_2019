@@ -32,6 +32,7 @@ InfoSaône - Module Odoo pour Plastigray en 2019
         "views/is_ctrl_budget_tdb_view.xml",
         "views/is_ctrl_budget_ana_view.xml",
         "views/is_equipement_view.xml",
+        "views/is_facture_proforma_view.xml",
         "views/is_fiche_tampographie_constituant_view.xml",
         'views/is_head_model_view.xml',
         "views/is_mode_operatoire_view.xml",
