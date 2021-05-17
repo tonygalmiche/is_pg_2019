@@ -167,11 +167,21 @@
                                             </tr>
                                             <tr><td><br /></td></tr>
                                             <tr><td style="text-align:right;padding-right:2mm">Ejection / <i>Ejection</i> :                   </td><td><b><span t-field="o.ejection"/></b></td></tr>
+
+                                            <tr><td><br /></td></tr>
+                                            <tr><td colspan="2" style="text-align:center"><b class="titre">Embout de buse standard 7/8</b></td></tr>
+                                            <tr><td style="height:2mm"></td></tr>
+                                            <tr><td style="text-align:right;padding-right:2mm">Ø de passage matière        : </td><td><b><span t-field="o.diametre_passage_matiere"/></b> </td></tr>
+                                            <tr><td style="text-align:right;padding-right:2mm">Type de matière transformée : </td><td><b><span t-field="o.type_matiere_transformee"/></b> </td></tr>
+                                            <tr><td style="text-align:right;padding-right:2mm">Longueur                    : </td><td><b><span t-field="o.embout_buse_longueur"/></b>     </td></tr>
+                                            <tr><td style="text-align:right;padding-right:2mm">Type de portée              : </td><td><b><span t-field="o.type_de_portee"/></b>           </td></tr>
+
                                             <tr><td><br /></td></tr>
                                             <tr><td colspan="2" style="text-align:center"><b class="titre">Rondelle de centrage / <i>Washer centring</i></b></td></tr>
                                             <tr><td style="height:2mm"></td></tr>
                                             <tr><td style="text-align:right;padding-right:2mm">Partie fixe / <i>Fixed side</i> :   </td><td><b><span t-field="o.rondelle_centrage_fixe"/></b>   <span t-field="o.rondelle_centrage_fixe_specifique"/></td></tr>
                                             <tr><td style="text-align:right;padding-right:2mm">Partie mobile / <i>Move side</i> :  </td><td><b><span t-field="o.rondelle_centrage_mobile"/></b> <span t-field="o.rondelle_centrage_mobile_specifique"/></td></tr>
+
                                             <tr><td><br /></td></tr>
                                             <tr><td colspan="2" style="text-align:center"><b class="titre">Classe ou Presse</b></td></tr>
                                             <tr><td style="height:2mm"></td></tr>

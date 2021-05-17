@@ -83,6 +83,12 @@
                             <field name="ejection"/>
                             <field name="ejection_specifique" attrs="{'invisible': [('ejection', '!=', 'specifique')]}"/>
                         </group>
+                        <group string="Embout de buse standard 7/8">
+                            <field name="diametre_passage_matiere"/>
+                            <field name="type_matiere_transformee"/>
+                            <field name="embout_buse_longueur"/>
+                            <field name="type_de_portee"/>
+                        </group>
                         <group string="Rondelle de centrage">
                             <field name="rondelle_centrage_fixe"/>
                             <field name="rondelle_centrage_fixe_specifique"   attrs="{'invisible': [('rondelle_centrage_fixe', '!=', 'specifique')]}"/>

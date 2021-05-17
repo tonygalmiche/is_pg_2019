@@ -131,6 +131,21 @@ class is_mold(models.Model):
         ], "Ejection")
     ejection_specifique = fields.Char(u"Ejection spécifique")
 
+    diametre_passage_matiere = fields.Integer(u"Ø de passage matière")
+    type_matiere_transformee = fields.Selection([
+            ("amorphe"    , u"amorphe"),
+            ("cristalline", u"cristalline"),
+        ], u"Type de matière transformée")
+    embout_buse_longueur = fields.Selection([
+            ("38mm", u"38mm"),
+            ("70mm", u"70mm"),
+            ("95mm", u"95mm"),
+        ], u"Longueur ")
+    type_de_portee = fields.Selection([
+            ("conique90", u"conique à 90°"),
+            ("rayon9"   , u"rayon de 9mm"),
+        ], u"Type de portée")
+
     rondelle_centrage_fixe = fields.Selection([
             ("standard"     , u"Standard Plastigray : 100"),
             ("specifique"   , u"Spécifique"),
