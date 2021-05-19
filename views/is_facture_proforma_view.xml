@@ -3,6 +3,44 @@
 <openerp>
     <data>
 
+        <!-- is.bon.transfert -->
+        <record model="ir.ui.view" id="is_bon_transfert_form_view_2019">
+            <field name="name">is_bon_transfert_form_view_2019</field>
+            <field name="model">is.bon.transfert</field>
+            <field name="inherit_id" ref="is_plastigray.is_bon_transfert_form_view"/>
+            <field name="arch" type="xml">
+                <sheet position="before">
+                    <header>
+                        <button 
+                            name="creation_facture_proforma_action"
+                            string="Créer facture proforma"
+                            groups="is_plastigray.is_administration_vente_group"
+                            type="object"
+                        />
+                    </header>
+                </sheet>
+            </field>
+        </record>
+
+
+        <!-- is.bl.manuel -->
+        <record model="ir.ui.view" id="is_bl_manuel_form_view_2019">
+            <field name="name">is_bl_manuel_form_view_2019</field>
+            <field name="model">is.bl.manuel</field>
+            <field name="inherit_id" ref="is_plastigray.is_bl_manuel_form_view"/>
+            <field name="arch" type="xml">
+                <button name="creation_demande_transport_action" position="after">
+                    <button 
+                        name="creation_facture_proforma_action"
+                        string="Créer facture proforma"
+                        groups="is_plastigray.is_administration_vente_group"
+                        type="object"
+                    />
+                </button>
+            </field>
+        </record>
+
+
         <!-- Sequence is.facture.proforma --> 
         <record id="is_facture_proforma_type_seq" model="ir.sequence.type">
             <field name="name">Facture proforma</field>
@@ -27,6 +65,16 @@
                         <group>
                             <group>
                                 <field name="name"/>
+                                <field name="adresse_liv_id"/>
+                                <field name="adresse_fac_id"/>
+                            </group>
+                            <group>
+                                <field name="date_facture"/>
+                                <field name="createur_id"/>
+                                <field name="pricelist_id"/>
+                                <field name="vat"/>
+                                <field name="incoterm_id"/>
+                                <field name="lieu"/>
                             </group>
                         </group>
                         <group>
@@ -35,11 +83,23 @@
                                     <field name="sequence" />
                                     <field name="product_id" widget="many2one_clickable"/>
                                     <field name="designation"/>
+                                    <field name="ref_client"/>
+                                    <field name="nomenclature_douaniere"/>
                                     <field name="quantite"/>
+                                    <field name="uom_id"/>
                                     <field name="prix"/>
                                     <field name="montant" sum="Total"/>
                                 </tree>
                             </field>
+                        </group>
+                        <group>
+                            <field name="montant"/>
+                            <field name="poids_brut"/>
+                            <field name="poids_net"/>
+                            <field name="packaging"/>
+                            <field name="informations"/>
+                            <field name="bon_transfert_id" attrs="{'invisible': [('bon_transfert_id','=', False)]}"/>
+                            <field name="bl_manuel_id"     attrs="{'invisible': [('bl_manuel_id','=', False)]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -52,6 +112,16 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="adresse_liv_id"/>
+                    <field name="adresse_fac_id"/>
+                    <field name="date_facture"/>
+                    <field name="createur_id"/>
+                    <field name="poids_brut" sum="Total"/>
+                    <field name="poids_net"  sum="Total"/>
+                    <field name="packaging"/>
+                    <field name="informations"/>
+                    <field name="bon_transfert_id"/>
+                    <field name="bl_manuel_id"/>
                 </tree>
             </field>
         </record>
@@ -61,6 +131,10 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
+                    <field name="adresse_liv_id"/>
+                    <field name="adresse_fac_id"/>
+                    <field name="bon_transfert_id"/>
+                    <field name="bl_manuel_id"/>
                 </search>
             </field>
         </record>
