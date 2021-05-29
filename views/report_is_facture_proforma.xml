@@ -210,7 +210,7 @@
                         <tr>
                             <td><strong>Code TVA destinataire</strong></td>
                             <td class="text-right">
-                                <span t-field="o.vat"/> Kg
+                                <span t-field="o.vat"/>
                             </td>
                         </tr>
                         <tr>

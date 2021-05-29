@@ -28,7 +28,9 @@ class is_bon_transfert(models.Model):
                     'uom_id'     : line.uom_id.id,
                     'quantite'   : line.quantite,
                 }
-                self.env['is.facture.proforma.line'].create(vals)
+                res=self.env['is.facture.proforma.line'].create(vals)
+                res._onchange_product_id()
+            proforma.calcul_poids()
             return {
                 'name': "Facture proforma",
                 'view_mode': 'form',
@@ -65,7 +67,8 @@ class is_bl_manuel(models.Model):
                     'uom_id': line.uom_id.id,
                     'quantite': line.qt_livree,
                 }
-                self.env['is.facture.proforma.line'].create(vals)
+                res=self.env['is.facture.proforma.line'].create(vals)
+                res._onchange_product_id()
             proforma.poids_net  = poids_net
             proforma.poids_brut = poids_brut
             return {
@@ -104,10 +107,10 @@ class is_facture_proforma(models.Model):
     date_facture         = fields.Date("Date facture"             , required=True, default=lambda *a: fields.datetime.now())
     adresse_liv_id       = fields.Many2one('res.partner', 'Adresse de livraison'  , required=True, domain=[('is_company','=',True),('customer','=',True)])
     adresse_fac_id       = fields.Many2one('res.partner', 'Adresse de facturation', compute='_compute_adresse_fac_id', readonly=True, store=True)
-    pricelist_id         = fields.Many2one('product.pricelist', "Liste de prix"   , related='adresse_fac_id.property_product_pricelist', readonly=True)
-    vat                  = fields.Char("Numéro fiscal"                            , related='adresse_fac_id.vat', readonly=True)
-    incoterm_id          = fields.Many2one('stock.incoterms', "Incoterm"          , related='adresse_fac_id.is_incoterm', readonly=True)
-    lieu                 = fields.Char("Lieu"                                     , related='adresse_fac_id.is_lieu', readonly=True)
+    pricelist_id         = fields.Many2one('product.pricelist', "Liste de prix"   , related='adresse_liv_id.property_product_pricelist', readonly=True)
+    vat                  = fields.Char("Numéro fiscal"                            , related='adresse_liv_id.vat', readonly=True)
+    incoterm_id          = fields.Many2one('stock.incoterms', "Incoterm"          , related='adresse_liv_id.is_incoterm', readonly=True)
+    lieu                 = fields.Char("Lieu"                                     , related='adresse_liv_id.is_lieu', readonly=True)
     line_ids             = fields.One2many('is.facture.proforma.line', 'proforma_id', u"Lignes", copy=True)
     poids_brut           = fields.Float("Poids brut")
     poids_net            = fields.Float("Poids net")
@@ -134,6 +137,17 @@ class is_facture_proforma(models.Model):
         return obj
 
 
+    @api.onchange('line_ids')
+    def calcul_poids(self):
+        for obj in self:
+            poids_brut=poids_net=0
+            for l in obj.line_ids:
+                poids_net+=l.quantite*l.product_id.weight_net
+                poids_brut+=l.quantite*l.product_id.weight
+            obj.poids_net  = poids_net
+            obj.poids_brut = poids_brut
+
+
 class is_facture_proforma_line(models.Model):
     _name='is.facture.proforma.line'
     _order='proforma_id,sequence'
@@ -157,6 +171,10 @@ class is_facture_proforma_line(models.Model):
             price = self.proforma_id.pricelist_id.price_get(product_id, self.quantite, partner_id)
             prix = price[pricelist_id]
         self.prix = prix
+
+
+
+
 
     proforma_id            = fields.Many2one('is.facture.proforma', "Facture proforma", required=True, ondelete='cascade', readonly=True)
     sequence               = fields.Integer('Ordre')
