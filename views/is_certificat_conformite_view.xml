@@ -131,6 +131,8 @@
                                 <field name="qt_liv"           attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="num_lot"          attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="date_fabrication" attrs="{'readonly': [('state', '=', 'creation')]}"/>
+                                <field name="rsp_livraison"    attrs="{'readonly': [('state', '=', 'creation')]}"/>
+                                <field name="job_id"/>
                             </group>
                         </group>
                         <field name="reference_ids" nolabel="1"  attrs="{'readonly': [('state', '=', 'valide')]}">

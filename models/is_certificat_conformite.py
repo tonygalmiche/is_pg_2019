@@ -123,18 +123,49 @@ class stock_picking(models.Model):
             if not os.path.exists(path):
                 os.makedirs(path)
             paths=[]
-            for line in obj.move_lines:
-                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id.id, line.product_id.id)
+            for move in obj.move_lines:
+                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id.id, move.product_id.id)
                 if certificat:
-                    self.env['is.certificat.conformite'].WriteCertificat(certificat,line)
-                    result = self.env['report'].get_pdf(certificat, 'is_pg_2019.is_certificat_conformite_report')
-                    file_name = path + '/'+str(line.id) + '.pdf'
-                    fd = os.open(file_name,os.O_RDWR|os.O_CREAT)
-                    try:
-                        os.write(fd, result)
-                    finally:
-                        os.close(fd)
-                    paths.append(file_name)
+                    self.env['is.certificat.conformite'].WriteCertificat(certificat,move)
+
+                    #** Recherche des lots scannés ************************************
+                    lots={}
+                    if move.picking_id.is_sale_order_id:
+                        if  move.picking_id.is_sale_order_id.is_liste_servir_id:
+                            if move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
+                                for um in move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
+                                    if um.product_id == move.product_id:
+                                        for uc in um.uc_ids:
+                                            if uc.production not in lots:
+                                                date_fabrication = uc.date_creation[:10]
+                                                lots[uc.production] = date_fabrication
+                    print("lots =",lots)
+
+#('lots =', {u'OF028224': '2021-02-08', u'OF028923': '2021-03-12', u'OF028923b': '2021-03-12', u'OF028923c': '2021-03-12', u'OF028923a': '2021-03-12'})
+                    if lots=={}:
+                        lots[' ']=False
+
+
+                    x=0
+                    for lot in lots:
+                        x+=1
+                        print(lot, lots[lot])
+                        certificat.num_lot = lot
+                        certificat.date_fabrication = lots[lot]
+
+
+
+                        result = self.env['report'].get_pdf(certificat, 'is_pg_2019.is_certificat_conformite_report')
+                        file_name = path + '/'+str(move.id) + '-' + str(x) + '.pdf'
+                        fd = os.open(file_name,os.O_RDWR|os.O_CREAT)
+                        try:
+                            os.write(fd, result)
+                        finally:
+                            os.close(fd)
+                        paths.append(file_name)
+
+
+            print("paths=",paths)
 
             # ** Merge des PDF *****************************************************
             path_merged=self._merge_pdf(paths)
@@ -221,6 +252,22 @@ class is_certificat_conformite(models.Model):
     _sql_constraints = [('product_id_client_id_uniq','UNIQUE(product_id,client_id)', u'Un certificat existe déjà pour ce client et pour cet article !')] 
     _rec_name = 'product_id'
 
+
+    @api.depends('rsp_livraison')
+    def _compute_job_id(self):
+        for obj in self:
+            job_id=False
+            if obj.rsp_livraison:
+                print(obj, obj.rsp_livraison)
+                employes = self.env['hr.employee'].search([("user_id","=",obj.rsp_livraison.id)])
+                for employe in employes:
+                    job_id=employe.job_id.id
+            obj.job_id=job_id
+
+
+
+
+
     product_id       = fields.Many2one('product.product', u"Article", domain=[('sale_ok','=',True)], required=True, select=True)
     client_id        = fields.Many2one('res.partner', u'Client', domain=[('is_company','=',True),('customer','=',True)], required=True, select=True)
     ref_client       = fields.Char(u"Référence client", related='product_id.is_ref_client', readonly=True)
@@ -234,6 +281,8 @@ class is_certificat_conformite(models.Model):
     num_lot          = fields.Char(u"N° de lot")
     date_fabrication = fields.Date(u"Date de fabrication")
     rsp_qualite      = fields.Many2one('res.users', u'Responsable qualité')
+    rsp_livraison    = fields.Many2one('res.users', u'Responsable livraison')
+    job_id           = fields.Many2one('hr.job', u'Fonction', compute='_compute_job_id', store=False, readonly=True)
     pourcentage_maxi = fields.Char(u"Pourcentage maxi de broyé", default="0%")
     reference_ids    = fields.One2many('is.certificat.conformite.reference', 'certificat_id', u"Références", copy=True)
     autre_ids        = fields.One2many('is.certificat.conformite.autre'    , 'certificat_id', u"Autre"     , copy=True)
@@ -269,25 +318,29 @@ class is_certificat_conformite(models.Model):
                 'picking_id'      : move.picking_id.id,
                 'date_bl'         : move.picking_id.is_date_expedition,
                 'qt_liv'          : move.product_uom_qty,
+                'rsp_livraison'   : self._uid,
+                'num_lot'         : False,
+                'date_fabrication': False,
             }
             certificat.write(vals)
 
-            #** Recherche des lots scannés ************************************
-            if move.picking_id.is_sale_order_id:
-                if  move.picking_id.is_sale_order_id.is_liste_servir_id:
-                    if move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
-                        lots={}
-                        for um in move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
-                            if um.product_id == move.product_id:
-                                for uc in um.uc_ids:
-                                    if uc.production not in lots:
-                                        date_fabrication            = uc.date_creation[:10]
-                                        certificat.num_lot          = uc.production
-                                        certificat.date_fabrication = date_fabrication
-                                        #TODO Voir comment afficher plusieurs lots
-                                        #date_fabrication= datetime.strptime(date_fabrication, '%Y-%m-%d')
-                                        #date_fabrication =date_fabrication.strftime('%d/%m/%Y')
-                                        #lots[uc.production] = date_fabrication
+            # #** Recherche des lots scannés ************************************
+            # if move.picking_id.is_sale_order_id:
+            #     if  move.picking_id.is_sale_order_id.is_liste_servir_id:
+            #         if move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
+            #             lots={}
+            #             for um in move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
+            #                 if um.product_id == move.product_id:
+            #                     for uc in um.uc_ids:
+            #                         if uc.production not in lots:
+            #                             print uc.production,lots
+            #                             date_fabrication            = uc.date_creation[:10]
+            #                             certificat.num_lot          = uc.production
+            #                             certificat.date_fabrication = date_fabrication
+            #                             #TODO Voir comment afficher plusieurs lots
+            #                             #date_fabrication= datetime.strptime(date_fabrication, '%Y-%m-%d')
+            #                             #date_fabrication =date_fabrication.strftime('%d/%m/%Y')
+            #                             lots[uc.production] = date_fabrication
 
 
     @api.multi

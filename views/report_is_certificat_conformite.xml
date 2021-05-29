@@ -148,38 +148,40 @@
                                 </tr>
                             </table>
                             <br />
-
-
-                            <table style="width:100%" class="lignes">
-                                <thead>
-                                    <tr>
-                                        <th><b>Réf. client de chaque élément (*) </b><br /><i>customer ref. of each part</i></th>
-                                        <th><b>Fabricant de la matière de base </b><br /><i>Material manufacturer</i></th>
-                                        <th><b>Référence précise de la matière de base </b><br /><i>Material designation</i></th>
-                                        <th><b>Epaisseur minimale mesurable sur la pièce </b><br /><i>Min. thickness of part</i></th>
-                                        <th><b>Classe d'inflammabilité de la matière dans l'épaisseur mini. </b><br /><i>Flame class in min. thickness</i></th>
-                                     </tr>
-                                </thead>
-                                <tboby>
-                                    <tr t-foreach="o.reference_ids" t-as="l" >
-                                        <td style="text-align:center"><span t-field="l.reference"/></td>
-                                        <td style="text-align:center"><span t-field="l.fabricant"/></td>
-                                        <td style="text-align:center"><span t-field="l.ref_precise"/></td>
-                                        <td style="text-align:center"><span t-field="l.epaisseur"/></td>
-                                        <td style="text-align:center"><span t-field="l.classe"/></td>
-                                    </tr>
-                                </tboby>
-                            </table>
-                            <br />
-                            <div>
-                                <b>Le pourcentage maximum de matière plastique réutilisée/rebroyée contenue dans les pièces injectées est de <span t-field="o.pourcentage_maxi"/>.</b><br />
-                                <i>The maximum percentage of reprocessed/regrind thermoplastic material used in the molding process is <span t-field="o.pourcentage_maxi"/>.</i>
-                            </div>
-                            <br />
-                            <div>
-                                <b>Les pièces plastiques colorées sont  réalisées avec des matières pigmentées par le fabriquant de la matière.</b><br />
-                                <i>Colored parts are made of material pigmented by the material manufacturer.</i>
-                            </div>
+                            <t t-if="o.reference_ids">
+                                <table style="width:100%" class="lignes">
+                                    <thead>
+                                        <tr>
+                                            <th><b>Réf. client de chaque élément (*) </b><br /><i>customer ref. of each part</i></th>
+                                            <th><b>Fabricant de la matière de base </b><br /><i>Material manufacturer</i></th>
+                                            <th><b>Référence précise de la matière de base </b><br /><i>Material designation</i></th>
+                                            <th><b>Epaisseur minimale mesurable sur la pièce </b><br /><i>Min. thickness of part</i></th>
+                                            <th><b>Classe d'inflammabilité de la matière dans l'épaisseur mini. </b><br /><i>Flame class in min. thickness</i></th>
+                                        </tr>
+                                    </thead>
+                                    <tboby>
+                                        <tr t-foreach="o.reference_ids" t-as="l" >
+                                            <td style="text-align:center"><span t-field="l.reference"/></td>
+                                            <td style="text-align:center"><span t-field="l.fabricant"/></td>
+                                            <td style="text-align:center"><span t-field="l.ref_precise"/></td>
+                                            <td style="text-align:center"><span t-field="l.epaisseur"/></td>
+                                            <td style="text-align:center"><span t-field="l.classe"/></td>
+                                        </tr>
+                                    </tboby>
+                                </table>
+                                <br />
+                                <div>
+                                    <b>Les pièces plastiques colorées sont  réalisées avec des matières pigmentées par le fabriquant de la matière.</b><br />
+                                    <i>Colored parts are made of material pigmented by the material manufacturer.</i>
+                                </div>
+                            </t>
+                            <t t-if="o.pourcentage_maxi">
+                                <br />
+                                <div>
+                                    <b>Le pourcentage maximum de matière plastique réutilisée/rebroyée contenue dans les pièces injectées est de <span t-field="o.pourcentage_maxi"/>.</b><br />
+                                    <i>The maximum percentage of reprocessed/regrind thermoplastic material used in the molding process is <span t-field="o.pourcentage_maxi"/>.</i>
+                                </div>
+                            </t>
                             <t t-if="o.autre_ids">
                                 <br />
                                 <table style="width:100%" class="lignes">
@@ -242,24 +244,27 @@
                                      </tr>
                                 </thead>
                                 <tboby>
-                                    <tr style="height:40mm">
+                                    <tr>
                                         <td style="text-align:center">
                                             <div t-field="o.date_bl"/>
+                                            <br />
                                         </td>
                                         <td style="text-align:center">
                                             <img 
                                                 t-att-src="'data:image/png;base64,%s' % res_company.is_cachet_plastigray" 
                                                 style="max-height: 40mm;max-width: 50mm;"
                                             />
+                                            <br />
                                         </td>
                                         <td style="text-align:center">
-                                            <div t-field="o.rsp_qualite.name"/>
+                                            <div t-field="o.rsp_livraison.name"/>
                                             <img 
-                                                t-att-src="'data:image/png;base64,%s' % o.rsp_qualite.is_signature" 
+                                                t-att-src="'data:image/png;base64,%s' % o.rsp_livraison.is_signature" 
                                                 style="max-height: 40mm;max-width: 50mm;"
                                             />
+                                            <br />
                                         </td>
-                                        <td style="text-align:center">Responsable qualité</td>
+                                        <td style="text-align:center"><div t-field="o.job_id.name"/></td>
                                      </tr>
                                 </tboby>
                             </table>

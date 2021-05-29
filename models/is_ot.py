@@ -119,6 +119,8 @@ class is_ot(models.Model):
     @api.multi
     def envoi_mail(self, email_from, email_to, subject, body_html):
         for obj in self:
+            if email_to=="robot@plastigray.com":
+                email_to = email_from
             vals = {
                 'email_from'    : email_from,
                 'email_to'      : email_to,
@@ -135,10 +137,10 @@ class is_ot(models.Model):
         for obj in self:
             if obj.demandeur_id.id!=1:
                 subject = u'[' + obj.name + u'] Gestion des OT - Annule'
-                email_to = obj.demandeur_id.email
                 user = self.env['res.users'].browse(self._uid)
                 email_from = user.email
                 nom = user.name
+                email_to = obj.demandeur_id.email
                 base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
                 url = base_url + u'/web#id=' + str(obj.id) + u'&view_type=form&model=is.ot'
                 body_html = u""" 
