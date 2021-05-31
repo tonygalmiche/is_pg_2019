@@ -232,6 +232,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><strong>Lieu</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.lieu"/>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><strong>Packaging</strong></td>
                             <td class="text-right">
                                 <span t-field="o.packaging"/>
