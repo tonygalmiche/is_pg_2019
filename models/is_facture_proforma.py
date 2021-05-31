@@ -31,6 +31,7 @@ class is_bon_transfert(models.Model):
                 res=self.env['is.facture.proforma.line'].create(vals)
                 res._onchange_product_id()
             proforma.calcul_poids()
+            proforma._compute()
             return {
                 'name': "Facture proforma",
                 'view_mode': 'form',
@@ -71,6 +72,7 @@ class is_bl_manuel(models.Model):
                 res._onchange_product_id()
             proforma.poids_net  = poids_net
             proforma.poids_brut = poids_brut
+            proforma._compute()
             return {
                 'name': "Facture proforma",
                 'view_mode': 'form',
