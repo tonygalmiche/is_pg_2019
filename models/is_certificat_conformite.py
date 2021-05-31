@@ -18,7 +18,7 @@ class is_liste_servir(models.Model):
             if obj.partner_id.is_certificat_matiere:
                 nb=0
                 for line in obj.line_ids:
-                    certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id.id, line.product_id.id)
+                    certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id, line.product_id.id)
                     if not certificat:
                         nb+=1
                 msg=u"Ne pas oublier de fournir les certificats matières."
@@ -36,7 +36,7 @@ class is_liste_servir_line(models.Model):
         for obj in self:
             vsb = False
             if obj.liste_servir_id.partner_id.is_certificat_matiere:
-                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.liste_servir_id.partner_id.id, obj.product_id.id)
+                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.liste_servir_id.partner_id, obj.product_id.id)
                 if certificat:
                     vsb = 1
                 else:
@@ -56,7 +56,7 @@ class is_liste_servir_line(models.Model):
     def imprimer_certificat_action(self):
         dummy, view_id = self.env['ir.model.data'].get_object_reference('is_pg_2019', 'is_certificat_conformite_form_view')
         for obj in self:
-            certificat = self.env['is.certificat.conformite'].GetCertificat(obj.liste_servir_id.partner_id.id, obj.product_id.id)
+            certificat = self.env['is.certificat.conformite'].GetCertificat(obj.liste_servir_id.partner_id, obj.product_id.id)
             if certificat:
                 return {
                     'name': "Certificat de conformité",
@@ -79,7 +79,7 @@ class stock_picking(models.Model):
             if obj.partner_id.is_certificat_matiere:
                 nb=0
                 for line in obj.move_lines:
-                    certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id.id, line.product_id.id)
+                    certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id, line.product_id.id)
                     if not certificat:
                         nb+=1
                 msg=u"Ne pas oublier de fournir les certificats matières."
@@ -124,7 +124,7 @@ class stock_picking(models.Model):
                 os.makedirs(path)
             paths=[]
             for move in obj.move_lines:
-                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id.id, move.product_id.id)
+                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id, move.product_id.id)
                 if certificat:
                     self.env['is.certificat.conformite'].WriteCertificat(certificat,move)
 
@@ -139,22 +139,13 @@ class stock_picking(models.Model):
                                             if uc.production not in lots:
                                                 date_fabrication = uc.date_creation[:10]
                                                 lots[uc.production] = date_fabrication
-                    print("lots =",lots)
-
-#('lots =', {u'OF028224': '2021-02-08', u'OF028923': '2021-03-12', u'OF028923b': '2021-03-12', u'OF028923c': '2021-03-12', u'OF028923a': '2021-03-12'})
                     if lots=={}:
                         lots[' ']=False
-
-
                     x=0
                     for lot in lots:
                         x+=1
-                        print(lot, lots[lot])
                         certificat.num_lot = lot
                         certificat.date_fabrication = lots[lot]
-
-
-
                         result = self.env['report'].get_pdf(certificat, 'is_pg_2019.is_certificat_conformite_report')
                         file_name = path + '/'+str(move.id) + '-' + str(x) + '.pdf'
                         fd = os.open(file_name,os.O_RDWR|os.O_CREAT)
@@ -163,9 +154,6 @@ class stock_picking(models.Model):
                         finally:
                             os.close(fd)
                         paths.append(file_name)
-
-
-            print("paths=",paths)
 
             # ** Merge des PDF *****************************************************
             path_merged=self._merge_pdf(paths)
@@ -211,7 +199,7 @@ class stock_move(models.Model):
         for obj in self:
             vsb = False
             if obj.picking_id.partner_id.is_certificat_matiere:
-                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.picking_id.partner_id.id, obj.product_id.id)
+                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.picking_id.partner_id, obj.product_id.id)
                 if certificat:
                     vsb = 1
                 else:
@@ -231,7 +219,7 @@ class stock_move(models.Model):
     def imprimer_certificat_action(self):
         dummy, view_id = self.env['ir.model.data'].get_object_reference('is_pg_2019', 'is_certificat_conformite_form_view')
         for obj in self:
-            certificat = self.env['is.certificat.conformite'].GetCertificat(obj.picking_id.partner_id.id, obj.product_id.id)
+            certificat = self.env['is.certificat.conformite'].GetCertificat(obj.picking_id.partner_id, obj.product_id.id)
             if certificat:
                 self.env['is.certificat.conformite'].WriteCertificat(certificat,obj)
                 return {
@@ -258,7 +246,6 @@ class is_certificat_conformite(models.Model):
         for obj in self:
             job_id=False
             if obj.rsp_livraison:
-                print(obj, obj.rsp_livraison)
                 employes = self.env['hr.employee'].search([("user_id","=",obj.rsp_livraison.id)])
                 for employe in employes:
                     job_id=employe.job_id.id
@@ -297,7 +284,7 @@ class is_certificat_conformite(models.Model):
     @api.multi
     def GetCertificat(self,partner_id,product_id):
         filtre = [
-            ('client_id' , '=', partner_id),
+            ('client_id.is_code' , '=', partner_id.is_code),
             ('product_id', '=', product_id),
             ('state'     , '=', 'valide'),
         ]
