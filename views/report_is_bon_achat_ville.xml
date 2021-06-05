@@ -153,8 +153,20 @@
                                     <th style="border:0"></th>
                                 </tr>
                                 <tr style="height:25mm">
-                                    <th>Visa : </th>
-                                    <th>Visa : </th>
+                                    <th>
+                                        Visa : 
+                                        <img 
+                                            t-att-src="'data:image/png;base64,%s' % o.createur_id.is_signature" 
+                                            style="max-height: 35mm;max-width: 50mm;"
+                                        />
+                                    </th>
+                                    <th>
+                                        Visa : 
+                                        <img 
+                                            t-att-src="'data:image/png;base64,%s' % o.responsable_id.is_signature" 
+                                            style="max-height: 35mm;max-width: 50mm;"
+                                        />
+                                    </th>
                                     <th style="border:0;font-size:12pt;font-weight: bold;vertical-align: bottom;">
                                         Faire parvenir votre facture avec votre BL et ce bon d'achat<br />
                                         à PLASTIGRAY ZAC DE GRAY SUD 70104 GRAY.<br />
