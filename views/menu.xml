@@ -431,6 +431,19 @@
         </record>
 
 
+        <menuitem id="is_indicateur_bei_menu" sequence="20" name="BEI" parent="is_plastigray.is_indicateurs_menu"/>
+        <record id="is_indicateur_revue_jalon_menu" model="ir.ui.menu" >
+            <field name="name">Indicateur Revue Jalon</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_indicateur_bei_menu')"/>
+            <field name="action"    ref="is_indicateur_revue_jalon_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_chef_projet_group'),
+            ])]"/>
+        </record>
+
+
+
 
 
 
