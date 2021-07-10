@@ -136,7 +136,12 @@
                                 </tr>
                                 <tr>
                                     <th style="width:25%"><b>N° bon de livraison :  </b><br /><i>Delivery form number</i></th>
-                                    <td style="width:25%"><span t-field="o.picking_id.name"/> du <span t-field="o.date_bl"/></td>
+                                    <t t-if="o.picking_id">
+                                        <td style="width:25%"><span t-field="o.picking_id.name"/> du <span t-field="o.date_bl"/></td>
+                                    </t>
+                                    <t t-if="not o.picking_id">
+                                        <td style="width:25%"><span t-field="o.bon_transfert_id.name"/> du <span t-field="o.date_bl"/></td>
+                                    </t>
                                     <th style="width:25%"><b>Quantité livrée :  </b><br /><i>Qty delivered</i></th>
                                     <td style="width:25%"><span t-field="o.qt_liv"/></td>
                                 </tr>

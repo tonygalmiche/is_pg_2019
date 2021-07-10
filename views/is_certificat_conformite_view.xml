@@ -3,6 +3,51 @@
 <openerp>
     <data>
 
+        <!-- is.bon.transfert -->
+        <record id="is_bon_transfert_form_view_certificat" model="ir.ui.view">
+            <field name="name">is_bon_transfert_form_view_certificat</field>
+            <field name="model">is.bon.transfert</field>
+            <field name="inherit_id" ref="is_pg_2019.is_bon_transfert_form_view_2019"/>
+            <field name="priority" eval="10" />
+            <field name="arch" type="xml">
+
+                <button name="creation_facture_proforma_action" position="after" >
+                    <button 
+                        name="imprimer_certificat_action" 
+                        string="Imprimer les certificats" 
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible': [('is_certificat_conformite_msg', '=', False)]}"
+                    />
+                </button>
+
+
+
+                <field name="partner_id" position="after">
+                    <field 
+                        name="is_certificat_conformite_msg"
+                        style="background:orange"
+                        attrs="{'invisible': [('is_certificat_conformite_msg', '=', False)]}"
+                    />
+                </field>
+                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="before">
+                    <field name="is_certificat_conformite_vsb" invisible="1"/>
+                    <button 
+                        string="Certificat" 
+                        name="imprimer_certificat_action"  
+                        type="object" icon="gtk-print" 
+                        attrs="{'invisible':[('is_certificat_conformite_vsb','!=',1)]}"  
+                    />
+                    <button 
+                        string="Pas de certificat !" 
+                        name="pas_de_certifcat_action"  
+                        type="object" icon="gtk-dialog-warning" 
+                        attrs="{'invisible':[('is_certificat_conformite_vsb','!=',2)]}"  
+                    />
+                </xpath>
+            </field>
+        </record>
+
+
         <!-- is.liste.servir -->
         <record model="ir.ui.view" id="is_liste_servir_form_view_2019">
             <field name="name">is_liste_servir_form_view_2019</field>
@@ -127,6 +172,7 @@
                                 <field name="client_order_ref" attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="order_id"         attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="picking_id"       attrs="{'readonly': [('state', '=', 'creation')]}"/>
+                                <field name="bon_transfert_id" attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="date_bl"/>
                                 <field name="qt_liv"           attrs="{'readonly': [('state', '=', 'creation')]}"/>
                                 <field name="num_lot"          attrs="{'readonly': [('state', '=', 'creation')]}"/>
@@ -183,6 +229,7 @@
                     <field name="rsp_qualite"/>
                     <field name="order_id"/>
                     <field name="picking_id"/>
+                    <field name="bon_transfert_id"/>
                     <field name="date_bl"/>
                     <field name="qt_liv"/>
                     <field name="num_lot"/>
@@ -201,6 +248,7 @@
                     <field name="ref_client"/>
                     <field name="order_id"/>
                     <field name="picking_id"/>
+                    <field name="bon_transfert_id"/>
                     <field name="state"/>
                 </search>
             </field>

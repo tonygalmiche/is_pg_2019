@@ -6,9 +6,12 @@ from openerp.tools.translate import _
 import time
 import datetime
 import os
+import subprocess
 from openerp.exceptions import Warning
 import logging
 _logger = logging.getLogger(__name__)
+
+
 
 
 couleurs=[
@@ -67,11 +70,52 @@ class is_etat_presse(models.Model):
     production_serie = fields.Boolean('Production série',help='Cocher cette case si cet état correspond à la production série')
     action_id        = fields.Many2one('is.theia.validation.action', u"Action de validation")
 
-
     _sql_constraints = [
         ('name_uniq', 'unique(name)', u"L'intulé doit être unique !"),
     ]
     _defaults = {}
+
+
+class is_raspberry_entree_sortie(models.Model):
+    _name = 'is.raspberry.entree.sortie'
+    _description = u"Gestion des Entrées / Sorties du Raspberry"
+    _order='entree_sortie,numero'
+    
+    @api.depends('etat')
+    def _couleur(self):
+        for obj in self:
+            couleur=""
+            if obj.etat=="pressed":
+                couleur="#5CB85C"
+            if obj.etat=="released":
+                couleur="#D9534F"
+            obj.couleur=couleur
+
+    raspberry_id  = fields.Many2one('is.raspberry', 'Raspberry', required=True, ondelete='cascade', readonly=True)
+    numero        = fields.Char(u'Numéro', required=True, select=True)
+    entree_sortie = fields.Char(u'Entrée / Sortie', required=True, select=True)
+    etat          = fields.Char(u'État', required=True, select=True)
+    couleur       = fields.Char(u'Couleur', compute='_couleur')
+
+    @api.multi
+    def changer_etat_action(self):
+        for obj in self:
+            print obj,obj.etat
+            if obj.etat=='pressed':
+                etat="released"
+            else:
+                etat="pressed"
+            obj.etat=etat
+
+            IP=obj.raspberry_id.name
+            print obj,IP
+            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "service theia restart"'
+            #res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
+            #print res
+
+
+
+
 
 
 class is_raspberry(models.Model):
@@ -79,14 +123,36 @@ class is_raspberry(models.Model):
     _description = u"raspberry"
     _order='name'
     
-    name      = fields.Char('Adresse IP' , required=True)
-    presse_id = fields.Many2one('is.presse', u"Presse", required=False)
+    name        = fields.Char('Adresse IP' , required=True)
+    adresse_mac = fields.Char('Adresse MAC', select=True)
+    presse_id   = fields.Many2one('is.presse', u"Presse", required=False)
+    entree_ids  = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Entrées du Raspberry",  domain=[('entree_sortie','=','entree')])
+    sortie_ids  = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Sorties du Raspberry",  domain=[('entree_sortie','=','sortie')])
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', u"L'adresse IP doit être unique !"),
-    ]
-    
-    _defaults = {}
+    @api.multi
+    def rafraichir_raspberry(self):
+        for obj in self:
+            IP=obj.name
+            print obj,IP
+            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "service theia restart"'
+            os.system(cmd)
+
+            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
+            WID=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
+            print WID,type(WID)
+            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus '+WID+' && xdotool key --window '+WID+' F5"'
+            res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
+            print res,type(res)
+
+
+
+#WID=`ssh root@raspberry4 "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"`
+#ssh root@raspberry4 "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus $WID && xdotool key --window $WID F5"
+#return_value =subprocess.check_output("sudo raspi-config nonint get_spi", stderr=subprocess.STDOUT, shell = True)
+
+
+
+        return
 
 
 class is_of(models.Model):
@@ -435,9 +501,21 @@ class is_presse_cycle(models.Model):
     _rec_name = "date_heure"
     _order='date_heure desc'
 
+    @api.depends('etat')
+    def _couleur(self):
+        for obj in self:
+            couleur=""
+            if obj.etat=="pressed":
+                couleur="#5CB85C"
+            if obj.etat=="released":
+                couleur="#D9534F"
+            obj.couleur=couleur
+
     date_heure = fields.Datetime("Date Heure",required=True, select=True)
-    #presse_id  = fields.Many2one('is.presse', u"Presse", required=False, select=True)
     presse_id  = fields.Many2one('is.equipement', u"Presse",  domain=[('type_id.code','=','PE')], required=False, select=True)
+    entree     = fields.Char("Entrée", select=True)
+    etat       = fields.Char("État"  , select=True)
+    couleur    = fields.Char('Couleur', compute='_couleur')
     of_ids     = fields.Many2many('is.of', 'is_presse_cycle_of_rel', 'is_of_id', 'is_presse_cycle_id', 'OF', readonly=False, required=False)
     
     _sql_constraints = []

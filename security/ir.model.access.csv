@@ -25,6 +25,7 @@ access_user_is_ot_affectation,access_is_ot_affectation,model_is_ot_affectation,b
 access_is_ot_indicateur,access_is_ot_indicateur,model_is_ot_indicateur,base.group_user,1,1,1,1
 
 access_is_raspberry,access_is_raspberry,model_is_raspberry,base.group_user,1,0,0,0
+access_is_raspberry_entree_sortie,access_is_raspberry_entree_sortie,model_is_raspberry_entree_sortie,base.group_user,1,0,0,0
 access_is_presse_cycle,access_is_presse_cycle,model_is_presse_cycle,base.group_user,1,0,0,0
 access_is_of,access_is_of,model_is_of,base.group_user,1,0,0,0
 access_is_presse_arret,access_is_presse_arret,model_is_presse_arret,base.group_user,1,0,0,0
@@ -184,4 +185,5 @@ access_is_facture_proforma_line,access_is_facture_proforma_line,model_is_facture
 
 access_is_indicateur_revue_jalon,access_is_indicateur_revue_jalon,model_is_indicateur_revue_jalon,base.group_user,1,0,0,0
 access_is_indicateur_revue_jalon_gest,access_is_indicateur_revue_jalon_gest,model_is_indicateur_revue_jalon,is_plastigray.is_chef_projet_group,1,1,1,1
+
 

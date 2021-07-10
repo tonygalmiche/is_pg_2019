@@ -84,6 +84,9 @@
             <tree>
                 <field name="date_heure"/>
                 <field name="presse_id"/>
+                <field name="entree"/>
+                <field name="couleur" widget="pgcolor"/>
+                <field name="etat"/>
                 <field name="of_ids"/>
             </tree>
         </field>
@@ -97,6 +100,8 @@
                 <group>
                     <field name="date_heure"/>
                     <field name="presse_id"/>
+                    <field name="entree"/>
+                    <field name="etat"/>
                     <field name="of_ids" widget="many2many_tags" />
                 </group>
             </sheet>
@@ -109,9 +114,13 @@
         <field name="arch" type="xml">
             <search>
                 <field name="presse_id"/>
+                <field name="entree"/>
+                <field name="etat"/>
                 <field name="of_ids" />
                 <group expand="0" string="Regroupé par...">
                   <filter name="group_presse_id"     string="Presse"       context="{'group_by':'presse_id'}"/>
+                  <filter name="group_entree"        string="Entrée"       context="{'group_by':'entree'}"/>
+                  <filter name="group_etat"          string="État"         context="{'group_by':'etat'}"/>
                   <filter name="group_annee"         string="Année"        context="{'group_by':'date_heure:year'}"/>
                   <filter name="group_mois"          string="Mois"         context="{'group_by':'date_heure:month'}"/>
                   <filter name="group_jour"          string="Jour"         context="{'group_by':'date_heure:day'}"/>
@@ -708,6 +717,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="adresse_mac"/>
             </tree>
         </field>
     </record>
@@ -717,8 +727,35 @@
         <field name="arch" type="xml">
         <form>
             <sheet>
+                <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                     <button class="oe_inline oe_stat_button"   string="Rafraichir" 
+                            help="Redémarrer le service theia" name= "rafraichir_raspberry" 
+                            type="object" icon="fa-spinner"/>
+                </div>
                 <group>
                     <field name="name"/>
+                    <field name="adresse_mac"/>
+                </group>
+                <group>
+                    <group string="Entrées">
+                        <field name="entree_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="numero" />
+                                <field name="etat" />
+                                <field name="couleur" widget='pgcolor'/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Sorties">
+                        <field name="sortie_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <button string="Changer l'état" name="changer_etat_action"  type="object" icon="gtk-zoom-in" />
+                                <field name="numero" />
+                                <field name="etat" />
+                                <field name="couleur" widget='pgcolor'/>
+                            </tree>
+                        </field>
+                    </group>
                 </group>
             </sheet>
         </form>
@@ -730,6 +767,7 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="adresse_mac"/>
             </search>
         </field>
     </record>

@@ -9,6 +9,172 @@ import tempfile
 from contextlib import closing
 
 
+class is_bon_transfert(models.Model):
+    _inherit='is.bon.transfert'
+
+    def _compute_is_certificat_conformite_msg(self):
+        for obj in self:
+            msg = False
+            if obj.partner_id.is_certificat_matiere:
+                nb=0
+                for line in obj.line_ids:
+                    certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id, line.product_id.id)
+                    if not certificat:
+                        nb+=1
+                msg=u"Ne pas oublier de fournir les certificats matières."
+                if nb:
+                    msg+=u"\nATTENTION : Il manque "+str(nb)+u" certificats !"
+            obj.is_certificat_conformite_msg = msg
+
+    is_certificat_conformite_msg = fields.Text('Certificat de conformité', compute='_compute_is_certificat_conformite_msg', store=False, readonly=True)
+
+
+
+    @api.multi
+    def imprimer_certificat_action(self):
+        for obj in self:
+            cr , uid, context = self.env.args
+            db = self._cr.dbname
+            path="/tmp/certificats-" + db + '-'+str(uid)
+            cde="rm -Rf " + path
+            os.popen(cde).readlines()
+            if not os.path.exists(path):
+                os.makedirs(path)
+            paths=[]
+            for line in obj.line_ids:
+                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.partner_id, line.product_id.id)
+                if certificat:
+                    vals={
+                        'client_order_ref': False,
+                        'order_id'        : False,
+                        'picking_id'      : False,
+                        'bon_transfert_id': obj.id,
+                        'qt_liv'          : line.quantite,
+                        'rsp_livraison'   : self._uid,
+                        'num_lot'         : False,
+                        'date_fabrication': False,
+                    }
+                    certificat.write(vals)
+                    #** Recherche des lots scannés ************************************
+                    lots={}
+                    for um in obj.galia_um_ids:
+                        if um.product_id == line.product_id:
+                            for uc in um.uc_ids:
+                                if uc.production not in lots:
+                                    lots[uc.production] = {}
+                                    lots[uc.production]["qt"]=0
+                                lots[uc.production]["qt"]+=uc.qt_pieces
+                                date_fabrication = uc.date_creation[:10]
+                                lots[uc.production]["date_fabrication"]=date_fabrication   
+                    if lots=={}:
+                        lots[' ']={}
+                        lots[' ']["date_fabrication"]=False
+                        lots[' ']["qt"]=False
+                    x=0
+                    for lot in lots:
+                        x+=1
+                        certificat.num_lot          = lot
+                        certificat.date_fabrication = lots[lot]["date_fabrication"]
+                        certificat.qt_liv           = lots[lot]["qt"]
+                        result = self.env['report'].get_pdf(certificat, 'is_pg_2019.is_certificat_conformite_report')
+                        file_name = path + '/'+str(line.id) + '-' + str(x) + '.pdf'
+                        fd = os.open(file_name,os.O_RDWR|os.O_CREAT)
+                        try:
+                            os.write(fd, result)
+                        finally:
+                            os.close(fd)
+                        paths.append(file_name)
+
+            # ** Merge des PDF *****************************************************
+            path_merged=self.env['stock.picking']._merge_pdf(paths)
+            pdfs = open(path_merged,'rb').read().encode('base64')
+            # **********************************************************************
+
+            # ** Recherche si une pièce jointe est déja associèe *******************
+            attachment_obj = self.env['ir.attachment']
+            name = 'certificats.pdf'
+            attachments = attachment_obj.search([('name','=',name)],limit=1)
+            # **********************************************************************
+
+            # ** Creation ou modification de la pièce jointe ***********************
+            vals = {
+                'name':        name,
+                'datas_fname': name,
+                'type':        'binary',
+                'datas':       pdfs,
+            }
+            if attachments:
+                for attachment in attachments:
+                    attachment.write(vals)
+                    attachment_id=attachment.id
+            else:
+                attachment = attachment_obj.create(vals)
+                attachment_id=attachment.id
+            #***********************************************************************
+
+            #** Envoi du PDF mergé dans le navigateur ******************************
+            if attachment_id:
+                return {
+                    'type' : 'ir.actions.act_url',
+                    'url': '/web/binary/saveas?model=ir.attachment&field=datas&id='+str(attachment_id)+'&filename_field=name',
+                    'target': 'new',
+                }
+            #***********************************************************************
+
+
+
+
+
+
+
+class is_bon_transfert_line(models.Model):
+    _inherit='is.bon.transfert.line'
+
+    def _compute_is_certificat_conformite_vsb(self):
+        for obj in self:
+            vsb = False
+            if obj.bon_transfert_id.partner_id.is_certificat_matiere:
+                certificat = self.env['is.certificat.conformite'].GetCertificat(obj.bon_transfert_id.partner_id, obj.product_id.id)
+                if certificat:
+                    vsb = 1
+                else:
+                    vsb = 2
+            obj.is_certificat_conformite_vsb = vsb
+
+    is_certificat_conformite_vsb = fields.Integer('Certificat de conformité', compute='_compute_is_certificat_conformite_vsb', store=False, readonly=True)
+
+
+    @api.multi
+    def pas_de_certifcat_action(self):
+        for obj in self:
+            print obj
+
+
+    @api.multi
+    def imprimer_certificat_action(self):
+        dummy, view_id = self.env['ir.model.data'].get_object_reference('is_pg_2019', 'is_certificat_conformite_form_view')
+        for obj in self:
+            certificat = self.env['is.certificat.conformite'].GetCertificat(obj.bon_transfert_id.partner_id, obj.product_id.id)
+            if certificat:
+                return {
+                    'name': "Certificat de conformité",
+                    'view_mode': 'form',
+                    'view_id': view_id,
+                    'view_type': 'form',
+                    'res_model': 'is.certificat.conformite',
+                    'type': 'ir.actions.act_window',
+                    'res_id': certificat.id,
+                    'domain': '[]',
+                }
+
+
+
+
+
+
+
+
+
 class is_liste_servir(models.Model):
     _inherit='is.liste.servir'
 
@@ -137,15 +303,21 @@ class stock_picking(models.Model):
                                     if um.product_id == move.product_id:
                                         for uc in um.uc_ids:
                                             if uc.production not in lots:
-                                                date_fabrication = uc.date_creation[:10]
-                                                lots[uc.production] = date_fabrication
+                                                lots[uc.production] = {}
+                                                lots[uc.production]["qt"]=0
+                                            lots[uc.production]["qt"]+=uc.qt_pieces
+                                            date_fabrication = uc.date_creation[:10]
+                                            lots[uc.production]["date_fabrication"]=date_fabrication   
                     if lots=={}:
-                        lots[' ']=False
+                        lots[' ']={}
+                        lots[' ']["date_fabrication"]=False
+                        lots[' ']["qt"]=False
                     x=0
                     for lot in lots:
                         x+=1
-                        certificat.num_lot = lot
-                        certificat.date_fabrication = lots[lot]
+                        certificat.num_lot          = lot
+                        certificat.date_fabrication = lots[lot]["date_fabrication"]
+                        certificat.qt_liv           = lots[lot]["qt"]
                         result = self.env['report'].get_pdf(certificat, 'is_pg_2019.is_certificat_conformite_report')
                         file_name = path + '/'+str(move.id) + '-' + str(x) + '.pdf'
                         fd = os.open(file_name,os.O_RDWR|os.O_CREAT)
@@ -252,7 +424,15 @@ class is_certificat_conformite(models.Model):
             obj.job_id=job_id
 
 
-
+    @api.depends('rsp_livraison')
+    def _compute_date_bl(self):
+        for obj in self:
+            date_bl = False
+            if obj.picking_id:
+                date_bl = obj.picking_id.is_date_expedition
+            if obj.bon_transfert_id:
+                date_bl = obj.bon_transfert_id.date_creation
+            obj.date_bl = date_bl
 
 
     product_id       = fields.Many2one('product.product', u"Article", domain=[('sale_ok','=',True)], required=True, select=True)
@@ -263,7 +443,13 @@ class is_certificat_conformite(models.Model):
     client_order_ref = fields.Char(u'N° commande client')
     order_id         = fields.Many2one('sale.order'   , u'N° de commande')
     picking_id       = fields.Many2one('stock.picking', u'N°BL', domain=[('picking_type_id','=',2)])
-    date_bl          = fields.Date(u"Date d'expédition", related='picking_id.is_date_expedition', readonly=True)
+    bon_transfert_id = fields.Many2one('is.bon.transfert', u'Bon de transfert')
+    date_bl          = fields.Date(u"Date d'expédition", compute='_compute_date_bl', store=False, readonly=True)
+
+
+
+
+
     qt_liv           = fields.Float(u"Quantité livrée")
     num_lot          = fields.Char(u"N° de lot")
     date_fabrication = fields.Date(u"Date de fabrication")
@@ -303,6 +489,7 @@ class is_certificat_conformite(models.Model):
                 'client_order_ref': move.is_sale_line_id.is_client_order_ref,
                 'order_id'        : move.is_sale_line_id.order_id.id,
                 'picking_id'      : move.picking_id.id,
+                'bon_transfert_id': False,
                 'date_bl'         : move.picking_id.is_date_expedition,
                 'qt_liv'          : move.product_uom_qty,
                 'rsp_livraison'   : self._uid,
@@ -310,24 +497,6 @@ class is_certificat_conformite(models.Model):
                 'date_fabrication': False,
             }
             certificat.write(vals)
-
-            # #** Recherche des lots scannés ************************************
-            # if move.picking_id.is_sale_order_id:
-            #     if  move.picking_id.is_sale_order_id.is_liste_servir_id:
-            #         if move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
-            #             lots={}
-            #             for um in move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
-            #                 if um.product_id == move.product_id:
-            #                     for uc in um.uc_ids:
-            #                         if uc.production not in lots:
-            #                             print uc.production,lots
-            #                             date_fabrication            = uc.date_creation[:10]
-            #                             certificat.num_lot          = uc.production
-            #                             certificat.date_fabrication = date_fabrication
-            #                             #TODO Voir comment afficher plusieurs lots
-            #                             #date_fabrication= datetime.strptime(date_fabrication, '%Y-%m-%d')
-            #                             #date_fabrication =date_fabrication.strftime('%d/%m/%Y')
-            #                             lots[uc.production] = date_fabrication
 
 
     @api.multi
