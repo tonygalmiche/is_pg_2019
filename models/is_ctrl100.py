@@ -9,13 +9,14 @@ from openerp.exceptions import except_orm, Warning, RedirectWarning
 # import pytz
 from datetime import datetime, timedelta
 import matplotlib
+import matplotlib.transforms
 matplotlib.use('Agg')
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import base64
-
+import textwrap
 
 
 class is_ctrl100_operation_standard(models.Model):
@@ -601,22 +602,22 @@ class is_ctrl100_rapport_controle(models.Model):
                 perc = float(res[1] or 0)*100/sum_nb_rebuts
 #                 perc = round(perc, 2)
             recdict = {
-                'desc': defautheque_data.name + ' - ' + defautheque_data.defaut or '',
-                'name': defautheque_data.name,
-                'photo': defautheque_data.photo or '',
-                'qty': res[1],
-                'perc': perc,
+                'desc'  : defautheque_data.name + ' - ' + defautheque_data.defaut or '',
+                'name'  : defautheque_data.name,
+                'photo' : defautheque_data.photo or '',
+                'qty'   : res[1],
+                'perc'  : perc,
             }
             seq_no += 1
             listdisct.append(recdict)
-        
         listdisct = sorted(listdisct, key = lambda i: i['qty'], reverse=True)
         for l in listdisct:
-            x.append(l['name'])
+            label = l['desc']
+            label="\n".join(textwrap.wrap(label, 40)) # Retour à la ligne automatique
+            x.append(label)
+
         popularity.sort(reverse=True)
         plt.rcParams.update({'font.size': 22})
-#         my_dpi=96
-#         plt.figure(figsize=(900/my_dpi, 600/my_dpi), dpi=my_dpi)
         labels=[]
         values=[]
         x_pos=[]
@@ -629,16 +630,22 @@ class is_ctrl100_rapport_controle(models.Model):
             ct+=1
         fig, ax = plt.subplots()
         rects1 = ax.bar(x_pos, values, align="center", color='#5dade2')
-        plt.xticks(x_pos, labels)
-        plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.04)
+        plt.xticks(x_pos, labels,rotation=90)
+        plt.subplots_adjust(left=0.04, right=0.98, top=0.98, bottom=0.4, hspace=0.2, wspace=0.2)
         for rect in rects1:
             height = rect.get_height()
             ax.text(rect.get_x() + rect.get_width()/2., 0.40*height,
                     height, ha='center', va='bottom', color="white")
-#         plt.savefig('/tmp/books_read.png',dpi=my_dpi)
+
+        # Déplace de 20 points vers le bas les labels des x *******************
+        dx = 0/72.; dy = -20/72. 
+        offset = matplotlib.transforms.ScaledTranslation(dx, dy, fig.dpi_scale_trans)
+        for label in ax.xaxis.get_majorticklabels():
+            label.set_transform(label.get_transform() + offset)
+        #**********************************************************************
+
         fig = plt.gcf()
-        fig.set_size_inches(18.5, 10.5)
-        #fig.savefig('test2png.png', dpi=100)
+        fig.set_size_inches(18.5, 22)
         fig.savefig('/tmp/books_read.png',dpi=46)
         return listdisct
 
