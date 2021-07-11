@@ -61,13 +61,12 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree>
+                    <field name="annee_investissement"/>
                     <field name="client"/>
                     <field name="moule"/>
                     <field name="chef_de_projet"/>
                     <field name="chrono"/>
                     <field name="j_actuelle"/>
-                    <field name="revue_de_lancement"/>
-                    <field name="revue_des_risques"/>
                     <field name="responsable_outillage"/>
                     <field name="metrologie"/>
                     <field name="qualite_developpement"/>

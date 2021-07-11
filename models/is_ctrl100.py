@@ -93,37 +93,6 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     _description = u"Gamme mur qualité"
     _order       = 'name desc'
 
-#    @api.multi
-#    def get_defautheque_data(self):
-#        cr = self._cr
-#        res = False
-#        defautheque = []
-#        rec_dict = defaultdict(list)
-#        defautheque_obj = self.env['is.ctrl100.defautheque']
-#        for obj in self:
-#            SQL = """
-#                select defautheque.name, defautheque.defaut, defautheque.photo, sum(l.nb_rebuts) 
-#                from is_ctrl100_defaut_line l inner join is_ctrl100_defaut d on d.id=l.defautid 
-#                                              inner join is_ctrl100_defautheque defautheque on l.defaut_id=defautheque.id
-#                where 
-#                    d.moule_dossierf='"""+str(obj.moule_dossierf)+"""'
-#                group by defautheque.name, defautheque.defaut, defautheque.photo
-#                order by defautheque.name
-#            """
-#            cr.execute(SQL)
-#            res_ids = cr.fetchall()
-#            nb_rebuts = 0
-#            for res in res_ids:
-#                recdict = {
-#                    'name'     : res[0],
-#                    'defaut'   : res[1],
-#                    'photo'    : res[2],
-#                    'nb_rebuts': res[3],
-#                }
-#                defautheque.append(recdict)
-#        return defautheque
-
-
 
     @api.multi
     def get_defautheque_data(self):
@@ -211,14 +180,6 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
         return res
 
 
-#    @api.multi
-#    def write(self, vals):
-#        res = super(is_ctrl100_gamme_mur_qualite, self).write(vals)
-#        for obj in self:
-#            obj.creer_modifier_formation()
-#        return res
-
-
     @api.model
     def default_get(self, default_fields):
         res = super(is_ctrl100_gamme_mur_qualite, self).default_get(default_fields)
@@ -295,6 +256,9 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
             #for formation in formations:
             #    formation_id = formation.id
             obj.formation_id = formation_id
+
+
+
 
 
     @api.multi
@@ -387,7 +351,6 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     formation_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite.formation", u"Formation", compute="_compute_formation_id", store=True, readonly=True)
     afficher_cout            = fields.Boolean(u"Afficher le coût", default=False)
     active                   = fields.Boolean(u"Gamme active", default=True)
-
 
 
 class is_ctrl100_gamme_defautheque_line(models.Model):
@@ -518,6 +481,21 @@ class is_ctrl100_defaut(models.Model):
             obj.moule_dossierf = moule_dossierf
 
 
+    @api.depends('gamme_id')
+    def _compute_employee_ids(self):
+        for obj in self:
+            ids=[]
+            ids.append(obj.gamme_id.formation_id.createur_id.id)
+            ids.append(obj.gamme_id.formation_id.operateur_referent_id.id)
+            for operateur in obj.gamme_id.formation_id.operateur_ids:
+                ids.append(operateur.id)
+            employes = self.env['hr.employee'].search([('user_id', 'in', ids),('user_id', '!=', False)])
+            employee_ids=[]
+            for employe in  employes:
+                employee_ids.append(employe.id)
+            obj.employee_ids = [(6,0,employee_ids)]
+
+
     name                 = fields.Char(u"N° du défaut")
     gamme_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
     tracabilite                = fields.Selection([
@@ -533,8 +511,12 @@ class is_ctrl100_defaut(models.Model):
     date_saisie          = fields.Date(u"Date saisie", copy=False, default=fields.Date.context_today)
     nb_pieces_controlees = fields.Integer("Nombre de pièces contrôlées")
     tps_passe            = fields.Float(u"Temps passé (H)", digits=(14, 2))
-    employe_id           = fields.Many2one("hr.employee", u"Employé") #, default=_get_employee)
     defautheque_ids      = fields.One2many("is.ctrl100.defaut.line", "defautid", u"Défauthèque")
+    employee_ids         = fields.Many2many('hr.employee','is_ctrl100_defaut_employee', 'defaut_id', 'employee_id', string=u"Employés autorisés", compute="_compute_employee_ids", readonly=True, help=u"Employés autorisés en saisie")
+    employe_id           = fields.Many2one("hr.employee", u"Employé")
+    #employe_id           = fields.Many2one("hr.employee", u"Employé", domain=lambda self:[('id','in', self.get_employee_ids())])
+    #employe_id           = fields.Many2one("hr.employee", u"Employé", domain=lambda self:[('id','in', [480,223])])
+
 
 
 class is_ctrl100_defaut_line(models.Model):

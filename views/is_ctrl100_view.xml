@@ -307,6 +307,7 @@
                         <group>
                             <field name="name" readonly="True" />
                             <field name="gamme_id" required="True" />
+                            <field name="employee_ids" widget="many2many_tags"/>
                             <field name="moule_dossierf"/>
                             <field name="tracabilite" required="True" />
                             <field 
@@ -323,7 +324,11 @@
                         </group>
                         <group>
                             <field name="createur_id"                   required="True"/>
-                            <field name="employe_id"/>
+
+                            <field name="employe_id" domain="[('id', 'in', employee_ids and employee_ids[0] and employee_ids[0][2] or False)]"/> 
+
+
+
                             <field name="date_saisie"                   required="True"/>
                             <field name="nb_pieces_controlees"          required="True"/>
                             <field name="tps_passe" widget="float_time" required="True"/>

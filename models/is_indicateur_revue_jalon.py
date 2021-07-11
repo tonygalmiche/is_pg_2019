@@ -10,6 +10,7 @@ class is_indicateur_revue_jalon(models.Model):
         ('moule_uniq', 'unique(moule)', u"Le moule doit-être unique !")
     ]
 
+    annee_investissement        = fields.Char('Année investissement')
     client                      = fields.Char('Client', required=True)
     moule                       = fields.Char('Moule', required=True)
     chef_de_projet              = fields.Char('Chef de projet')
