@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp import pooler
-from openerp import models, fields, api
+from openerp import models, fields, api, tools, pooler
 from openerp.tools.translate import _
-from collections import defaultdict
 from openerp.exceptions import except_orm, Warning, RedirectWarning
-# from pytz import timezone
-# import pytz
+from collections import defaultdict
 from datetime import datetime, timedelta
 import matplotlib
 import matplotlib.transforms
@@ -431,6 +428,8 @@ class is_ctrl100_defaut(models.Model):
                 raise Warning("Temps passé obligatoire")
             if data.nb_pieces_controlees <= 0:
                 raise Warning("Nombre de pièces contrôlées obligatoire")
+            # if len(data.operateur_evalue_ids)==0:
+            #     raise Warning("Opérateurs évalués obligatoire")
             #for line in data.defautheque_ids:
             #    if line.nb_rebuts <= 0 and line.nb_repris <= 0:
             #        raise Warning("Le nombre de rebuts ou de repris doit être supérieur à 0")
@@ -496,7 +495,23 @@ class is_ctrl100_defaut(models.Model):
             obj.employee_ids = [(6,0,employee_ids)]
 
 
-    name                 = fields.Char(u"N° du défaut")
+    @api.depends('defautheque_ids')
+    def _compute_rebuts(self):
+        for obj in self:
+            nb_rebuts = 0
+            nb_repris = 0
+            taux_rebut = 0
+            for line in obj.defautheque_ids:
+                nb_rebuts+=line.nb_rebuts
+                nb_repris+=line.nb_repris
+            obj.nb_rebuts = nb_rebuts
+            obj.nb_repris = nb_repris
+            if obj.nb_pieces_controlees>0:
+                taux_rebut = 100 * nb_rebuts / obj.nb_pieces_controlees
+            obj.taux_rebut = taux_rebut
+
+
+    name                 = fields.Char(u"N° de saisie")
     gamme_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
     tracabilite                = fields.Selection([
                                     ("article", "Article"),
@@ -514,9 +529,10 @@ class is_ctrl100_defaut(models.Model):
     defautheque_ids      = fields.One2many("is.ctrl100.defaut.line", "defautid", u"Défauthèque")
     employee_ids         = fields.Many2many('hr.employee','is_ctrl100_defaut_employee', 'defaut_id', 'employee_id', string=u"Employés autorisés", compute="_compute_employee_ids", readonly=True, help=u"Employés autorisés en saisie")
     employe_id           = fields.Many2one("hr.employee", u"Employé")
-    #employe_id           = fields.Many2one("hr.employee", u"Employé", domain=lambda self:[('id','in', self.get_employee_ids())])
-    #employe_id           = fields.Many2one("hr.employee", u"Employé", domain=lambda self:[('id','in', [480,223])])
-
+    operateur_evalue_ids = fields.Many2many('hr.employee','is_ctrl100_defaut_operateur', 'defaut_id', 'employee_id', string=u"Opérateurs évalués")
+    nb_rebuts            = fields.Integer("Rebuts", compute="_compute_rebuts", store=True, readonly=True)
+    nb_repris            = fields.Integer("Repris", compute="_compute_rebuts", store=True, readonly=True)
+    taux_rebut           = fields.Float("Taux de rebuts (%)", compute="_compute_rebuts", store=True, readonly=True)
 
 
 class is_ctrl100_defaut_line(models.Model):
@@ -524,12 +540,85 @@ class is_ctrl100_defaut_line(models.Model):
     _description = u"Défauts Line"
     _order       = 'defaut_id desc'
 
-    defaut_id    = fields.Many2one("is.ctrl100.defautheque", u"N° du défaut")
-    defaut_text  = fields.Text("Défaut" , related="defaut_id.defaut", readonly=True)
-    defaut_photo = fields.Binary("Photo", related="defaut_id.photo" , readonly=True)
-    nb_rebuts    = fields.Integer("Nombre de rebuts")
-    nb_repris    = fields.Integer("Nombre de repris")
-    defautid     = fields.Many2one("is.ctrl100.defaut", u"N° du défaut")
+    defaut_id            = fields.Many2one("is.ctrl100.defautheque", u"N° du défaut")
+    defaut_text          = fields.Text("Défaut" , related="defaut_id.defaut", readonly=True)
+    defaut_photo         = fields.Binary("Photo", related="defaut_id.photo" , readonly=True)
+    nb_rebuts            = fields.Integer("Nombre de rebuts")
+    nb_repris            = fields.Integer("Nombre de repris")
+    defautid             = fields.Many2one("is.ctrl100.defaut", u"N° de saisie")
+    operateur_defaut_ids = fields.Many2many('hr.employee','is_ctrl100_defaut_line_operateur', 'line_id', 'employee_id', string=u"Opérateurs en défaut")
+
+
+class is_ctrl100_ligne_saisie(models.Model):
+    _name = 'is.ctrl100.ligne.saisie'
+    _order = 'id desc'
+    _auto = False
+
+
+    @api.depends('gamme_id')
+    def _compute_moule_dossierf(self):
+        for obj in self:
+            obj.moule_dossierf = obj.gamme_id.moule_dossierf
+
+
+    ligne_id             = fields.Many2one("is.ctrl100.defaut.line", u"Ligne de saisie")
+    defaut_id            = fields.Many2one("is.ctrl100.defautheque", u"N° du défaut")
+    defaut_text          = fields.Text("Défaut" , related="defaut_id.defaut", readonly=True)
+    defaut_photo         = fields.Binary("Photo", related="defaut_id.photo" , readonly=True)
+    nb_rebuts            = fields.Integer("Nombre de rebuts")
+    nb_repris            = fields.Integer("Nombre de repris")
+    defautid             = fields.Many2one("is.ctrl100.defaut", u"N° de saisie")
+    operateur_defaut_ids = fields.Many2many('hr.employee','is_ctrl100_defaut_line_operateur', 'line_id', 'employee_id', string=u"Opérateurs en défaut")
+
+    gamme_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite", u"N°gamme")
+    tracabilite          = fields.Selection([
+                                    ("article", "Article"),
+                                    ("of", "OF"),
+                                    ("reception", "Réception"),
+                         ], "Traçabilité")
+    product_id           = fields.Many2one("product.product", "Article")
+    production_id        = fields.Many2one("mrp.production", "OF")
+    picking_id           = fields.Many2one("stock.picking", "Réception", domain=[('picking_type_id.code','=','incoming')])
+    moule_dossierf       = fields.Char(u"Moule / Dossier F", compute="_compute_moule_dossierf", store=True, readonly=True)
+    createur_id          = fields.Many2one("res.users", "Createur", default=lambda self: self.env.user)
+    date_saisie          = fields.Date(u"Date saisie", copy=False, default=fields.Date.context_today)
+    nb_pieces_controlees = fields.Integer("Nombre de pièces contrôlées")
+    tps_passe            = fields.Float(u"Temps passé (H)", digits=(14, 2))
+    #defautheque_ids      = fields.One2many("is.ctrl100.defaut.line", "defautid", u"Défauthèque")
+    #employee_ids         = fields.Many2many('hr.employee','is_ctrl100_defaut_employee', 'defaut_id', 'employee_id', string=u"Employés autorisés", compute="_compute_employee_ids", readonly=True, help=u"Employés autorisés en saisie")
+    employe_id           = fields.Many2one("hr.employee", u"Employé")
+    #operateur_evalue_ids = fields.Many2many('hr.employee','is_ctrl100_defaut_operateur', 'defaut_id', 'employee_id', string=u"Opérateurs évalués")
+
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'is_ctrl100_ligne_saisie')
+        cr.execute("""
+            CREATE OR REPLACE view is_ctrl100_ligne_saisie AS (
+                select
+                    l.id,
+                    l.id as ligne_id,
+                    l.defaut_id,
+                    d.defaut as defaut_text,
+                    d.photo  as defaut_photo,
+                    coalesce(l.nb_rebuts,0) as nb_rebuts,
+                    coalesce(l.nb_repris,0) as nb_repris,
+                    l.defautid,
+
+                    s.gamme_id,
+                    s.tracabilite,
+                    s.product_id,
+                    s.production_id,
+                    s.picking_id,
+                    s.moule_dossierf,
+                    s.createur_id,
+                    s.date_saisie,
+                    s.nb_pieces_controlees,
+                    s.tps_passe,
+                    s.employe_id
+                from is_ctrl100_defaut_line l inner join is_ctrl100_defautheque d on l.defaut_id=d.id
+                                              inner join is_ctrl100_defaut s      on l.defautid=s.id 
+            )
+        """)
 
 
 class is_ctrl100_rapport_controle(models.Model):
@@ -673,11 +762,18 @@ class is_ctrl100_rapport_controle(models.Model):
         return quantite
 
 
-    gamme_id      = fields.Many2one("is.ctrl100.gamme.mur.qualite", string=u"N°gamme", required=True)
-    createur_id   = fields.Many2one("res.users", "Createur", default=lambda self: self.env.user, required=True, writeable=True)
-    date_debut    = fields.Date(u"Date de début", required=True)
-    date_fin      = fields.Date("Date de fin", required=True)
-    afficher_cout = fields.Boolean(u"Afficher le coût horaire et le coût total", default=False)
+    @api.depends('gamme_id')
+    def _compute_moule_dossierf(self):
+        for obj in self:
+            obj.moule_dossierf = obj.gamme_id.moule_dossierf
+
+
+    gamme_id       = fields.Many2one("is.ctrl100.gamme.mur.qualite", string=u"N°gamme", required=True)
+    moule_dossierf = fields.Char(u"Moule / Dossier F",  compute="_compute_moule_dossierf", store=True, readonly=True)
+    createur_id    = fields.Many2one("res.users", "Createur", default=lambda self: self.env.user, required=True, writeable=True)
+    date_debut     = fields.Date(u"Date de début", required=True)
+    date_fin       = fields.Date("Date de fin", required=True)
+    afficher_cout  = fields.Boolean(u"Afficher le coût horaire et le coût total", default=False)
 
 
 class is_ctrl100_pareto(models.Model):

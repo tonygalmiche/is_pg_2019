@@ -67,9 +67,6 @@ access_is_ctrl100_defautheque_qualite,access_is_ctrl100_defautheque,model_is_ctr
 access_is_ctrl100_defaut,access_is_ctrl100_defaut,model_is_ctrl100_defaut,base.group_user,1,1,1,0
 access_is_ctrl100_defaut_manager,access_is_ctrl100_defaut_manager,model_is_ctrl100_defaut,is_pg_2019.is_ctrl100_grp,1,1,1,1
 
-
-
-
 access_is_ctrl100_defaut_line_user,access_is_ctrl100_defaut_line,model_is_ctrl100_defaut_line,base.group_user,1,1,1,1
 access_is_ctrl100_defaut_line_qualite,access_is_ctrl100_defaut_line,model_is_ctrl100_defaut_line,is_pg_2019.is_ctrl100_grp,1,1,1,1
 
@@ -82,6 +79,7 @@ access_is_ctrl100_rapport_controle_user,access_is_ctrl100_rapport_controle,model
 
 access_is_ctrl100_pareto,access_is_ctrl100_pareto,model_is_ctrl100_pareto,base.group_user,1,1,1,1
 
+access_is_ctrl100_ligne_saisie,access_is_ctrl100_ligne_saisie,model_is_ctrl100_ligne_saisie,base.group_user,1,0,0,0
 
 
 access_is_preventif_moule_user,access_is_preventif_moule,model_is_preventif_moule,base.group_user,1,0,0,0
@@ -136,7 +134,12 @@ access_is_invest_detail,access_is_invest_detail,model_is_invest_detail,mrp.group
 access_is_invest_cde,access_is_invest_cde,model_is_invest_cde,base.group_user,1,0,0,0
 access_is_invest_compta,access_is_invest_compta,model_is_invest_compta,base.group_user,1,0,0,0
 
-access_is_theia_habilitation_operateur,access_is_theia_habilitation_operateur,model_is_theia_habilitation_operateur,is_plastigray.group_gestionnaire_cpi_raspberry,1,1,1,1
+access_is_theia_habilitation_operateur_gest,access_is_theia_habilitation_operateur_gest,model_is_theia_habilitation_operateur,is_plastigray.group_gestionnaire_cpi_raspberry,1,1,1,1
+access_is_theia_habilitation_operateur,access_is_theia_habilitation_operateur,model_is_theia_habilitation_operateur,base.group_user,1,0,0,0
+
+
+
+
 
 access_is_demande_conges_user,is_demande_conges_user,model_is_demande_conges,base.group_user,1,1,1,1
 

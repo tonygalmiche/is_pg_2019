@@ -99,7 +99,8 @@
         <menuitem id="menu_is_ctrl100_gamme_mur_qualite"            sequence="10" name="Gamme mur qualité"    parent="menu_is_controle_100" action="is_ctrl100_gamme_mur_qualite_action" />
         <menuitem id="is_ctrl100_gamme_mur_qualite_formation_menu"  sequence="20" name="Formation"            parent="menu_is_controle_100" action="is_ctrl100_gamme_mur_qualite_formation_action" />
         <menuitem id="menu_is_ctrl100_defautheque"                  sequence="30" name="Défauthèque"          parent="menu_is_controle_100" action="is_ctrl100_defautheque_action" />
-        <menuitem id="menu_is_ctrl100_defaut"                       sequence="40" name="Saisie mur qualité"   parent="menu_is_controle_100" action="is_ctrl100_defaut_action" />
+        <menuitem id="menu_is_ctrl100_defaut"                       sequence="40" name="Saisie mur qualité"   parent="menu_is_controle_100" action="is_ctrl100_defaut_action"/>
+        <menuitem id="is_ctrl100_ligne_saisie_menu"                 sequence="45" name="Lignes des saisies"   parent="menu_is_controle_100" action="is_ctrl100_ligne_saisie_action"/>
         <menuitem id="menu_is_ctrl100_rapport_controle"             sequence="50" name="Rapport de mission"   parent="menu_is_controle_100" action="is_ctrl100_rapport_controle_action" />
         <record id="is_ctrl100_pareto_menu" model="ir.ui.menu" >
             <field name="name">Pareto</field>
