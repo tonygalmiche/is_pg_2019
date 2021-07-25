@@ -38,6 +38,11 @@ states=[
     ("dequalification"   , "Déqualification"),
 ]
 
+etats_sorties=[
+    ("released", "Ouverte"),
+    ("pressed" , "Fermée"),
+]
+
 
 class is_etat_presse_regroupement(models.Model):
     _name = 'is.etat.presse.regroupement'
@@ -94,13 +99,12 @@ class is_raspberry_entree_sortie(models.Model):
     raspberry_id  = fields.Many2one('is.raspberry', 'Raspberry', required=True, ondelete='cascade', readonly=True)
     numero        = fields.Char(u'Numéro', required=True, select=True)
     entree_sortie = fields.Char(u'Entrée / Sortie', required=True, select=True)
-    etat          = fields.Char(u'État', required=True, select=True)
+    etat          = fields.Selection(etats_sorties, u'État', required=True, select=True)
     couleur       = fields.Char(u'Couleur', compute='_couleur')
 
     @api.multi
     def changer_etat_action(self):
         for obj in self:
-            print obj,obj.etat
             if obj.etat=='pressed':
                 etat="released"
             else:
@@ -112,6 +116,7 @@ class is_raspberry_entree_sortie(models.Model):
             cmd="ssh -o ConnectTimeout=2 root@"+IP+' "service theia restart"'
             #res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
             #print res
+            obj.raspberry_id.rafraichir_sorties()
 
 
 
@@ -123,11 +128,14 @@ class is_raspberry(models.Model):
     _description = u"raspberry"
     _order='name'
     
-    name        = fields.Char('Adresse IP' , required=True)
-    adresse_mac = fields.Char('Adresse MAC', select=True)
-    presse_id   = fields.Many2one('is.presse', u"Presse", required=False)
-    entree_ids  = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Entrées du Raspberry",  domain=[('entree_sortie','=','entree')])
-    sortie_ids  = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Sorties du Raspberry",  domain=[('entree_sortie','=','sortie')])
+    name               = fields.Char(u'Adresse IP' , required=True)
+    adresse_mac        = fields.Char(u'Adresse MAC', select=True)
+    presse_id          = fields.Many2one('is.presse', u"Presse", required=False)
+    onglet_indicateurs = fields.Boolean(u'Afficher onglet "Indicateurs"' , default=False)
+    onglet_es          = fields.Boolean(u'Afficher onglet "Entrées / Sorties"', default=False)
+    onglet_actif       = fields.Char(u'Onglet actif', readonly=True, help=u"Ce champ est utilsé pour détecter si une mise à jour de l'onglet Indicateurs est necessaire")
+    entree_ids         = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Entrées du Raspberry",  domain=[('entree_sortie','=','entree')])
+    sortie_ids         = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Sorties du Raspberry",  domain=[('entree_sortie','=','sortie')])
 
     @api.multi
     def rafraichir_raspberry(self):
@@ -140,19 +148,33 @@ class is_raspberry(models.Model):
             cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
             WID=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
             print WID,type(WID)
-            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus '+WID+' && xdotool key --window '+WID+' F5"'
+            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus '+WID+' && xdotool key --window '+WID+' Shift_L+F1"'
             res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
             print res,type(res)
 
 
+    @api.multi
+    def rafraichir_sorties(self):
+        for obj in self:
+            IP=obj.name
+            sorties=list("00000000")
+            for line in obj.sortie_ids:
+                if line.etat=="pressed" and line.numero:
+                    n = int(line.numero)
+                    sorties[n-1]="1"
+            sorties = "".join(sorties)
+            path="/tmp/sorties-rasberry-"+IP+".txt"
+            f = open(path, "w")
+            f.write(sorties)
+            f.close()
+            cmd="scp -o ConnectTimeout=2 "+path+" root@"+IP+":/opt/theia/sorties/sorties.txt"
+            res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
 
-#WID=`ssh root@raspberry4 "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"`
-#ssh root@raspberry4 "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus $WID && xdotool key --window $WID F5"
-#return_value =subprocess.check_output("sudo raspi-config nonint get_spi", stderr=subprocess.STDOUT, shell = True)
-
-
-
-        return
+            #Envoi d'une série de touche au clavier (ex : Badge RFID) (pour test)
+            #cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
+            #WID=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
+            #cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus '+WID+' && xdotool type --window '+WID+' 3742554362 && xdotool key --window '+WID+' KP_Enter"'
+            #res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
 
 
 class is_of(models.Model):

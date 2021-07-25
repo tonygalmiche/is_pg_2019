@@ -735,6 +735,9 @@
                 <group>
                     <field name="name"/>
                     <field name="adresse_mac"/>
+                    <field name="onglet_indicateurs"/>
+                    <field name="onglet_es"/>
+                    <field name="onglet_actif"/>
                 </group>
                 <group>
                     <group string="Entrées">
@@ -749,7 +752,7 @@
                     <group string="Sorties">
                         <field name="sortie_ids" nolabel="1" readonly="1">
                             <tree>
-                                <button string="Changer l'état" name="changer_etat_action"  type="object" icon="gtk-zoom-in" />
+                                <button string="Inverser l'état de la sortie" name="changer_etat_action"  type="object" icon="gtk-execute" />
                                 <field name="numero" />
                                 <field name="etat" />
                                 <field name="couleur" widget='pgcolor'/>

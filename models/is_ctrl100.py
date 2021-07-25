@@ -631,14 +631,15 @@ class is_ctrl100_rapport_controle(models.Model):
     @api.multi
     def get_tps_passe(self, gamme_id, date_debut, date_fin):
         tps_passe = 0
-        self._cr.execute("\
-            select sum(tps_passe) \
-            from is_ctrl100_defaut \
-            where \
-                gamme_id=%s and \
-                date_saisie > %s and \
-                date_saisie <= %s \
-            ", (gamme_id.id,date_debut,date_fin))
+        SQL = """
+            select sum(tps_passe) 
+            from is_ctrl100_defaut 
+            where 
+                gamme_id=%s and 
+                date_saisie > %s and 
+                date_saisie <= %s 
+        """
+        self._cr.execute(SQL, (gamme_id.id,date_debut,date_fin))
         res_ids = self._cr.fetchall()
         for res in res_ids:
             tps_passe += (res[0] or 0)
@@ -652,14 +653,16 @@ class is_ctrl100_rapport_controle(models.Model):
         if quantite_controlee_data:
             sum_nb_rebuts = quantite_controlee_data['nb_rebuts']
         defautheque_obj = self.env['is.ctrl100.defautheque']
-        self._cr.execute("\
-            select is_ctrl100_defaut_line.defaut_id, sum(nb_rebuts) \
-            from is_ctrl100_defaut_line inner join is_ctrl100_defaut on is_ctrl100_defaut.id=is_ctrl100_defaut_line.defautid \
-            where \
-                is_ctrl100_defaut.gamme_id=%s and \
-                is_ctrl100_defaut.date_saisie > %s and \
-                is_ctrl100_defaut.date_saisie <= %s \
-            group by is_ctrl100_defaut_line.defaut_id", (gamme_id.id,date_debut,date_fin))
+        SQL="""
+            select l.defaut_id, sum(l.nb_rebuts) 
+            from is_ctrl100_defaut_line l inner join is_ctrl100_defaut d on d.id=l.defautid 
+            where 
+                d.gamme_id=%s and 
+                d.date_saisie > %s and 
+                d.date_saisie <= %s 
+            group by l.defaut_id
+        """
+        self._cr.execute(SQL, (gamme_id.id,date_debut,date_fin))
         listdisct = []
         x = []
         res_ids = self._cr.fetchall()
@@ -737,9 +740,19 @@ class is_ctrl100_rapport_controle(models.Model):
 
     @api.multi
     def get_quantite_controlee(self, gamme_id, date_debut, date_fin):
-        self._cr.execute("select is_ctrl100_defaut_line.defaut_id, coalesce(sum(nb_rebuts),0), coalesce(sum(nb_repris),0) from is_ctrl100_defaut_line inner join is_ctrl100_defaut on is_ctrl100_defaut.id=is_ctrl100_defaut_line.defautid \
-            where is_ctrl100_defaut.gamme_id=%s and is_ctrl100_defaut.date_saisie > %s and \
-            is_ctrl100_defaut.date_saisie <= %s group by is_ctrl100_defaut_line.defaut_id", (gamme_id.id,date_debut,date_fin))
+        SQL="""
+            select 
+                l.defaut_id, 
+                coalesce(sum(l.nb_rebuts),0), 
+                coalesce(sum(l.nb_repris),0) 
+            from is_ctrl100_defaut_line l inner join is_ctrl100_defaut d on d.id=l.defautid 
+            where 
+                d.gamme_id=%s and 
+                d.date_saisie > %s and 
+                d.date_saisie <= %s 
+            group by l.defaut_id
+        """
+        self._cr.execute(SQL, (gamme_id.id,date_debut,date_fin))
         listdisct = []
         x = []
         res_ids = self._cr.fetchall()
