@@ -8,6 +8,13 @@
             <field name="model">is.preventif.equipement.zone</field>
             <field name="arch" type="xml">
             <form string="Zone préventif équipement">
+                <header>
+                    <button 
+                        string="Imprimer les gammes de cette zone" 
+                        name="imprimer_gammes_action"  
+                        type="object" 
+                    />
+                </header>
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -24,12 +31,25 @@
                     </group>
                     <group string="Préventifs">
                         <field name="preventif_ids" nolabel="1">
-                            <tree editable="bottom">
+                            <form string="Historique des contrôles">  
+                                <sheet>
+                                    <group>
+                                        <field name="equipement_id" domain="[('zone_id','=',parent.id)]"/>
+                                        <field name="type_preventif"/>
+                                        <field name="frequence"/>
+                                        <field name="date_dernier_preventif"/>
+                                        <field name="date_prochain_preventif"/>
+                                        <field name="gamme_ids" widget="many2many_binary"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree>
                                 <field name="equipement_id" domain="[('zone_id','=',parent.id)]"/>
                                 <field name="type_preventif"/>
                                 <field name="frequence"/>
                                 <field name="date_dernier_preventif"/>
                                 <field name="date_prochain_preventif"/>
+                                <field name="gamme_ids"/>
                             </tree>
                         </field>
                     </group>
@@ -72,6 +92,54 @@
             <field name="res_model">is.preventif.equipement.zone</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+
+
+        <!-- is.preventif.equipement.heure -->
+        <record model="ir.ui.view" id="view_is_preventif_equipement_heure_form">
+            <field name="name">view_is_preventif_equipement_heure_form</field>
+            <field name="model">is.preventif.equipement.heure</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="equipement_id"/>
+                        <field name="mois"/>
+                        <field name="nb_heures"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_equipement_heure_tree">
+            <field name="name">is_preventif_equipement_heure_tree</field>
+            <field name="model">is.preventif.equipement.heure</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="equipement_id"/>
+                    <field name="mois"/>
+                    <field name="nb_heures"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_equipement_heure_search" >
+            <field name="name">is_preventif_equipement_heure_search</field>
+            <field name="model">is.preventif.equipement.heure</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="equipement_id"/>
+                    <field name="mois"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_preventif_equipement_heure_action">
+            <field name="name">Nombre d'heures par équipement et par mois</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.preventif.equipement.heure</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
     </data>
 </openerp>
 

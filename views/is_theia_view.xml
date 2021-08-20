@@ -718,9 +718,16 @@
             <tree>
                 <field name="name"/>
                 <field name="adresse_mac"/>
+                <field name="last_presse_id"/>
+                <field name="onglet_indicateurs"/>
+                <field name="onglet_es"/>
+                <field name="onglet_actif"/>
+                <field name="create_date"/>
+                <field name="write_date"/>
             </tree>
         </field>
     </record>
+
     <record model="ir.ui.view" id="is_raspberry_form_view">
         <field name="name">is.raspberry.form</field>
         <field name="model">is.raspberry</field>
@@ -735,6 +742,7 @@
                 <group>
                     <field name="name"/>
                     <field name="adresse_mac"/>
+                    <field name="last_presse_id"/>
                     <field name="onglet_indicateurs"/>
                     <field name="onglet_es"/>
                     <field name="onglet_actif"/>

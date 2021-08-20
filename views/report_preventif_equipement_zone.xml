@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <template id="preventif_equipement_zone_style">
             td,th {
                 border: 1px solid black;

@@ -96,11 +96,16 @@ class is_raspberry_entree_sortie(models.Model):
                 couleur="#D9534F"
             obj.couleur=couleur
 
+
+
+
     raspberry_id  = fields.Many2one('is.raspberry', 'Raspberry', required=True, ondelete='cascade', readonly=True)
     numero        = fields.Char(u'Numéro', required=True, select=True)
     entree_sortie = fields.Char(u'Entrée / Sortie', required=True, select=True)
     etat          = fields.Selection(etats_sorties, u'État', required=True, select=True)
     couleur       = fields.Char(u'Couleur', compute='_couleur')
+
+
 
     @api.multi
     def changer_etat_action(self):
@@ -113,14 +118,10 @@ class is_raspberry_entree_sortie(models.Model):
 
             IP=obj.raspberry_id.name
             print obj,IP
-            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "service theia restart"'
+            cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "service theia restart"'
             #res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
             #print res
             obj.raspberry_id.rafraichir_sorties()
-
-
-
-
 
 
 class is_raspberry(models.Model):
@@ -128,9 +129,20 @@ class is_raspberry(models.Model):
     _description = u"raspberry"
     _order='name'
     
+
+    @api.depends('name')
+    def _compute_presse_id(self):
+        for obj in self:
+            presses = self.env['is.equipement'].search([('raspberry_id','=',obj.id)])
+            presse_id=False
+            for presse in presses:
+                presse_id = presse.id
+            obj.last_presse_id = presse_id
+
+
     name               = fields.Char(u'Adresse IP' , required=True)
     adresse_mac        = fields.Char(u'Adresse MAC', select=True)
-    presse_id          = fields.Many2one('is.presse', u"Presse", required=False)
+    last_presse_id     = fields.Many2one('is.equipement', u"Presse", compute='_compute_presse_id', required=False, readonly=True)
     onglet_indicateurs = fields.Boolean(u'Afficher onglet "Indicateurs"' , default=False)
     onglet_es          = fields.Boolean(u'Afficher onglet "Entrées / Sorties"', default=False)
     onglet_actif       = fields.Char(u'Onglet actif', readonly=True, help=u"Ce champ est utilsé pour détecter si une mise à jour de l'onglet Indicateurs est necessaire")
@@ -142,13 +154,13 @@ class is_raspberry(models.Model):
         for obj in self:
             IP=obj.name
             print obj,IP
-            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "service theia restart"'
-            os.system(cmd)
+            #cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "service theia restart"'
+            #os.system(cmd)
 
-            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
+            cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
             WID=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
             print WID,type(WID)
-            cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus '+WID+' && xdotool key --window '+WID+' Shift_L+F1"'
+            cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus '+WID+' && xdotool key --window '+WID+' F5"'
             res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
             print res,type(res)
 
