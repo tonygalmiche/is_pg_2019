@@ -147,6 +147,7 @@
             <field name="groups_id" eval="[(6,0,[ref('is_pg_2019.is_base_principale_grp')])]"/>
         </record>
         <menuitem id="is_preventif_equipement_zone_menu"   sequence="10" parent="is_preventif_equipement_main_menu" action="is_preventif_equipement_zone_action"   name="Zones"/>
+        <menuitem id="is_preventif_equipement_saisie_menu" sequence="20" parent="is_preventif_equipement_main_menu" action="is_preventif_equipement_saisie_action" name="Saisie préventif"/>
         <menuitem id="is_preventif_equipement_heure_menu"  sequence="90" parent="is_preventif_equipement_main_menu" action="is_preventif_equipement_heure_action"  name="Heures par équipement"/>
 
 

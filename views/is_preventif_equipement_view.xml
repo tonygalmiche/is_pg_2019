@@ -44,6 +44,7 @@
                                 </sheet>
                             </form>
                             <tree>
+                                <button string="Sasie préventif" name="saisie_preventif_action"  type="object" icon="gtk-add" />
                                 <field name="equipement_id" domain="[('zone_id','=',parent.id)]"/>
                                 <field name="type_preventif"/>
                                 <field name="frequence"/>
@@ -139,6 +140,65 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+
+        <!-- is.preventif.equipement.saisie -->
+        <record model="ir.ui.view" id="view_is_preventif_equipement_saisie_form">
+            <field name="name">view_is_preventif_equipement_saisie_form</field>
+            <field name="model">is.preventif.equipement.saisie</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="equipement_id"/>
+                            <field name="zone_id" readonly="1"/>
+                            <field name="type_preventif"/>
+                        </group>
+                        <group>
+                            <field name="date_preventif" readonly="1"/>
+                            <field name="nb_heures"      readonly="1"/>
+                            <field name="frequence"      readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="fiche_preventif_ids" widget="many2many_binary"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_equipement_saisie_tree">
+            <field name="name">is_preventif_equipement_saisie_tree</field>
+            <field name="model">is.preventif.equipement.saisie</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="equipement_id"/>
+                    <field name="zone_id"/>
+                    <field name="type_preventif"/>
+                    <field name="date_preventif"/>
+                    <field name="nb_heures"/>
+                    <field name="frequence"/>
+                    <field name="fiche_preventif_ids"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_equipement_saisie_search" >
+            <field name="name">is_preventif_equipement_saisie_search</field>
+            <field name="model">is.preventif.equipement.saisie</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="equipement_id"/>
+                    <field name="zone_id"/>
+                    <field name="type_preventif"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_preventif_equipement_saisie_action">
+            <field name="name">Saisie préventif équipement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.preventif.equipement.saisie</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
     </data>
 </openerp>
