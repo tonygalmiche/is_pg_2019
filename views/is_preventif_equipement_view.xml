@@ -130,7 +130,7 @@
             <field name="name">is_preventif_equipement_tree</field>
             <field name="model">is.preventif.equipement</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree fonts="bold:(nb_heures_avant_preventif&lt;0)" colors="red:(nb_heures_avant_preventif&lt;0)">
                     <field name="zone_id"/>
                     <field name="equipement_id"/>
                     <field name="type_preventif"/>
