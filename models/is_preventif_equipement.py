@@ -145,15 +145,25 @@ class is_preventif_equipement_heure(models.Model):
 
 class is_preventif_equipement(models.Model):
     _name = 'is.preventif.equipement'
-    _order = "equipement_id"
+    _order = "zone_id, equipement_id"
+    _sql_constraints = [('name_uniq','UNIQUE(equipement_id,type_preventif)', u'Ce type de préventif existe déjà pour cet équipement')]
 
-    zone_id                 = fields.Many2one('is.preventif.equipement.zone', u"Zone", required=True, ondelete='cascade', readonly=True)
-    equipement_id           = fields.Many2one('is.equipement', u"Equipement",required=True)
-    type_preventif          = fields.Selection(TYPE_PREVENTIF_EQUIPEMENT, u"Type de préventif",required=True)
-    frequence               = fields.Integer(u"Fréquence du préventif (H)", required=True)
-    date_dernier_preventif  = fields.Date(u"Date du dernier préventif"  , readonly=True)
-    date_prochain_preventif = fields.Date(u"Date du prochain préventif" , readonly=True)
-    gamme_ids               = fields.Many2many('ir.attachment', 'is_preventif_equipement_gamme_rel', 'preventif_id', 'gamme_id', u'Gamme')
+
+    @api.depends('equipement_id')
+    def _compute(self):
+        for obj in self:
+            obj.zone_id = obj.equipement_id.zone_id.id
+
+
+    zone_id                     = fields.Many2one('is.preventif.equipement.zone', u"Zone", ondelete='cascade', readonly=True, compute="_compute", store=True)
+    equipement_id               = fields.Many2one('is.equipement', u"Equipement",required=True)
+    type_preventif              = fields.Selection(TYPE_PREVENTIF_EQUIPEMENT, u"Type de préventif",required=True)
+    frequence                   = fields.Integer(u"Fréquence du préventif (H)" , required=True)
+    date_dernier_preventif      = fields.Date(u"Date du dernier préventif"     , readonly=True)
+    nb_heures_dernier_preventif = fields.Integer(u"Nb heures dernier préventif", readonly=True)
+    nb_heures_actuel            = fields.Integer(u"Nb heures actuel"           , readonly=True)
+    nb_heures_avant_preventif   = fields.Integer(u"Nb heures avant préventif"  , readonly=True)
+    gamme_ids                   = fields.Many2many('ir.attachment', 'is_preventif_equipement_gamme_rel', 'preventif_id', 'gamme_id', u'Gamme')
 
     @api.multi
     def saisie_preventif_action(self):

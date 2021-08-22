@@ -15,7 +15,7 @@
                         type="object" 
                     />
                 </header>
-                <sheet>
+                <sheet class="oe_form_sheet_width_wider">
                     <group>
                         <field name="name"/>
                         <field name="description"/>
@@ -37,8 +37,6 @@
                                         <field name="equipement_id" domain="[('zone_id','=',parent.id)]"/>
                                         <field name="type_preventif"/>
                                         <field name="frequence"/>
-                                        <field name="date_dernier_preventif"/>
-                                        <field name="date_prochain_preventif"/>
                                         <field name="gamme_ids" widget="many2many_binary"/>
                                     </group>
                                 </sheet>
@@ -49,7 +47,9 @@
                                 <field name="type_preventif"/>
                                 <field name="frequence"/>
                                 <field name="date_dernier_preventif"/>
-                                <field name="date_prochain_preventif"/>
+                                <field name="nb_heures_dernier_preventif"/>
+                                <field name="nb_heures_actuel"/>
+                                <field name="nb_heures_avant_preventif"/>
                                 <field name="gamme_ids"/>
                             </tree>
                         </field>
@@ -94,6 +94,69 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+
+        <!-- is.preventif.equipement -->
+        <record model="ir.ui.view" id="view_is_preventif_equipement_form">
+            <field name="name">view_is_preventif_equipement_form</field>
+            <field name="model">is.preventif.equipement</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="zone_id"/>
+                            <field name="equipement_id"/>
+                            <field name="type_preventif"/>
+                            <field name="frequence"/>
+                        </group>
+                        <group>
+                            <field name="date_dernier_preventif"/>
+                            <field name="nb_heures_dernier_preventif"/>
+                            <field name="nb_heures_actuel"/>
+                            <field name="nb_heures_avant_preventif"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="gamme_ids" widget="many2many_binary"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_equipement_tree">
+            <field name="name">is_preventif_equipement_tree</field>
+            <field name="model">is.preventif.equipement</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="zone_id"/>
+                    <field name="equipement_id"/>
+                    <field name="type_preventif"/>
+                    <field name="frequence"/>
+                    <field name="date_dernier_preventif"/>
+                    <field name="nb_heures_dernier_preventif"/>
+                    <field name="nb_heures_actuel"/>
+                    <field name="nb_heures_avant_preventif"/>
+                    <field name="gamme_ids"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_preventif_equipement_search" >
+            <field name="name">is_preventif_equipement_search</field>
+            <field name="model">is.preventif.equipement</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="zone_id"/>
+                    <field name="equipement_id"/>
+                    <field name="type_preventif"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_preventif_equipement_action">
+            <field name="name">Nombre d'heures par équipement et par mois</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">is.preventif.equipement</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
 
         <!-- is.preventif.equipement.heure -->
