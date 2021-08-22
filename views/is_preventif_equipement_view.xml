@@ -29,6 +29,9 @@
                             </tree>
                         </field>
                     </group>
+                    <group>
+                        <field name="equipement_pilote_id" domain="[('zone_id','=',id)]"/>
+                    </group>
                     <group string="Préventifs">
                         <field name="preventif_ids" nolabel="1">
                             <form string="Historique des contrôles">  
@@ -136,6 +139,7 @@
                     <field name="nb_heures_dernier_preventif"/>
                     <field name="nb_heures_actuel"/>
                     <field name="nb_heures_avant_preventif"/>
+                    <button string="Sasie préventif" name="saisie_preventif_action"  type="object" icon="gtk-add" />
                     <field name="gamme_ids"/>
                 </tree>
             </field>
@@ -224,6 +228,7 @@
                             <field name="date_preventif" readonly="1"/>
                             <field name="nb_heures"      readonly="1"/>
                             <field name="frequence"      readonly="1"/>
+                            <field name="preventif_id"   readonly="1"/>
                         </group>
                     </group>
                     <group>

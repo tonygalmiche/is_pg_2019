@@ -43,18 +43,22 @@ class is_preventif_equipement_zone(models.Model):
     def _compute_frequence(self):
         for obj in self:
             frequences = []
-            for line in obj.preventif_ids:
-                if line.frequence>0:
-                    frequences.append(line.frequence)
+            try:
+                for line in obj.preventif_ids:
+                    if line.frequence>0:
+                        frequences.append(line.frequence)
+            except:
+                print("## BUG ###")
             pgcdn = self.pgcdn(frequences)
             obj.frequence = pgcdn
 
-    name           = fields.Char(u"Nom de la zone", required=True, index=True)
-    description    = fields.Text(u"Description de la zone")
-    equipement_ids = fields.One2many('is.equipement', 'zone_id', u"Equipements de cette zone")
-    preventif_ids  = fields.One2many('is.preventif.equipement', 'zone_id', u"Préventifs")
-    frequence      = fields.Integer(u"Fréquence préventif zone (H)", compute='_compute_frequence', store=True, readonly=True)
-    active         = fields.Boolean(u"Active", default=True)
+    name                 = fields.Char(u"Nom de la zone", required=True, index=True)
+    description          = fields.Text(u"Description de la zone")
+    equipement_ids       = fields.One2many('is.equipement', 'zone_id', u"Equipements de cette zone")
+    equipement_pilote_id = fields.Many2one('is.equipement', u"Equipement pilote du préventif")
+    preventif_ids        = fields.One2many('is.preventif.equipement', 'zone_id', u"Préventifs")
+    frequence            = fields.Integer(u"Fréquence préventif zone (H)", compute='_compute_frequence', store=True, readonly=True)
+    active               = fields.Boolean(u"Active", default=True)
 
 
     @api.multi
@@ -145,7 +149,7 @@ class is_preventif_equipement_heure(models.Model):
 
 class is_preventif_equipement(models.Model):
     _name = 'is.preventif.equipement'
-    _order = "zone_id, equipement_id"
+    _order = "zone_id, equipement_id, type_preventif"
     _sql_constraints = [('name_uniq','UNIQUE(equipement_id,type_preventif)', u'Ce type de préventif existe déjà pour cet équipement')]
 
 
@@ -171,7 +175,6 @@ class is_preventif_equipement(models.Model):
             context = dict(self.env.context or {})
             context['equipement_id']  = obj.equipement_id.id
             context['type_preventif'] = obj.type_preventif
-            print(context)
             return {
                 'name': u"Saisie préventif équipement",
                 'view_mode': 'form',
@@ -182,9 +185,6 @@ class is_preventif_equipement(models.Model):
                 'context': context,
             }
         return True
-
-
-
 
 
 class is_preventif_equipement_saisie(models.Model):
@@ -202,20 +202,6 @@ class is_preventif_equipement_saisie(models.Model):
         return res
 
 
-    # @api.depends('moule')
-    # def _compute(self):
-    #     cr = self._cr
-    #     for obj in self:
-    #         if obj.moule.id:
-    #             nb_cycles=0
-    #             cr.execute("select sum(nb_cycles) from is_mold_cycle where moule_id = %s ",[obj.moule.id])
-    #             res_ids = cr.fetchall()
-    #             for res in res_ids:
-    #                 nb_cycles = res[0]
-    #             obj.nb_cycles = nb_cycles
-    #             obj.periodicite = obj.moule.periodicite_maintenance_moule
-
-
     @api.depends('equipement_id','type_preventif')
     def _compute(self):
         cr = self._cr
@@ -223,19 +209,19 @@ class is_preventif_equipement_saisie(models.Model):
             zone_id = obj.equipement_id.zone_id.id
             obj.zone_id   = zone_id
             preventifs = self.env['is.preventif.equipement'].search([('zone_id','=',zone_id),('equipement_id','=',obj.equipement_id.id),('type_preventif','=',obj.type_preventif)],limit=1)
-            frequence = (preventifs and preventifs[0].frequence) or False
+            obj.preventif_id = (preventifs and preventifs[0].id) or False
+            frequence    = (preventifs and preventifs[0].frequence) or False
             obj.frequence = frequence
-
-
             nb_heures = False
-            if obj.equipement_id:
+            equipement_pilote_id = obj.equipement_id.zone_id.equipement_pilote_id.id
+            if equipement_pilote_id:
                 SQL = "SELECT sum(nb_heures) FROM is_preventif_equipement_heure WHERE equipement_id=%s"
-                cr.execute(SQL,[obj.equipement_id.id])
+                cr.execute(SQL,[equipement_pilote_id])
                 res = cr.fetchall()
-                print(res)
                 nb_heures = (res and res[0][0]) or False
             obj.nb_heures = nb_heures
 
+    preventif_id        = fields.Many2one('is.preventif.equipement', u"Préventif", compute="_compute", store=True)
     zone_id             = fields.Many2one('is.preventif.equipement.zone', u"Zone", compute="_compute", store=True)
     equipement_id       = fields.Many2one('is.equipement', u"Equipement",required=True)
     type_preventif      = fields.Selection(TYPE_PREVENTIF_EQUIPEMENT, u"Type de préventif",required=True)
@@ -243,4 +229,15 @@ class is_preventif_equipement_saisie(models.Model):
     nb_heures           = fields.Integer(u"Nb heures actuel", compute="_compute", store=True)
     frequence           = fields.Integer(u"Fréquence du préventif (H)", compute="_compute", store=True)
     fiche_preventif_ids = fields.Many2many('ir.attachment', 'is_preventif_equipement_saisie_attachment_rel', 'saisie_id', 'file_id', u"Fiche de réalisation du préventif")
+
+
+    @api.model
+    def create(self, vals):
+        res =  super(is_preventif_equipement_saisie, self).create(vals)
+        res.preventif_id.date_dernier_preventif      = res.date_preventif
+        res.preventif_id.nb_heures_dernier_preventif = res.nb_heures
+        res.preventif_id.nb_heures_actuel            = res.nb_heures
+        res.preventif_id.nb_heures_avant_preventif   = res.frequence
+        return res
+
 
