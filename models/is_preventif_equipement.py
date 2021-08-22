@@ -135,8 +135,9 @@ class is_preventif_equipement_zone(models.Model):
 class is_preventif_equipement_heure(models.Model):
     _name = 'is.preventif.equipement.heure'
     _description = u"Nombre d'heures par équipement et par mois"
-    _order = "equipement_id, mois desc"
+    _order = "mois desc, equipement_id"
 
+    soc            = fields.Integer(u"Société"                     , required=True, index=True)
     equipement_id  = fields.Many2one('is.equipement', u"Equipement", required=True, index=True)
     mois           = fields.Char(u"Mois"                           , required=True, index=True)
     nb_heures      = fields.Integer(u"Nb heures")
