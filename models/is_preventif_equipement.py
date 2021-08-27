@@ -3,7 +3,8 @@
 from openerp import models, fields, api
 from openerp.exceptions import Warning
 import time
-import datetime
+from datetime import date,datetime,timedelta
+
 import os
 from pyPdf import PdfFileWriter, PdfFileReader
 from shutil import copy
@@ -87,13 +88,14 @@ class is_preventif_equipement_zone(models.Model):
             # ** Ajout des gammes *********************************************
             filestore = os.environ.get('HOME')+"/.local/share/Odoo/filestore/"+db+"/"
             for line in obj.preventif_ids:
-                for gamme in line.gamme_ids:
-                    src = filestore+gamme.store_fname
-                    dst = path+"/"+str(gamme.id)+".pdf"
-                    filetype = magic.from_file(src, mime=True)
-                    if filetype=="application/pdf":
-                        copy(src, dst)
-                        paths.append(dst)
+                if line.nb_heures_avant_preventif<=0:
+                    for gamme in line.gamme_ids:
+                        src = filestore+gamme.store_fname
+                        dst = path+"/"+str(gamme.id)+".pdf"
+                        filetype = magic.from_file(src, mime=True)
+                        if filetype=="application/pdf":
+                            copy(src, dst)
+                            paths.append(dst)
             # ******************************************************************
 
             # ** Merge des PDF *************************************************
@@ -159,14 +161,31 @@ class is_preventif_equipement(models.Model):
             obj.zone_id = obj.equipement_id.zone_id.id
 
 
+    @api.depends('date_dernier_preventif','frequence','frequence_semaine')
+    def _compute_date_prochain_preventif(self):
+        for obj in self:
+            date_prochain_preventif = False
+            nb_heures_avant_preventif = obj.nb_heures_avant_preventif
+            if obj.date_dernier_preventif and obj.frequence_semaine:
+                d=datetime.strptime(obj.date_dernier_preventif, '%Y-%m-%d')
+                date_prochain_preventif = d + timedelta(days=obj.frequence_semaine*7)
+                if not obj.frequence:
+                    now = datetime.now()
+                    nb  = (date_prochain_preventif - now).days*8
+                    nb_heures_avant_preventif = nb
+            obj.nb_heures_avant_preventif = nb_heures_avant_preventif
+            obj.date_prochain_preventif = date_prochain_preventif
+
     zone_id                     = fields.Many2one('is.preventif.equipement.zone', u"Zone", ondelete='cascade', readonly=True, compute="_compute", store=True)
     equipement_id               = fields.Many2one('is.equipement', u"Equipement",required=True)
     type_preventif              = fields.Selection(TYPE_PREVENTIF_EQUIPEMENT, u"Type de préventif",required=True)
-    frequence                   = fields.Integer(u"Fréquence du préventif (H)" , required=True)
-    date_dernier_preventif      = fields.Date(u"Date du dernier préventif"     , readonly=True)
-    nb_heures_dernier_preventif = fields.Integer(u"Nb heures dernier préventif", readonly=True)
-    nb_heures_actuel            = fields.Integer(u"Nb heures actuel"           , readonly=True)
-    nb_heures_avant_preventif   = fields.Integer(u"Nb heures avant préventif"  , readonly=True)
+    frequence                   = fields.Integer(u"Fréquence préventif (Heure)"  , help="Dans ce cas le préventif se base sur le temps réellement pas passé dans THEIA")
+    frequence_semaine           = fields.Integer(u"Fréquence préventif (Semaine)", help="Dans ce cas le préventif se base sur la date du dernier préventif")
+    date_dernier_preventif      = fields.Date(u"Date du dernier préventif"       , readonly=True)
+    date_prochain_preventif      = fields.Date(u"Date du prochain préventif"     , compute='_compute_date_prochain_preventif', store=True, readonly=True)
+    nb_heures_dernier_preventif = fields.Integer(u"Nb heures dernier préventif"  , readonly=True)
+    nb_heures_actuel            = fields.Integer(u"Nb heures actuel"             , readonly=True)
+    nb_heures_avant_preventif   = fields.Integer(u"Nb heures avant préventif"    , compute='_compute_date_prochain_preventif', store=True, readonly=True)
     gamme_ids                   = fields.Many2many('ir.attachment', 'is_preventif_equipement_gamme_rel', 'preventif_id', 'gamme_id', u'Gamme')
 
     @api.multi

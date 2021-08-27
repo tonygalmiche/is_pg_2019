@@ -40,16 +40,24 @@
                                         <field name="equipement_id" domain="[('zone_id','=',parent.id)]"/>
                                         <field name="type_preventif"/>
                                         <field name="frequence"/>
+                                        <field name="frequence_semaine"/>
+                                        <field name="date_dernier_preventif"/>
+                                        <field name="date_prochain_preventif"/>
+                                        <field name="nb_heures_dernier_preventif"/>
+                                        <field name="nb_heures_actuel"/>
+                                        <field name="nb_heures_avant_preventif"/>
                                         <field name="gamme_ids" widget="many2many_binary"/>
                                     </group>
                                 </sheet>
                             </form>
-                            <tree>
+                            <tree fonts="bold:(nb_heures_avant_preventif&lt;0)" colors="red:(nb_heures_avant_preventif&lt;0)">
                                 <button string="Sasie préventif" name="saisie_preventif_action"  type="object" icon="gtk-add" />
                                 <field name="equipement_id" domain="[('zone_id','=',parent.id)]"/>
                                 <field name="type_preventif"/>
                                 <field name="frequence"/>
+                                <field name="frequence_semaine"/>
                                 <field name="date_dernier_preventif"/>
+                                <field name="date_prochain_preventif"/>
                                 <field name="nb_heures_dernier_preventif"/>
                                 <field name="nb_heures_actuel"/>
                                 <field name="nb_heures_avant_preventif"/>
@@ -135,7 +143,9 @@
                     <field name="equipement_id"/>
                     <field name="type_preventif"/>
                     <field name="frequence"/>
+                    <field name="frequence_semaine"/>
                     <field name="date_dernier_preventif"/>
+                    <field name="date_prochain_preventif"/>
                     <field name="nb_heures_dernier_preventif"/>
                     <field name="nb_heures_actuel"/>
                     <field name="nb_heures_avant_preventif"/>
