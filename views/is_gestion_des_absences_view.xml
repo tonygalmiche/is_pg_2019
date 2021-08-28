@@ -189,12 +189,15 @@
                     </header>
                     <sheet>
                         <group>
-                            <group>
-                                <field name="name" readonly="1" />
-                                <field name="date_creation" readonly="1" />
-                                <field name="valideur_n1" readonly="1" />
-                                <field name="valideur_n2" readonly="1" />
-                                <field name="responsable_rh_id" readonly="1" />
+                            <group string="DEMANDE DE CONGÉS">
+                                <field 
+                                    name="demandeur_id"
+                                    attrs="{
+                                        'invisible': [('demande_collective','!=','non')],
+                                        'required' : [('demande_collective','=' ,'non')]
+                                    }"
+                                   domain="[('id', '=', uid)]"
+                                />
                                 <field name="type_demande"/>
                                 <field 
                                     name="autre_id"
@@ -256,30 +259,8 @@
                                     widget="float_time"
                                 />
                             </group>
-                            <group>
-                                <field name="createur_id" readonly="1" />
-                                <field 
-                                    name="employe_id"
-                                    attrs="{
-                                        'invisible': ['|',
-                                            ('demande_collective','!=','non'),
-                                            ('state','!=','creation'),
-                                        ],
-                                    }"
-                                    domain="['|','|',
-                                        ('user_id'       , '=', uid),
-                                        ('is_valideur_n1', '=', uid),
-                                        ('is_valideur_n2', '=', uid),
-                                    ]"
-                                />
-                                <field 
-                                    name="demandeur_id"
-                                    attrs="{
-                                        'invisible': [('demande_collective','!=','non')],
-                                        'required' : [('demande_collective','=' ,'non')]
-                                    }"
-                                   domain="[('id', '=', uid)]"
-                                />
+
+                            <group string="INFORMATION DEMANDEUR">
                                 <field 
                                     name="matricule"
                                     attrs="{
@@ -299,18 +280,46 @@
                                     name="mobile"
                                     attrs="{'invisible': [('mobile','=',False)]}"
                                 />
+                            </group>
+
+
+                            <group string="CYCLE DE VALIDATION">
+                                <field name="valideur_n1" readonly="1" />
+                                <field name="valideur_n2" readonly="1" />
+                                <field name="responsable_rh_id" readonly="1" />
                                 <field name="date_validation_n1" readonly="1" />
                                 <field name="date_validation_n2" readonly="1" />
                                 <field name="date_validation_rh" readonly="1" />
+                            </group>
+
+
+                            <group string="INFORMATION SUR LA DEMANDE">
+                                <field name="name" readonly="1" />
+                                <field name="createur_id" readonly="1" />
+                                <field name="date_creation" readonly="1" />
+                                <field name="demande_collective"    readonly="1"/>
+                                <field name="demande_collective_id" readonly="1" attrs="{'invisible': [('demande_collective_id','=',False)]}"/>
+                                <field 
+                                    name="employe_id"
+                                    attrs="{
+                                        'invisible': ['|',
+                                            ('demande_collective','!=','non'),
+                                            ('state','!=','creation'),
+                                        ],
+                                    }"
+                                    domain="['|','|',
+                                        ('user_id'       , '=', uid),
+                                        ('is_valideur_n1', '=', uid),
+                                        ('is_valideur_n2', '=', uid),
+                                    ]"
+                                />
                                 <field name="raison_annulation"  readonly="True" attrs="{'invisible': [('raison_annulation','=',False)]}"/>
                                 <field name="raison_du_retour"   readonly="True" attrs="{'invisible': [('raison_du_retour','=',False)]}"/>
                                 <field name="fld_vsb" invisible="1" />
                             </group>
                         </group>
-                        <group>
-                            <field name="demande_collective"    readonly="1"/>
-                            <field name="demande_collective_id" readonly="1" attrs="{'invisible': [('demande_collective_id','=',False)]}"/>
-                        </group>
+
+
                         <group attrs="{'invisible': [('demande_collective','!=','oui')]}">
                             <field nolabel="1"
                                 name="demandeur_ids"
