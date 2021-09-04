@@ -234,8 +234,8 @@ class is_ot(models.Model):
     instrument_id       = fields.Many2one("is.instrument.mesure", u"Instrument de mesure")
     gravite             = fields.Selection([
             ('1', u"1-risque de rupture client suite panne moule/machine ; risque pour outillage ou équipement ; risque sécurité ; risque environnemental"),
-            ('2', u"2-moule ou équipement en production mais en mode dégradé"),
-            ('3', u"3-action d'amélioration ou de modification"),
+            ('2', u"2-moule ou équipement en production mais en mode dégradé / moule en cours de développement (sans risque avéré)"),
+            ('3', u"3-action d'amélioration ou de modification sans impact sur la qualité ou le dimmensionnel du produit"),
             ], u"Gravité", required=True)
     code_gravite        = fields.Char(u"Gravité",help="Code gravité", store=True, readonly=True, compute='_compute_gravite')
     date_intervention_demandee = fields.Date(u"Date intervention demandée", copy=False)
