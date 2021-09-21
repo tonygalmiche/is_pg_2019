@@ -122,6 +122,7 @@ class is_raspberry_entree_sortie(models.Model):
             #res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
             #print res
             obj.raspberry_id.rafraichir_sorties()
+            return True
 
 
 class is_raspberry(models.Model):
