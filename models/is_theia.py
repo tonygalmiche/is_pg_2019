@@ -182,6 +182,17 @@ class is_raspberry(models.Model):
             cmd="scp -o ConnectTimeout=2 "+path+" root@"+IP+":/opt/theia/sorties/sorties.txt"
             res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
 
+            #TODO : Le rafraissement ne fonctionne pas toujours (1 fois sur 2)
+            #cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
+            #WID=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
+            #print WID,type(WID)
+            #cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus '+WID+' && xdotool key --window '+WID+' Shift_L+F1"'  #Shift_L+F2
+            #res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
+            #print res,type(res)
+
+            #cmd="export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus "+WID+" && xdotool key --window "+WID+" Shift_L+F2"
+
+
             #Envoi d'une série de touche au clavier (ex : Badge RFID) (pour test)
             #cmd="ssh -o ConnectTimeout=2 root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
             #WID=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
