@@ -469,6 +469,7 @@ class is_equipement(models.Model):
             'mesure_debit'                          : equp.mesure_debit,
             'base_capacitaire'                      : tools.ustr(equp.base_capacitaire),
             'emplacement_affectation_pe'            : tools.ustr(equp.emplacement_affectation_pe or ''),
+            'adresse_ip_mac'                        : tools.ustr(equp.adresse_ip_mac or ''),
         }
         return is_equipement_vals
 
@@ -956,6 +957,10 @@ class is_equipement(models.Model):
     emplacement_affectation_pe_vsb           = fields.Boolean("Emplacement / affectation PE", compute='_compute')
     emplacement_affectation_pe_obl           = fields.Boolean("Emplacement / affectation PE", compute='_compute')
     emplacement_affectation_pe               = fields.Char("Emplacement / affectation PE")
+
+    adresse_ip_mac_vsb = fields.Boolean("Adresse IP / MAC", compute='_compute')
+    adresse_ip_mac_obl = fields.Boolean("Adresse IP / MAC", compute='_compute')
+    adresse_ip_mac     = fields.Char("Adresse IP / MAC")
 
 
     # Integration de THEIA

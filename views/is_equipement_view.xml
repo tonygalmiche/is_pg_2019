@@ -542,7 +542,10 @@
                                 <field name="emplacement_affectation_pe" 
                                     attrs="{'invisible': [('emplacement_affectation_pe_vsb', '!=', True)], 'required':  [('emplacement_affectation_pe_obl', '=', True)]}"/>
 
-
+                                <field name="adresse_ip_mac_vsb" invisible="1" />
+                                <field name="adresse_ip_mac_obl" invisible="1" />
+                                <field name="adresse_ip_mac" 
+                                    attrs="{'invisible': [('adresse_ip_mac_vsb', '!=', True)], 'required':  [('adresse_ip_mac_obl', '=', True)]}"/>
 
                                 <field name="active" />
                             </group>
@@ -733,20 +736,6 @@
         </record>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <!-- Presse THIEA -->
     <record model="ir.ui.view" id="is_theia_presse_tree_view">
         <field name="name">is_theia_presse_tree_view</field>
@@ -754,6 +743,7 @@
         <field name="priority" eval="90" />
         <field name="arch" type="xml">
             <tree>
+                <field name="type_id"/>
                 <field name="numero_equipement"/>
                 <field name="prioritaire"/>
                 <field name="designation"/>
@@ -772,7 +762,7 @@
         <field name="arch" type="xml">
         <form>
             <sheet>
-                <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                <!-- <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
                    <button class="oe_inline oe_stat_button"    string="Interface"    
                             help="Interface de la presse"      name= "interface_presse"     
                             type="object" icon="fa-eye" />
@@ -785,11 +775,12 @@
                     <button class="oe_inline oe_stat_button"   string="Redémarrer" 
                             help="Redémarrer le Raspberry"     name= "reboot_raspberry"     
                             type="object" icon="fa-refresh"    groups="base.group_erp_manager"/>
-                </div>
+                </div> -->
                 <group>
-                    <field name="numero_equipement"/>
-                    <field name="prioritaire" readonly="1"/>
-                    <field name="designation"/>
+                    <field name="type_id"           readonly="1"/>
+                    <field name="numero_equipement" readonly="1"/>
+                    <field name="prioritaire"       readonly="1"/>
+                    <field name="designation"       readonly="1"/>
                     <field name="ilot_id"/>
                     <field name="ordre"/>
                     <field name="raspberry_id"/>
@@ -821,12 +812,12 @@
     </record>
     -->
     <record model="ir.actions.act_window" id="is_theia_presse_action">
-        <field name="name">Presse</field>
+        <field name="name">Equipements</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">is.equipement</field>
         <!--<field name="context">{"search_default_presses_actives":1}</field>-->
         <field name="context">{}</field>
-        <field name="domain">[('type_id.code', '=', 'PE')]</field>
+        <field name="domain">[('type_id.code', 'in', ['PE','9000'])]</field>
         <field name="view_mode">tree,form</field>
         <!--<field name="view_id" ref="is_theia_presse_tree_view"/>-->
         <field name="view_ids" eval="[

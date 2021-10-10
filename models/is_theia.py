@@ -143,7 +143,7 @@ class is_raspberry(models.Model):
 
     name               = fields.Char(u'Adresse IP' , required=True)
     adresse_mac        = fields.Char(u'Adresse MAC', select=True)
-    last_presse_id     = fields.Many2one('is.equipement', u"Presse", compute='_compute_presse_id', required=False, readonly=True)
+    last_presse_id     = fields.Many2one('is.equipement', u"Equipement", compute='_compute_presse_id', required=False, readonly=True)
     onglet_indicateurs = fields.Boolean(u'Afficher onglet "Indicateurs"' , default=False)
     onglet_es          = fields.Boolean(u'Afficher onglet "Entrées / Sorties"', default=False)
     onglet_actif       = fields.Char(u'Onglet actif', readonly=True, help=u"Ce champ est utilsé pour détecter si une mise à jour de l'onglet Indicateurs est necessaire")
@@ -216,8 +216,8 @@ class is_of(models.Model):
     designation       = fields.Char('Désignation' , required=False)
     uc                = fields.Integer('Qt par UC', required=False)
     cout              = fields.Float('Coût article', digits=(12,4), required=False)
-    presse_id         = fields.Many2one('is.equipement', u"Presse",  domain=[('type_id.code','=','PE')], required=False, select=False)
-    affecte           = fields.Boolean('OF affecté à la presse', select=True,help="Cocher cette case si l'OF est affecté à la presse")
+    presse_id         = fields.Many2one('is.equipement', u"Equipement",  domain=[('type_id.code','=','PE')], required=False, select=False)
+    affecte           = fields.Boolean(u"OF affecté à l'équipement", select=True,help=u"Cocher cette case si l'OF est affecté à l'équipement")
     ordre             = fields.Integer('Ordre', select=True, required=False)
     qt                = fields.Integer('Qt à produire', required=False)
     nb_cycles         = fields.Integer('Nombre de cycles')
@@ -558,7 +558,7 @@ class is_presse_cycle(models.Model):
             obj.couleur=couleur
 
     date_heure = fields.Datetime("Date Heure",required=True, select=True)
-    presse_id  = fields.Many2one('is.equipement', u"Presse",  domain=[('type_id.code','=','PE')], required=False, select=True)
+    presse_id  = fields.Many2one('is.equipement', u"Equipement",  domain=[('type_id.code','=','PE')], required=False, select=True)
     entree     = fields.Char("Entrée", select=True)
     etat       = fields.Char("État"  , select=True)
     couleur    = fields.Char('Couleur', compute='_couleur')
@@ -584,11 +584,8 @@ class is_presse_arret(models.Model):
             obj.couleur=couleur
 
     date_heure    = fields.Datetime("Date Heure",required=True)
-
-    #presse_id     = fields.Many2one('is.presse', u"Presse", required=True)
-    presse_id     = fields.Many2one('is.equipement', u"Presse",  domain=[('type_id.code','=','PE')], required=True, select=True)
-
-    type_arret_id = fields.Many2one('is.etat.presse', u"État de la presse", required=True)
+    presse_id     = fields.Many2one('is.equipement', u"Equipement",  domain=[('type_id.code','=','PE')], required=True, select=True)
+    type_arret_id = fields.Many2one('is.etat.presse', u"État équipement", required=True)
     couleur       = fields.Char('Couleur'            , compute='_couleur')
     origine       = fields.Char("Origine du changement d'état")
     tps_arret     = fields.Float("Durée dans cet état", required=False)
@@ -619,7 +616,7 @@ class is_theia_trs(models.Model):
 
     date_heure   = fields.Datetime(u'Heure début' , required=True, select=True)
     presse       = fields.Char(u'Presse'          , required=True, select=True)
-    presse_id    = fields.Many2one('is.equipement', u"Presse", required=True, select=True)
+    presse_id    = fields.Many2one('is.equipement', u"Equipement", required=True, select=True)
     ilot         = fields.Char(u'Ilot', select=True)
     etat         = fields.Char(u'État'            , required=True, select=True)
     etat_id      = fields.Many2one('is.etat.presse', u"État", required=True, select=True)
@@ -661,7 +658,7 @@ class is_theia_habilitation_operateur(models.Model):
 
     heure_debut  = fields.Datetime(u'Heure de début'          , required=True , select=True)
     heure_fin    = fields.Datetime(u'Heure de fin'            , required=False, select=True)
-    presse_id    = fields.Many2one('is.equipement', u"Presse" , required=True , select=True)
+    presse_id    = fields.Many2one('is.equipement', u"Equipement" , required=True , select=True)
     moule        = fields.Char(u'Moule'                       , required=True , select=True)
     operateur_id = fields.Many2one("hr.employee", u"Opérateur", required=True , select=True)
     valideur_id  = fields.Many2one("hr.employee", u"Valideur" , required=False, select=True)
@@ -673,7 +670,7 @@ class is_theia_habilitation_operateur_etat(models.Model):
     _order = 'presse_id,moule,operateur_id'
     _auto = False
 
-    presse_id    = fields.Many2one('is.equipement', u"Presse" , required=True , select=True)
+    presse_id    = fields.Many2one('is.equipement', u"Equipement" , required=True , select=True)
     moule        = fields.Char(u'Moule'                       , required=True , select=True)
     operateur_id = fields.Many2one("hr.employee", u"Opérateur", required=True , select=True)
     state        = fields.Selection(states, 'État'            , required=True , select=True)
@@ -711,7 +708,7 @@ class is_theia_lecture_ip(models.Model):
     _order='date_heure desc'
 
     date_heure   = fields.Datetime(u'Heure de lecture'                                                    , required=True , select=True)
-    presse_id    = fields.Many2one('is.equipement', u"Presse"                                             , required=True , select=True)
+    presse_id    = fields.Many2one('is.equipement', u"Equipement"                                             , required=True , select=True)
     moule        = fields.Char(u'Moule'                                                                   , required=True , select=True)
     of_ids       = fields.Many2many('is.of', 'is_theia_lecture_ip_of_rel', 'lecture_ip_id', 'of_id', 'OFs', required=False)
     operateur_id = fields.Many2one("hr.employee", u"Opérateur"                                            , required=True , select=True)

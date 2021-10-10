@@ -10,7 +10,7 @@
         ])]"/>
     </record>
 
-    <menuitem name="Presse" id="is_theia_presse_main_menu"
+    <menuitem name="Equipements" id="is_theia_presse_main_menu"
               parent="is_theia_root_menu" sequence="10"/>
 
     <menuitem name="OF" id="menu_is_of_root" 
@@ -44,8 +44,30 @@
         <field name="url">http://localhost</field>
         <field name="type">ir.actions.act_url</field>
     </record>
-    <menuitem name="Parc des presses" id="is_url_parc_presses_menu" action="is_url_parc_presses_action"
-              parent="is_theia_presse_main_menu" sequence="15" />
+    <menuitem 
+        name="Parc des presses" 
+        id="is_url_parc_presses_menu" 
+        action="is_url_parc_presses_action"
+        parent="is_theia_presse_main_menu"
+        sequence="15"
+    />
+    <record model="ir.actions.act_url" id="is_url_parc_assemblage_action">
+        <field name="name">is_url_parc_assemblage_action</field>
+        <field name="url">http://localhost</field>
+        <field name="type">ir.actions.act_url</field>
+    </record>
+    <menuitem 
+        name="Parc assemblage" 
+        id="is_url_parc_assemblage_menu" 
+        action="is_url_parc_assemblage_action"
+        parent="is_theia_presse_main_menu"
+        sequence="16"
+    />
+
+
+
+
+
 
 
     <record model="ir.actions.act_url" id="is_url_indicateur_rebuts_action">
@@ -129,7 +151,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="is_presse_cycle_action">
-        <field name="name">Cycles des presses</field>
+        <field name="name">Cycles équipements</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">is.presse.cycle</field>
         <field name="view_mode">tree,form</field>
@@ -196,7 +218,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="is_presse_arret_action">
-        <field name="name">États des presses</field>
+        <field name="name">États équipements</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">is.presse.arret</field>
         <field name="view_mode">tree,form</field>

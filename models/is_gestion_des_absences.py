@@ -482,11 +482,11 @@ class is_demande_conges(models.Model):
     courriel = fields.Char(u"Courriel", help="Courriel utilisé pour l'envoi des informations pour les demandes de congés", compute='_compute_mode_communication', readonly=True, store=True)
 
     valideur_n1                   = fields.Many2one('res.users', 'Valideur Niveau 1')
-    date_validation_n1            = fields.Datetime(string='Date validation N1', copy=False)
+    date_validation_n1            = fields.Datetime(string='Date vers validation N1', copy=False)
     valideur_n2                   = fields.Many2one('res.users', 'Valideur Niveau 2')
-    date_validation_n2            = fields.Datetime(string='Date validation N2', copy=False)
+    date_validation_n2            = fields.Datetime(string='Date vers validation N2', copy=False)
     responsable_rh_id             = fields.Many2one('res.users', 'Responsable RH', default=lambda self: self.env.user.company_id.is_responsable_rh_id)
-    date_validation_rh            = fields.Datetime(string='Date Responsable RH', copy=False)
+    date_validation_rh            = fields.Datetime(string='Date vers Responsable RH', copy=False)
     type_demande                  = fields.Selection([
                                         ('cp_rtt_journee'     , u'CP ou RTT par journée entière'),
                                         ('cp_rtt_demi_journee', u'CP ou RTT par ½ journée'),
