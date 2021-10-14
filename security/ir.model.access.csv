@@ -199,5 +199,4 @@ access_is_facture_proforma_line,access_is_facture_proforma_line,model_is_facture
 access_is_indicateur_revue_jalon,access_is_indicateur_revue_jalon,model_is_indicateur_revue_jalon,base.group_user,1,0,0,0
 access_is_indicateur_revue_jalon_gest,access_is_indicateur_revue_jalon_gest,model_is_indicateur_revue_jalon,is_plastigray.is_chef_projet_group,1,1,1,1
 
-
-
+access_is_import_budget_pk,access_is_import_budget_pk,model_is_import_budget_pk,is_pg_2019.is_import_budget_pk_grp,1,1,1,1
