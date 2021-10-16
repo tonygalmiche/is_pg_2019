@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <!-- Sequence is.facture.proforma.outillage --> 
+        <record id="is_facture_proforma_outillage_type_seq" model="ir.sequence.type">
+            <field name="name">Facture proforma</field>
+            <field name="code">is.facture.proforma.outillage</field>
+        </record>
+        <record id="is_facture_proforma_outillage_seq" model="ir.sequence">
+            <field name="name">Facture proforma</field>
+            <field name="code">is.facture.proforma.outillage</field>
+            <field name="prefix">FPO-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- is.facture.proforma.outillage --> 
+        <record model="ir.ui.view" id="is_facture_proforma_outillage_form_view">
+            <field name="name">is_facture_proforma_outillage_form_view</field>
+            <field name="model">is.facture.proforma.outillage</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form" create="1">
+                    <sheet class="oe_form_sheet_width_wider">
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="num_cde"/>
+                                <field name="bl_manuel_id"/>
+                                <field name="picking_id"/>
+                                <field name="mold_id"/>
+                                <field name="mold_designation"/>
+                            </group>
+                            <group>
+                                <field name="date_facture"/>
+                                <field name="term_id"/>
+                                <field name="date_due"/>
+                                <field name="cofor"/>
+                                <field name="vat"/>
+                                <field name="type_reglement"/>
+                                <field name="rib_id"/>
+                             </group>
+                        </group>
+                        <group>
+                            <field name="line_ids" nolabel="1" >
+                                <tree editable="bottom">
+                                    <field name="sequence" />
+                                    <field name="designation"/>
+                                    <field name="pourcentage"/>
+                                    <field name="prix"/>
+                                    <field name="total" sum="Total"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="commentaire"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_facture_proforma_outillage_tree_view">
+            <field name="name">is_facture_proforma_outillage_tree_view</field>
+            <field name="model">is.facture.proforma.outillage</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+
+                    <field name="name"/>
+                    <field name="date_facture"/>
+                    <field name="partner_id"/>
+                    <field name="num_cde"/>
+                    <field name="bl_manuel_id"/>
+                    <field name="picking_id"/>
+                    <field name="mold_id"/>
+                    <field name="total" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="is_facture_proforma_outillage_search_view" >
+            <field name="name">is_facture_proforma_outillage_search_view</field>
+            <field name="model">is.facture.proforma.outillage</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="num_cde"/>
+                    <field name="bl_manuel_id"/>
+                    <field name="picking_id"/>
+                    <field name="mold_id"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="is_facture_proforma_outillage_action">
+            <field name="name">Facture proforma outillage</field>
+            <field name="res_model">is.facture.proforma.outillage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}
+            </field>
+        </record>
+  </data>
+</openerp>
