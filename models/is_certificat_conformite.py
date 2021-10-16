@@ -485,8 +485,14 @@ class is_certificat_conformite(models.Model):
             if certificat.picking_id != move.picking_id:
                 certificat.num_lot          = False
                 certificat.date_fabrication = False
+            orders=[]
+            for line in move.picking_id.move_lines:
+                if line.product_id==move.product_id:
+                    order = line.is_sale_line_id.is_client_order_ref
+                    if order not in orders:
+                        orders.append(order)
             vals={
-                'client_order_ref': move.is_sale_line_id.is_client_order_ref,
+                'client_order_ref': u", ".join(orders),
                 'order_id'        : move.is_sale_line_id.order_id.id,
                 'picking_id'      : move.picking_id.id,
                 'bon_transfert_id': False,
