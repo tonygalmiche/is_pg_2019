@@ -67,6 +67,7 @@ InfoSaône - Module Odoo pour Plastigray en 2019
         "views/report_is_ctrl100_pareto.xml",
         "views/report_is_bon_achat_ville.xml",
         "views/report_is_facture_proforma.xml",
+        "views/report_is_facture_proforma_outillage.xml",
         "views/report_preventif_equipement_zone.xml",
         "views/report_paperformat.xml",
         "views/report.xml",

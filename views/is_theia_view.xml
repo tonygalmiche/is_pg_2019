@@ -566,6 +566,7 @@
         <field name="arch" type="xml">
             <tree editable="top">
                 <field name="name"/>
+                <field name="active"/>
             </tree>
         </field>
     </record>
@@ -577,6 +578,7 @@
             <sheet>
                 <group>
                     <field name="name"/>
+                    <field name="active"/>
                 </group>
             </sheet>
         </form>

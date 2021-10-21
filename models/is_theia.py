@@ -601,7 +601,9 @@ class is_type_defaut(models.Model):
     _description = u"Type de défaut des rebuts"
     _order='name'
 
-    name = fields.Char('Type de défaut' , required=True)
+    name   = fields.Char('Type de défaut' , required=True)
+    active = fields.Boolean(u'Actif', default=True)
+
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', u"Le type de défaut doit être unique !"),
