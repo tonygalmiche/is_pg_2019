@@ -385,6 +385,7 @@
                     <field name="createur_id"/>
                     <field name="employe_id"/>
                     <field name="date_saisie"/>
+                    <field name="operateur_evalue_ids" widget="many2many_tags"/>
                     <field name="nb_rebuts" sum="Total"/>
                     <field name="nb_repris" sum="Total"/>
                     <field name="taux_rebut"/>
@@ -407,6 +408,7 @@
                     <field name="moule_dossierf"/>
                     <field name="createur_id"/>
                     <field name="employe_id"/>
+                    <field name="operateur_evalue_ids"/>
                     <group string="Regroupement par">
                         <filter string="Game"              context="{'group_by': 'gamme_id'}"/>
                         <filter string="Moule / Dossier F" context="{'group_by': 'moule_dossierf'}"/>

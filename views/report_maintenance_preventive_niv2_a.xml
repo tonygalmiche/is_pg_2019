@@ -325,17 +325,17 @@
                                             </tr>
                                             <t t-set="i" t-value="1" />
                                             <t t-foreach="o.systematique_ids" t-as="syst">
-                                                <t t-if="syst.activer">
-                                                <tr>
-                                                    <td width="4%">
-                                                    </td>
-                                                    <td width="60%" class="tdborder">
-                                                        <span t-esc="i" /> - <span t-field="syst.operation_systematique_id.name" /> <t t-if="syst.frequence_preventif_id"> / <span t-field="syst.frequence_preventif_id.name" /></t>
-                                                    </td>
-                                                    <td width="20%"> </td>
-                                                    <td width="6%"> </td>
-                                                </tr>
-                                                <t t-set="i" t-value="i+1"/>
+                                                <t t-if="syst.activer==True">
+                                                    <tr>
+                                                        <td width="4%">
+                                                        </td>
+                                                        <td width="60%" class="tdborder">
+                                                            <span t-esc="i" /> - <span t-field="syst.operation_systematique_id.name" /> <t t-if="syst.frequence_preventif_id"> / <span t-field="syst.frequence_preventif_id.name" /></t>
+                                                        </td>
+                                                        <td width="20%"> </td>
+                                                        <td width="6%"> </td>
+                                                    </tr>
+                                                    <t t-set="i" t-value="i+1"/>
                                                 </t>
                                             </t>
                                         </table>
