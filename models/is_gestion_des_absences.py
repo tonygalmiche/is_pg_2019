@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import ssl
 from openerp import models, fields, api
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -9,8 +9,18 @@ import codecs
 import base64
 import csv, cStringIO
 from openerp.exceptions import Warning
+import xmlrpclib
+from openerp import SUPERUSER_ID
+import pytz
 
 
+_TYPE_DEMANDE = [
+    ('cp_rtt_journee'     , u'CP ou RTT par journée entière'),
+    ('cp_rtt_demi_journee', u'CP ou RTT par ½ journée'),
+    ('rc_heures'          , u'RC en heures'),
+    ('sans_solde'         , u'Congés sans solde'),
+    ('autre'              , u'Autre'),
+]
 
 
 class is_pointage_commentaire(models.Model):
@@ -285,6 +295,10 @@ class is_demande_conges(models.Model):
                             res=self.env['is.pointage.commentaire'].sudo().create(vals)
                 #***************************************************************
 
+            try:
+                obj.ajouter_dans_agenda()
+            except:
+                pass
             obj.signal_workflow('validation_rh')
         return True
 
@@ -336,6 +350,102 @@ class is_demande_conges(models.Model):
         res=super(is_demande_conges, self).create(vals)
         res.test_dates()
         return res
+
+
+
+    @api.multi
+    def ajouter_dans_agenda(self):
+        now = datetime.datetime.now()
+        tz = pytz.timezone('CET')
+        offset=tz.utcoffset(now).total_seconds()
+        events=[]
+        if self.type_demande in ["cp_rtt_journee","sans_solde","autre"]:
+            dt1 = datetime.datetime.strptime(self.date_debut + " 08:00:00", '%Y-%m-%d %H:%M:%S')
+            dt2 = datetime.datetime.strptime(self.date_fin   + " 08:00:00", '%Y-%m-%d %H:%M:%S')
+            start = dt1
+            while start <= dt2:
+                events.append([
+                    start - datetime.timedelta(seconds=offset), 
+                    start - datetime.timedelta(seconds=offset) + datetime.timedelta(hours=10), 
+                ])
+                start = start + datetime.timedelta(days=1)
+        if self.type_demande=="cp_rtt_demi_journee":
+            start = self.le
+            if self.matin_ou_apres_midi=="matin":
+                start = self.le+" 08:00:00"
+            else:
+                start = self.le+" 13:30:00"
+            start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
+            start = start - datetime.timedelta(seconds=offset)
+            stop = start + datetime.timedelta(hours=4)
+            events.append([start, stop])
+        if self.type_demande=="rc_heures": 
+            hours, minutes = divmod(self.heure_debut*60, 60)
+            debut = " %02d:%02d:00"%(hours,minutes)
+            hours, minutes = divmod(self.heure_fin*60, 60)
+            fin   = " %02d:%02d:00"%(hours,minutes)
+            start = self.le + debut
+            start = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
+            start = start - datetime.timedelta(seconds=offset)
+            stop = self.le + fin
+            stop = datetime.datetime.strptime(stop, '%Y-%m-%d %H:%M:%S')
+            stop = stop - datetime.timedelta(seconds=offset)
+            events.append([start, stop])
+        email = self.demandeur_id.partner_id.email
+        company = self.env.user.company_id
+        DB = "odoo-agenda"
+        USERID = 2
+        DBLOGIN = "admin"
+        USERPASS = company.is_agenda_pwd
+        url = company.is_agenda_url+'/xmlrpc/2/common'
+        common = xmlrpclib.ServerProxy(url, verbose=False, use_datetime=True, context=ssl._create_unverified_context())
+        uid = common.authenticate(DB, DBLOGIN, USERPASS, {})
+        url = company.is_agenda_url+'/xmlrpc/object'
+        models = xmlrpclib.ServerProxy(url, verbose=False, use_datetime=True, context=ssl._create_unverified_context())
+        partner = models.execute_kw(
+            DB, USERID, USERPASS, 
+            'res.partner', 
+            'search_read', 
+            [[('email', '=', email)]],
+            {'fields': ['name','email'], 'limit': 1}
+        )
+        if partner:
+            partner_id=partner[0]["id"]
+            user = models.execute_kw(
+                DB, USERID, USERPASS, 
+                'res.users', 
+                'search_read', 
+                [[('partner_id', '=',partner_id)]],
+                {'fields': ['login'], 'limit': 1}
+            )
+            if user:
+                user_id=user[0]["id"]
+                name=self.type_demande
+                for line in _TYPE_DEMANDE:
+                    if line[0]==self.type_demande:
+                        name = line[1]
+                name=u"[Congé] "+name
+                for event in events:
+                    vals={
+                        "name"       : name,
+                        "user_id"    : user_id,
+                        "start"      : str(event[0]),
+                        "stop"       : str(event[1]),
+                        "partner_ids": [[6, False, [partner_id]]],
+                    }
+                    event_id = models.execute_kw(DB, USERID, USERPASS, 'calendar.event', 'create', [vals])
+                    print(event_id,vals)
+                    if event_id:
+                        attendee = models.execute_kw(
+                            DB, USERID, USERPASS, 
+                            'calendar.attendee', 
+                            'search_read', 
+                            [[('event_id', '=', event_id)]],
+                            {'fields': ['state'], 'limit': 1}
+                        )
+                        if attendee:
+                            attendee_id=attendee[0]["id"]
+                            models.execute_kw(DB, USERID, USERPASS, 'calendar.attendee', 'write', [[attendee_id], {'state': "accepted"}])
 
 
     @api.multi
@@ -487,13 +597,7 @@ class is_demande_conges(models.Model):
     date_validation_n2            = fields.Datetime(string='Date vers validation N2', copy=False)
     responsable_rh_id             = fields.Many2one('res.users', 'Responsable RH', default=lambda self: self.env.user.company_id.is_responsable_rh_id)
     date_validation_rh            = fields.Datetime(string='Date vers Responsable RH', copy=False)
-    type_demande                  = fields.Selection([
-                                        ('cp_rtt_journee'     , u'CP ou RTT par journée entière'),
-                                        ('cp_rtt_demi_journee', u'CP ou RTT par ½ journée'),
-                                        ('rc_heures'          , u'RC en heures'),
-                                        ('sans_solde'         , u'Congés sans solde'),
-                                        ('autre'              , u'Autre'),
-                                        ], string='Type de demande', required=True)
+    type_demande                  = fields.Selection(_TYPE_DEMANDE, string='Type de demande', required=True)
     autre_id                      = fields.Many2one('is.demande.conges.autre', 'Type autre')
     justificatif_ids              = fields.Many2many('ir.attachment', 'is_demande_conges_attachment_rel', 'demande_conges_id', 'file_id', u"Justificatif")
     cp                            = fields.Float(string='CP (jours)' , digits=(14,2), copy=False)
@@ -704,7 +808,6 @@ class is_demande_conges_export_cegid(models.Model):
                         comment   = u'Jours ARTT Pris '+self.fdate(date_debut)+u' '+t1[row['matin_ou_apres_midi']]
                     else:
                         comment   = u'Jours ARTT Pris '+self.fdate(date_debut)+u' au '+self.fdate(date_fin)
-                #print 'MAB',login,self.fdate(date_debut),self.fdate(date_fin),'{:07.2f}'.format(nb_jours),'{:07.2f}'.format(nb_heures),code,comment
                 f.write(u'MAB\t')
                 f.write(login+u'\t')
                 f.write(self.fdate(date_debut)+u'\t')
