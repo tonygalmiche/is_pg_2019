@@ -10,7 +10,7 @@
         ])]"/>
     </record>
 
-    <menuitem name="Equipements" id="is_theia_presse_main_menu"
+    <menuitem name="Process" id="is_theia_presse_main_menu"
               parent="is_theia_root_menu" sequence="10"/>
 
     <menuitem name="OF" id="menu_is_of_root" 
@@ -151,7 +151,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="is_presse_cycle_action">
-        <field name="name">Cycles équipements</field>
+        <field name="name">Cycles process</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">is.presse.cycle</field>
         <field name="view_mode">tree,form</field>
@@ -218,7 +218,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="is_presse_arret_action">
-        <field name="name">États équipements</field>
+        <field name="name">États process</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">is.presse.arret</field>
         <field name="view_mode">tree,form</field>
@@ -815,7 +815,7 @@
     <menuitem action="is_raspberry_action" 
               id="menu_is_raspberry" 
               parent="is_theia_parametres_menu" 
-              sequence="25" groups="base.group_erp_manager"/>
+              sequence="25" groups="is_plastigray.group_gestionnaire_cpi_raspberry"/>
 
 
     <!-- Lancement automatisé du calcul du bilan de fin d'OF -->

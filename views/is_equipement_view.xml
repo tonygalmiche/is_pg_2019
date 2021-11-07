@@ -812,7 +812,7 @@
     </record>
     -->
     <record model="ir.actions.act_window" id="is_theia_presse_action">
-        <field name="name">Equipements</field>
+        <field name="name">Process</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">is.equipement</field>
         <!--<field name="context">{"search_default_presses_actives":1}</field>-->
