@@ -428,8 +428,6 @@
             ])]"/>
         </record>
 
-
-
         <record id="is_certificat_conformite_menu" model="ir.ui.menu" >
             <field name="name">Certificat de conformité</field>
             <field name="sequence">50</field>
@@ -440,7 +438,6 @@
                 ref('is_plastigray.is_qualite_group'),
             ])]"/>
         </record>
-
 
         <menuitem id="is_indicateur_bei_menu" sequence="20" name="BEI" parent="is_plastigray.is_indicateurs_menu"/>
         <record id="is_indicateur_revue_jalon_menu" model="ir.ui.menu" >
@@ -453,10 +450,24 @@
             ])]"/>
         </record>
 
-
-
-
-
+        <record id="is_indicateur_commercial_menu" model="ir.ui.menu" >
+            <field name="name">Commercial</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" eval="ref('is_plastigray.is_indicateurs_menu')"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_base_principale_grp'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_appel_offre_menu" model="ir.ui.menu" >
+            <field name="name">Dossier appels d'offres</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_indicateur_commercial_menu')"/>
+            <field name="action"    ref="is_dossier_appel_offre_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_chef_projet_group'),
+                ref('is_plastigray.is_administration_vente_group'),
+            ])]"/>
+        </record>
 
     </data>
 </openerp>
