@@ -32,7 +32,6 @@
                                 <field name="dao_daterepplast"/>
                                 <field name="dao_rsplast"/>
                                 <field name="dao_daterepcli"/>
-                                <field name="dao_rspcli"/>
                                 <field name="dao_comment"/>
                                 <field name="dao_motif"/>
                                 <field name="dao_avancement"/>
@@ -69,7 +68,6 @@
                     <field name="dao_daterepplast"/>
                     <field name="dao_rsplast"/>
                     <field name="dao_daterepcli"/>
-                    <field name="dao_rspcli"/>
                     <field name="dao_comment"/>
                     <field name="dao_motif"/>
                     <field name="dao_avancement"/>
@@ -92,7 +90,6 @@
                     <field name="dao_be"/>
                     <field name="dao_dirbe"/>
                     <field name="dao_rsplast"/>
-                    <field name="dao_rspcli"/>
                     <field name="dao_comment"/>
                     <field name="dao_motif"/>
                     <field name="dao_avancement"/>

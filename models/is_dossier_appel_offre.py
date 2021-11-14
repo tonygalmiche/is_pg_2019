@@ -49,7 +49,6 @@ class is_dossier_appel_offre(models.Model):
     dao_daterepplast = fields.Date("Date réponse Plastigray")
     dao_rsplast      = fields.Selection(_DAO_RSPLAST, "Rsp Plastigray")
     dao_daterepcli   = fields.Date("Date réponse client")
-    dao_rspcli       = fields.Char("Rsp client")
     dao_comment      = fields.Char("Commentaire")
     dao_motif        = fields.Selection(_DAO_MOTIF, "Motif")
     dao_avancement   = fields.Selection(_DAO_AVANCEMENT, "Avancement")
