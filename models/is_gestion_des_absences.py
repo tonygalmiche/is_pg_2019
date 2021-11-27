@@ -592,11 +592,16 @@ class is_demande_conges(models.Model):
     courriel = fields.Char(u"Courriel", help="Courriel utilisé pour l'envoi des informations pour les demandes de congés", compute='_compute_mode_communication', readonly=True, store=True)
 
     valideur_n1                   = fields.Many2one('res.users', 'Valideur Niveau 1')
-    date_validation_n1            = fields.Datetime(string='Date vers validation N1', copy=False)
+    date_validation_n1            = fields.Datetime(string='Date de création', copy=False)
     valideur_n2                   = fields.Many2one('res.users', 'Valideur Niveau 2')
-    date_validation_n2            = fields.Datetime(string='Date vers validation N2', copy=False)
+    date_validation_n2            = fields.Datetime(string='Date validation N1', copy=False)
     responsable_rh_id             = fields.Many2one('res.users', 'Responsable RH', default=lambda self: self.env.user.company_id.is_responsable_rh_id)
-    date_validation_rh            = fields.Datetime(string='Date vers Responsable RH', copy=False)
+    date_validation_rh            = fields.Datetime(string='Date validation N2', copy=False)
+
+# - Date vers validation N1 => Ne sert à rien => Ou "Date de création" si tu veux
+# - Date vers validation N2 => Date validation N1
+# - Date vers  responsable RH => Date validation N2
+
     type_demande                  = fields.Selection(_TYPE_DEMANDE, string='Type de demande', required=True)
     autre_id                      = fields.Many2one('is.demande.conges.autre', 'Type autre')
     justificatif_ids              = fields.Many2many('ir.attachment', 'is_demande_conges_attachment_rel', 'demande_conges_id', 'file_id', u"Justificatif")

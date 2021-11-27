@@ -296,7 +296,7 @@
                             <group string="INFORMATION SUR LA DEMANDE">
                                 <field name="name" readonly="1" />
                                 <field name="createur_id" readonly="1" />
-                                <field name="date_creation" readonly="1" />
+                                <!-- <field name="date_creation" readonly="1" /> -->
                                 <field name="demande_collective"    readonly="1"/>
                                 <field name="demande_collective_id" readonly="1" attrs="{'invisible': [('demande_collective_id','=',False)]}"/>
                                 <field 

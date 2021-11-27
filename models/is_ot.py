@@ -121,16 +121,17 @@ class is_ot(models.Model):
         for obj in self:
             if email_to=="robot@plastigray.com":
                 email_to = email_from
-            vals = {
-                'email_from'    : email_from,
-                'email_to'      : email_to,
-                'email_cc'      : email_from,
-                'subject'       : subject,
-                'body_html'     : body_html,
-            }
-            email = self.env['mail.mail'].create(vals)
-            if email:
-                self.env['mail.mail'].send(email)
+            if email_to and email_to!='robot@plastigray.com':
+                vals = {
+                    'email_from'    : email_from,
+                    'email_to'      : email_to,
+                    'email_cc'      : email_from,
+                    'subject'       : subject,
+                    'body_html'     : body_html,
+                }
+                email = self.env['mail.mail'].create(vals)
+                if email:
+                    self.env['mail.mail'].send(email)
 
     @api.multi
     def action_annule(self):
