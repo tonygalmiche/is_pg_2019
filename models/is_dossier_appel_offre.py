@@ -7,16 +7,31 @@ _DAO_RSPLAST=([
     ('D', u'D=Déclinée'),
 ])
 
+# _DAO_MOTIF=([
+#     ("0", ""),
+#     ("1", "abandon client"),
+#     ("2", "délai trop long"),
+#     ("3", "moule et pièce trop chers"),
+#     ("4", "moule trop cher"),
+#     ("5", "pièce trop chère"),
+#     ("6", "autre"),
+#     ("7", "abandon Plastigray"),
+# ])
+
 _DAO_MOTIF=([
-    ("0", ""),
-    ("1", "abandon client"),
-    ("2", "délai trop long"),
-    ("3", "moule et pièce trop chers"),
-    ("4", "moule trop cher"),
-    ("5", "pièce trop chère"),
-    ("6", "autre"),
-    ("7", "abandon Plastigray"),
+    ('P01', 'Perdu - Prix moule & pièce'),
+    ('P02', 'Perdu - Prix moule'),
+    ('P03', 'Perdu - Prix pièce'),
+    ('P04', 'Perdu - Délai trop long'),
+    ('P05', 'Perdu - Projet client annulé'),
+    ('P06', 'Perdu - Pas de retour client'),
+    ('P07', 'Perdu - Choix stratégique client'),
+    ('D01', 'Décliné - Motif technique (process ou techno)'),
+    ('D02', 'Décliné - Capacitaire PG'),
+    ('D03', 'Décliné - Volume faible'),
+    ('D04', 'Décliné - Stratégique'),
 ])
+
 
 _DAO_AVANCEMENT=([
     (u'Développement', u'Développement'),
