@@ -7,6 +7,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Form" create="1">
+                    <header>
+                        <field name="state" widget="statusbar" clickable="True"/>
+                    </header>
                     <sheet>
                         <group>
                             <group>
@@ -71,6 +74,7 @@
                     <field name="dao_comment"/>
                     <field name="dao_motif"/>
                     <field name="dao_avancement"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -93,6 +97,7 @@
                     <field name="dao_comment"/>
                     <field name="dao_motif"/>
                     <field name="dao_avancement"/>
+                    <field name="state"/>
                 </search>
             </field>
         </record>

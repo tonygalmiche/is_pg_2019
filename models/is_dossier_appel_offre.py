@@ -7,16 +7,6 @@ _DAO_RSPLAST=([
     ('D', u'D=Déclinée'),
 ])
 
-# _DAO_MOTIF=([
-#     ("0", ""),
-#     ("1", "abandon client"),
-#     ("2", "délai trop long"),
-#     ("3", "moule et pièce trop chers"),
-#     ("4", "moule trop cher"),
-#     ("5", "pièce trop chère"),
-#     ("6", "autre"),
-#     ("7", "abandon Plastigray"),
-# ])
 
 _DAO_MOTIF=([
     ('P01', 'Perdu - Prix moule & pièce'),
@@ -36,6 +26,20 @@ _DAO_MOTIF=([
 _DAO_AVANCEMENT=([
     (u'Développement', u'Développement'),
     (u'Série'        , u'Série'),
+])
+
+
+_STATE=([
+    (u'plascreate'     , u'créé'),
+    (u'plasanalysed'   , u'analysé'),
+    (u'plastransbe'    , u'transmis BE'),
+    (u'plasvalidbe'    , u'validé BE'),
+    (u'plasvalidcom'   , u'validé commercial'),
+    (u'plasdiffusedcli', u'diffusé client'),
+    (u'plasrelancecli' , u'relance client'),
+    (u'plaswinned'     , u'gagné'),
+    (u'plasloosed'     , u'perdu'),
+    (u'plascancelled'  , u'annulé'),
 ])
 
 
@@ -67,4 +71,5 @@ class is_dossier_appel_offre(models.Model):
     dao_comment      = fields.Char("Commentaire")
     dao_motif        = fields.Selection(_DAO_MOTIF, "Motif")
     dao_avancement   = fields.Selection(_DAO_AVANCEMENT, "Avancement")
+    state            = fields.Selection(_STATE, "Etat")
     dynacase_id      = fields.Integer("id Dynacase")
