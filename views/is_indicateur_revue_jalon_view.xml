@@ -38,6 +38,8 @@
                                 <field name="affectation_presse_actuelle"/>
                                 <field name="cycle_par_piece1"/>
                                 <field name="cycle_par_piece2"/>
+                                <field name="nb_emp1"/>
+                                <field name="nb_emp2"/>
                                 <field name="mod1"/>
                                 <field name="mod2"/>
                                 <field name="tx_rebut_vendu1"/>
@@ -85,6 +87,8 @@
                     <field name="affectation_presse_actuelle"/>
                     <field name="cycle_par_piece1"/>
                     <field name="cycle_par_piece2"/>
+                    <field name="nb_emp1"/>
+                    <field name="nb_emp2"/>
                     <field name="mod1"/>
                     <field name="mod2"/>
                     <field name="tx_rebut_vendu1"/>
