@@ -146,6 +146,7 @@ class is_raspberry(models.Model):
     last_presse_id     = fields.Many2one('is.equipement', u"Equipement", compute='_compute_presse_id', required=False, readonly=True)
     onglet_indicateurs = fields.Boolean(u'Afficher onglet "Indicateurs"' , default=False)
     onglet_es          = fields.Boolean(u'Afficher onglet "Entrées / Sorties"', default=False)
+    declaration_odoo   = fields.Boolean(u'Activer la déclaration de production dans Odoo', default=False)
     onglet_actif       = fields.Char(u'Onglet actif', readonly=True, help=u"Ce champ est utilsé pour détecter si une mise à jour de l'onglet Indicateurs est necessaire")
     entree_ids         = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Entrées du Raspberry",  domain=[('entree_sortie','=','entree')])
     sortie_ids         = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Sorties du Raspberry",  domain=[('entree_sortie','=','sortie')])
@@ -180,7 +181,7 @@ class is_raspberry(models.Model):
             f = open(path, "w")
             f.write(sorties)
             f.close()
-            cmd="scp -o ConnectTimeout=2 "+path+" root@"+IP+":/opt/theia/sorties/sorties.txt"
+            cmd="scp -o ConnectTimeout=2 -o StrictHostKeyChecking=no "+path+" root@"+IP+":/opt/theia/sorties/sorties.txt"
             res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
 
             #TODO : Le rafraissement ne fonctionne pas toujours (1 fois sur 2)

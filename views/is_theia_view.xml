@@ -746,6 +746,7 @@
                 <field name="onglet_indicateurs"/>
                 <field name="onglet_es"/>
                 <field name="onglet_actif"/>
+                <field name="declaration_odoo"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
             </tree>
@@ -770,6 +771,7 @@
                     <field name="onglet_indicateurs"/>
                     <field name="onglet_es"/>
                     <field name="onglet_actif"/>
+                    <field name="declaration_odoo"/>
                 </group>
                 <group>
                     <group string="Entrées">
