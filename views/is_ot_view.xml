@@ -552,6 +552,8 @@
                     <field name="state"/>
                     <field name="pj" invisible="1"/>
                     <button string="Pièce jointe" name="pj_action" type="object" icon="STOCK_FILE" attrs="{'invisible': [('pj', '==', False)]}"/>
+                    <field name="write_date" string="Date modification"/>
+                    <field name="write_uid"  string="Dernier intervenant"/>
                 </tree>
             </field>
         </record>
