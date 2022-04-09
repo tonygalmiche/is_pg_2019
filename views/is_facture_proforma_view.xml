@@ -9,16 +9,14 @@
             <field name="model">is.bon.transfert</field>
             <field name="inherit_id" ref="is_plastigray.is_bon_transfert_form_view"/>
             <field name="arch" type="xml">
-                <sheet position="before">
-                    <header>
-                        <button 
-                            name="creation_facture_proforma_action"
-                            string="Créer facture proforma"
-                            groups="is_plastigray.is_administration_vente_group"
-                            type="object"
-                        />
-                    </header>
-                </sheet>
+                <button name="desadv_action" position="after">
+                    <button 
+                        name="creation_facture_proforma_action"
+                        string="Créer facture proforma"
+                        groups="is_plastigray.is_administration_vente_group"
+                        type="object"
+                    />
+                </button>
             </field>
         </record>
 
