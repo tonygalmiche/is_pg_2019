@@ -47,7 +47,6 @@ class is_facture_proforma_outillage(models.Model):
         if self.term_id and self.date_facture:
             pterm = self.env['account.payment.term'].browse(self.term_id.id)
             pterm_list = pterm.compute(value=1, date_ref=self.date_facture)[0]
-            print(pterm_list)
             if pterm_list:
                 date_due = max(line[0] for line in pterm_list)
         self.date_due = date_due
@@ -86,45 +85,54 @@ class is_facture_proforma_outillage(models.Model):
         return obj
 
 
-
-
-
-
-
     @api.multi
     def envoyer_par_mail_action(self):
         cr , uid, context = self.env.args
         user = self.env['res.users'].browse(uid)
         if user.email==False:
             raise Warning(u"Votre mail n'est pas renseigné !")
+        if not self.pool['res.users'].has_group(cr, uid, 'is_plastigray.is_comptable_group'):
+            raise Warning(u"Accès non autorisé !")
+        partners={}
         for obj in self:
+            if not obj.date_envoi_mail:
+                partner = obj.partner_id
+                if not partner in partners:
+                    partners[partner]=[]
+                partners[partner].append(obj)
+        for partner in partners:
+            attachment_ids=[]
+            for obj in partners[partner]:
 
-            # ** Recherche si une pièce jointe est déja associèe **************
-            model='is.facture.proforma.outillage'
-            name="Facture.pdf"
-            attachment_obj = self.env['ir.attachment']
-            attachments = attachment_obj.search([('res_model','=',model),('res_id','=',obj.id),('name','=',name)])
-            # *****************************************************************
+                # ** Recherche si une pièce jointe est déja associèe **************
+                model='is.facture.proforma.outillage'
+                name="Facture-Proforma-"+obj.name+".pdf"
+                attachment_obj = self.env['ir.attachment']
+                attachments = attachment_obj.search([('res_model','=',model),('res_id','=',obj.id),('name','=',name)])
+                # *****************************************************************
 
-            # ** Creation ou modification de la pièce jointe *******************
-            pdf = self.env['report'].get_pdf(obj, 'is_pg_2019.report_is_facture_proforma_outillage')
+                # ** Creation ou modification de la pièce jointe *******************
+                pdf = self.env['report'].get_pdf(obj, 'is_pg_2019.report_is_facture_proforma_outillage')
 
-            vals = {
-                'name':        name,
-                'datas_fname': name,
-                'type':        'binary',
-                'res_model':   model,
-                'res_id':      obj.id,
-                'datas':       pdf.encode('base64'),
-            }
-            if attachments:
-                for attachment in attachments:
-                    attachment.write(vals)
+                vals = {
+                    'name':        name,
+                    'datas_fname': name,
+                    'type':        'binary',
+                    'res_model':   model,
+                    'res_id':      obj.id,
+                    'datas':       pdf.encode('base64'),
+                }
+                attachment_id=False
+                if attachments:
+                    for attachment in attachments:
+                        attachment.write(vals)
+                        attachment_id=attachment.id
+                else:
+                    attachment = attachment_obj.create(vals)
                     attachment_id=attachment.id
-            else:
-                attachment = attachment_obj.create(vals)
-                attachment_id=attachment.id
-            # ******************************************************************
+                if attachment_id:
+                    attachment_ids.append(attachment_id)
+                # ******************************************************************
 
             #** Recherche du contact Facturation *******************************
             SQL="""
@@ -135,19 +143,16 @@ class is_facture_proforma_outillage(models.Model):
                     itc.name='Facturation' and
                     rp.active='t'
             """
-            cr.execute(SQL, [obj.partner_id.id])
+            cr.execute(SQL, [partner.id])
             result = cr.fetchall()
             emails_to=[]
             for row in result:
-                print(row)
                 email_to = row[1]
                 if email_to:
                     emails_to.append(row[0]+u' <'+email_to+u'>')
             if len(emails_to)==0:
-                raise Warning(u"Aucun contact de type 'Facturation' trouvé pour le client !")
-            print(emails_to)
+                raise Warning(u"Aucun contact de type 'Facturation' trouvé pour le client "+partner.name)
             #*******************************************************************
-
 
             email_cc   = user.name+u' <'+user.email+u'>'
             email_to   = u','.join(emails_to)
@@ -161,7 +166,7 @@ class is_facture_proforma_outillage(models.Model):
                 'email_cc'      : email_cc,
                 'email_from'    : email_from, 
                 'body_html'     : body_html.encode('utf-8'), 
-                'attachment_ids': [(6, 0, [[attachment_id]])] 
+                'attachment_ids': [(6, 0, [attachment_ids])] 
             })
 
             email_id=self.env['mail.mail'].create(email_vals)
@@ -171,167 +176,6 @@ class is_facture_proforma_outillage(models.Model):
             email_to   = u','.join(emails_to)
             obj.message_post(body=subject+u' envoyée par mail à '+u','.join(emails_to))
             obj.date_envoi_mail=datetime.now()
-
-
-
-
-
-
-        # cr , uid, context = self.env.args
-        # user = self.env['res.users'].browse(self._uid)
-        # if user.email==False:
-        #     raise Warning(u"Votre mail n'est pas renseigné !")
-        # attachment_ids=[]
-        # for id in ids:
-        #     invoice = self.env['account.invoice'].browse(id)
-        #     attachments = self.env['ir.attachment'].search([
-        #         ('res_model','=','account.invoice'),
-        #         ('res_id'   ,'=',id),
-        #     ], order='id desc', limit=1)
-        #     if len(attachments)==0:
-        #         raise Warning(u"Facture "+invoice.number+" non générée (non imprimée) !")
-
-        #     for attachment in attachments:
-        #         if invoice.is_mode_envoi_facture=='mail2':
-        #             # ** Duplication de la facture + fusion ********************
-        #             db = self._cr.dbname
-        #             path="/tmp/factures-" + db + '-'+str(uid)
-        #             cde="rm -Rf " + path
-        #             os.popen(cde).readlines()
-        #             if not os.path.exists(path):
-        #                 os.makedirs(path)
-        #             paths=[]
-        #             for x in range(1, 3):
-        #                 file_name = path + '/'+str(invoice.number) + '-' + str(x) + '.pdf'
-        #                 fd = os.open(file_name,os.O_RDWR|os.O_CREAT)
-        #                 try:
-        #                     os.write(fd, attachment.datas.decode('base64'))
-        #                 finally:
-        #                     os.close(fd)
-        #                 paths.append(file_name)
-        #             # ** Merge des PDF *****************************************
-        #             path_merged=self._merge_pdf(paths)
-        #             pdfs = open(path_merged,'rb').read().encode('base64')
-        #             # **********************************************************
-
-
-        #             # ** Création d'une piece jointe fusionnée *****************
-        #             name = 'facture-' + str(invoice.number) + '-' + str(uid) + '.pdf'
-        #             vals = {
-        #                 'name':        name,
-        #                 'datas_fname': name,
-        #                 'type':        'binary',
-        #                 'datas':       pdfs,
-        #             }
-        #             new = self.env['ir.attachment'].create(vals)
-        #             attachment_id=new.id
-        #             #***********************************************************
-        #         else:
-        #             attachment_id=attachment.id
-
-        #         attachment_ids.append(attachment_id)
-
-
-        # partner = self.env['res.partner'].browse(partner_id)
-        # if partner.is_mode_envoi_facture=='mail_client_bl':
-        #     attachment_obj = self.env['ir.attachment']
-        #     for id in ids:
-        #         invoice = self.env['account.invoice'].browse(id)
-        #         for line in invoice.invoice_line:
-        #             picking=line.is_move_id.picking_id
-
-        #             # ** Recherche si une pièce jointe est déja associèe au bl *
-        #             model='stock.picking'
-        #             name='BL-'+picking.name+u'.pdf'
-        #             attachments = attachment_obj.search([('res_model','=',model),('res_id','=',picking.id),('name','=',name)])
-        #             # **********************************************************
-
-        #             # ** Creation ou modification de la pièce jointe *******************
-        #             pdf = self.env['report'].get_pdf(picking, 'stock.report_picking')
-        #             vals = {
-        #                 'name':        name,
-        #                 'datas_fname': name,
-        #                 'type':        'binary',
-        #                 'res_model':   model,
-        #                 'res_id':      picking.id,
-        #                 'datas':       pdf.encode('base64'),
-        #             }
-        #             if attachments:
-        #                 for attachment in attachments:
-        #                     attachment.write(vals)
-        #                     attachment_id=attachment.id
-        #             else:
-        #                 attachment = attachment_obj.create(vals)
-        #                 attachment_id=attachment.id
-        #             # ******************************************************************
-
-        #             if attachment_id not in attachment_ids:
-        #                 attachment_ids.append(attachment_id)
-
-
-        # #** Recherche du contact Facturation *******************************
-        # SQL="""
-        #     select rp.name, rp.email, rp.active
-        #     from res_partner rp inner join is_type_contact itc on rp.is_type_contact=itc.id
-        #     where 
-        #         rp.parent_id="""+str(partner_id)+""" and 
-        #         itc.name='Facturation' and
-        #         rp.active='t'
-        # """
-        # cr.execute(SQL)
-        # result = cr.fetchall()
-        # emails_to=[]
-        # for row in result:
-        #     email_to = str(row[1])
-        #     if email_to=='None':
-        #         raise Warning(u"Mail du contact de facturation non renseigné pour le client "+partner.is_code+u'/'+partner.is_adr_code+" !")
-        #     emails_to.append(row[0]+u' <'+email_to+u'>')
-        # if len(emails_to)==0:
-        #     raise Warning(u"Aucun contact de type 'Facturation' trouvé pour le client "+partner.is_code+u'/'+partner.is_adr_code+" !")
-        # #*******************************************************************
-
-
-        # email_cc   = user.name+u' <'+user.email+u'>'
-        # email_to   = u','.join(emails_to)
-        # #email_to   = email_cc
-        # email_from = email_cc
-        # subject    = u'Facture Plastigray pour '+partner.name
-        # #subject    = u'Facture Plastigray pour '+partner.name+u' ('+u','.join(emails_to)+u')'
-        # email_vals = {}
-        # body_html=modele_mail.replace('[from]', user.name)
-        # email_vals.update({
-        #     'subject'       : subject,
-        #     'email_to'      : email_to,
-        #     'email_cc'      : email_cc,
-        #     'email_from'    : email_from, 
-        #     'body_html'     : body_html.encode('utf-8'), 
-        #     'attachment_ids': [(6, 0, [attachment_ids])] 
-        # })
-
-        # email_id=self.env['mail.mail'].create(email_vals)
-        # if email_id:
-        #     self.env['mail.mail'].send(email_id)
-
-        # email_to   = u','.join(emails_to)
-        # for id in ids:
-        #     invoice = self.env['account.invoice'].browse(id)
-        #     invoice.message_post(body=subject+u' envoyée par mail à '+u','.join(emails_to))
-        #     invoice.is_date_envoi_mail=datetime.now()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class is_facture_proforma_outillage_line(models.Model):
