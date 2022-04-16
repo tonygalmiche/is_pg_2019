@@ -157,7 +157,7 @@ class is_facture_proforma_outillage(models.Model):
             email_cc   = user.name+u' <'+user.email+u'>'
             email_to   = u','.join(emails_to)
             email_from = email_cc
-            subject    = u'Facture Proforma Outillage pour '+obj.partner_id.name
+            subject    = u'Facture Proforma Outillage pour '+partner.name
             email_vals = {}
             body_html=modele_mail.replace('[from]', user.name)
             email_vals.update({
@@ -174,8 +174,10 @@ class is_facture_proforma_outillage(models.Model):
                 self.env['mail.mail'].send(email_id)
 
             email_to   = u','.join(emails_to)
-            obj.message_post(body=subject+u' envoyée par mail à '+u','.join(emails_to))
-            obj.date_envoi_mail=datetime.now()
+
+            for obj in partners[partner]:
+                obj.message_post(body=subject+u' envoyée par mail à '+u','.join(emails_to))
+                obj.date_envoi_mail=datetime.now()
 
 
 class is_facture_proforma_outillage_line(models.Model):
