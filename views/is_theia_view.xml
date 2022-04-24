@@ -45,12 +45,26 @@
         <field name="type">ir.actions.act_url</field>
     </record>
     <menuitem 
-        name="Parc des presses" 
+        name="Parc des presses (ancien)" 
         id="is_url_parc_presses_menu" 
         action="is_url_parc_presses_action"
         parent="is_theia_presse_main_menu"
         sequence="15"
     />
+
+    <record model="ir.actions.act_url" id="is_url_parc_presses_new_action">
+        <field name="name">is_url_parc_presses_new_action</field>
+        <field name="url">http://localhost</field>
+        <field name="type">ir.actions.act_url</field>
+    </record>
+    <menuitem 
+        name="Parc des presses" 
+        id="is_url_parc_presses_new_menu" 
+        action="is_url_parc_presses_new_action"
+        parent="is_theia_presse_main_menu"
+        sequence="16"
+    />
+
     <record model="ir.actions.act_url" id="is_url_parc_assemblage_action">
         <field name="name">is_url_parc_assemblage_action</field>
         <field name="url">http://localhost</field>
@@ -61,13 +75,8 @@
         id="is_url_parc_assemblage_menu" 
         action="is_url_parc_assemblage_action"
         parent="is_theia_presse_main_menu"
-        sequence="16"
+        sequence="17"
     />
-
-
-
-
-
 
 
     <record model="ir.actions.act_url" id="is_url_indicateur_rebuts_action">
