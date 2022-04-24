@@ -605,6 +605,58 @@
               sequence="40" groups="base.group_erp_manager"/>
 
 
+
+
+
+
+
+
+    <!-- is.raspberry.zebra -->
+    <record model="ir.ui.view" id="is_raspberry_zebra_tree_view">
+        <field name="name">is.raspberry.zebra.tree</field>
+        <field name="model">is.raspberry.zebra</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_raspberry_zebra_form_view">
+        <field name="name">is.raspberry.zebra.form</field>
+        <field name="model">is.raspberry.zebra</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_raspberry_zebra_search_view" >
+        <field name="name">is.raspberry.zebra.search</field>
+        <field name="model">is.raspberry.zebra</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_raspberry_zebra_action">
+        <field name="name">Imprimante Zebra</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.raspberry.zebra</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="is_raspberry_zebra_action" 
+              id="menu_is_raspberry_zebra" 
+              parent="is_theia_parametres_menu" 
+              sequence="50" groups="base.group_erp_manager"/>
+
+
+
     <!-- État Presse -->
     <record model="ir.ui.view" id="is_etat_presse_tree_view">
         <field name="name">is.etat.presse.tree</field>
@@ -734,7 +786,7 @@
               sequence="20" groups="base.group_erp_manager"/>
 
 
-    <!-- raspberry -->
+    <!-- is.raspberry -->
     <record model="ir.ui.view" id="is_raspberry_tree_view">
         <field name="name">is.raspberry.tree</field>
         <field name="model">is.raspberry</field>
@@ -747,6 +799,7 @@
                 <field name="onglet_es"/>
                 <field name="onglet_actif"/>
                 <field name="declaration_odoo"/>
+                <field name="zebra_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
             </tree>
@@ -772,6 +825,7 @@
                     <field name="onglet_es"/>
                     <field name="onglet_actif"/>
                     <field name="declaration_odoo"/>
+                    <field name="zebra_id"/>
                 </group>
                 <group>
                     <group string="Entrées">
@@ -818,6 +872,10 @@
               id="menu_is_raspberry" 
               parent="is_theia_parametres_menu" 
               sequence="25" groups="is_plastigray.group_gestionnaire_cpi_raspberry"/>
+
+
+
+
 
 
     <!-- Lancement automatisé du calcul du bilan de fin d'OF -->

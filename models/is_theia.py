@@ -125,6 +125,15 @@ class is_raspberry_entree_sortie(models.Model):
             return True
 
 
+
+class is_raspberry_zebra(models.Model):
+    _name = 'is.raspberry.zebra'
+    _description = u"is_raspberry_zebra"
+    _order='name'
+    
+    name = fields.Char(u'Imprimante Zebra' , required=True)
+
+
 class is_raspberry(models.Model):
     _name = 'is.raspberry'
     _description = u"raspberry"
@@ -146,10 +155,12 @@ class is_raspberry(models.Model):
     last_presse_id     = fields.Many2one('is.equipement', u"Equipement", compute='_compute_presse_id', required=False, readonly=True)
     onglet_indicateurs = fields.Boolean(u'Afficher onglet "Indicateurs"' , default=False)
     onglet_es          = fields.Boolean(u'Afficher onglet "Entrées / Sorties"', default=False)
-    declaration_odoo   = fields.Boolean(u'Activer la déclaration de production dans Odoo', default=False)
     onglet_actif       = fields.Char(u'Onglet actif', readonly=True, help=u"Ce champ est utilsé pour détecter si une mise à jour de l'onglet Indicateurs est necessaire")
+    declaration_odoo   = fields.Boolean(u'Activer la déclaration de production dans Odoo', default=False)
+    zebra_id           = fields.Many2one('is.raspberry.zebra', u"Imprimante Zebra")
     entree_ids         = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Entrées du Raspberry",  domain=[('entree_sortie','=','entree')])
     sortie_ids         = fields.One2many('is.raspberry.entree.sortie', 'raspberry_id', u"Sorties du Raspberry",  domain=[('entree_sortie','=','sortie')])
+
 
     @api.multi
     def rafraichir_raspberry(self):
