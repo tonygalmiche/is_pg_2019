@@ -83,6 +83,7 @@
                             <field name="dossierf_id" attrs="{'invisible': [('gamme_sur', '!=', 'dossier_f')], 'required': [('gamme_sur', '=', 'dossier_f')]}"/>
                             <field name="product_id"  attrs="{'invisible': [('gamme_sur', '!=', 'article')], 'required': [('gamme_sur', '=', 'article')]}"/>
                             <field name="moule_dossierf"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
                         </group>
                         <group>
                             <field name="date_creation"/>

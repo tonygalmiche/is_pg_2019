@@ -348,6 +348,7 @@ class is_ctrl100_gamme_mur_qualite(models.Model):
     formation_id             = fields.Many2one("is.ctrl100.gamme.mur.qualite.formation", u"Formation", compute="_compute_formation_id", store=True, readonly=True)
     afficher_cout            = fields.Boolean(u"Afficher le coût", default=False)
     active                   = fields.Boolean(u"Gamme active", default=True)
+    attachment_ids           = fields.Many2many('ir.attachment', 'is_ctrl100_gamme_mur_qualite_attachment_rel', 'gamme_id', 'attachment_id', u'Pièces jointes')
 
 
 class is_ctrl100_gamme_defautheque_line(models.Model):
