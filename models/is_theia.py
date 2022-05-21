@@ -115,12 +115,10 @@ class is_raspberry_entree_sortie(models.Model):
             else:
                 etat="pressed"
             obj.etat=etat
-
             IP=obj.raspberry_id.name
-            print obj,IP
+            _logger.info("is_raspberry_entree_sortie : changer_etat_action : %s : %s : %s : %s"%(etat, IP, obj.entree_sortie, obj.numero))
             cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "service theia restart"'
             #res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
-            #print res
             obj.raspberry_id.rafraichir_sorties()
             return True
 
@@ -166,16 +164,17 @@ class is_raspberry(models.Model):
     def rafraichir_raspberry(self):
         for obj in self:
             IP=obj.name
-            print obj,IP
             #cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "service theia restart"'
             #os.system(cmd)
 
             cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
             WID=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
-            print WID,type(WID)
+
+
             cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0 && xdotool windowfocus '+WID+' && xdotool key --window '+WID+' F5"'
             res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
-            print res,type(res)
+
+
 
 
     @api.multi
@@ -194,6 +193,9 @@ class is_raspberry(models.Model):
             f.close()
             cmd="scp -o ConnectTimeout=2 -o StrictHostKeyChecking=no "+path+" root@"+IP+":/opt/theia/sorties/sorties.txt"
             res=subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell = True).strip()
+
+            _logger.info("is_raspberry : rafraichir_sorties : %s : %s : %s"%(obj.name, sorties, res))
+
 
             #TODO : Le rafraissement ne fonctionne pas toujours (1 fois sur 2)
             #cmd="ssh -o ConnectTimeout=2 -o StrictHostKeyChecking=no root@"+IP+' "export XAUTHORITY=/home/pi/.Xauthority; export DISPLAY=:0; xdotool search --class chromium | tail -1"'
@@ -222,7 +224,7 @@ class is_of(models.Model):
     name              = fields.Char('N°OF' , required=True)
     moule             = fields.Char('Moule' , required=False)
     nb_empreintes     = fields.Integer("Nombre d'empreintes", required=False)
-    coef_cpi          = fields.Float("Coefficient Theia", required=False, digits=(14,1))
+    coef_cpi          = fields.Float("Coefficient Theia", required=False, digits=(14,2))
     code_article      = fields.Char('Code article' , required=True)
     categorie         = fields.Char('Catégorie')
     designation       = fields.Char('Désignation' , required=False)
@@ -640,7 +642,7 @@ class is_theia_trs(models.Model):
     code_article = fields.Char('Code article', select=True)
     categorie    = fields.Char('Catégorie', select=True)
     moule        = fields.Char(u'Moule'           , required=True, select=True)
-    coef_theia   = fields.Float("Coefficient Theia", digits=(14,1), defaut=1)
+    coef_theia   = fields.Float("Coefficient Theia", digits=(14,2), defaut=1)
     duree_etat   = fields.Float("Durée dans cet état")
     duree_of     = fields.Float("Durée par OF")
 
