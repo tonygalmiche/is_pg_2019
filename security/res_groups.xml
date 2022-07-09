@@ -32,5 +32,14 @@
         <field name="comment">Ce groupe permet d'importer dans PK le budget (PIC/PDP) de Gray</field>
         <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
     </record>
+
+    <record model="res.groups" id="is_gestionnaire_dossier_article_grp" >
+        <field name="name">Gestionnaire dossier article</field>
+        <field name="comment">Ce groupe permet de modifier les dossier article</field>
+        <field name="category_id" ref="is_plastigray.is_groupe_plastigray_module_category"/>
+    </record>
+
+
+
 </data>
 </openerp>

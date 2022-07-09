@@ -28,3 +28,4 @@ import is_facture_proforma
 import is_facture_proforma_outillage
 import is_indicateur_revue_jalon
 import is_import_budget_pk
+import is_dossier_article

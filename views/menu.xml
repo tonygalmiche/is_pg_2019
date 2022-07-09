@@ -23,6 +23,108 @@
         </record>
 
 
+        <!-- Dossiers articles -->
+        <record id="is_dossier_article_main_menu" model="ir.ui.menu" >
+            <field name="name">Dossiers articles</field>
+            <field name="sequence">16</field>
+            <field name="parent_id" eval="ref('is_plastigray.menu_is_donnees_techniques')"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_base_principale_grp'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_menu" model="ir.ui.menu" >
+            <field name="name">Dossiers articles</field>
+            <field name="sequence">10</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_main_menu')"/>
+            <field name="action"    ref="is_dossier_article_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_base_principale_grp'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_actualiser_menu" model="ir.ui.menu" >
+            <field name="name">Actualiser Dossier article</field>
+            <field name="sequence">20</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_actions_server"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_pg_2019.is_gestionnaire_dossier_article_grp'),
+            ])]"/>
+        </record>
+
+
+        <record id="is_dossier_article_code_recyclage_menu" model="ir.ui.menu" >
+            <field name="name">Code recyclage</field>
+            <field name="sequence">30</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_code_recyclage_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_gestionnaire_tables_group'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_combustion_menu" model="ir.ui.menu" >
+            <field name="name">Combustion</field>
+            <field name="sequence">31</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_combustion_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_gestionnaire_tables_group'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_durete_menu" model="ir.ui.menu" >
+            <field name="name">Dureté</field>
+            <field name="sequence">32</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_durete_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_gestionnaire_tables_group'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_gamme_commerciale_menu" model="ir.ui.menu" >
+            <field name="name">Gamme commerciale</field>
+            <field name="sequence">33</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_gamme_commerciale_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_gestionnaire_tables_group'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_producteur_menu" model="ir.ui.menu" >
+            <field name="name">Producteur</field>
+            <field name="sequence">34</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_producteur_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_gestionnaire_tables_group'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_traitement_menu" model="ir.ui.menu" >
+            <field name="name">Traitement</field>
+            <field name="sequence">35</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_traitement_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_gestionnaire_tables_group'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_type_article_menu" model="ir.ui.menu" >
+            <field name="name">Type article</field>
+            <field name="sequence">36</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_type_article_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_gestionnaire_tables_group'),
+            ])]"/>
+        </record>
+        <record id="is_dossier_article_utilisation_menu" model="ir.ui.menu" >
+            <field name="name">Utilisation</field>
+            <field name="sequence">37</field>
+            <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
+            <field name="action"    ref="is_dossier_article_utilisation_action"/>
+            <field name="groups_id" eval="[(6,0,[
+                ref('is_plastigray.is_gestionnaire_tables_group'),
+            ])]"/>
+        </record>
+
 
         <!-- Bon d'achat en ville -->
         <menuitem id="is_bon_achat_ville_main_menu" sequence="26" name="Bon d'achat en ville"  parent="is_plastigray.menu_is_achats" />
