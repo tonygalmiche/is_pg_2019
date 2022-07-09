@@ -38,7 +38,7 @@ class is_dossier_article(models.Model):
     traitement1_id       = fields.Many2one('is.dossier.article.traitement', u"Traitement 1") #: menu déroulant ( anti-UV,etc…)
     traitement2_id       = fields.Many2one('is.dossier.article.traitement', u"Traitement 2") #: menu déroulant : le même que précédemment
     utilisation_id       = fields.Many2one('is.dossier.article.utilisation', u"Utilisations") #: liste de choix : possibilité de sélectionner plusieurs choix ( capotage domotique, …)
-    carte_jaune          = fields.Char(u"Carte jaune") #: oui/non
+    carte_jaune          = fields.Selection([('Oui', u'Oui'),('Non'  , u"Non")], u"Carte jaune") #: oui/non
     couleur_ral          = fields.Char(u"Couleur/Ral") #: champ libre
     documents_techniques = fields.Char(u"Documents techniques") #: lien pour accéder directement aux documents de la GED
 
@@ -63,7 +63,7 @@ class is_dossier_article(models.Model):
     temp_transformation = fields.Integer(u"T°C transformation (°C)") #: champ nombre
     temp_moule          = fields.Integer(u"T°C moule (°C)") #: champ nombre
     retrait             = fields.Char(u"Retrait (// - L )") #: champ libre
-    dessiccateur        = fields.Char(u"Dessiccateur") #:  oui/non
+    dessiccateur        = fields.Selection([('Oui', u'Oui'),('Non'  , u"Non")], u"Dessiccateur") #:  oui/non
     temp_rose           = fields.Integer(u"T°C Rosée") #: champ nombre
     taux_humidite       = fields.Float(u"Taux d’humidité", digits=(14,2)) #: champ nombre : 2 chiffres après la virgule
     commentaire         = fields.Char(u"Commentaires") #: champ libre
