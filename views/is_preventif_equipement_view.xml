@@ -235,9 +235,10 @@
                             <field name="type_preventif"/>
                         </group>
                         <group>
-                            <field name="date_preventif" readonly="1"/>
-                            <field name="nb_heures"      readonly="1"/>
-                            <field name="frequence"      readonly="1"/>
+                            <field name="readonly"       invisible="1"/>
+                            <field name="date_preventif" attrs="{'readonly': [('readonly', '=', True)]}"/>
+                            <field name="nb_heures"      attrs="{'readonly': [('readonly', '=', True)]}"/>
+                            <field name="frequence"      attrs="{'readonly': [('readonly', '=', True)]}"/>
                             <field name="preventif_id"   readonly="1"/>
                         </group>
                     </group>

@@ -229,24 +229,82 @@ class is_preventif_equipement_saisie(models.Model):
             obj.zone_id   = zone_id
             preventifs = self.env['is.preventif.equipement'].search([('zone_id','=',zone_id),('equipement_id','=',obj.equipement_id.id),('type_preventif','=',obj.type_preventif)],limit=1)
             obj.preventif_id = (preventifs and preventifs[0].id) or False
-            frequence    = (preventifs and preventifs[0].frequence) or False
-            obj.frequence = frequence
-            nb_heures = False
-            equipement_pilote_id = obj.equipement_id.zone_id.equipement_pilote_id.id
-            if equipement_pilote_id:
-                SQL = "SELECT sum(nb_heures) FROM is_preventif_equipement_heure WHERE equipement_id=%s"
-                cr.execute(SQL,[equipement_pilote_id])
-                res = cr.fetchall()
-                nb_heures = (res and res[0][0]) or False
-            obj.nb_heures = nb_heures
+            #frequence = (preventifs and preventifs[0].frequence) or False
+            #obj.frequence = frequence
+            #nb_heures = False
+            #equipement_pilote_id = obj.equipement_id.zone_id.equipement_pilote_id.id
+            #if equipement_pilote_id:
+            #    SQL = "SELECT sum(nb_heures) FROM is_preventif_equipement_heure WHERE equipement_id=%s"
+            #    cr.execute(SQL,[equipement_pilote_id])
+            #    res = cr.fetchall()
+            #    nb_heures = (res and res[0][0]) or False
+            #obj.nb_heures = nb_heures
+
+
+    @api.model
+    def _get_frequence(self):
+        cr = self._cr
+        equipement_id=type_preventif=zone_id=frequence=False
+        if self._context and self._context.get('equipement_id'):
+            equipement_id = self._context.get('equipement_id')
+        if self._context and self._context.get('type_preventif'):
+            type_preventif = self._context.get('type_preventif')
+        if equipement_id and type_preventif:
+            equipements = self.env['is.equipement'].search([('id','=',equipement_id)],limit=1)
+            for equipement in equipements:
+                zone_id = equipement.zone_id.id
+                preventifs = self.env['is.preventif.equipement'].search([('zone_id','=',zone_id),('equipement_id','=',equipement_id),('type_preventif','=',type_preventif)],limit=1)
+                frequence = (preventifs and preventifs[0].frequence) or False
+        return frequence
+
+
+    @api.model
+    def _get_nb_heures(self):
+        cr = self._cr
+        nb_heures=False
+        equipement_id=type_preventif=zone_id=frequence=False
+        if self._context and self._context.get('equipement_id'):
+            equipement_id = self._context.get('equipement_id')
+        if self._context and self._context.get('type_preventif'):
+            type_preventif = self._context.get('type_preventif')
+        if equipement_id and type_preventif:
+            equipements = self.env['is.equipement'].search([('id','=',equipement_id)],limit=1)
+            for equipement in equipements:
+                nb_heures = False
+                equipement_pilote_id = equipement.zone_id.equipement_pilote_id.id
+                if equipement_pilote_id:
+                    SQL = "SELECT sum(nb_heures) FROM is_preventif_equipement_heure WHERE equipement_id=%s"
+                    cr.execute(SQL,[equipement_pilote_id])
+                    res = cr.fetchall()
+                    nb_heures = (res and res[0][0]) or False
+        return nb_heures
+
+
+    @api.depends('nb_heures','frequence')
+    def _compute_ro(self):
+        cr , uid, context = self.env.args
+        for obj in self:
+            ro = True
+            user = self.env['res.users'].browse(uid)
+            if self.pool['res.users'].has_group(cr, uid, 'base.group_system'):
+                ro=False
+            obj.readonly = ro
+
 
     preventif_id        = fields.Many2one('is.preventif.equipement', u"Préventif", compute="_compute", store=True)
     zone_id             = fields.Many2one('is.preventif.equipement.zone', u"Zone", compute="_compute", store=True)
     equipement_id       = fields.Many2one('is.equipement', u"Equipement",required=True)
     type_preventif      = fields.Selection(TYPE_PREVENTIF_EQUIPEMENT, u"Type de préventif",required=True)
+
+    readonly            = fields.Boolean('Champ technique', compute='_compute_ro', readonly=True, store=False)
     date_preventif      = fields.Date(string=u'Date du préventif', default=fields.Date.context_today,select=True, required=True)
-    nb_heures           = fields.Integer(u"Nb heures actuel", compute="_compute", store=True)
-    frequence           = fields.Integer(u"Fréquence du préventif (H)", compute="_compute", store=True)
+
+    #nb_heures           = fields.Integer(u"Nb heures actuel", compute="_compute", store=True)
+    nb_heures           = fields.Integer(u"Nb heures actuel", default=_get_nb_heures)
+
+    #frequence           = fields.Integer(u"Fréquence du préventif (H)", compute="_compute", store=True)
+    frequence           = fields.Integer(u"Fréquence du préventif (H)", default=_get_frequence)
+
     fiche_preventif_ids = fields.Many2many('ir.attachment', 'is_preventif_equipement_saisie_attachment_rel', 'saisie_id', 'file_id', u"Fiche de réalisation du préventif")
 
 
