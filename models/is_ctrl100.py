@@ -776,6 +776,16 @@ class is_ctrl100_rapport_controle(models.Model):
         return quantite
 
 
+    @api.multi
+    def get_pourcentage_rebuts(self, gamme_id, date_debut, date_fin):
+        qt     = self.get_quantite(gamme_id, date_debut, date_fin)
+        rebuts = self.get_quantite_controlee(gamme_id, date_debut, date_fin)["nb_rebuts"]
+        res=0
+        if qt>0:
+            res=round(100.0*rebuts/qt,1)
+        return res
+
+
     @api.depends('gamme_id')
     def _compute_moule_dossierf(self):
         for obj in self:

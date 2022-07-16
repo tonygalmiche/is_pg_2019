@@ -340,6 +340,15 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td width="20%">
+                                                    % de rebuts : <span t-esc="o.get_pourcentage_rebuts(o.gamme_id, o.date_debut, o.date_fin)"/> %
+                                                </td>
+                                                <td width="80%">
+                                                    <div>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </td>
                                 </tr>
