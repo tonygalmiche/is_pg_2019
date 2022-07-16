@@ -33,7 +33,7 @@
                                 <field name="utilisation_id"       attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="carte_jaune"          attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="couleur_ral"/>
-                                <field name="documents_techniques"/>
+                                <field name="documents_techniques" widget="url"/>
                             </group>
                             <group string="Propriétés">
                                 <field name="densite"              attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>

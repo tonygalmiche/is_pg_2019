@@ -4,6 +4,8 @@ from openerp import models,fields,api
 import datetime
 import pytz
 import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -27,10 +29,6 @@ class is_dossier_article(models.Model):
     fournisseur       = fields.Char(u"Fournisseur par défaut")
     unite             = fields.Char(u"Unité")
 
-
-#    product_id       = fields.Many2one('xxx', u"Article", domain=[('sale_ok','=',True)], required=True, select=True)
-
-
     # Informations matières :
     gamme_commerciale_id = fields.Many2one('is.dossier.article.gamme.commerciale', u"Gamme commerciale") # : liste de choix ( LEXAN, ELASTOLLAN, DELRIN,…). voir annexe
     producteur_id        = fields.Many2one('is.dossier.article.producteur', u"Producteur") #: menu déroulant (SABIC, BASF, DUPONT, CHIMEI…) voir annexe
@@ -40,8 +38,7 @@ class is_dossier_article(models.Model):
     utilisation_id       = fields.Many2one('is.dossier.article.utilisation', u"Utilisations") #: liste de choix : possibilité de sélectionner plusieurs choix ( capotage domotique, …)
     carte_jaune          = fields.Selection([('Oui', u'Oui'),('Non'  , u"Non")], u"Carte jaune") #: oui/non
     couleur_ral          = fields.Char(u"Couleur/Ral") #: champ libre
-    documents_techniques = fields.Char(u"Documents techniques") #: lien pour accéder directement aux documents de la GED
-
+    documents_techniques = fields.Char(u"Documents techniques", compute="_compute_documents_techniques", readonly=True, store=False) #: lien pour accéder directement aux documents de la GED
 
     # Propriétés Matières :
     densite              = fields.Float(u"Densité", digits=(14,2)) #: nombre avec 2 chiffres après la virgule
@@ -72,6 +69,32 @@ class is_dossier_article(models.Model):
     commentaire         = fields.Char(u"Commentaires") #: champ libre
     code_recyclage_id   = fields.Many2one('is.dossier.article.code.recyclage', u"Code recyclage") #: menu déroulant : A,B…
     controle_qualite    = fields.Char(u"Contrôle qualité") #: champ libre : attention : champ présent dans onglet information à transférer dans ce nouvel onglet : attention lien avec les réceptions.
+
+
+    @api.depends('code_pg')
+    def _compute_documents_techniques(self):
+        #** Connexion à Dynacase **********************************************
+        cr , uid, context = self.env.args
+        company = self.env.user.company_id
+        password=company.is_dynacase_pwd
+        cr_dynacase=False
+        if password:
+            try:
+                cnx_dynacase = psycopg2.connect("host='dynacase' port=5432 dbname='freedom' user='freedomowner' password='"+password+"'")
+                cr_dynacase = cnx_dynacase.cursor(cursor_factory=RealDictCursor)
+            except:
+                cr_dynacase=False
+        #**********************************************************************
+        for obj in self:
+            url=False
+            if cr_dynacase:
+                SQL="select id from doc48613 where dosart_codepg=%s"
+                cr_dynacase.execute(SQL, [obj.code_pg])
+                result = cr_dynacase.fetchall()
+                for row in result:
+                    print(row)
+                    url="https://dynacase-rp/?sole=Y&app=FDL&action=FDL_CARD&latest=Y&id="+str(row["id"])
+            obj.documents_techniques=url
 
 
     @api.multi
