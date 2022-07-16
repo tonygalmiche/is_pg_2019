@@ -52,20 +52,23 @@ class is_dossier_article(models.Model):
     type_article2_id     = fields.Many2one('is.dossier.article.type.article', u"Type 2") #: menu déroulant (fibres de verre, talc, textile, bois…) Idem champ précédent
     combustion_id        = fields.Many2one('is.dossier.article.combustion', u"Combustion") #: menu déroulant ( V0, V2…)
     epaisseur_combustion = fields.Float(u"Epaisseur combustion (mm)", digits=(14,2)) #: nombre avec 2 chiffres après la virgule
-    gmfi                 = fields.Integer(u"GMFI (°C)") #: champ nombre
+    gwfi                 = fields.Integer(u"GWFI (°C)") #: champ nombre
     lab_l                = fields.Float(u" L (L*A*B)", digits=(14,2)) #: 3 cases avec nombre 2 chiffres après la virgule :
     lab_a                = fields.Float(u" A (L*A*B)", digits=(14,2)) #: 3 cases avec nombre 2 chiffres après la virgule :
     lab_b                = fields.Float(u" B (L*A*B)", digits=(14,2)) #: 3 cases avec nombre 2 chiffres après la virgule :
 
     # Informations production :
-    mfr_mvr             = fields.Char(u"MFR/MVR (g/10min – cm3/10min)") #: champ libre
+    mfr                 = fields.Integer(u"MFR (g/10min)") #: champ libre
+    mvr                 = fields.Integer(u"MVR (cm3/10min)") #: champ libre
     norme               = fields.Char(u"Norme (n° - T°C/masse kg)") #: champ libre
-    temp_transformation = fields.Integer(u"T°C transformation (°C)") #: champ nombre
-    temp_moule          = fields.Integer(u"T°C moule (°C)") #: champ nombre
+    temp_transformation = fields.Char(u"T°C transformation (°C)") #: champ nombre
+    temp_moule          = fields.Char(u"T°C moule (°C)") #: champ nombre
     retrait             = fields.Char(u"Retrait (// - L )") #: champ libre
+    temps_etuvage       = fields.Integer(u"Temps étuvage minimum (H)") #: champ nombre
+    temperature_etuvage = fields.Integer(u"Température étuvage (°C +/-10°)") #: champ nombre
     dessiccateur        = fields.Selection([('Oui', u'Oui'),('Non'  , u"Non")], u"Dessiccateur") #:  oui/non
     temp_rose           = fields.Integer(u"T°C Rosée") #: champ nombre
-    taux_humidite       = fields.Float(u"Taux d’humidité", digits=(14,2)) #: champ nombre : 2 chiffres après la virgule
+    taux_humidite       = fields.Float(u"Taux d'humidité maximum (%)", digits=(14,2)) #: champ nombre : 2 chiffres après la virgule
     commentaire         = fields.Char(u"Commentaires") #: champ libre
     code_recyclage_id   = fields.Many2one('is.dossier.article.code.recyclage', u"Code recyclage") #: menu déroulant : A,B…
     controle_qualite    = fields.Char(u"Contrôle qualité") #: champ libre : attention : champ présent dans onglet information à transférer dans ce nouvel onglet : attention lien avec les réceptions.

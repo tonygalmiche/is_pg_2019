@@ -107,7 +107,7 @@
             ])]"/>
         </record>
         <record id="is_dossier_article_type_article_menu" model="ir.ui.menu" >
-            <field name="name">Type article</field>
+            <field name="name">Type charge</field>
             <field name="sequence">36</field>
             <field name="parent_id" eval="ref('is_pg_2019.is_dossier_article_menu')"/>
             <field name="action"    ref="is_dossier_article_type_article_action"/>

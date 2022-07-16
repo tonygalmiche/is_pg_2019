@@ -44,17 +44,20 @@
                                 <field name="type_article2_id"     attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="combustion_id"        attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="epaisseur_combustion" attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
-                                <field name="gmfi"                 attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
+                                <field name="gwfi"                 attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="lab_l"/>
                                 <field name="lab_a"/>
                                 <field name="lab_b"/>
                              </group>
                             <group string="Informations production">
-                                <field name="mfr_mvr"             attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
+                                <field name="mfr"                 attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
+                                <field name="mvr"                 attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="norme"               attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="temp_transformation" attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="temp_moule"          attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="retrait"             attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
+                                <field name="temps_etuvage"       attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
+                                <field name="temperature_etuvage" attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="dessiccateur"        attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="temp_rose"           attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="taux_humidite"       attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
@@ -102,6 +105,11 @@
                     <field name="ref_plan"/>
                     <field name="couleur"/>
                     <field name="fournisseur"/>
+                    <separator/>
+                    <group string="Regrouper par">
+                        <filter string="Sous-Famille" context="{'group_by':'sous_famille'}"/>
+                        <filter string="Gestionnaire" context="{'group_by':'gestionnaire'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -354,7 +362,7 @@
             </field>
         </record>
         <record id="is_dossier_article_type_article_action" model="ir.actions.act_window" >
-            <field name="name">Type article</field>
+            <field name="name">Type charge</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.dossier.article.type.article</field>
             <field name="view_mode">tree,form</field>
