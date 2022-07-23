@@ -238,7 +238,7 @@
                             <field name="readonly"       invisible="1"/>
                             <field name="date_preventif" attrs="{'readonly': [('readonly', '=', True)]}"/>
                             <field name="nb_heures"      attrs="{'readonly': [('readonly', '=', True)]}"/>
-                            <field name="frequence"      attrs="{'readonly': [('readonly', '=', True)]}"/>
+                            <field name="frequence"      readonly="1"/>
                             <field name="preventif_id"   readonly="1"/>
                         </group>
                     </group>

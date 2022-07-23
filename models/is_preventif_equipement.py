@@ -286,7 +286,7 @@ class is_preventif_equipement_saisie(models.Model):
         for obj in self:
             ro = True
             user = self.env['res.users'].browse(uid)
-            if self.pool['res.users'].has_group(cr, uid, 'base.group_system'):
+            if self.pool['res.users'].has_group(cr, uid, 'is_plastigray.is_rsp_preventif_equipement_group'):
                 ro=False
             obj.readonly = ro
 

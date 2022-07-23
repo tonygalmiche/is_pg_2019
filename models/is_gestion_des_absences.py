@@ -296,7 +296,8 @@ class is_demande_conges(models.Model):
                 #***************************************************************
 
             try:
-                obj.ajouter_dans_agenda()
+                if obj.demande_collective=='non':
+                    obj.ajouter_dans_agenda()
             except:
                 pass
             obj.signal_workflow('validation_rh')
