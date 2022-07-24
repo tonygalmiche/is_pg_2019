@@ -438,77 +438,77 @@ class is_of(models.Model):
             #*******************************************************************
 
 
-            #** Envoi par mail *************************************************
-            if obj.impression_bilan!=True and obj.heure_fin:
-                obj.envoyer_par_mail_action()
-                obj.impression_bilan=True
-            #*******************************************************************
+            # #** Envoi par mail *************************************************
+            # if obj.impression_bilan!=True and obj.heure_fin:
+            #     obj.envoyer_par_mail_action()
+            #     obj.impression_bilan=True
+            # #*******************************************************************
         return []
 
 
-    @api.multi
-    def envoyer_par_mail_action(self):
-        for obj in self:
-            user  = self.env['res.users'].browse(self._uid)
-            email_to=[]
-            for row in user.company_id.is_dest_bilan_of_ids:
-                if row.email:
-                    email_to.append(row.name+u' <'+row.email+u'>')
+    # @api.multi
+    # def envoyer_par_mail_action(self):
+    #     for obj in self:
+    #         user  = self.env['res.users'].browse(self._uid)
+    #         email_to=[]
+    #         for row in user.company_id.is_dest_bilan_of_ids:
+    #             if row.email:
+    #                 email_to.append(row.name+u' <'+row.email+u'>')
 
-            name='bilan-fin-of.pdf'
+    #         name='bilan-fin-of.pdf'
 
-            #** Génération du PDF **********************************************
-            pdf = self.env['report'].get_pdf(obj, 'is_pg_2019.bilan_fin_of_report')
+    #         #** Génération du PDF **********************************************
+    #         pdf = self.env['report'].get_pdf(obj, 'is_pg_2019.bilan_fin_of_report')
 
-            #** Recherche si une pièce jointe est déja associèe ****************
-            model=self._name
-            attachment_obj = self.env['ir.attachment']
-            attachments = attachment_obj.search([('res_model','=',model),('res_id','=',obj.id),('name','=',name)])
-            # ******************************************************************
+    #         #** Recherche si une pièce jointe est déja associèe ****************
+    #         model=self._name
+    #         attachment_obj = self.env['ir.attachment']
+    #         attachments = attachment_obj.search([('res_model','=',model),('res_id','=',obj.id),('name','=',name)])
+    #         # ******************************************************************
 
-            #** Creation ou modification de la pièce jointe ********************
-            vals = {
-                'name':        name,
-                'datas_fname': name,
-                'type':        'binary',
-                'res_model':   model,
-                'res_id':      obj.id,
-                'datas':       pdf.encode('base64'),
-            }
-            attachment_id=False
-            if attachments:
-                for attachment in attachments:
-                    attachment.write(vals)
-                    attachment_id=attachment.id
-            else:
-                attachment = attachment_obj.create(vals)
-                attachment_id=attachment.id
-            #*******************************************************************
+    #         #** Creation ou modification de la pièce jointe ********************
+    #         vals = {
+    #             'name':        name,
+    #             'datas_fname': name,
+    #             'type':        'binary',
+    #             'res_model':   model,
+    #             'res_id':      obj.id,
+    #             'datas':       pdf.encode('base64'),
+    #         }
+    #         attachment_id=False
+    #         if attachments:
+    #             for attachment in attachments:
+    #                 attachment.write(vals)
+    #                 attachment_id=attachment.id
+    #         else:
+    #             attachment = attachment_obj.create(vals)
+    #             attachment_id=attachment.id
+    #         #*******************************************************************
 
-            if len(email_to)>0:
-                body_html=u"""
-                    <html>
-                        <head>
-                            <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-                        </head>
-                        <body>
-                            <p>Bonjour, </p>
-                            <p>Ci-joint le bilan de l'OF """+obj.name+"""</p>
-                        </body>
-                    </html>
-                """
-                email_vals={
-                    'subject'       : "[THEIA] Bilan de l'OF "+obj.name,
-                    'email_to'      : ';'.join(email_to), 
-                    'email_cc'      : "",
-                    'email_from'    : "robot@plastigray.com", 
-                    'body_html'     : body_html.encode('utf-8'), 
-                    'attachment_ids': [(6, 0, [attachment_id])] 
-                }
-                email_id=self.env['mail.mail'].create(email_vals)
-                self.env['mail.mail'].send(email_id)
+    #         if len(email_to)>0:
+    #             body_html=u"""
+    #                 <html>
+    #                     <head>
+    #                         <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    #                     </head>
+    #                     <body>
+    #                         <p>Bonjour, </p>
+    #                         <p>Ci-joint le bilan de l'OF """+obj.name+"""</p>
+    #                     </body>
+    #                 </html>
+    #             """
+    #             email_vals={
+    #                 'subject'       : "[THEIA] Bilan de l'OF "+obj.name,
+    #                 'email_to'      : ';'.join(email_to), 
+    #                 'email_cc'      : "",
+    #                 'email_from'    : "robot@plastigray.com", 
+    #                 'body_html'     : body_html.encode('utf-8'), 
+    #                 'attachment_ids': [(6, 0, [attachment_id])] 
+    #             }
+    #             email_id=self.env['mail.mail'].create(email_vals)
+    #             self.env['mail.mail'].send(email_id)
 
-                _logger.info(u"Envoi par mail du bilan de l'OF "+obj.name+u' à '+u';'.join(email_to))
+    #             _logger.info(u"Envoi par mail du bilan de l'OF "+obj.name+u' à '+u';'.join(email_to))
 
 
 class is_of_tps(models.Model):
