@@ -314,14 +314,14 @@
         <field name="model">is.of</field>
         <field name="arch" type="xml">
         <form>
-            <header>
+            <!-- <header>
                 <button 
                     name="envoyer_par_mail_action"
                     string="Envoyer par mail le blian de fin d'OF"
                     type="object"
                     groups="base.group_system"
                 />
-            </header>
+            </header> -->
             <sheet>
                 <group>
                     <group>
