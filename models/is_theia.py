@@ -253,6 +253,7 @@ class is_of(models.Model):
     tps_ids           = fields.One2many('is.of.tps'  , 'of_id', u"Répartition des temps d'arrêt")
     rebut_ids         = fields.One2many('is.of.rebut', 'of_id', u"Répartition des rebuts")
     impression_bilan  = fields.Boolean('Bilan imprimé et envoyé par mail', select=True)
+    impression_bilan_equipe = fields.Boolean(u"Bilan des OFs de l'équipe imprimé et envoyé par mail", select=True, default=False)
     prioritaire       = fields.Boolean('Ordre de fabrication prioritaire')
     
     _sql_constraints = [
