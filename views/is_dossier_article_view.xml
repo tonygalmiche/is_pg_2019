@@ -63,7 +63,7 @@
                                 <field name="taux_humidite"       attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="commentaire"         attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="code_recyclage_id"   attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
-                                <field name="controle_qualite"    readonly="1"/>
+                                <field name="controle_qualite"/>
                              </group>
                         </group>
                     </sheet>
