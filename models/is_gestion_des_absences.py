@@ -468,6 +468,7 @@ class is_demande_conges(models.Model):
             vers_validation_rh  = False
             vers_solde          = False
             fld_vsb             = False
+            droit_actualise_vsb = False
             test_date           = False
             current_date = datetime.date.today()
             current_date_plus_ten = current_date + relativedelta(days=10)
@@ -526,6 +527,9 @@ class is_demande_conges(models.Model):
                     vers_annuler = True
                     vers_annuler = True
 
+            if obj.responsable_rh_id.id == uid:
+                droit_actualise_vsb = True
+
             obj.vers_creation_btn_vsb      = vers_creation
             obj.vers_annuler_btn_vsb       = vers_annuler
             obj.vers_refuse_btn_vsb        = vers_refuse
@@ -534,6 +538,7 @@ class is_demande_conges(models.Model):
             obj.vers_validation_rh_btn_vsb = vers_validation_rh
             obj.vers_solde_btn_vsb         = vers_solde
             obj.fld_vsb                    = fld_vsb
+            obj.droit_actualise_vsb        = droit_actualise_vsb
 
 
     @api.depends('demandeur_id')
@@ -565,6 +570,29 @@ class is_demande_conges(models.Model):
             obj.droit_rtt = droit_rtt
             obj.droit_rc  = droit_rc
         return True
+
+
+    @api.depends('demandeur_id')
+    def _compute_droit_actualise(self):
+        for obj in self:
+            employes = self.env['hr.employee'].search([('user_id', '=', obj.demandeur_id.id)], limit=1)
+            droit_cp  = 0
+            droit_rtt = 0
+            droit_rc  = 0
+            for employe in employes:
+                droits = self.env['is.droit.conges'].search([('employe_id', '=', employe.id)])
+                for droit in droits:
+                    if droit.name=='CP':
+                        droit_cp = droit.nombre
+                    if droit.name=='RTT':
+                        droit_rtt = droit.nombre
+                    if droit.name=='RC':
+                        droit_rc = droit.nombre
+            obj.droit_cp_actualise  = droit_cp
+            obj.droit_rtt_actualise = droit_rtt
+            obj.droit_rc_actualise  = droit_rc
+        return True
+
 
     @api.depends('demandeur_id')
     def _compute_matricule(self):
@@ -614,6 +642,10 @@ class is_demande_conges(models.Model):
     droit_rtt                     = fields.Float(string='Droit RTT (jours)', digits=(14,2), compute='_compute_mode_communication', readonly=True, store=True)
     droit_rc                      = fields.Float(string='Droit RC (heures)', digits=(14,2), compute='_compute_mode_communication', readonly=True, store=True)
 
+    droit_cp_actualise            = fields.Float(string='Droit CP actualisé (jours)' , digits=(14,2), compute='_compute_droit_actualise', readonly=True, store=False)
+    droit_rtt_actualise           = fields.Float(string='Droit RTT actualisé (jours)', digits=(14,2), compute='_compute_droit_actualise', readonly=True, store=False)
+    droit_rc_actualise            = fields.Float(string='Droit RC actualisé (heures)', digits=(14,2), compute='_compute_droit_actualise', readonly=True, store=False)
+
     date_debut                    = fields.Date(string=u'Date début')
     date_fin                      = fields.Date(string='Date fin')
     le                            = fields.Date(string='Le')
@@ -652,6 +684,7 @@ class is_demande_conges(models.Model):
     vers_validation_rh_btn_vsb = fields.Boolean(string='vers_validation_rh_btn_vsb', compute='_get_btn_vsb', default=False, readonly=True)
     vers_solde_btn_vsb         = fields.Boolean(string='vers_solde_btn_vsb'        , compute='_get_btn_vsb', default=False, readonly=True)
     fld_vsb                    = fields.Boolean(string='Field Vsb'                 , compute='_get_btn_vsb', default=False, readonly=True)
+    droit_actualise_vsb        = fields.Boolean(string='droit_actualise_vsb'       , compute='_get_btn_vsb', default=False, readonly=True)
 
 
 

@@ -147,7 +147,7 @@
                         <field name="vers_validation_n2_btn_vsb" invisible="1"/>
                         <field name="vers_validation_rh_btn_vsb" invisible="1"/>
                         <field name="vers_solde_btn_vsb"         invisible="1"/>
-
+                        <field name="droit_actualise_vsb"        invisible="1"/>
                         <button 
                             string="Vers Validation Niveau 1"
                             name="vers_validation_n1_action"
@@ -347,10 +347,18 @@
                                 <field name="droit_rtt"/>
                                 <field name="droit_rc"/>
                             </group>
+
                             <group string="Responsable RH">
                                 <field name="cp"  attrs="{'readonly': [('fld_vsb','=',False)]}" />
                                 <field name="rtt" attrs="{'readonly': [('fld_vsb','=',False)]}" />
                                 <field name="rc"  attrs="{'readonly': [('fld_vsb','=',False)]}" />
+                            </group>
+                        </group>
+                        <group  attrs="{'invisible': [('demande_collective','!=','non')]}">
+                            <group string="Droit actualisé (RH)" attrs="{'invisible': [('droit_actualise_vsb','=',False)]}">
+                                <field name="droit_cp_actualise"/>
+                                <field name="droit_rtt_actualise"/>
+                                <field name="droit_rc_actualise"/>
                             </group>
                         </group>
                     </sheet>
