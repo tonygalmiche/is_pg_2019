@@ -276,7 +276,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="is_preventif_equipement_saisie_action">
-            <field name="name">Saisie préventif équipement</field>
+            <field name="name">Historique préventifs</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">is.preventif.equipement.saisie</field>
             <field name="view_mode">tree,form</field>
