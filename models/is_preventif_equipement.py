@@ -230,7 +230,7 @@ class is_preventif_equipement_saisie(models.Model):
             preventifs = self.env['is.preventif.equipement'].search([('zone_id','=',zone_id),('equipement_id','=',obj.equipement_id.id),('type_preventif','=',obj.type_preventif)],limit=1)
             obj.preventif_id = (preventifs and preventifs[0].id) or False
             #frequence = (preventifs and preventifs[0].frequence) or False
-            #obj.frequence = frequence
+            obj.frequence = obj._get_frequence()
             #nb_heures = False
             #equipement_pilote_id = obj.equipement_id.zone_id.equipement_pilote_id.id
             #if equipement_pilote_id:
@@ -247,8 +247,16 @@ class is_preventif_equipement_saisie(models.Model):
         equipement_id=type_preventif=zone_id=frequence=False
         if self._context and self._context.get('equipement_id'):
             equipement_id = self._context.get('equipement_id')
+        else:
+            equipement_id = self.equipement_id.id
+
+
         if self._context and self._context.get('type_preventif'):
             type_preventif = self._context.get('type_preventif')
+        else:
+            type_preventif = self.type_preventif
+
+
         if equipement_id and type_preventif:
             equipements = self.env['is.equipement'].search([('id','=',equipement_id)],limit=1)
             for equipement in equipements:
@@ -265,8 +273,14 @@ class is_preventif_equipement_saisie(models.Model):
         equipement_id=type_preventif=zone_id=frequence=False
         if self._context and self._context.get('equipement_id'):
             equipement_id = self._context.get('equipement_id')
+        else:
+            equipement_id = self.equipement_id.id
+
         if self._context and self._context.get('type_preventif'):
             type_preventif = self._context.get('type_preventif')
+        else:
+            type_preventif = self.type_preventif
+
         if equipement_id and type_preventif:
             equipements = self.env['is.equipement'].search([('id','=',equipement_id)],limit=1)
             for equipement in equipements:
@@ -302,8 +316,8 @@ class is_preventif_equipement_saisie(models.Model):
     #nb_heures           = fields.Integer(u"Nb heures actuel", compute="_compute", store=True)
     nb_heures           = fields.Integer(u"Nb heures actuel", default=_get_nb_heures)
 
-    #frequence           = fields.Integer(u"Fréquence du préventif (H)", compute="_compute", store=True)
-    frequence           = fields.Integer(u"Fréquence du préventif (H)", default=_get_frequence)
+    frequence           = fields.Integer(u"Fréquence du préventif (H)", compute="_compute", store=True)
+    #frequence           = fields.Integer(u"Fréquence du préventif (H)", default=_get_frequence)
 
     fiche_preventif_ids = fields.Many2many('ir.attachment', 'is_preventif_equipement_saisie_attachment_rel', 'saisie_id', 'file_id', u"Fiche de réalisation du préventif")
 
@@ -318,3 +332,7 @@ class is_preventif_equipement_saisie(models.Model):
         return res
 
 
+    @api.onchange('equipement_id','type_preventif')
+    def on_change_equipement_id(self):
+        self.nb_heures = self._get_nb_heures()
+        #self.frequence = self._get_frequence()
