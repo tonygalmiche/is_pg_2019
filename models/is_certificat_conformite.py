@@ -281,6 +281,8 @@ class stock_picking(models.Model):
     @api.multi
     def imprimer_certificat_action(self):
         for obj in self:
+            if obj.is_sale_order_id.is_liste_servir_id:
+                obj.is_sale_order_id.is_liste_servir_id.affecter_uc_aux_lignes_ls_action()
             cr , uid, context = self.env.args
             db = self._cr.dbname
             path="/tmp/certificats-" + db + '-'+str(uid)
@@ -313,11 +315,27 @@ class stock_picking(models.Model):
                         lots[' ']["date_fabrication"]=False
                         lots[' ']["qt"]=False
                     x=0
+
                     for lot in lots:
-                        x+=1
+                        #** Recherche qt livrée par lot et par commande client **********
+                        qt_liv=0
+                        if move.picking_id.is_sale_order_id:
+                            if  move.picking_id.is_sale_order_id.is_liste_servir_id:
+                                if move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
+                                    for um in move.picking_id.is_sale_order_id.is_liste_servir_id.galia_um_ids:
+                                        if um.product_id == move.product_id:
+                                            for uc in um.uc_ids:
+                                                if uc.production==lot:
+                                                    if uc.ls_line_id and uc.ls_line_id.client_order_ref==move.is_sale_line_id.is_client_order_ref:
+                                                        qt_liv+=uc.qt_pieces
+                        certificat.qt_liv  = qt_liv
+                        #certificat.qt_liv = lots[lot]["qt"]
+                        #****************************************************************
+
+                        certificat.client_order_ref = move.is_sale_line_id.is_client_order_ref
                         certificat.num_lot          = lot
                         certificat.date_fabrication = lots[lot]["date_fabrication"]
-                        certificat.qt_liv           = lots[lot]["qt"]
+                        x+=1
                         result = self.env['report'].get_pdf(certificat, 'is_pg_2019.is_certificat_conformite_report')
                         file_name = path + '/'+str(move.id) + '-' + str(x) + '.pdf'
                         fd = os.open(file_name,os.O_RDWR|os.O_CREAT)
