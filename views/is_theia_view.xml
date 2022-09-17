@@ -238,6 +238,67 @@
               sequence="30"/>
 
 
+    <!-- is.theia.alerte -->
+    <record model="ir.ui.view" id="is_theia_alerte_tree_view">
+        <field name="name">is.theia.alerte.tree</field>
+        <field name="model">is.theia.alerte</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="equipement_id"/>
+                <field name="type_alerte_id"/>
+                <field name="heure_debut"/>
+                <field name="heure_fin"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_alerte_form_view">
+        <field name="name">is.theia.alerte.form</field>
+        <field name="model">is.theia.alerte</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="equipement_id"/>
+                    <field name="type_alerte_id"/>
+                    <field name="heure_debut"/>
+                    <field name="heure_fin"/>
+                    <field name="active"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_alerte_search_view" >
+        <field name="name">is.theia.alerte.search</field>
+        <field name="model">is.theia.alerte</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="equipement_id"/>
+                <field name="type_alerte_id"/>
+                <group string="Filtres">
+                    <filter string="Alertes inactives" name="alertes_inactives" domain="[('active','=',False)]"/>
+                    <filter string="Alertes actives"   name="alertes_actives"   domain="[('active','=',True)]"/>
+                </group>
+                <group string="Regrouper par">
+                    <filter string="Process"       name="group_by_process" context="{'group_by': 'equipement_id'}"/>
+                    <filter string="Type d'alerte" name="group_by_alerte"  context="{'group_by': 'type_alerte_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_theia_alerte_action">
+        <field name="name">Alertes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.theia.alerte</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem action="is_theia_alerte_action" 
+              id="menu_is_theia_alerte" 
+              parent="is_theia_presse_main_menu" 
+              sequence="35"/>
+
+
     <!-- of -->
     <record id="bilan_fin_of_action_server" model="ir.actions.server">
          <field name="name">Bilan de fin d'OF</field>
@@ -612,6 +673,58 @@
               id="menu_is_type_defaut" 
               parent="is_theia_parametres_menu" 
               sequence="40" groups="base.group_erp_manager"/>
+
+
+
+
+
+
+    <!-- is.theia.alerte.type -->
+    <record model="ir.ui.view" id="is_theia_alerte_type_tree_view">
+        <field name="name">is.theia.alerte.type.tree</field>
+        <field name="model">is.theia.alerte.type</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_alerte_type_form_view">
+        <field name="name">is.theia.alerte.type.form</field>
+        <field name="model">is.theia.alerte.type</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="code"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="is_theia_alerte_type_search_view" >
+        <field name="name">is.theia.alerte.type.search</field>
+        <field name="model">is.theia.alerte.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="is_theia_alerte_type_action">
+        <field name="name">Type d'alerte</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">is.theia.alerte.type</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem action="is_theia_alerte_type_action" 
+              id="menu_is_theia_alerte_type" 
+              parent="is_theia_parametres_menu" 
+              sequence="45" groups="base.group_erp_manager"/>
+
+
 
 
 

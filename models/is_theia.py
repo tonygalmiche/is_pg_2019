@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from openerp import pooler
 from openerp import models,fields,api,tools
 from openerp.tools.translate import _
@@ -763,10 +762,24 @@ class is_mold(models.Model):
                 id=self.env['is.theia.habilitation.operateur'].create(vals)
 
 
+class is_theia_alerte_type(models.Model):
+    _name = 'is.theia.alerte.type'
+    _description = u"Type d'alerte dans THEIA"
+    _order='name'
+
+    name = fields.Char(u"Type d'alerte", required=True)
+    code = fields.Char(u"Code"         , required=True)
 
 
+class is_theia_alerte(models.Model):
+    _name = 'is.theia.alerte'
+    _description = u"Alerte dans THEIA"
+    _order='equipement_id, type_alerte_id, heure_debut desc'
 
-
-
+    equipement_id  = fields.Many2one("is.equipement"       , u"Process", required=True , select=True)
+    type_alerte_id = fields.Many2one("is.theia.alerte.type", u"Type d'alerte"    , required=True , select=True)
+    heure_debut    = fields.Datetime(u'Heure de début', required=True, select=True)
+    heure_fin      = fields.Datetime(u'Heure de fin', select=True)
+    active         = fields.Boolean(u'Active'       , select=True, default=True)
 
 
