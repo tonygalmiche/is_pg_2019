@@ -149,7 +149,11 @@
                             <table style="width:100%" class="entete">
                                 <tr>
                                     <th style="width:25%">Demandeur :   <span t-field="o.createur_id.name"/></th>
-                                    <th style="width:25%">Responsable : <span t-field="o.responsable_id.name"/></th>
+                                    <th style="width:25%">Responsable : 
+                                        <t t-if="o.state=='valide'">
+                                            <span t-field="o.responsable_id.name"/>
+                                        </t>
+                                    </th>
                                     <th style="border:0"></th>
                                 </tr>
                                 <tr style="height:25mm">
@@ -162,7 +166,8 @@
                                     </th>
                                     <th>
                                         Visa : 
-                                        <img 
+                                        <img  
+                                            t-if="o.state=='valide'"
                                             t-att-src="'data:image/png;base64,%s' % o.responsable_id.is_signature" 
                                             style="max-height: 35mm;max-width: 50mm;"
                                         />

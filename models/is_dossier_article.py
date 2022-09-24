@@ -69,6 +69,7 @@ class is_dossier_article(models.Model):
     commentaire         = fields.Char(u"Commentaires") #: champ libre
     code_recyclage_id   = fields.Many2one('is.dossier.article.code.recyclage', u"Code recyclage") #: menu déroulant : A,B…
     controle_qualite    = fields.Char(u"Contrôle qualité") #: champ libre : attention : champ présent dans onglet information à transférer dans ce nouvel onglet : attention lien avec les réceptions.
+    conditions_stockage = fields.Char(u"Conditions de stockage")
 
 
     @api.depends('code_pg')

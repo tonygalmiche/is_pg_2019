@@ -64,6 +64,7 @@
                                 <field name="commentaire"         attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="code_recyclage_id"   attrs="{'invisible': [('sous_famille', '=', 'COLORANTS')]}"/>
                                 <field name="controle_qualite"/>
+                                <field name="conditions_stockage"/>
                              </group>
                         </group>
                     </sheet>
