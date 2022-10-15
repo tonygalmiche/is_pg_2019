@@ -44,5 +44,6 @@ class ResCompany(models.Model):
         return super(ResCompany, self).write(vals)
 
     is_responsable_rh_id = fields.Many2one('res.users', string='Responsable RH')
+    is_zebra_id = fields.Many2one('is.raspberry.zebra', u"Imprimante Zebra par défaut", help=u"Utilisé pour imprimer les étiquettes des équipements")
 
 

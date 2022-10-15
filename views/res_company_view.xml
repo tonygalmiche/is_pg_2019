@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_res_company_form_inherit_is_pg_2019" model="ir.ui.view">
+            <field name="name">view.res.company.form.inherit.is.pg.2019</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_gest_demande_transport_id']"
+                    position="after">
+                    <field name="is_responsable_rh_id" />
+                </xpath>
+                <field name="is_code_societe" position="after">
+                    <field name="is_zebra_id" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
