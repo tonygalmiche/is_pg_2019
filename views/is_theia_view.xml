@@ -934,11 +934,23 @@
         <field name="arch" type="xml">
         <form>
             <sheet>
-                <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
-                     <button class="oe_inline oe_stat_button"   string="Rafraichir" 
-                            help="Redémarrer le service theia" name= "rafraichir_raspberry" 
-                            type="object" icon="fa-spinner"/>
-                </div>
+                <!-- <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                     <button 
+                        class="oe_inline oe_stat_button"   string="Rafraichir" 
+                        help="Redémarrer le service theia et le navigateur du Rapsberry" name= "rafraichir_raspberry" 
+                        type="object" icon="fa-spinner"
+                    />
+                    <button 
+                        class="oe_inline oe_stat_button"   string="Arrêter"    
+                        help="Arrêter le Raspberry"        name= "arret_raspberry"     
+                        type="object" icon="fa-power-off " groups="base.group_erp_manager"
+                    />
+                    <button 
+                        class="oe_inline oe_stat_button"   string="Redémarrer" 
+                        help="Redémarrer le Raspberry"     name= "reboot_raspberry"     
+                        type="object" icon="fa-refresh"    groups="base.group_erp_manager"
+                    />
+                </div> -->
                 <group>
                     <field name="name"/>
                     <field name="adresse_mac"/>

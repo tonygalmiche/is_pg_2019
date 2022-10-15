@@ -11,7 +11,7 @@ from openerp import SUPERUSER_ID
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
-
+import subprocess
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -584,6 +584,29 @@ class is_equipement(models.Model):
                 'domain': '[]',
             }
 
+
+    @api.multi
+    def imprimer_etiquette_equipement(self):
+        for obj in self:
+            user=self.env['res.users'].browse(self._uid)
+            imprimante=user.company_id.is_zebra_id.name
+            if imprimante:
+                Msg          = ""
+                FN1 = obj.numero_equipement or ''
+                FN2 = obj.designation or ''
+                FN3 = "Z"+FN1
+
+                ZPL="""
+                ^XA
+                ^A0R,100,100^FO650,50               ^FD%s   ^FS
+                ^A0R,70,70^FO570,50                 ^FD%s   ^FS
+                ^BY5,1.0^FO370,50^BC R,159,N,Y,Y,N  ^FD%s   ^FS
+                ^MMC
+                ^XZ
+                """%(FN1,FN2,FN3)
+                cmd='echo "'+ZPL+'" | lpr -P '+imprimante
+                res = subprocess.call(cmd, shell=True)
+                _logger.info(cmd)
 
 
     @api.depends('numero_equipement')
