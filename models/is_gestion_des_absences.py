@@ -342,6 +342,11 @@ class is_demande_conges(models.Model):
                 raise Warning(u"La date de fin doit être dans le même mois que la date de début")
             if self.date_debut>self.date_fin:
                 raise Warning(u"La date de fin doit être supérieure à la date de début")
+        if self.le:
+            mois_demande = str(self.le)[:8]
+            ce_mois      = str(datetime.date.today())[:8]
+            if mois_demande<ce_mois and self.responsable_rh_id.id!=uid and uid!=1:
+                raise Warning(u"Le mois de la demande ne peux pas être inférieur au mois en cours")
         return True
 
 
