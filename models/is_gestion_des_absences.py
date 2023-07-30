@@ -259,18 +259,18 @@ class is_demande_conges(models.Model):
                     <p>""" + nom + """ vient de passer la Demande de congés <a href='""" + url + """'>""" + obj.name + """</a> à l'état 'Validation RH'.</p> 
                     <p>Merci d'en prendre connaissance.</p> 
                 """ 
-                self.envoi_mail(email_from, email_to, email_cc, subject, body_html)
-                subject   = u"vers Validation RH"
-                body_html = u"<p>Mail envoyé de "+str(email_from)+u" à "+str(email_to)+u" (cc="+str(email_cc)+u")</p>"+body_html
-                self.creer_notification(subject,body_html)
-                if obj.mode_communication in ['sms','courriel+sms'] and obj.mobile:
-                    message = """Bonjour, """ + nom + """ vient de passer la Demande de congés """ + obj.name + """ à l'état 'Validation RH'."""
-                    res,err = self.envoi_sms(obj.mobile, message)
-                    if err=='':
-                        subject = u'SMS envoyé sur le '+obj.mobile+u' (il reste '+res+u' SMS sur le compte)'
-                        self.creer_notification(subject,message)
-                    else:
-                        self.creer_notification(u'ATTENTION : SMS non envoyé', err)
+                #self.envoi_mail(email_from, email_to, email_cc, subject, body_html)
+                #subject   = u"vers Validation RH"
+                #body_html = u"<p>Mail envoyé de "+str(email_from)+u" à "+str(email_to)+u" (cc="+str(email_cc)+u")</p>"+body_html
+                #self.creer_notification(subject,body_html)
+                #if obj.mode_communication in ['sms','courriel+sms'] and obj.mobile:
+                    #message = """Bonjour, """ + nom + """ vient de passer la Demande de congés """ + obj.name + """ à l'état 'Validation RH'."""
+                    #res,err = self.envoi_sms(obj.mobile, message)
+                    #if err=='':
+                    #    subject = u'SMS envoyé sur le '+obj.mobile+u' (il reste '+res+u' SMS sur le compte)'
+                    #    self.creer_notification(subject,message)
+                    #else:
+                    #    self.creer_notification(u'ATTENTION : SMS non envoyé', err)
 
                 #** Creation du commentaire de pointage ************************
                 if obj.type_demande in ['sans_solde','autre']:
