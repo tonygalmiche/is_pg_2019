@@ -308,7 +308,10 @@ class stock_picking(models.Model):
                                                 lots[uc.production] = {}
                                                 lots[uc.production]["qt"]=0
                                             lots[uc.production]["qt"]+=uc.qt_pieces
-                                            date_fabrication = uc.date_creation[:10]
+
+                                            #date_fabrication = uc.date_creation[:10]
+                                            date_fabrication = uc.date_creation
+
                                             lots[uc.production]["date_fabrication"]=date_fabrication   
                     if lots=={}:
                         lots[' ']={}
