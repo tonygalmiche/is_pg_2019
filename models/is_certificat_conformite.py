@@ -7,6 +7,8 @@ import os
 from pyPdf import PdfFileWriter, PdfFileReader
 import tempfile
 from contextlib import closing
+import pytz
+
 
 
 class is_bon_transfert(models.Model):
@@ -309,10 +311,16 @@ class stock_picking(models.Model):
                                                 lots[uc.production]["qt"]=0
                                             lots[uc.production]["qt"]+=uc.qt_pieces
 
-                                            #date_fabrication = uc.date_creation[:10]
-                                            date_fabrication = uc.date_creation
+                                            #** Ajoute le décalage horaire ****
+                                            date_fabrication = datetime.strptime(uc.date_creation, '%Y-%m-%d %H:%M:%S')
+                                            tz = pytz.timezone('Europe/Paris')
+                                            offset = tz.localize(date_fabrication).utcoffset()
+                                            date_fabrication = date_fabrication + offset
+                                            date_fabrication = str(date_fabrication)[:10]
+                                            #print(offset, uc.date_creation, date_fabrication)
+                                            #**********************************
 
-                                            lots[uc.production]["date_fabrication"]=date_fabrication   
+                                            lots[uc.production]["date_fabrication"]=date_fabrication
                     if lots=={}:
                         lots[' ']={}
                         lots[' ']["date_fabrication"]=False
